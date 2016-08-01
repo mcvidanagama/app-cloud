@@ -2193,4 +2193,24 @@ public class ApplicationDAO {
         }
     }
 
+    public List<String> getCloudTypes(Connection dbConnection) throws AppCloudException {
+        PreparedStatement preparedStatement = null;
+        List<String> cloudTypes = new ArrayList<>();
+        ResultSet resultSet = null;
+        try {
+            preparedStatement = dbConnection.prepareStatement(SQLQueryConstants.GET_ALL_CLOUDS);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                cloudTypes.add(resultSet.getString(SQLQueryConstants.NAME));
+            }
+        } catch (SQLException e) {
+            String msg = "Error while retrieving cloud types from database";
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeResultSet(resultSet);
+            DBUtil.closePreparedStatement(preparedStatement);
+        }
+        return cloudTypes;
+    }
+
 }
