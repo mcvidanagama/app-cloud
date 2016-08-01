@@ -1170,24 +1170,19 @@ var getVersionHashId = function(applicationName, versionName){
 }
 
 var getApplicationCreationEvents = function(applicationName, versionName) {
-
     var tenantId = modManager.getTenantId();
     var versionHashId = Util.getVersionHashId(applicationName, versionName, tenantId);
-
     var eventsManager = new EventsManager();
     var eventsArray = [];
-
     try {
         var events = eventsManager.getEventsOfApplication(versionHashId);
         for (var i = 0; i < events.length; i++) {
             var event = events[i];
             var eventObject = {};
-
             eventObject.name = event.eventName;
             eventObject.status = event.eventStatus;
             eventObject.timestamp = event.timestamp;
             eventObject.description = event.eventDescription;
-
             eventsArray.push(eventObject);
         }
     } catch(e){
@@ -1196,8 +1191,6 @@ var getApplicationCreationEvents = function(applicationName, versionName) {
         throw e;
     }
     return eventsArray;
-
-    var events = eventsManager.getEventsOfApplication(versionHashId);
 };
 
 var uploadExistingArchive = function (uploadedArtifact, appTypeName, applicationName, revision) {
