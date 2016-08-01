@@ -1280,4 +1280,23 @@ public class ApplicationManager {
         }
     }
 
+    /**
+     * Get all cloud types
+     *
+     * @return cloud types
+     * @throws AppCloudException
+     */
+    public static String[] getCloudTypes() throws AppCloudException {
+        Connection dbConnection = DBUtil.getDBConnection();
+        try {
+            List<String> cloudTypes = ApplicationDAO.getInstance().getCloudTypes(dbConnection);
+            return cloudTypes.toArray(new String[cloudTypes.size()]);
+        } catch (AppCloudException e) {
+            String msg = "Error while retrieving cloud types from database";
+            log.error(msg, e);
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeConnection(dbConnection);
+        }
+    }
 }

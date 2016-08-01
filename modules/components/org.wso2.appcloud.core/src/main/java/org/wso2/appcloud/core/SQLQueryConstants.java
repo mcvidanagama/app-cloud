@@ -208,6 +208,8 @@ public class SQLQueryConstants {
     public static final String GET_DEFAULT_VERSION = "SELECT default_version FROM AC_APPLICATION " +
             "WHERE hash_id=? AND AC_APPLICATION.tenant_id=?";
 
+    public static final String GET_ALL_CLOUDS = "SELECT * FROM AC_CLOUD";
+
     /* Update Queries */
     public static final String GET_ALL_APPLICATIONS_LIST_WITH_TAG =
             "SELECT app.name as application_name, app.hash_id as hash_id, type.name as app_type_name, " +
