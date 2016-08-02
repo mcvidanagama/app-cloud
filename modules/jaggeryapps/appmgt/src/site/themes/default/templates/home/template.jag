@@ -42,6 +42,10 @@ jagg.template("home", function(inputs, outputs, jagg) {
     } else if (application.defaultURL != null) {
         defaultAppLaunchURL = application.defaultURL;
     }
+
+    if (selectedApplicationRevision.status == APPLICATION_RUNNING) {
+        loadEndpoints();
+    }
 %>
 
 <script>
@@ -381,6 +385,30 @@ jagg.template("home", function(inputs, outputs, jagg) {
                 timeout: '5000'
             });
         }, function(jqXHR, textStatus, errorThrown) {
+            setTimeout(reloadAppHome, 2000);
+            jagg.message({
+                content: jqXHR.responseText,
+                type: 'error',
+                id: 'view_log',
+                timeout: '5000'
+            });
+        });
+    }
+
+    function loadEndpoints() {
+        jagg.post("../blocks/application/application.jag", {
+            action: "loadEndpoints",
+            appType: application.applicationType,
+            deploymentURL: selectedApplicationRevision.deploymentURL
+        }, function(result) {
+            selectedApplicationRevision.endpoints = JSON.parse(result).data;
+            setTimeout(reloadAppHome, 2000);
+            jagg.message({
+                content: "Application stopped successfully.",
+                type: 'info',
+                timeout: '5000'
+            });
+        }, function(jqXHR, data, errorThrown) {
             setTimeout(reloadAppHome, 2000);
             jagg.message({
                 content: jqXHR.responseText,
