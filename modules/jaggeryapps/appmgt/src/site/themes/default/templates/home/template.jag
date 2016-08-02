@@ -42,10 +42,6 @@ jagg.template("home", function(inputs, outputs, jagg) {
     } else if (application.defaultURL != null) {
         defaultAppLaunchURL = application.defaultURL;
     }
-
-    if (selectedApplicationRevision.status == APPLICATION_RUNNING) {
-        loadEndpoints();
-    }
 %>
 
 <script>
@@ -66,6 +62,7 @@ jagg.template("home", function(inputs, outputs, jagg) {
     var APPLICATION_RUNNING = "<%=APPLICATION_RUNNING%>";
     var APPLICATION_INACTIVE = "<%=APPLICATION_INACTIVE%>";
     var pageTitle = "<%=outputs.pageTitle%>";
+    var applicationType = "<%=application.applicationType%>";
 </script>
 
     <div class="right-pane">
@@ -196,59 +193,9 @@ jagg.template("home", function(inputs, outputs, jagg) {
                               </div>
                           </a>
                       </div>
-                      <% if (appTypeName = "wso2esb" && selectedApplicationRevision.endpoints != undefined ) {%>
+                      <% if (application.applicationType == "wso2esb") {%>
+                      <div id="app-type-data" class="col-xs-12 col-md-12 col-lg-12">
 
-                      <div class="col-xs-12 col-md-12 col-lg-12">
-                           <div class="block-endpoints">
-                              <h3>Endpoints</h3>
-                              <h4>SOAP Services</h4>
-                              <table class="table table-responsive">
-                                <thead class="thead">
-                                   <tr>
-                                      <th>Name</th>
-                                      <th>WSDL</th>
-                                      <th>WSDL2</th>
-                                   </tr>
-                                </thead>
-                                <tbody>
-
-                                <% for (var i=0; i < selectedApplicationRevision.endpoints.data.urls.proxies.length; i++) {
-                                   var proxy = selectedApplicationRevision.endpoints.data.urls.proxies[i]; %>
-                                   <tr>
-                                       <td><%=proxy.name%></td>
-                                       <td><a href=<%=proxy.wsdl[1]%>><%=proxy.wsdl[1]%></a></td>
-                                       <td><a href=<%=proxy.wsdl[0]%>><%=proxy.wsdl[0]%></a></td>
-                                   </tr>
-                                <% } %>
-
-                                </tbody>
-                              </table>
-
-                              <h4>SOAP Services</h4>
-                                <table class="table table-responsive">
-                                  <thead class="thead">
-                                     <tr>
-                                        <th>Name</th>
-                                        <th>URL</th>
-                                     </tr>
-                                  </thead>
-                                  <tbody>
-
-                                  <% for (var i=0; i < selectedApplicationRevision.endpoints.data.urls.apis.length; i++) {
-                                     var api = selectedApplicationRevision.endpoints.data.urls.apis[i];
-                                     var url = defaultAppLaunchURL + api.context;
-                                     if (api.name != "ContainerAPI") {
-                                     %>
-                                         <tr>
-                                            <td><%=api.name%></td>
-                                            <td><a href=<%=url%>><%=url%></a></td>
-                                         </tr>
-                                     <% } %>
-                                  <% } %>
-
-                                  </tbody>
-                                </table>
-                           </div>
                       </div>
                       <% } %>
                         <div class="col-xs-12 col-md-9 col-lg-9">
@@ -385,30 +332,6 @@ jagg.template("home", function(inputs, outputs, jagg) {
                 timeout: '5000'
             });
         }, function(jqXHR, textStatus, errorThrown) {
-            setTimeout(reloadAppHome, 2000);
-            jagg.message({
-                content: jqXHR.responseText,
-                type: 'error',
-                id: 'view_log',
-                timeout: '5000'
-            });
-        });
-    }
-
-    function loadEndpoints() {
-        jagg.post("../blocks/application/application.jag", {
-            action: "loadEndpoints",
-            appType: application.applicationType,
-            deploymentURL: selectedApplicationRevision.deploymentURL
-        }, function(result) {
-            selectedApplicationRevision.endpoints = JSON.parse(result).data;
-            setTimeout(reloadAppHome, 2000);
-            jagg.message({
-                content: "Application stopped successfully.",
-                type: 'info',
-                timeout: '5000'
-            });
-        }, function(jqXHR, data, errorThrown) {
             setTimeout(reloadAppHome, 2000);
             jagg.message({
                 content: jqXHR.responseText,
