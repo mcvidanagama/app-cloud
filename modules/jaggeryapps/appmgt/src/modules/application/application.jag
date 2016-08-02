@@ -155,7 +155,7 @@ var triggerKubernetesDeployment = function(runtimeProperties, applicationRuntime
 var pushDockerImage = function (applicationName, versionName, applicationRuntime, tagName, versionHashId, dockerClient){
 
     //Adding docker image push pending event
-    var msg = "Docker image push successfully triggered in triggered";
+    var msg = "Docker image push successfully triggered";
     addEvent(DOCKER_REGISTRY_PUSH, EVENT_PENDING, msg, versionHashId);
 
     try {
@@ -437,7 +437,7 @@ var deployApplication = function(applicationName, versionName, appTypeName, depl
         }
         log.error(msg);
         log.error(e);
-        log.info("Application deployment failed because kubernetes deployment was failed and roll back process" +
+        log.info("Application deployment failed because Kubernetes deployment was failed and roll back process" +
                  " is started for application: " + applicationName + " with revision: " + versionName);
         if(!isRedeploy) {
             deleteVersion(versionHashId, true, true);
@@ -445,7 +445,7 @@ var deployApplication = function(applicationName, versionName, appTypeName, depl
         throw e;
     }
     //Adding deployment success event
-    var msg = "Application deployment successfull";
+    var msg = "Application deployment successful";
     addEvent(KUBE_DEPLOY, EVENT_SUCCEEDED, msg, versionHashId);
 
     //======================================= checking pod status =================================================
@@ -699,7 +699,6 @@ function getDeploymentConfig(containersList, versionHashId, replicas){
  * Method for getting all the available application types e.g : war, mss, car
  */
 var getAllAppTypes = function(){
-
     var appTypeArray = [];
     try {
         var appTypes = ApplicationManager.getAllAppTypesForCloud(jagg.getSelectedCloud());
@@ -727,9 +726,7 @@ var getAllAppTypes = function(){
  * @param appType application type
  */
 var getAllRuntimes = function(appType){
-
     var runtimeArray = [];
-
     try {
         var runtimes = ApplicationManager.getAllRuntimesForAppType(appType);
 
@@ -799,7 +796,6 @@ var generateApplicationHashId = function(applicationName){
         throw e;
     }
 }
-
 
 var getApplicationHashIdByName = function(applicationName){
     try {
@@ -894,7 +890,6 @@ var generateVersionList = function (versions, applicationName, appType) {
     return versionList;
 }
 
-
 /**
  * Get application icon as a base64 encoded string.
  *
@@ -924,7 +919,6 @@ function changeApplicationIcon(applicationHashId, appIcon){
         log.error("Provided app icon is Empty for application : "+applicationName);
         throw "Provided app icon is Empty"
     }
-
 }
 
 var getEnvVariablesOfVersion = function(versionHashId){
@@ -1136,7 +1130,6 @@ var getDeploymentURL = function (applicationName, versionName, versionID){
     }
     return applicationLaunchURL;
 };
-
 
 var putSelectedRevisionToSession = function(applicationKey, currentRevision) {
     var selectedVersions = session.get("SELECTED_REVISIONS");
