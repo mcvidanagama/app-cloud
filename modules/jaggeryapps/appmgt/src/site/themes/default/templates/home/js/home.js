@@ -56,6 +56,80 @@ function initPageView() {
 
     listTags();
     listEnvs();
+
+    if (selectedApplicationRevision.status == APPLICATION_RUNNING) {
+        loadEndpoints(deploymentURL, applicationType);
+    }
+
+}
+
+function loadEndpoints(deploymentURL, applicationType) {
+    jagg.post("../blocks/application/application.jag", {
+     action: "loadEndpoints",
+     appType: applicationType,
+     deploymentURL: deploymentURL
+     }, function(result) {
+        var endpoints = JSON.parse(result);
+        var html_1 = '<div class="block-endpoints">'+
+            '<h3>Endpoints</h3>'+
+            '<h4>SOAP Services</h4>'+
+            '<table class="table table-responsive">'+
+            '<thead class="thead">'+
+            '<tr>'+
+            '<th>Name</th>'+
+            '<th>WSDL</th>'+
+            '<th>WSDL2</th>'+
+            '</tr>'+
+            '</thead>'+
+            '<tbody>';
+
+        var html_2;
+        for (var i=0; i < endpoints.data.urls.proxies.length; i++) {
+            var proxy = endpoints.data.urls.proxies[i];
+            html_2 = '<tr>'+
+                '<td>' + proxy.name+'</td>'+
+                '<td><a href="' +proxy.wsdl[1]+ '">'+proxy.wsdl[1] +'</a></td>'+
+                '<td><a href="'+proxy.wsdl[0]+'">'+proxy.wsdl[0]+'</a></td>'+
+                '</tr>';
+        }
+
+        var html_3 =
+            '</tbody>'+
+            '</table>'+
+
+            '<h4>REST APIs</h4>'+
+            '<table class="table table-responsive">'+
+            '<thead class="thead">'+
+            '<tr>'+
+            '<th>Name</th>'+
+            '<th>URL</th>'+
+            '</tr>'+
+            '</thead>'+
+            '<tbody>';
+
+
+        var html_4;
+        for (var j=0; j < endpoints.data.urls.apis.length; j++) {
+            var api = endpoints.data.urls.apis[j];
+            var url = deploymentURL + api.context;
+            if (api.name != "ContainerAPI") {
+
+                html_4 = '<tr>' +
+                    '<td>'+ api.name +'</td>'+
+                    '<td><a href="' + url+ '">' + url + '</a></td>'+
+                    '</tr>';
+            }
+        }
+
+        var html_5 =       '</tbody>'+
+            '</table>'+
+            '</div>';
+
+        $("#app-type-data").html(html_1 + html_2 + html_3 + html_4 + html_5);
+
+     }, function(jqXHR, data, errorThrown) {
+
+     });
 }
 
 function launchApp() {
@@ -251,6 +325,7 @@ function changeSelectedRevision(newRevision){
                                  'data-toggle="tooltip" title="Adding replicas to your application will not support in this release."></i>' +
                                  '</span></figcaption></figure></div>');
 
+        loadEndpoints(deploymentURL, applicationType);
     } else if(selectedApplicationRevision.status == APPLICATION_STOPPED || selectedApplicationRevision.status == APPLICATION_INACTIVE){
 
         $('#launch-default-url-block').empty();

@@ -877,7 +877,6 @@ var generateVersionList = function (versions, applicationName, appType) {
             versionObject.conSpecMemory = version.conSpecMemory;
             versionObject.runtimeProperties = generateRuntimePropsArray(version.runtimeProperties);
             versionObject.tags = generateTagsArray(version.tags);
-            versionObject.endpoints = jagg.module("application").getEndpointsExtractor(appType).getEndpoints(deploymentUrl);
 
             versionList[version.versionName] = versionObject;
         }
