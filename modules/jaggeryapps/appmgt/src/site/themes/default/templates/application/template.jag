@@ -435,6 +435,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                     if(event.name === "Status" && event.status == "success"){
                         setTimeout(redirectAppHome, 4250);
                         function redirectAppHome(){
+                            deleteAppCreationEvents();
                             window.location.replace("home.jag?applicationKey=" + applicationHashId);
                         }
                     } else if(event.status == "failed"){
@@ -443,6 +444,18 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 }
             },function (jqXHR, textStatus, errorThrown) {
                 showAppCreationFailedNotification(errorThrown);
+            });
+        }
+
+        function deleteAppCreationEvents() {
+            jagg.post("../blocks/application/application.jag", {
+                action:"deleteAppCreationEvents",
+                applicationName: $("#applicationName").val(),
+                applicationRevision: $("#applicationRevision").val()
+            }, function (result) {
+                //This just return a boolean from backend
+            }, function(jqXHR, textStatus, errorThrown) {
+                //do not interrupt the application creation process even deletion of events fails.
             });
         }
 
@@ -642,7 +655,6 @@ jagg.template("application", function (inputs, outputs, jagg) {
         /** end application creation form validations */
 
         $('#url-upload').click(function(){
-        console.log("inside url upload click");
             $("#url-upload-progress").html("<i class=\"fa fa-circle-o-notch fa-spin\"></i>");
             isUploadUrlValid()
         });
