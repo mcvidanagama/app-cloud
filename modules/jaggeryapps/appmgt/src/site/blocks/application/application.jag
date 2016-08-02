@@ -508,6 +508,22 @@ var log = new Log();
             response.content = msg;
         }
 
+    } else if (action == "deleteAppCreationEvents"){
+        var applicationName = request.getParameter("applicationName");
+        var applicationRevision = request.getParameter("applicationRevision");
+        var mod = jagg.module("application");
+        var versionHashId = applicationModule.getVersionHashId(applicationName, applicationRevision);
+        try {
+            mod.deleteEventsOfAppVersions(versionHashId);
+            print(true);
+        } catch (e) {
+            var msg = "Error while deleting application creation events for application hash id : " + applicationKey;
+            log.error(msg);
+            log.error(e);
+            response.status = 500;
+            response.content = msg;
+        }
+
     } else if (action == "getSampleArtifactUrl") {
         var appType = request.getParameter("appType");
         var managerModule = jagg.module("manager");
