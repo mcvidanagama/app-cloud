@@ -144,6 +144,7 @@ function as_setup(){
     cp $APP_CLOUD_SRC_HOME/modules/components/org.wso2.appcloud.provisioning.runtime/target/org.wso2.appcloud.provisioning.runtime-3.0.0-SNAPSHOT.jar $1/repository/components/dropins/
     cp $APP_CLOUD_SRC_HOME/modules/components/org.wso2.appcloud.common/target/org.wso2.appcloud.common-3.0.0-SNAPSHOT.jar $1/repository/components/dropins/
     mkdir -p $1/repository/conf/appcloud
+
     cp $CONF_LOCATION/wso2as-5.2.1/repository/conf/appcloud/appcloud.properties $1/repository/conf/appcloud/
     cp $CONF_LOCATION/wso2as-5.2.1/repository/conf/security/authenticators.xml $1/repository/conf/security/
     cp -r $PATCH_LOCATION/wso2as-5.2.1/* $1/repository/components/patches/
@@ -187,6 +188,7 @@ function as_cluster_setup(){
     cp $CONF_LOCATION/wso2as-5.2.1/repository/conf/security/authenticators.xml $AS_HOME2/repository/conf/security/
     cp -r $PATCH_LOCATION/wso2as-5.2.1/* $AS_HOME1/repository/components/patches/
     cp -r $PATCH_LOCATION/wso2as-5.2.1/* $AS_HOME2/repository/components/patches/
+
 
     echo "AS cluster setup successfully done!"
 
