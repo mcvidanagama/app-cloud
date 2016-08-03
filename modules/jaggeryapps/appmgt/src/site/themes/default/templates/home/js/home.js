@@ -473,10 +473,7 @@ function deleteApplication(){
         versionKey:selectedApplicationRevision.hashId
     },function (result) {
         jagg.message({content: "Selected version deleted successfully", type: 'success', id:'view_log'});
-        var versionCount = 0;
-        for (var version in application.versions){
-            versionCount++;
-        }
+        var versionCount = getVersionCount();
         if(versionCount == 1){
             setTimeout(redirectAppListing, 2000);
         } else {
@@ -488,12 +485,7 @@ function deleteApplication(){
 }
 
 function deleteApplicationPopUp(){
-
-    var versionCount = 0;
-    for (var version in application.versions){
-        versionCount++;
-    }
-
+    var versionCount = getVersionCount();
     if(versionCount == 1){
         jagg.popMessage({type:'confirm', modalStatus: true, title:'Delete Application Version',content:'You are about to delete the only available version of your application, are you sure you want to delete this "' + selectedRevision + '" version ?',
             okCallback:function(){
@@ -522,4 +514,12 @@ function redirectAppListing() {
 
 function redirectAppHome() {
     window.location.replace("home.jag?applicationKey=" + applicationKey);
+}
+
+function getVersionCount(){
+    var versionCount = 0;
+    for (var version in application.versions){
+        versionCount++;
+    }
+    return versionCount;
 }
