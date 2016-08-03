@@ -70,65 +70,92 @@ function loadEndpoints(deploymentURL, applicationType) {
      }, function(result) {
         var endpoints = JSON.parse(result);
         if (endpoints == undefined) {
-            $("#app-type-data").html('<h3>Endpoints</h3>' +
+            $("#app-type-data").html('<div class="block-endpoints-init"><h3>Endpoints &nbsp;' +
                 '<span> ' +
-                '<i class="fa fa-circle-o-notch fa-spin"></i>'+
-                ' Server is still starting ...</span>');
+                '<i class="fw fw-spin fw-loader4"></i>'+
+                '</span></h3></div>');
         } else {
             var html_1 = '<div class="block-endpoints">' +
                 '<h3>Endpoints</h3>';
 
             var html_2 = "";
-            if (endpoints.data.urls.proxies.length > 0) {
-                html_2 += '<h4>SOAP Services</h4>' +
-                '<table class="table table-responsive">' +
-                '<thead class="thead">'+
-                '<tr>' +
-                '<th>Name</th>' +
-                '<th>WSDL</th>' +
-                '<th>WSDL2</th>' +
-                '</tr>' +
-                '</thead>' +
-                '<tbody>';
-                for (var i = 0; i < endpoints.data.urls.proxies.length; i++) {
-                    var proxy = endpoints.data.urls.proxies[i];
+            if(endpoints.data.urls.proxies != null) {
+                html_2 += '<h4><i class="fw fw-soap fw-2x"></i> &nbsp; SOAP Services</h4>' +
+                    '<table class="table table-responsive">' +
+                    '<thead class="thead">' +
+                    '<tr>' +
+                    '<th width="20%">Name</th>' +
+                    '<th>WSDL</th>' +
+                    '<th>WSDL2</th>' +
+                    '</tr>' +
+                    '</thead>' +
+                    '<tbody>';
+                if (Array.isArray(endpoints.data.urls.proxies)) {
+                    for (var i = 0; i < endpoints.data.urls.proxies.length; i++) {
+                        var proxy = endpoints.data.urls.proxies[i];
+                        var wsdl1 = deploymentURL + "/" + (proxy.wsdl[0]).substring((proxy.wsdl[0]).indexOf('services'));
+                        var wsdl2 = deploymentURL + "/" + (proxy.wsdl[1]).substring((proxy.wsdl[1]).indexOf('services'));
+
+                        html_2 += '<tr>' +
+                            '<td>' + proxy.name + '</td>' +
+                            '<td><a href="' + wsdl1 + '" target="_blank">' + wsdl1 + '</a></td>' +
+                            '<td><a href="' + wsdl2 + '" target="_blank">' + wsdl2 + '</a></td>' +
+                            '</tr>';
+                    }
+
+
+                } else {
+                    var proxy = endpoints.data.urls.proxies;
+                    var wsdl1 = deploymentURL + "/" + (proxy.wsdl[0]).substring((proxy.wsdl[0]).indexOf('services'));
+                    var wsdl2 = deploymentURL + "/" + (proxy.wsdl[1]).substring((proxy.wsdl[1]).indexOf('services'));
+
                     html_2 += '<tr>' +
                         '<td>' + proxy.name + '</td>' +
-                        '<td><a href="' + proxy.wsdl[1] + '">' + proxy.wsdl[1] + '</a></td>' +
-                        '<td><a href="' + proxy.wsdl[0] + '">' + proxy.wsdl[0] + '</a></td>' +
+                        '<td><a href="' + wsdl1 + '" target="_blank">' + wsdl1 + '</a></td>' +
+                        '<td><a href="' + wsdl2 + '" target="_blank">' + wsdl2 + '</a></td>' +
                         '</tr>';
                 }
-
                 html_2 += '</tbody>' +
                     '</table>';
             }
 
             var html_3 = "";
-            if (endpoints.data.urls.apis.length > 0) {
-                html_3 += '<h4>REST APIs</h4>' +
+            if (endpoints.data.urls.apis != null) {
+                var api_header = '<h4><i class="fw fw-rest-api fw-2x"></i> &nbsp; REST APIs</h4>' +
                     '<table class="table table-responsive">' +
                     '<thead class="thead">' +
                     '<tr>' +
-                    '<th>Name</th>' +
+                    '<th width="20%">Name</th>' +
                     '<th>URL</th>' +
                     '</tr>' +
                     '</thead>' +
                     '<tbody>';
 
-                for (var j = 0; j < endpoints.data.urls.apis.length; j++) {
-                    var api = endpoints.data.urls.apis[j];
+                if (Array.isArray(endpoints.data.urls.apis)) {
+                    for (var j = 0; j < endpoints.data.urls.apis.length; j++) {
+                        var api = endpoints.data.urls.apis[j];
+                        var url = deploymentURL + api.context;
+                        if (api.name != "ContainerAPI") {
+                            html_3 += '<tr>' +
+                                '<td>' + api.name + '</td>' +
+                                '<td><a href="' + url + '" target="_blank">' + url + '</a></td>' +
+                                '</tr>';
+                        }
+                    }
+                } else {
+                    var api = endpoints.data.urls.apis;
                     var url = deploymentURL + api.context;
                     if (api.name != "ContainerAPI") {
                         html_3 += '<tr>' +
                             '<td>' + api.name + '</td>' +
-                            '<td><a href="' + url + '">' + url + '</a></td>' +
+                            '<td><a href="' + url + '" target="_blank">' + url + '</a></td>' +
                             '</tr>';
                     }
                 }
 
-                html_3 += '</tbody>' +
-                    '</table>';
-
+                if (html_3 != "") {
+                    html_3 = api_header + html_3 + '</tbody></table>';
+                }
             }
 
             var html_4 = '</div>';
