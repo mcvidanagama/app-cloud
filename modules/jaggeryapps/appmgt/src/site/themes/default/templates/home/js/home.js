@@ -72,7 +72,7 @@ function loadEndpoints(deploymentURL, applicationType) {
         if (endpoints == undefined) {
             $("#app-type-data").html('<h3>Endpoints</h3>' +
                 '<span> ' +
-                '<i class="fw fw-loader5"></i>'+
+                '<i class="fa fa-circle-o-notch fa-spin"></i>'+
                 ' Server is still starting ...</span>');
         } else {
             var html_1 = '<div class="block-endpoints">' +
