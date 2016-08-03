@@ -124,6 +124,7 @@ function as_setup(){
     cp $LIB_LOCATION/jackson-dataformat-yaml-2.7.5.jar $1/repository/components/dropins/
     cp $LIB_LOCATION/slf4j-api-1.7.13.jar $1/repository/components/dropins/
     cp $LIB_LOCATION/snakeyaml-1.17.jar $1/repository/components/dropins/
+
     cp $LIB_LOCATION/mysql-connector-java-5.1.27-bin.jar $1/repository/components/lib/
 
     cp $LIB_LOCATION/junixsocket-common-2.0.4.wso2v1.jar $1/repository/components/dropins/
@@ -182,8 +183,6 @@ function as_cluster_setup(){
 
     sed -i -e "s/https:\/\/localhost:9443\/appmgt\/jagg\/jaggery_acs.jag/http:\/\/$IP\/appmgt\/jagg\/jaggery_acs.jag/g" $IS_HOME/repository/conf/security/sso-idp-config.xml
 
-    cp $CONF_LOCATION/wso2as-5.2.1/repository/conf/axis2/axis2.xml $AS_HOME1/repository/conf/axis2/
-    cp $CONF_LOCATION/wso2as-5.2.1/repository/conf/axis2/axis2.xml $AS_HOME2/repository/conf/axis2/
     cp $CONF_LOCATION/wso2as-5.2.1/repository/conf/security/authenticators.xml $AS_HOME1/repository/conf/security/
     cp $CONF_LOCATION/wso2as-5.2.1/repository/conf/security/authenticators.xml $AS_HOME2/repository/conf/security/
     cp -r $PATCH_LOCATION/wso2as-5.2.1/* $AS_HOME1/repository/components/patches/
