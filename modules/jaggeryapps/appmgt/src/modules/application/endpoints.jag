@@ -80,27 +80,77 @@ DSSEndpointsExtractor.prototype = Object.create(EndpointsExtractor);
 
 // actual implementation goes here
 WarEndpointsExtractor.prototype.getEndpoints = function (deploymentUrl) {
-    return createJsonResponse(null, null, {"url" : deploymentUrl});
+    return ;
 };
 
 PHPEndpointsExtractor.prototype.getEndpoints = function (deploymentUrl) {
-    return createJsonResponse(null, null, {"url" : deploymentUrl});
+    return ;
 };
 
 MSSEndpointsExtractor.prototype.getEndpoints = function (deploymentUrl) {
-    return createJsonResponse(null, null, {"url" : deploymentUrl});
+    return ;
 };
 
 ESBEndpointsExtractor.prototype.getEndpoints = function (deploymentUrl) {
-    return createJsonResponse(null, null, {"url" : deploymentUrl});
+    var containerApiUrl = deploymentUrl + "/container/endpoints";
+    log.info("Calling Container API : " + containerApiUrl);
+    var endpoints = get(containerApiUrl, {}, "json");
+
+/*
+    var endpoints = {
+        "data": {
+            "urls": {
+                "apis": [{
+                    "context": "/container/endpoints",
+                    "name": "ContainerAPI"
+                }, {
+                    "context": "/endpoints",
+                    "name": "EndpointAPI"
+                }, {
+                    "context": "/hello",
+                    "name": "HelloAPI"
+                }, {
+                    "context": "/plain",
+                    "name": "PlainAPI"
+                }, {
+                    "context": "/account",
+                    "name": "SalesforceAccountAPI"
+                }, {
+                    "context": "/test",
+                    "name": "Test"
+                }],
+                "proxies": [{
+                    "name": "DD",
+                    "wsdl": [
+                        "http://maheekas-macbook-pro-5.local:8290/services/DD?wsdl",
+                        "http://maheekas-macbook-pro-5.local:8290/services/DD?wsdl2"
+                    ]
+                }, {
+                    "name": "HelloProxy",
+                    "wsdl": [
+                        "http://maheekas-macbook-pro-5.local:8290/services/HelloProxy?wsdl",
+                        "http://maheekas-macbook-pro-5.local:8290/services/HelloProxy?wsdl2"
+                    ]
+                }, {
+                    "name": "SalesforceProxy",
+                    "wsdl": [
+                        "http://maheekas-macbook-pro-5.local:8290/services/SalesforceProxy?wsdl",
+                        "http://maheekas-macbook-pro-5.local:8290/services/SalesforceProxy?wsdl2"
+                    ]
+                }]
+            }
+        }
+    };
+*/
+    return endpoints;
 };
 
 JaggeryEndpointsExtractor.prototype.getEndpoints = function (deploymentUrl) {
-    return createJsonResponse(null, null, {"url" : deploymentUrl});
+    return ;
 };
 
 DSSEndpointsExtractor.prototype.getEndpoints = function (deploymentUrl) {
-    return createJsonResponse(null, null, {"url" : deploymentUrl});
+    return ;
 };
 
 
@@ -128,15 +178,5 @@ var getEndpointsExtractor = function(appType) {
     if (appType == "wso2dataservice") {
         return new DSSEndpointsExtractor();
     }
-};
-
-var createJsonResponse = function (restEndpoints, soapEndpoints, webEndpoints){
-    return {
-        "endpoints" : {
-            "rest" : restEndpoints,
-            "soap" : soapEndpoints,
-            "web" : webEndpoints
-        }
-    };
 };
 %>

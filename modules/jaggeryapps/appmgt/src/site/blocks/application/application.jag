@@ -552,6 +552,12 @@ var log = new Log();
         } else {
             print(false);
         }
+    } else if (action == "loadEndpoints") {
+        var deploymentURL = request.getParameter("deploymentURL");
+        var appType = request.getParameter("appType");
+        var mod = jagg.module("application");
+        var endpoints = mod.getEndpointsExtractor(appType).getEndpoints(deploymentURL);
+        print(endpoints);
     } else {
         throw new Error("No action specified for: " + action);
     }

@@ -33,10 +33,10 @@ ADD init.sh /init.sh
 
 # Copy carbon pack and required other resources
 COPY $WSO2CARBON_ZIP $INSTALL_PATH
-# COPY patches/ $CARBON_HOME_PATH/repository/components/patches/
-# COPY modules/ $CARBON_HOME_PATH/modules/
-# COPY lib/ $CARBON_HOME_PATH/repository/components/lib/
-# COPY removed-bundles.txt /
+COPY patches/ $CARBON_HOME_PATH/repository/components/patches/
+ENV CAR_DEPLOYMENT_DIR $CARBON_HOME_PATH/repository/deployment/server/carbonapps/
+RUN mkdir -p $CAR_DEPLOYMENT_DIR
+COPY ContainerAPICompositeApplication_1.0.0.car $CAR_DEPLOYMENT_DIR
 
 RUN apt-get update --fix-missing && \
         apt-get install -y pwgen git wget && \

@@ -1108,6 +1108,7 @@ a.btn-action {
 .block-runtime,
 .block-monitoring,
 .block-team,
+.block-endpoints,
 .block-replica,
 .block-database {
     margin-top: 1em;
@@ -1133,6 +1134,10 @@ a.btn-action {
     min-height: 24em;
 }
 .block-replica {
+    background-color: #464646;
+    min-height: 24em;
+}
+.block-endpoints {
     background-color: #464646;
     min-height: 24em;
 }
