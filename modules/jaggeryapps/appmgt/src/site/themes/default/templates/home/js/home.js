@@ -488,11 +488,32 @@ function deleteApplication(){
 }
 
 function deleteApplicationPopUp(){
-    jagg.popMessage({type:'confirm', modalStatus: true, title:'Delete Application Version',content:'Are you sure you want to delete this version:' + selectedRevision + ' ?',
-                        okCallback:function(){
-                            deleteApplication();
-                        }, cancelCallback:function(){}
-                    });
+
+    var versionCount = 0;
+    for (var version in application.versions){
+        versionCount++;
+    }
+
+    if(versionCount == 1){
+        jagg.popMessage({type:'confirm', modalStatus: true, title:'Delete Application Version',content:'You are about to delete the only available version of your application, are you sure you want to delete this "' + selectedRevision + '" version ?',
+            okCallback:function(){
+                deleteApplication();
+            }
+        });
+    } else if (versionCount > 1 && (selectedRevision == application.defaultVersion)) {
+        jagg.message({
+            type:'warning', modalStatus: true, title:'Delete Application Version',
+            content:'This version:' + selectedRevision + ' is set as the default version of the application. If you '
+            + 'really want to delete this please select some other version as the default version',
+            timeout: 8000
+        });
+    } else {
+        jagg.popMessage({type:'confirm', modalStatus: true, title:'Delete Application Version',content:'Are you sure you want to delete this version:' + selectedRevision + ' ?',
+            okCallback:function(){
+                deleteApplication();
+            }, cancelCallback:function(){}
+        });
+    }
 }
 
 function redirectAppListing() {
