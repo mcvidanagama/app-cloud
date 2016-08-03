@@ -107,11 +107,8 @@ function as_setup(){
     # copy esb artifacts to dockerfiles/wso2esb
     cp $APP_CLOUD_SRC_HOME/modules/components/org.wso2.appcloud.esb.integration/ContainerAPICompositeApplication/target/ContainerAPICompositeApplication_3.0.0-SNAPSHOT.car $APP_CLOUD_SRC_HOME/modules/resources/dockerfile/wso2esb/base/5.0.0/carbonapps/
     cp $APP_CLOUD_SRC_HOME/modules/components/org.wso2.appcloud.tenant.initializer/target/org.wso2.appcloud.tenant.initializer-3.0.0-SNAPSHOT.jar $APP_CLOUD_SRC_HOME/modules/resources/dockerfile/wso2esb/base/5.0.0/dropins/
-
     cp -R $APP_CLOUD_SRC_HOME/modules/resources/dockerfiles $1/repository/deployment/server/jaggeryapps/appmgt/
-
     cp -r $APP_CLOUD_SRC_HOME/modules/setup-scripts/jaggery/modules/* $1/modules/
-
     cp $LIB_LOCATION/org.wso2.carbon.hostobjects.sso_4.2.1.jar $1/repository/components/dropins/
     cp $LIB_LOCATION/nimbus-jose-jwt_2.26.1.wso2v2.jar $1/repository/components/dropins/
     cp $LIB_LOCATION/commons-codec-1.10.0.wso2v1.jar $1/repository/components/dropins/
@@ -124,11 +121,8 @@ function as_setup(){
     cp $LIB_LOCATION/jackson-dataformat-yaml-2.7.5.jar $1/repository/components/dropins/
     cp $LIB_LOCATION/slf4j-api-1.7.13.jar $1/repository/components/dropins/
     cp $LIB_LOCATION/snakeyaml-1.17.jar $1/repository/components/dropins/
-
     cp $LIB_LOCATION/mysql-connector-java-5.1.27-bin.jar $1/repository/components/lib/
-
     cp $LIB_LOCATION/junixsocket-common-2.0.4.wso2v1.jar $1/repository/components/dropins/
-
     cp $LIB_LOCATION/logging-interceptor-2.7.5.wso2v1.jar $1/repository/components/dropins/
     cp $LIB_LOCATION/okhttp-2.7.5.wso2v1.jar $1/repository/components/dropins/
     cp $LIB_LOCATION/okhttp-ws-2.7.5.wso2v1.jar $1/repository/components/dropins/
@@ -138,26 +132,22 @@ function as_setup(){
     cp $LIB_LOCATION/dnsjava-2.1.7.wso2v1.jar $1/repository/components/dropins/
     cp $LIB_LOCATION/json-20160212.jar $1/repository/components/dropins/
     cp $LIB_LOCATION/fabric8-utils-2.2.100.jar $1/repository/components/dropins/
-
     cp $CONF_LOCATION/$AS_VERSION/repository/conf/datasources/master-datasources.xml $1/repository/conf/datasources/
     cp $CONF_LOCATION/$AS_VERSION/repository/conf/datasources/appcloud-datasources.xml $1/repository/conf/datasources/
     cp $APP_CLOUD_SRC_HOME/modules/components/org.wso2.appcloud.core/target/org.wso2.appcloud.core-3.0.0-SNAPSHOT.jar $1/repository/components/dropins/
     cp $APP_CLOUD_SRC_HOME/modules/components/org.wso2.appcloud.provisioning.runtime/target/org.wso2.appcloud.provisioning.runtime-3.0.0-SNAPSHOT.jar $1/repository/components/dropins/
     cp $APP_CLOUD_SRC_HOME/modules/components/org.wso2.appcloud.common/target/org.wso2.appcloud.common-3.0.0-SNAPSHOT.jar $1/repository/components/dropins/
     mkdir -p $1/repository/conf/appcloud
-
     cp $CONF_LOCATION/wso2as-5.2.1/repository/conf/appcloud/appcloud.properties $1/repository/conf/appcloud/
     cp $CONF_LOCATION/wso2as-5.2.1/repository/conf/security/authenticators.xml $1/repository/conf/security/
     cp -r $PATCH_LOCATION/wso2as-5.2.1/* $1/repository/components/patches/
     cp $CONF_LOCATION/$AS_VERSION/repository/conf/carbon.xml $1/repository/conf/
     cp $CONF_LOCATION/$AS_VERSION/bin/wso2server.sh $1/bin/
-
     cp -r $APP_CLOUD_SRC_HOME/modules/webapps/appCloudTierapi/target/tierapi.war $1/repository/deployment/server/webapps/
-
     sed -i -e "s|AS_HOME|$1|g" $1/repository/conf/appcloud/appcloud.properties
 }
-function as_cluster_setup(){
 
+function as_cluster_setup(){
     mkdir -p $SETUP_DIR/AS_NODE1
     mkdir -p $SETUP_DIR/AS_NODE2
     unzip -q $PACK_DIR/$AS_VERSION.zip -d $SETUP_DIR/AS_NODE1/
@@ -188,13 +178,10 @@ function as_cluster_setup(){
     cp -r $PATCH_LOCATION/wso2as-5.2.1/* $AS_HOME1/repository/components/patches/
     cp -r $PATCH_LOCATION/wso2as-5.2.1/* $AS_HOME2/repository/components/patches/
 
-
     echo "AS cluster setup successfully done!"
-
 }
 
 function as_non_cluster_setup(){
-
     unzip -q $PACK_DIR/$AS_VERSION.zip -d $SETUP_DIR
     AS_HOME=$SETUP_DIR/$AS_VERSION/
 
