@@ -214,7 +214,7 @@ var buildDockerImage = function (applicationName, versionName, runtimeId, absFil
                 addEvent(DOCKER_IMAGE_BUILD, EVENT_SUCCEEDED, msg, versionHashId);
                 return true;
             } catch (e){
-                log.error("Error occured while building image, Hence retrying...");
+                log.error("Error occurred while building image, Hence retrying...");
             }
         }
 
