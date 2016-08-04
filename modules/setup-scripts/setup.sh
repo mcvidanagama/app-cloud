@@ -138,7 +138,8 @@ function as_setup(){
     cp $APP_CLOUD_SRC_HOME/modules/components/org.wso2.appcloud.common/target/org.wso2.appcloud.common-3.0.0-SNAPSHOT.jar $1/repository/components/dropins/
     mkdir -p $1/repository/conf/appcloud
     cp $CONF_LOCATION/wso2as-5.2.1/repository/conf/appcloud/appcloud.properties $1/repository/conf/appcloud/
-
+    cp $CONF_LOCATION/wso2as-5.2.1/repository/conf/security/authenticators.xml $1/repository/conf/security/
+    cp -r $PATCH_LOCATION/wso2as-5.2.1/* $1/repository/components/patches/
     cp -r $APP_CLOUD_SRC_HOME/modules/webapps/appCloudTierapi/target/tierapi.war $1/repository/deployment/server/webapps/
 
     sed -i -e "s|AS_HOME|$1|g" $1/repository/conf/appcloud/appcloud.properties
@@ -172,7 +173,11 @@ function as_cluster_setup(){
 
     cp $CONF_LOCATION/wso2as-5.2.1/repository/conf/axis2/axis2.xml $AS_HOME1/repository/conf/axis2/
     cp $CONF_LOCATION/wso2as-5.2.1/repository/conf/axis2/axis2.xml $AS_HOME2/repository/conf/axis2/
-
+    cp $CONF_LOCATION/wso2as-5.2.1/repository/conf/security/authenticators.xml $AS_HOME1/repository/conf/security/
+    cp $CONF_LOCATION/wso2as-5.2.1/repository/conf/security/authenticators.xml $AS_HOME2/repository/conf/security/
+    cp -r $PATCH_LOCATION/wso2as-5.2.1/* $AS_HOME1/repository/components/patches/
+    cp -r $PATCH_LOCATION/wso2as-5.2.1/* $AS_HOME2/repository/components/patches/
+    
     echo "AS cluster setup successfully done!"
 
 }
@@ -197,7 +202,7 @@ cp $CONF_LOCATION/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml $IS_H
 
 
 echo "Updaing AS node with new configurations"
-read -p "Do you wish to do a clustered setup?" yn
+read -p "Do you wish to do a clustered setup[y/n]:" yn
      case $yn in
          [Yy]* ) as_cluster_setup;;
          [Nn]* ) as_non_cluster_setup;;
