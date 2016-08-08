@@ -1115,23 +1115,25 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 <input id="applicationContext" name="applicationContext" type="text" class="form-control" value="<%=appType.defaultContext%>" />
             </div>
 
-            <div class="form-group">
-                <label for="application-icon">Icon:
-                    <i class="fa fa-question-circle help-tips" data-toggle="tooltip" data-placement="left"
-                title="Recommended image size : 300 x 300 pixels, file size 70 k (maximum)"></i>
-                </label>
-                <div class="input-group">
-                    <input type="text" id="icon" name="icon" class="form-control" readonly>
-                    <span class="input-group-btn">
-                        <span class="btn btn-primary btn-file">
-                            Browse <input type="file" id="appIcon" name="appIcon"/>
+            <% if (!newVersion) { %>
+                <div class="form-group">
+                    <label for="application-icon">Icon:
+                        <i class="fa fa-question-circle help-tips" data-toggle="tooltip" data-placement="left"
+                    title="Recommended image size : 300 x 300 pixels, file size 70 k (maximum)"></i>
+                    </label>
+                    <div class="input-group">
+                        <input type="text" id="icon" name="icon" class="form-control" readonly>
+                        <span class="input-group-btn">
+                            <span class="btn btn-primary btn-file">
+                                Browse <input type="file" id="appIcon" name="appIcon"/>
+                            </span>
+                            <span class="btn btn-primary btn-file" onclick="clearUploadIconField()" id="clear">
+                                Clear
+                            </span>
                         </span>
-                        <span class="btn btn-primary btn-file" onclick="clearUploadIconField()" id="clear">
-                            Clear
-                        </span>
-                    </span>
+                    </div>
                 </div>
-            </div>
+            <% } %>
 
             <div class="panel-group property-accordion" id="property-accordion">
                     <div class="panel panel-default">
