@@ -300,7 +300,8 @@ function getExistingValidationOptions(){
         rules: {
             "database-name": {
                 required: true,
-                maxlength: 30
+                maxlength: 30,
+                characters: true
             },
             "user-name-select": {
                 required: true,
@@ -342,7 +343,8 @@ function getNewUserValidationOptions(){
         rules: {
             "database-name": {
                 required: true,
-                maxlength: 30
+                maxlength: 30,
+                characters: true
             },
             "user-name-select": {
                 required: true,
@@ -384,6 +386,10 @@ function getNewUserValidationOptions(){
  *  Adding new database
  */
 function addNewDatabase() {
+    $.validator.addMethod("characters", function(value) {
+        var allowedCharactersRegex = /^\w+$/;
+        return allowedCharactersRegex.test(value);
+    }, "Please enter alphanumeric characters and underscore only.");
     var validator = $("#addDatabaseForm").validate(getValidationOptions());
     var formValidated = validator.form();
     if (formValidated) {  
