@@ -52,6 +52,8 @@ var STOP_CONTAINERS = "Stopping Containers";
 var INGRESS = "Creating ingress";
 var POD_STATUS = "Status";
 
+var DEFAULT_TEMPLATE = 'DEFAULT_ALL_PERMISSIONS';
+
 var EVENT_SUCCEEDED = "success";
 var EVENT_PENDING = "pending";
 var EVENT_FAILED = "failed";
