@@ -23,7 +23,6 @@ include("/jagg/constants.jag");
 
 var log= new Log();
 var response = {};
-var DEFAULT_TEMPLATE = 'DEFAULT_ALL_PERMISSIONS';
 var databaseModule = jagg.module("databases");
 
 (function () {
