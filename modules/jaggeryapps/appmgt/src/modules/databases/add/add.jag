@@ -204,7 +204,7 @@ function buildResponse(result){
 	var databaseObject=[];
 
 	if(result != undefined){
-		var response=result.*::["return"]
+		var response=result.*::["return"];
 		for(var index=0; index < response.length();index++){
 			var task={
 			};
