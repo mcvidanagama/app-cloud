@@ -2641,7 +2641,7 @@ th.hide-column-data, td.hide-column-data {
 }
 
 .demo-dashboard-block{
-    font-size: 13em;
+    font-size: 900%;
 }
 .block-replicas{
     min-height: 16em;
