@@ -33,8 +33,7 @@ $(document).ready(function() {
         displayApplicationInactiveMessage();
     }
 
-    var deploymentURL = selectedApplicationRevision.deploymentURL;
-    timerId = setInterval(function(){ loadEndpoints(deploymentURL, applicationType); }, 3000);
+    loadEndpointView();
 });
 
 // wrapping functions
@@ -62,6 +61,40 @@ function initPageView() {
     listEnvs();
 }
 
+function generateDefaultLaunchUrl() {
+    var defaultAppLaunchURL = selectedApplicationRevision.deploymentURL;
+    if (application.defaultVersion == selectedRevision) {
+        if (application.customURL != null) {
+            defaultAppLaunchURL = application.customURL;
+        } else if (application.defaultURL != null) {
+            defaultAppLaunchURL = application.defaultURL;
+        }
+    }
+
+    return defaultAppLaunchURL;
+}
+
+function loadEndpointView() {
+    clearInterval(timerId);
+    // This is implemented for ESB only.
+    if (application.applicationType == "wso2esb") {
+        showLoadingEndpointView();
+        if(selectedApplicationRevision.status == APPLICATION_RUNNING){
+            var deploymentURL = generateDefaultLaunchUrl();
+            timerId = setInterval(function () {
+                loadEndpoints(deploymentURL, applicationType);
+            }, 2000);
+        }
+    }
+}
+
+function showLoadingEndpointView() {
+    $("#app-type-data").html('<div class="block-endpoints-init"><h3>Endpoints &nbsp;' +
+        '<span> ' +
+        '<i class="fw fw-spin fw-loader4"></i>'+
+        '</span></h3></div>');
+}
+
 function loadEndpoints(deploymentURL, applicationType) {
     jagg.post("../blocks/application/application.jag", {
      action: "loadEndpoints",
@@ -70,96 +103,81 @@ function loadEndpoints(deploymentURL, applicationType) {
      }, function(result) {
         var endpoints = JSON.parse(result);
         if (endpoints == undefined) {
-            $("#app-type-data").html('<div class="block-endpoints-init"><h3>Endpoints &nbsp;' +
-                '<span> ' +
-                '<i class="fw fw-spin fw-loader4"></i>'+
-                '</span></h3></div>');
+            loadDefaultEndpointSection();
         } else {
-            var html_1 = '<div class="block-endpoints">' +
-                '<h3>Endpoints</h3>';
-
-            var html_2 = "";
-            if(endpoints.data.urls.proxies != null) {
-                html_2 += '<h4><i class="fw fw-soap fw-2x"></i> &nbsp; SOAP Services</h4>' +
+            // Generate SOAP Services Section
+            var soap_html = "";
+            if (endpoints.data.soapEndpoints != null) {
+                soap_html += '<h4><i class="fw fw-soap fw-2x"></i> &nbsp; SOAP Services</h4>' +
                     '<table class="table table-responsive">' +
                     '<thead class="thead">' +
                     '<tr>' +
-                    '<th width="20%">Name</th>' +
+                    '<th width="30%">Name</th>' +
                     '<th>WSDL</th>' +
-                    '<th>WSDL2</th>' +
                     '</tr>' +
                     '</thead>' +
                     '<tbody>';
-                if (Array.isArray(endpoints.data.urls.proxies)) {
-                    for (var i = 0; i < endpoints.data.urls.proxies.length; i++) {
-                        var proxy = endpoints.data.urls.proxies[i];
-                        var wsdl1 = deploymentURL + "/" + (proxy.wsdl[0]).substring((proxy.wsdl[0]).indexOf('services'));
-                        var wsdl2 = deploymentURL + "/" + (proxy.wsdl[1]).substring((proxy.wsdl[1]).indexOf('services'));
+                for (var i = 0; i < endpoints.data.soapEndpoints.length; i++) {
+                    var proxy = endpoints.data.soapEndpoints[i];
 
-                        html_2 += '<tr>' +
-                            '<td>' + proxy.name + '</td>' +
-                            '<td><a href="' + wsdl1 + '" target="_blank">' + wsdl1 + '</a></td>' +
-                            '<td><a href="' + wsdl2 + '" target="_blank">' + wsdl2 + '</a></td>' +
-                            '</tr>';
-                    }
-
-
-                } else {
-                    var proxy = endpoints.data.urls.proxies;
-                    var wsdl1 = deploymentURL + "/" + (proxy.wsdl[0]).substring((proxy.wsdl[0]).indexOf('services'));
-                    var wsdl2 = deploymentURL + "/" + (proxy.wsdl[1]).substring((proxy.wsdl[1]).indexOf('services'));
-
-                    html_2 += '<tr>' +
+                    soap_html += '<tr>' +
                         '<td>' + proxy.name + '</td>' +
-                        '<td><a href="' + wsdl1 + '" target="_blank">' + wsdl1 + '</a></td>' +
-                        '<td><a href="' + wsdl2 + '" target="_blank">' + wsdl2 + '</a></td>' +
+                        '<td><a href="' + proxy.wsdl + '" target="_blank">' + proxy.wsdl + '</a></td>' +
                         '</tr>';
                 }
-                html_2 += '</tbody>' +
+                soap_html += '</tbody>' +
                     '</table>';
             }
 
-            var html_3 = "";
-            if (endpoints.data.urls.apis != null) {
-                var api_header = '<h4><i class="fw fw-rest-api fw-2x"></i> &nbsp; REST APIs</h4>' +
+            // Generate REST APIs Section
+            var rest_html = "";
+            if (endpoints.data.restEndpoints != null) {
+                rest_html += '<h4><i class="fw fw-rest-api fw-2x"></i> &nbsp; REST APIs</h4>' +
                     '<table class="table table-responsive">' +
                     '<thead class="thead">' +
                     '<tr>' +
-                    '<th width="20%">Name</th>' +
+                    '<th width="30%">Name</th>' +
                     '<th>URL</th>' +
                     '</tr>' +
                     '</thead>' +
                     '<tbody>';
 
-                if (Array.isArray(endpoints.data.urls.apis)) {
-                    for (var j = 0; j < endpoints.data.urls.apis.length; j++) {
-                        var api = endpoints.data.urls.apis[j];
-                        var url = deploymentURL + api.context;
-                        if (api.name != "ContainerAPI") {
-                            html_3 += '<tr>' +
-                                '<td>' + api.name + '</td>' +
-                                '<td><a href="' + url + '" target="_blank">' + url + '</a></td>' +
-                                '</tr>';
-                        }
-                    }
-                } else {
-                    var api = endpoints.data.urls.apis;
-                    var url = deploymentURL + api.context;
-                    if (api.name != "ContainerAPI") {
-                        html_3 += '<tr>' +
-                            '<td>' + api.name + '</td>' +
-                            '<td><a href="' + url + '" target="_blank">' + url + '</a></td>' +
-                            '</tr>';
-                    }
+                for (var j = 0; j < endpoints.data.restEndpoints.length; j++) {
+                    var api = endpoints.data.restEndpoints[j];
+                    rest_html += '<tr>' +
+                        '<td>' + api.name + '</td>' +
+                        '<td><a href="' + api.url + '" target="_blank">' + api.url + '</a></td>' +
+                        '</tr>';
                 }
+                rest_html += '</tbody></table>';
 
-                if (html_3 != "") {
-                    html_3 = api_header + html_3 + '</tbody></table>';
-                }
             }
 
-            var html_4 = '</div>';
-            $("#app-type-data").html(html_1 + html_2 + html_3 + html_4);
+            // Generate Web URLs Section
+            var web_html = "";
+            if (endpoints.data.webEndpoints != null) {
+                web_html += '<h4><i class="fw fw-endpoint fw-2x"></i> &nbsp; Web URLs</h4>' +
+                    '<table class="table table-responsive">' +
+                    '<thead class="thead">' +
+                    '<tr>' +
+                    '<th width="30%">Context</th>' +
+                    '<th>URL</th>' +
+                    '</tr>' +
+                    '</thead>' +
+                    '<tbody>';
+
+                for (var k = 0; k < endpoints.data.webEndpoints.length; k++) {
+                    var web = endpoints.data.webEndpoints[k];
+                    web_html += '<tr>' +
+                        '<td>' + web.context + '</td>' +
+                        '<td><a href="' + web.url + '" target="_blank">' + web.url + '</a></td>' +
+                        '</tr>';
+                }
+                web_html += '</tbody></table>';
+
+            }
+
+            $("#app-type-data").html('<div class="block-endpoints"><h3>Endpoints</h3>' + rest_html + soap_html + web_html + '</div>');
             clearInterval(timerId);
         }
 
@@ -303,6 +321,10 @@ function changeSelectedRevision(newRevision){
     $("#version-url-link").html(repoUrlHtml);
     $('#btn-launchApp').attr({url:deploymentURL});
 
+    // Changing default launch URL
+    var defaultAppLaunchURL = generateDefaultLaunchUrl();
+    loadEndpointView();
+
     var dashboardUrl = dashboardBaseUrl + applicationName + "-" + newRevision;
     $('#btn-dashboard').attr({url:dashboardUrl});
 
@@ -336,7 +358,8 @@ function changeSelectedRevision(newRevision){
     if(selectedApplicationRevision.status == APPLICATION_RUNNING){
 
         $('#launch-default-url-block').empty();
-        $('#launch-default-url-block').html('<a id="launch-default-url-a" target="_blank" href="' + deploymentURL + '">' + deploymentURL + '</a>');
+        $('#launch-default-url-block').html('<a id="launch-default-url-a" target="_blank" href="' + defaultAppLaunchURL + '">' + defaultAppLaunchURL + '</a>' +
+            '<a href="/appmgt/site/pages/customurl.jag?applicationKey=' + applicationKey + '&selectedRevision='+ newRevision+ '"><i class="fw fw-settings"></i></a>');
 
         $('#version-url-link').empty();
         $('#version-url-link').html('<a id="launch-version-url-a" href="' + deploymentURL + '" target="_blank"><span><b>URL : </b>' + deploymentURL + '</span></a>');
@@ -364,7 +387,7 @@ function changeSelectedRevision(newRevision){
     } else if(selectedApplicationRevision.status == APPLICATION_STOPPED || selectedApplicationRevision.status == APPLICATION_INACTIVE){
 
         $('#launch-default-url-block').empty();
-        $('#launch-default-url-block').html('<a id="launch-default-url-a" target="_blank">' + deploymentURL + '</a>');
+        $('#launch-default-url-block').html('<a id="launch-default-url-a" target="_blank">' + defaultAppLaunchURL + '</a>');
 
         $('#version-url-link').empty();
         $('#version-url-link').html('<a id="launch-version-url-a" target="_blank"><span><b>URL : </b>' + deploymentURL + '</span></a>');
@@ -387,7 +410,7 @@ function changeSelectedRevision(newRevision){
     } else {
 
         $('#launch-default-url-block').empty();
-        $('#launch-default-url-block').html('<a id="launch-default-url-a" target="_blank">' + deploymentURL + '</a>');
+        $('#launch-default-url-block').html('<a id="launch-default-url-a" target="_blank">' + defaultAppLaunchURL + '</a>');
 
         $('#version-url-link').empty();
         $('#version-url-link').html('<a id="launch-version-url-a" target="_blank"><span><b>URL : </b>' + deploymentURL + '</span></a>');
