@@ -17,6 +17,8 @@
  *   under the License.
  */
 
+include("/jagg/jagg.jag");
+include("/jagg/constants.jag");
 var log = new Log();
 /*
 -----------------------------------------------------------------
@@ -94,11 +96,53 @@ MSSEndpointsExtractor.prototype.getEndpoints = function (deploymentUrl) {
 ESBEndpointsExtractor.prototype.getEndpoints = function (deploymentUrl) {
     var containerApiUrl = deploymentUrl + "/container/endpoints";
     var endpoints = undefined;
+
     try {
         endpoints = get(containerApiUrl, {}, "json");
+
+        var restEndpoints = [];
+        var soapEndpoints = [];
+
+        var data = endpoints.data;
+        var proxies = data.urls.proxies;
+        if (proxies != null) {
+            if (Array.isArray(proxies)) {
+                for (var i = 0; i < proxies.length; i++) {
+                    var proxy = proxies[i];
+                    var wsdl1 = deploymentUrl + "/" + (proxy.wsdl[0]).substring((proxy.wsdl[0]).indexOf('services'));
+                    soapEndpoints.push({name : proxy.name, wsdl :wsdl1});
+                }
+            } else {
+                var proxy = proxies;
+                var wsdl1 = deploymentUrl + "/" + (proxy.wsdl[0]).substring((proxy.wsdl[0]).indexOf('services'));
+                soapEndpoints.push({name : proxy.name, wsdl :wsdl1});
+            }
+        }
+
+        var apis = data.urls.apis;
+        if (apis != null) {
+            if (Array.isArray(apis)) {
+                for (var j = 0; j < apis.length; j++) {
+                    var api = apis[j];
+                    var url = deploymentUrl + api.context;
+                    if (api.name != "ContainerAPI") {
+                        restEndpoints.push({"name" : api.name, "url" : url});
+                    }
+                }
+            } else {
+                var api = apis;
+                var url = deploymentUrl + api.context;
+                if (api.name != "ContainerAPI") {
+                    restEndpoints.push({"name" : api.name, "url" : url});
+                }
+            }
+        }
+
+        endpoints = createJsonResponse(restEndpoints, soapEndpoints, null);
     } catch(e) {
         return endpoints;
     }
+
     return endpoints;
 };
 
@@ -135,5 +179,35 @@ var getEndpointsExtractor = function(appType) {
     if (appType == "wso2dataservice") {
         return new DSSEndpointsExtractor();
     }
+};
+
+var createJsonResponse = function (restEndpoints, soapEndpoints, webEndpoints) {
+
+    if (restEndpoints != null && restEndpoints.length < 1) {
+        restEndpoints = null;
+    }
+
+    if (soapEndpoints != null && soapEndpoints.length < 1) {
+        soapEndpoints = null;
+    }
+
+    if (webEndpoints != null && webEndpoints.length < 1) {
+        webEndpoints = null;
+    }
+
+    // If all three arrays does not contain any data, return undefined.
+    if (restEndpoints == null && soapEndpoints == null && webEndpoints == null) {
+        return undefined;
+    }
+
+    var endpoints =  {
+        "data": {
+            "restEndpoints" : restEndpoints,
+            "soapEndpoints": soapEndpoints,
+            "webEndpoints" : webEndpoints
+        }
+    };
+
+    return endpoints;
 };
 %>
