@@ -35,13 +35,21 @@ var log = new Log();
         var applicationName = request.getParameter("applicationName");
         var appTypeName = request.getParameter("appTypeName");
         var applicationRevision = request.getParameter("applicationRevision");
-        var fileSuccessfullyUploaded = applicationModule.
-                            uploadExistingArchive(uploadedArtifact, appTypeName, applicationName, applicationRevision);
-        if (fileSuccessfullyUploaded) {
-            response.status = 200;
-            response.content = "Artifact is successfully uploaded!";
-        } else {
-            var msg = "Error while uploading file: " + uploadedArtifact.getName();
+
+        try {
+            var fileSuccessfullyUploaded = applicationModule.
+                                        uploadExistingArchive(uploadedArtifact, appTypeName, applicationName, applicationRevision);
+            if (fileSuccessfullyUploaded) {
+                response.status = 200;
+                response.content = "Artifact is successfully uploaded!";
+            } else {
+                var msg = "Error while uploading file: " + uploadedArtifact.getName();
+                log.error(msg);
+                response.status = 504;
+                response.content = msg + ". Please retry uploading";
+            }
+        } catch (e) {
+            var msg = "Uploaded artifact does not exist for application:" + applicationName + " version:" + applicationRevision;
             log.error(msg);
             response.status = 504;
             response.content = msg + ". Please retry uploading";
