@@ -249,12 +249,10 @@ var log = new Log();
         var applicationHashId = applicationModule.getApplicationHashIdByName(applicationName);
         var applicationType = applicationModule.getApplication(applicationHashId).applicationType;
 
-        // delete application from kubernetes
-        applicationModule.deleteApplicationFromKubernetes(versionKey);
-
-        //Wait for the pod to get completely deleted
         try {
-            if (applicationModule.waitForPodToGetDeleted(applicationName, applicationRevision, versionKey, applicationType)) {
+            // delete application from kubernetes
+            var isDeleted = applicationModule.deleteApplicationFromKubernetes(versionKey);
+            if (isDeleted) {
                 // update application status to stopped
                 applicationModule.updateApplicationStatus(versionKey, APPLICATION_STOPPED);
                 applicationModule.deleteEventsOfAppVersions(versionKey);
@@ -262,8 +260,7 @@ var log = new Log();
                 response.message = "Application is successfully stopped.";
             } else {
                 response.status = 504;
-                response.content = "Unable to stop application within a time period of " + (podDeleteTimeOut/1000) +
-                        "s. Please submit request again.";
+                response.content = "Unable to stop application. Please submit request again.";
             }
         } catch (e) {
             var msg = "Error while waiting for the pod to get deleted for application: " + applicationName +

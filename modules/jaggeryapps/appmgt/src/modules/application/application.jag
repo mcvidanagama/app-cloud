@@ -26,6 +26,7 @@ var ApplicationManager = Packages.org.wso2.appcloud.core.ApplicationManager;
 var Application = Packages.org.wso2.appcloud.core.dto.Application;
 var Version = Packages.org.wso2.appcloud.core.dto.Version;
 var KubernetesProvisioningUtils =  Packages.org.wso2.appcloud.provisioning.runtime.Utils.KubernetesProvisioningUtils;
+var KubernetesRuntime =  Packages.org.wso2.appcloud.provisioning.runtime.KubernetesRuntimeProvisioningService;
 var EventsManager = Packages.org.wso2.appcloud.core.EventsManager;
 var Event = Packages.org.wso2.appcloud.core.dto.Event;
 var Deployment = Packages.org.wso2.appcloud.core.dto.Deployment;
@@ -420,8 +421,6 @@ var deployApplication = function(applicationName, versionName, appTypeName, depl
     addEvent(KUBE_DEPLOY, EVENT_PENDING, msg, versionHashId);
 
     //Creating basic deployment
-    var KubernetesRuntime = Packages.org.wso2.appcloud.provisioning.runtime.KubernetesRuntimeProvisioningService;
-
     var applicationCtx = KubernetesProvisioningUtils.getApplicationContext(
             applicationName, versionName, appTypeName , modManager.getTenantId(), modManager.getTenantDomain(), versionHashId);
     var kubService = new KubernetesRuntime(applicationCtx, resourceQuotaLimit);
@@ -490,7 +489,6 @@ var deployApplication = function(applicationName, versionName, appTypeName, depl
 
 var getRestartCounts = function (applicationName, versionName, applicationType){
     var versionHashId = getVersionHashId(applicationName, versionName);
-    var KubernetesRuntime = Packages.org.wso2.appcloud.provisioning.runtime.KubernetesRuntimeProvisioningService;
     var applicationCtx = KubernetesProvisioningUtils.getApplicationContext(
             applicationName, versionName, applicationType , modManager.getTenantId(), modManager.getTenantDomain(), versionHashId);
     var kubService = new KubernetesRuntime(applicationCtx);
@@ -521,11 +519,11 @@ var updateApplicationStatus = function(versionHashId, status){
 };
 
 var redeployVersion = function(applicationName, versionName, versionHashId, appTypeName){
-    deleteApplicationFromKubernetes(versionHashId);
+    var isDeleted = deleteApplicationFromKubernetes(versionHashId);
     deleteEventsOfAppVersions(versionHashId);
     var msg = "Successfully triggered stopping container";
     addEvent(STOP_CONTAINERS, EVENT_PENDING, msg, versionHashId);
-    if (waitForPodToGetDeleted(applicationName, versionName, versionHashId, appTypeName)) {
+    if (isDeleted) {
         updateApplicationStatus(versionHashId, APPLICATION_STOPPED);
         msg = "Successfully completed stopping container";
         addEvent(STOP_CONTAINERS, EVENT_SUCCEEDED, msg, versionHashId);
@@ -1355,11 +1353,10 @@ var deleteApplicationUploadedPath = function(versionHashId) {
 var deleteApplicationFromKubernetes = function(versionHashId) {
 
     try{
-        var KubernetesRuntimeProvisioningService = Packages.org.wso2.appcloud.provisioning.runtime.KubernetesRuntimeProvisioningService;
         var applicationCtx = KubernetesProvisioningUtils.getApplicationContext(null, null, null, modManager.getTenantId(),
                                                                                modManager.getTenantDomain(true), versionHashId);
-        var kubernetesRuntimeProvisioningService = new KubernetesRuntimeProvisioningService(applicationCtx);
-        kubernetesRuntimeProvisioningService.deleteDeployment();
+        var kubernetesRuntimeProvisioningService = new KubernetesRuntime(applicationCtx);
+        return kubernetesRuntimeProvisioningService.deleteDeployment();
 
     } catch(e){
         log.error("Error while cleaning up the Kubernetes deployment for the version with hash id : " + versionHashId);
@@ -1516,9 +1513,7 @@ var createServiceWithHostName = function (applicationName, versionName, hostName
 
     var applicationCtx = KubernetesProvisioningUtils.getApplicationContext(
             applicationName, versionName, appType, modManager.getTenantId(), modManager.getTenantDomain(), versionHashId);
-    var KubernetesRuntimeProvisioningService =
-            Packages.org.wso2.appcloud.provisioning.runtime.KubernetesRuntimeProvisioningService;
-    var kubernetesRuntimeProvisioningService = new KubernetesRuntimeProvisioningService(applicationCtx);
+    var kubernetesRuntimeProvisioningService = new KubernetesRuntime(applicationCtx);
 
     var containerServiceProxies = getContainerServiceProxies(versionHashId);
 
@@ -1541,15 +1536,13 @@ var createServiceWithHostName = function (applicationName, versionName, hostName
 };
 
 var deleteService = function (applicationName, versionName) {
-    var KubernetesRuntimeProvisioningService =
-            Packages.org.wso2.appcloud.provisioning.runtime.KubernetesRuntimeProvisioningService;
     var tenantId = modManager.getTenantId();
     var applicationHashId = Util.getApplicationHashId(applicationName, tenantId);
     var appType = getApplication(applicationHashId).applicationType;
     var versionHashId = getVersionHashId(applicationName, versionName);
     var applicationCtx = KubernetesProvisioningUtils.getApplicationContext(
             applicationName, versionName, appType, modManager.getTenantId(), modManager.getTenantDomain(), versionHashId);
-    var kubernetesRuntimeProvisioningService = new KubernetesRuntimeProvisioningService(applicationCtx);
+    var kubernetesRuntimeProvisioningService = new KubernetesRuntime(applicationCtx);
     //delete version specific service from K8s
     var k8sKindService = Packages.org.wso2.appcloud.provisioning.runtime.KubernetesPovisioningConstants.KIND_SERVICE;
     kubernetesRuntimeProvisioningService.deleteK8sKindByName(k8sKindService, "htp-" + applicationHashId);
@@ -1656,34 +1649,6 @@ var getVersionsOfApplication = function(applicationKey) {
 var getRuntimePropertyMap = function (runtimePropertyArray) {
     var runtimePropertyList = generateRuntimePropsList(runtimePropertyArray);
     return getRuntimeProperties(runtimePropertyList);
-};
-
-var waitForPodToGetDeleted = function(applicationName, versionName, versionHashId, appTypeName) {
-    var isPodDeleted = false;
-
-    try {
-        var applicationCtx = KubernetesProvisioningUtils.getApplicationContext(applicationName, versionName, appTypeName,
-                modManager.getTenantId(), modManager.getTenantDomain(), versionHashId);
-        //Maximum waiting time to check if the pod gets completely deleted (in milliseconds)
-        var timeOut = modManager.getPropertyValue(POD_DELETE_TIMEOUT);
-        //Waiting time between calls made to check if pod has been deleted (in milliseconds)
-        var waitTimePeriod = modManager.getPropertyValue(POD_DELETE_WAIT);
-
-        for(var podDeleteWaitCounter = 0; podDeleteWaitCounter < timeOut; podDeleteWaitCounter += waitTimePeriod){
-            java.lang.Thread.sleep(waitTimePeriod);
-            var podList = KubernetesProvisioningUtils.getPods(applicationCtx).getItems();
-            if ((podList != null) && (podList.size() == 0)) {
-                isPodDeleted = true;
-                break;
-            }
-        }
-    } catch (e) {
-        log.error("Error while getting pods list for application: " + applicationName + " and version: " + versionName);
-        log.error(e);
-        throw e;
-    }
-
-    return isPodDeleted;
 };
 
 var getAllowedContainerSpecificationsForRuntime = function(runtimeID) {
