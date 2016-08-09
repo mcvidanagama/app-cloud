@@ -173,7 +173,7 @@ public class SQLQueryConstants {
 
     public static final String GET_RUNTIMES_FOR_APP_TYPE_OF_TENANT =
             "SELECT * FROM AC_RUNTIME WHERE id IN (SELECT runtime_id FROM AC_APP_TYPE_RUNTIME WHERE app_type_id=" +
-            "(SELECT id FROM AC_APP_TYPE WHERE name=?))";
+            "(SELECT id FROM AC_APP_TYPE WHERE name=?)) ORDER BY id DESC";
 
     public static final String GET_RUNTIME_BY_ID =
             "SELECT * FROM AC_RUNTIME WHERE id = ?";
