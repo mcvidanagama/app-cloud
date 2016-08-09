@@ -25,11 +25,18 @@ jagg.template("index", function(inputs, outputs, jagg) {
     var appType = outputs.appType;
     var cloudTitle = outputs.cloudTitle;
     var log = new Log("index");
+    var appOrProject;
+    if(jagg.getSelectedCloud() == INTEGRATION_CLOUD){
+        appOrProject = "Project";
+    } else {
+        appOrProject = "Application";
+    }
 
     %>
 
     <script type="text/javascript" xmlns="http://www.w3.org/1999/html" charset="utf-8">
         var applicationList = <%=applications%>;
+        var appOrProject = <%=appOrProject%>;
         var taggedApplicationsList;
         var searchbox;
 
@@ -82,7 +89,7 @@ jagg.template("index", function(inputs, outputs, jagg) {
 
                     if ($("#item_list").children().length <= 1) {
                         $("#item_list").append($('<div class="col-centered col-md-4 "><div class="cloud-new-content"> ' +
-                         '<h3>Your search "'+finder+'" did not match any applications.</h3></div></div>'));
+                         '<h3>Your search "'+finder+'" did not match any' + appOrProject + '.</h3></div></div>'));
                     }
                 }
             });
@@ -240,7 +247,7 @@ jagg.template("index", function(inputs, outputs, jagg) {
             if(finderKey != null){
                 $("#item_list").append($('<div class="col-centered col-md-4 ">' +
                                             '<div class="cloud-new-content">' +
-                                                '<h3>No applications found with tag' +
+                                                '<h3>No ' + appOrProject + ' found with tag' +
                                                         ' key : ' + finderKey +
                                                         ', and value : '  + finderVal +
                                                 '.</h3>' +
@@ -249,7 +256,7 @@ jagg.template("index", function(inputs, outputs, jagg) {
             } else {
                 $("#item_list").append($('<div class="col-centered col-md-4 ">' +
                                             '<div class="cloud-new-content">' +
-                                                '<h3>No applications found with tag' +
+                                                '<h3>No ' + appOrProject + ' found with tag' +
                                                         ' key : ' + finder +
                                                 '.</h3>' +
                                             '</div>' +
@@ -269,7 +276,7 @@ jagg.template("index", function(inputs, outputs, jagg) {
             <span class="fw-stack fw-lg btn-action-ico">
                 <i class="fw fw-circle-outline fw-stack-2x"></i>
                 <i class="fw fw-add fw-stack-1x"></i>
-            </span> <span class="hidden-xs">Create Application</span>
+            </span> <span class="hidden-xs">Create <%=appOrProject%></span>
         </a>
         <a href="<%=jagg.getAbsoluteUrl("/site/pages/newdatabase.jag")%>?isEdit=false" class="btn-action" data-toggle="tooltip" data-placement="top" title="Add New Database">
             <span class="fw-stack fw-lg btn-action-ico">
@@ -285,7 +292,7 @@ jagg.template("index", function(inputs, outputs, jagg) {
     <% if (applications.length > 0 ) { %>
         <div class="row row-centered app-sort-bar">
             <div class="col-centered col-md-5 search">
-                <input type="text" class="form-control" id="search-apps" placeholder="Search applications">
+                <input type="text" class="form-control" id="search-apps" placeholder="Search <%=appOrProject%>">
                 <i class="fa fa-2x fa-search" ></i>
             </div>
         </div>
@@ -299,7 +306,7 @@ jagg.template("index", function(inputs, outputs, jagg) {
                     <% } else { %>
                     <a id="app-create-button" class="cu-btn cu-btn-md cu-btn-blue" href="/appmgt/site/pages/select-apptype.jag">
                     <% } %>
-                      Create your first application</a>
+                      Create your first <%=appOrProject%></a>
                     <!--div class="help">
                         <i class="fa fa-2x fa-book"></i> Need help ? Read App creation guide first..
                     </div-->
