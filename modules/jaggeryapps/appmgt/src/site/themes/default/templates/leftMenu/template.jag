@@ -21,6 +21,7 @@ include("/jagg/jagg.jag");
 
 jagg.template("leftMenu", function (inputs, outputs, jagg) {
     var applicationKey = outputs.applicationKey;
+    var applicationName = outputs.applicationName;
     var versionKey = outputs.versionKey;
     var selectedRevision = outputs.selectedRevision;
     var pageName = outputs.pageName;
@@ -34,9 +35,9 @@ jagg.template("leftMenu", function (inputs, outputs, jagg) {
              <div class="side-pane-trigger">
                 <i class="fa fa-reorder"></i>
             </div>
-            <div class="col-md-3 breadcrumb-secondary">
+            <div class="col-md-8 breadcrumb-secondary">
                 <a href="/appmgt/site/pages/index.jag"><i class="fa fa-cubes visible-xs visible-lg"></i></a>
-                <span class="hidden-xs"><a href="/appmgt/site/pages/index.jag"><%=cloudTitle%></a></span>
+                <span class="hidden-xs"><a href="/appmgt/site/pages/index.jag"><%=cloudTitle%></a> / <a href="/appmgt/site/pages/home.jag?applicationKey=<%=applicationKey%>"> <%=applicationName%></a> / <%=pageName%></span>
             </div>
         </div>
     </div>
