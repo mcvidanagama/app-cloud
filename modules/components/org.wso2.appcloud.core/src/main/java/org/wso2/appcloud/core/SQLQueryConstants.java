@@ -135,7 +135,7 @@ public class SQLQueryConstants {
 
     public static final String GET_APPLICATION_BY_HASH_ID =
             "SELECT app.*, type.name as app_type_name, icon.icon as icon FROM AC_APPLICATION app JOIN AC_APP_TYPE type " +
-            "ON app.app_type_id = type.id JOIN AC_APP_ICON icon ON app.id = icon.application_id WHERE app.hash_id=? AND app.tenant_id=?";
+            "ON app.app_type_id = type.id LEFT OUTER JOIN AC_APP_ICON icon ON app.id = icon.application_id WHERE app.hash_id=? AND app.tenant_id=?";
 
     public static final String GET_ALL_VERSIONS_OF_APPLICATION =
             "SELECT version.*, runtime.name as runtime_name, runtime.id as runtime_id FROM AC_VERSION version JOIN " +
