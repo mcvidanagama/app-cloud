@@ -114,6 +114,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                            <i class="fw fw-api fa-3x"></i>
                            <div class="cloud-name">API Cloud</div>
                        </a>
+                        <%
+                            if (jagg.getSelectedCloud() == INTEGRATION_CLOUD) {
+                        %>
+                        <a class="cloud-block" href="https://apps.cloud.wso2.com/appmgt/" target="_blank">
+                            <i class="fa fa-3x fa-cubes"></i>
+                            <div class="cloud-name"> App Cloud</div>
+                        </a>
+                        <%
+                            }
+                        %>
                        <div class="clearfix"></div> <!-- to make seperate -->
                    </div>
                    <div class="cloud-actions">
