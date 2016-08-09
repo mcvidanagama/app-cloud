@@ -311,6 +311,8 @@ jagg.template("application", function (inputs, outputs, jagg) {
                             var status = jqXHR.status;
                             if (status == 200) {
                                 fileMoved = true;
+                                $('#btn-artifact-upload').replaceWith("<span class=\"btn btn-primary btn-file\" " +
+                                "id=\"btn-artifact-upload\"><input id=\"fileupload\" type=\"file\" name=\"fileupload\">Browse</span>");
                                 if (progress == 100) getVersionHashId();
                             } else {
                                 progress = 0;
@@ -333,6 +335,10 @@ jagg.template("application", function (inputs, outputs, jagg) {
                         'width',
                         progress + '%'
                     );
+                    if (progress == 100) {
+                        $('#btn-artifact-upload').replaceWith("<span class=\"btn btn-primary btn-file\" " +
+                        "id=\"btn-artifact-upload\" disabled>Processing &nbsp <i class=\"fw fw-loader2 fw-spin\"></i></span>");
+                    }
                     if (progress == 100 && fileMoved) {
                         getVersionHashId();
                     }
