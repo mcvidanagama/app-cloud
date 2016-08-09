@@ -18,6 +18,7 @@
  * /
  */
 var isNewUser = true;
+var dbNameValidationErrorMsg = "";
 $(document).ready(function () {
     if (databaseCount >= maxDatabases) {
         $('#outerContainer').empty();
@@ -285,6 +286,8 @@ function validateForm(){
 }
 
 function getValidationOptions(){
+    //Add custom validator for database name
+    $.validator.addMethod("validateDatabaseName", validateDatabaseName , dbNameValidationErrorMsg);
     if(isNewUser){
         return getNewUserValidationOptions();
     } else {
@@ -301,7 +304,7 @@ function getExistingValidationOptions(){
             "database-name": {
                 required: true,
                 maxlength: 30,
-                characters: true
+                validateDatabaseName: true
             },
             "user-name-select": {
                 required: true,
@@ -344,7 +347,7 @@ function getNewUserValidationOptions(){
             "database-name": {
                 required: true,
                 maxlength: 30,
-                characters: true
+                validateDatabaseName: true
             },
             "user-name-select": {
                 required: true,
@@ -386,10 +389,6 @@ function getNewUserValidationOptions(){
  *  Adding new database
  */
 function addNewDatabase() {
-    $.validator.addMethod("characters", function(value) {
-        var allowedCharactersRegex = /^\w+$/;
-        return allowedCharactersRegex.test(value);
-    }, "Please enter alphanumeric characters and underscore only.");
     var validator = $("#addDatabaseForm").validate(getValidationOptions());
     var formValidated = validator.form();
     if (formValidated) {  
@@ -423,3 +422,15 @@ function addNewDatabase() {
     }
 }
 
+function validateDatabaseName(value) {
+    var dbNameValidation = validateDbName(value);
+    if (!dbNameValidation.status) {
+        dbNameValidationErrorMsg = dbNameValidation.msg;
+    }
+    return dbNameValidation.status;
+}
+
+$(document).on('focusout keyup blur change', '#database-name', function() {
+    var validator = $("#addDatabaseForm").validate(getValidationOptions());
+    $('#database-name').valid();
+});
