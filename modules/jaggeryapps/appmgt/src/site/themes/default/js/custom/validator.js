@@ -1,5 +1,5 @@
 //Regex patterns
-var ALLOWED_CHARACTERS_REGEX = "^[A-Za-z0-9_]+$";
+var ALLOWED_CHARACTERS_REGEX = "^[A-Za-z0-9_]+$"; //Only alphanumeric and underscore characters are allowed for content
 
 
 //Environment key validation
@@ -26,7 +26,7 @@ function validateDbName(databaseName) {
     if (!databaseNameRegex.test(databaseName)) {
         validator = {
             status: false,
-            msg: "Invalid value for database name. Valid characters are [A-Z, a-z, 0-9, _]."
+            msg: "Invalid value for database name. Only alphanumeric characters and underscore are allowed."
         }
     } else {
         validator = {
