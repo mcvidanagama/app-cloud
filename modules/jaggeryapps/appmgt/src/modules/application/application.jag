@@ -1187,7 +1187,12 @@ var getApplicationCreationEvents = function(applicationName, versionName) {
 };
 
 var uploadExistingArchive = function (uploadedArtifact, appTypeName, applicationName, revision) {
-    var uploadedFileName = uploadedArtifact.getName();
+    if(uploadedArtifact){
+        var uploadedFileName = uploadedArtifact.getName();
+    } else {
+        throw "Uploaded artifact does not exist for application:" + applicationName + " version:" + revision;
+    }
+
     var versionHashId = Util.getVersionHashId(applicationName, revision, modManager.getTenantId());
     createDestinationDirsForUploadedApps(versionHashId);
     var fileUploadPath = constructFileUploadPath(versionHashId);

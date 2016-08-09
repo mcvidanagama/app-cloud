@@ -76,8 +76,8 @@ function generateDefaultLaunchUrl() {
 
 function loadEndpointView() {
     clearInterval(timerId);
-    // This is implemented for ESB only.
-    if (application.applicationType == "wso2esb") {
+    // This is implemented for ESB & MSS only.
+    if (application.applicationType == "wso2esb" || application.applicationType == "mss") {
         showLoadingEndpointView();
         if(selectedApplicationRevision.status == APPLICATION_RUNNING){
             var deploymentURL = generateDefaultLaunchUrl();
@@ -89,7 +89,7 @@ function loadEndpointView() {
 }
 
 function showLoadingEndpointView() {
-    $("#app-type-data").html('<div class="block-endpoints-init"><h3>Endpoints &nbsp;' +
+    $("#app-type-data").html('<div class="block-endpoints"><h3>Endpoints &nbsp;' +
         '<span> ' +
         '<i class="fw fw-spin fw-loader4"></i>'+
         '</span></h3></div>');
@@ -177,7 +177,30 @@ function loadEndpoints(deploymentURL, applicationType) {
 
             }
 
-            $("#app-type-data").html('<div class="block-endpoints"><h3>Endpoints</h3>' + rest_html + soap_html + web_html + '</div>');
+            // Generate Swagger URL Section
+            var swagger_html = "";
+            if (endpoints.data.swaggerEndpoints != null) {
+                swagger_html += '<h4><i class="fw fw-swagger fw-2x"></i> &nbsp; Swagger</h4>' +
+                    '<table class="table table-responsive">' +
+                    '<thead class="thead">' +
+                    '<tr>' +
+                    '<th width="30%">Context</th>' +
+                    '<th>URL</th>' +
+                    '</tr>' +
+                    '</thead>' +
+                    '<tbody>';
+
+                for (var j = 0; j < endpoints.data.swaggerEndpoints.length; j++) {
+                    var swagger = endpoints.data.swaggerEndpoints[j];
+                    swagger_html += '<tr>' +
+                        '<td>' + swagger.context + '</td>' +
+                        '<td><a href="' + swagger.url + '" target="_blank">' + swagger.url + '</a></td>' +
+                        '</tr>';
+                }
+                swagger_html += '</tbody></table>';
+
+            }
+            $("#app-type-data").html('<div class="block-endpoints"><h3>Endpoints</h3>' + rest_html + soap_html + web_html + swagger_html + '</div>');
             clearInterval(timerId);
         }
 
@@ -362,11 +385,10 @@ function changeSelectedRevision(newRevision){
             '<a href="/appmgt/site/pages/customurl.jag?applicationKey=' + applicationKey + '&selectedRevision='+ newRevision+ '"><i class="fw fw-settings"></i></a>');
 
         $('#version-url-link').empty();
-        $('#version-url-link').html('<a id="launch-version-url-a" href="' + deploymentURL + '" target="_blank"><span><b>URL : </b>' + deploymentURL + '</span></a>');
+        $('#version-url-link').html('<a id="launch-version-url-a" href="' + deploymentURL + '" target="_blank"><span>' + deploymentURL + '</span></a>');
 
         $('#version-app-launch-block').empty();
-        $('#version-app-launch-block').html('<button class="cu-btn cu-btn-md cu-btn-gr-dark btn-launch-app" id="btn-launchApp"' +
-                       'url="' + deploymentURL + '">Launch App</button>' +
+        $('#version-app-launch-block').html(
                        '<div class="btn-group ctrl-edit-button btn-edit-code"><a type="button" ' +
                        'class="btn cu-btn cu-btn-md cu-btn-red" onclick="stopApplication();">Stop' +
                        '<span id="stop-in-progress"><span></a></div><div class="btn-group ctrl-edit-button btn-edit-code">' +
@@ -390,11 +412,10 @@ function changeSelectedRevision(newRevision){
         $('#launch-default-url-block').html('<a id="launch-default-url-a" target="_blank">' + defaultAppLaunchURL + '</a>');
 
         $('#version-url-link').empty();
-        $('#version-url-link').html('<a id="launch-version-url-a" target="_blank"><span><b>URL : </b>' + deploymentURL + '</span></a>');
+        $('#version-url-link').html('<a id="launch-version-url-a" target="_blank"><span>' + deploymentURL + '</span></a>');
 
         $('#version-app-launch-block').empty();
-        $('#version-app-launch-block').html('<button class="cu-btn cu-btn-md cu-btn-gr-dark btn-launch-app" id="btn-launchApp"' +
-                       'url="' + deploymentURL + '">Launch App</button>' +
+        $('#version-app-launch-block').html(
                        '<div class="btn-group ctrl-edit-button btn-edit-code"><a type="button" ' +
                        'class="btn cu-btn cu-btn-md cu-btn-blue" onclick="startApplication();">Start</a></div>');
 
@@ -413,7 +434,7 @@ function changeSelectedRevision(newRevision){
         $('#launch-default-url-block').html('<a id="launch-default-url-a" target="_blank">' + defaultAppLaunchURL + '</a>');
 
         $('#version-url-link').empty();
-        $('#version-url-link').html('<a id="launch-version-url-a" target="_blank"><span><b>URL : </b>' + deploymentURL + '</span></a>');
+        $('#version-url-link').html('<a id="launch-version-url-a" target="_blank"><span>' + deploymentURL + '</span></a>');
 
         $('#version-app-launch-block').empty();
         $('#version-app-launch-block').html('<div class="btn-group ctrl-edit-button btn-edit-code">' +
@@ -440,7 +461,6 @@ function generateLunchUrl(appURL, status) {
             message += "<a id='launch-version-url-a' target='_blank' >";
         }
         message += "<span>";
-        message += "<b>URL : </b>";
         message += appURL;
         message += "</span>";
         message += "</a>";

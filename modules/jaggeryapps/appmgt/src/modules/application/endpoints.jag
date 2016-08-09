@@ -90,7 +90,20 @@ PHPEndpointsExtractor.prototype.getEndpoints = function (deploymentUrl) {
 };
 
 MSSEndpointsExtractor.prototype.getEndpoints = function (deploymentUrl) {
-    return ;
+
+    var swaggerUrl = deploymentUrl + "/swagger";
+    var endpoints = undefined;
+    try {
+        // check whether accessible
+        get(swaggerUrl, {}, "json");
+
+        var swaggerEndpoints = [];
+        swaggerEndpoints.push({context : "/swagger", url: swaggerUrl});
+        endpoints = createJsonResponse(null, null, null, swaggerEndpoints);
+    } catch(e) {
+        return undefined;
+    }
+    return endpoints;
 };
 
 ESBEndpointsExtractor.prototype.getEndpoints = function (deploymentUrl) {
@@ -140,7 +153,7 @@ ESBEndpointsExtractor.prototype.getEndpoints = function (deploymentUrl) {
 
         endpoints = createJsonResponse(restEndpoints, soapEndpoints, null);
     } catch(e) {
-        return endpoints;
+        return undefined;
     }
 
     return endpoints;
@@ -181,7 +194,7 @@ var getEndpointsExtractor = function(appType) {
     }
 };
 
-var createJsonResponse = function (restEndpoints, soapEndpoints, webEndpoints) {
+var createJsonResponse = function (restEndpoints, soapEndpoints, webEndpoints, swaggerEndpoints) {
 
     if (restEndpoints != null && restEndpoints.length < 1) {
         restEndpoints = null;
@@ -195,8 +208,12 @@ var createJsonResponse = function (restEndpoints, soapEndpoints, webEndpoints) {
         webEndpoints = null;
     }
 
+    if (swaggerEndpoints != null && swaggerEndpoints.length < 1) {
+        swaggerEndpoints = null;
+    }
+
     // If all three arrays does not contain any data, return undefined.
-    if (restEndpoints == null && soapEndpoints == null && webEndpoints == null) {
+    if (restEndpoints == null && soapEndpoints == null && webEndpoints == null && swaggerEndpoints == null) {
         return undefined;
     }
 
@@ -204,7 +221,8 @@ var createJsonResponse = function (restEndpoints, soapEndpoints, webEndpoints) {
         "data": {
             "restEndpoints" : restEndpoints,
             "soapEndpoints": soapEndpoints,
-            "webEndpoints" : webEndpoints
+            "webEndpoints" : webEndpoints,
+            "swaggerEndpoints" : swaggerEndpoints
         }
     };
 

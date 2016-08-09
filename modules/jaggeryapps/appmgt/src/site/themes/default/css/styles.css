@@ -1108,7 +1108,6 @@ a.btn-action {
 .block-runtime,
 .block-monitoring,
 .block-team,
-.block-endpoints-init,
 .block-endpoints,
 .block-replica,
 .block-database {
@@ -1138,13 +1137,8 @@ a.btn-action {
     background-color: #464646;
     min-height: 24em;
 }
-.block-endpoints-init {
-    background-color: #464646;
-    min-height: 2em;
-}
 .block-endpoints {
     background-color: #464646;
-    min-height: 24em;
 }
 .block-runtime{
     background-color: #e67e22;
@@ -1949,7 +1943,7 @@ a.btn-action {
 .btn-edit-code > a{
     border:none;
     line-height:20px;
-    margin-top:-3px;
+    margin-top:0px;
 }
 .invitaiton_list{
     list-style:none;
@@ -2641,7 +2635,7 @@ th.hide-column-data, td.hide-column-data {
 }
 
 .demo-dashboard-block{
-    font-size: 13em;
+    font-size: 900%;
 }
 .block-replicas{
     min-height: 16em;
