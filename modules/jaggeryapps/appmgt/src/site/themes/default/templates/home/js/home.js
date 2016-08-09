@@ -385,11 +385,10 @@ function changeSelectedRevision(newRevision){
             '<a href="/appmgt/site/pages/customurl.jag?applicationKey=' + applicationKey + '&selectedRevision='+ newRevision+ '"><i class="fw fw-settings"></i></a>');
 
         $('#version-url-link').empty();
-        $('#version-url-link').html('<a id="launch-version-url-a" href="' + deploymentURL + '" target="_blank"><span><b>URL : </b>' + deploymentURL + '</span></a>');
+        $('#version-url-link').html('<a id="launch-version-url-a" href="' + deploymentURL + '" target="_blank"><span>' + deploymentURL + '</span></a>');
 
         $('#version-app-launch-block').empty();
-        $('#version-app-launch-block').html('<button class="cu-btn cu-btn-md cu-btn-gr-dark btn-launch-app" id="btn-launchApp"' +
-                       'url="' + deploymentURL + '">Launch App</button>' +
+        $('#version-app-launch-block').html(
                        '<div class="btn-group ctrl-edit-button btn-edit-code"><a type="button" ' +
                        'class="btn cu-btn cu-btn-md cu-btn-red" onclick="stopApplication();">Stop' +
                        '<span id="stop-in-progress"><span></a></div><div class="btn-group ctrl-edit-button btn-edit-code">' +
@@ -413,11 +412,10 @@ function changeSelectedRevision(newRevision){
         $('#launch-default-url-block').html('<a id="launch-default-url-a" target="_blank">' + defaultAppLaunchURL + '</a>');
 
         $('#version-url-link').empty();
-        $('#version-url-link').html('<a id="launch-version-url-a" target="_blank"><span><b>URL : </b>' + deploymentURL + '</span></a>');
+        $('#version-url-link').html('<a id="launch-version-url-a" target="_blank"><span>' + deploymentURL + '</span></a>');
 
         $('#version-app-launch-block').empty();
-        $('#version-app-launch-block').html('<button class="cu-btn cu-btn-md cu-btn-gr-dark btn-launch-app" id="btn-launchApp"' +
-                       'url="' + deploymentURL + '">Launch App</button>' +
+        $('#version-app-launch-block').html(
                        '<div class="btn-group ctrl-edit-button btn-edit-code"><a type="button" ' +
                        'class="btn cu-btn cu-btn-md cu-btn-blue" onclick="startApplication();">Start</a></div>');
 
@@ -436,7 +434,7 @@ function changeSelectedRevision(newRevision){
         $('#launch-default-url-block').html('<a id="launch-default-url-a" target="_blank">' + defaultAppLaunchURL + '</a>');
 
         $('#version-url-link').empty();
-        $('#version-url-link').html('<a id="launch-version-url-a" target="_blank"><span><b>URL : </b>' + deploymentURL + '</span></a>');
+        $('#version-url-link').html('<a id="launch-version-url-a" target="_blank"><span>' + deploymentURL + '</span></a>');
 
         $('#version-app-launch-block').empty();
         $('#version-app-launch-block').html('<div class="btn-group ctrl-edit-button btn-edit-code">' +
@@ -463,7 +461,6 @@ function generateLunchUrl(appURL, status) {
             message += "<a id='launch-version-url-a' target='_blank' >";
         }
         message += "<span>";
-        message += "<b>URL : </b>";
         message += appURL;
         message += "</span>";
         message += "</a>";

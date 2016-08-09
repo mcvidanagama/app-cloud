@@ -1943,7 +1943,7 @@ a.btn-action {
 .btn-edit-code > a{
     border:none;
     line-height:20px;
-    margin-top:-3px;
+    margin-top:0px;
 }
 .invitaiton_list{
     list-style:none;
