@@ -1108,7 +1108,6 @@ a.btn-action {
 .block-runtime,
 .block-monitoring,
 .block-team,
-.block-endpoints-init,
 .block-endpoints,
 .block-replica,
 .block-database {
@@ -1138,13 +1137,8 @@ a.btn-action {
     background-color: #464646;
     min-height: 24em;
 }
-.block-endpoints-init {
-    background-color: #464646;
-    min-height: 2em;
-}
 .block-endpoints {
     background-color: #464646;
-    min-height: 24em;
 }
 .block-runtime{
     background-color: #e67e22;
