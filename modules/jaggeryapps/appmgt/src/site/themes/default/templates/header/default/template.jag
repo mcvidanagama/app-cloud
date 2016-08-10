@@ -156,8 +156,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <div class="container-fliud">
         <div class="row">
             <div class="col-md-3 breadcrumb-secondary">
-                <a href="/appmgt/site/pages/index.jag"><i class="fa fa-cubes visible-xs visible-lg"></i></a>
-                <span class="hidden-xs"><a href="/appmgt/site/pages/index.jag"><%=cloudTitle%></a></span>
+                <a href="/appmgt/site/pages/index.jag">
+                    <%if (jagg.getSelectedCloud() == INTEGRATION_CLOUD) {%>
+                        <i class="fw fw-share visible-xs visible-lg"></i> <!-- Change this once UX team provided a proper icon-->
+                    <%} else {%>
+                        <i class="fa fa-cubes visible-xs visible-lg"></i>
+                    <%}%>
+                </a>
+    <span class="hidden-xs"><a href="/appmgt/site/pages/index.jag"><%=cloudTitle%></a></span>
             </div>
         </div>
     </div>

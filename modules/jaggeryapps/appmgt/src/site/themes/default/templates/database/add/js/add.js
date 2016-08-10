@@ -387,7 +387,7 @@ function addNewDatabase() {
     var validator = $("#addDatabaseForm").validate(getValidationOptions());
     var formValidated = validator.form();
     if (formValidated) {  
-        $("#add-database").loadingButton('show');
+        $("#add-database").loadingButton({action:'show'});
         jagg.post("../blocks/database/add/ajax/add.jag", {
             action: "createDatabaseAndAttachUser",
             databaseName: $("#database-name").val().trim(),
@@ -406,9 +406,14 @@ function addNewDatabase() {
                 jagg.message({content: 'Error occurred while creating database.', type: 'error', id: 'databasecreation'});
             }
         }, function (jqXHR, textStatus, errorThrown) {
-            jagg.message({content: 'Error occurred while creating database.', type: 'error', id: 'databasecreation'});
+            jagg.message({
+                content: 'Error occurred while creating database',
+                type: 'error',
+                id: 'databasecreation',
+                timeout: 8000
+            });
+            $("#add-database").loadingButton({action:'hide'});
         });
-        $("#add-database").loadingButton('hide');
     }
 }
 
