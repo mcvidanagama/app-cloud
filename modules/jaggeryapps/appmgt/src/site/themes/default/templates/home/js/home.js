@@ -231,14 +231,14 @@ function displayMessage() {
                 modalStatus: true,
                 type: 'warning',
                 timeout: 3000,
-                content: "<b>Application has been stopped. Start the application before launch.</b>"
+                content: "<b>The application has been stopped. Start the application before launching it.</b>"
             });
         } else if (selectedApplicationRevision.status == APPLICATION_INACTIVE) {
             jagg.message({
                 modalStatus: true,
                 type: 'warning',
                 timeout: 3000,
-                content: "<b>Application has been stopped due to inactivity. Start the application before launch.</b>"
+                content: "<b>The application has been stopped due to inactivity. Start the application before launching it.</b>"
             });
         } else {
             jagg.message({
@@ -497,7 +497,7 @@ function submitChangeAppIcon(newIconObj) {
     if(validated) {
         $('#changeAppIcon').submit();
     } else {
-        jagg.message({content: "Invalid image selected for application icon. Please select a valid image.", type: 'error', id:'notification'});
+        jagg.message({content: "Only jpg and png file types are allowed for the the application's icon.", type: 'error', id:'notification'});
     }
 }
 
@@ -515,7 +515,7 @@ function validateIconImage(filename, fileSize) {
             extStatus = true;
             break;
         default:
-            jagg.message({content: "Invalid image selected for application icon. Please select a valid image.", type: 'error', id:'notification'});
+            jagg.message({content: "Only jpg and png file types are allowed for the the application's icon.", type: 'error', id:'notification'});
             break;
     }
 
@@ -547,7 +547,7 @@ function deleteApplication(){
         action:"deleteVersion",
         versionKey:selectedApplicationRevision.hashId
     },function (result) {
-        jagg.message({content: "Selected version deleted successfully", type: 'success', id:'view_log'});
+        jagg.message({content: "The selected version was successfully deleted.", type: 'success', id:'view_log'});
         var versionCount = getVersionCount();
         if(versionCount == 1){
             setTimeout(redirectAppListing, 2000);
