@@ -58,7 +58,7 @@ jagg.template("envs", function(inputs, outputs, jagg) {
 
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 msg-issues">
-                This allows you to set environment variables that are used in your application. If you want to add database specific environment variables type <b>database:</b> tag in the Value text-box.
+                This allows you to set environment variables that are used in your application. To add database-specific environment variables, type <b>database:</b> in the Value textbox.
             </div>
         </div>
         <div class="env-list">
