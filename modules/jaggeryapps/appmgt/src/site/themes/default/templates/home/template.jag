@@ -249,7 +249,7 @@ jagg.template("home", function(inputs, outputs, jagg) {
           <div class="col-xs-12 col-md-3 col-lg-3">
               <div class="block-team pull-left">
                 <a class="block-anch" id="envVars" href="/appmgt/site/pages/envs.jag?applicationKey=<%=applicationKey%>&versionKey=<%=selectedApplicationRevision.hashId%>">
-                  <h3>Env Variables</h3>
+                  <h3>Environment Variables</h3>
                   <div class="block-icon pull-left">
                     <i class="fa fa-wrench fa-5x"></i>
                   </div>
@@ -325,7 +325,7 @@ jagg.template("home", function(inputs, outputs, jagg) {
         }, function(result) {
             setTimeout(reloadAppHome, 2000);
             jagg.message({
-                content: "Application redeployed successfully.",
+                content: "Application was successfully redeployed.",
                 type: 'info',
                 timeout: '5000'
             });
@@ -351,7 +351,7 @@ jagg.template("home", function(inputs, outputs, jagg) {
         }, function(result) {
             setTimeout(reloadAppHome, 2000);
             jagg.message({
-                content: "Application stopped successfully.",
+                content: "Application was successfully stopped.",
                 type: 'info',
                 timeout: '5000'
             });
@@ -390,7 +390,7 @@ jagg.template("home", function(inputs, outputs, jagg) {
             if (versions.length > 1) {
                 jagg.message({
                     content: "You can start only one version of an application at a time on a free subscription." +
-                        " Other versions have been stopped automatically.",
+                        " Other versions were stopped automatically.",
                     type: 'info',
                     timeout: 3500
                 });

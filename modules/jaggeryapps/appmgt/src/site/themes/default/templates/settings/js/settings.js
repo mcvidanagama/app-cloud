@@ -37,6 +37,6 @@ $("#update-default-version").click(function () {
 function defaultVersionUpdatedSuccess() {
     var defaultVersion = "Default version is set to " + $("#default-version option:selected").val();
     $("#lbl-default-version").text(defaultVersion);
-    jagg.message({content: "Default version successfully updated", type: 'success', id: 'view_log'});
+    jagg.message({content: "Default version is successfully updated.", type: 'success', id: 'view_log'});
 
 }

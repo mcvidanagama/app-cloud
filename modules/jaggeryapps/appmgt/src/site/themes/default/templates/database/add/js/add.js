@@ -408,7 +408,7 @@ function addNewDatabase() {
             if (result.value == 'success') {
                 window.location.href = "databases.jag";
             } else {
-                jagg.message({content: 'Error occurred while creating database.', type: 'error', id: 'databasecreation'});
+                jagg.message({content: 'An error occurred while creating the database.', type: 'error', id: 'databasecreation'});
             }
         }, function (jqXHR, textStatus, errorThrown) {
             jagg.message({
