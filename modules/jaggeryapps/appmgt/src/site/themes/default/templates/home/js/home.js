@@ -95,7 +95,7 @@ function loadEndpointView() {
 function showLoadingEndpointView() {
     $("#app-type-data").html('<div class="block-endpoints"><h3>Endpoints &nbsp;' +
         '<span> ' +
-        '<i class="fw fw-spin fw-loader4"></i>'+
+        '<i class="fw fw-spin fw-loader2"></i>'+
         '</span></h3></div>');
 }
 
