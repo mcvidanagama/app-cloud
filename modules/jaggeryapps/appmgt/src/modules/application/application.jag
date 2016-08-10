@@ -879,6 +879,7 @@ var generateVersionList = function (versions, applicationName, appType) {
             versionObject.conSpecMemory = version.conSpecMemory;
             versionObject.runtimeProperties = generateRuntimePropsArray(version.runtimeProperties);
             versionObject.tags = generateTagsArray(version.tags);
+            versionObject.versionId = versionID;
 
             versionList[version.versionName] = versionObject;
         }
@@ -1118,13 +1119,6 @@ var getDeploymentURL = function (applicationName, versionName, versionID){
     var baseURL = constructAppLaunchURL(applicationName, versionName);
     var applicationLaunchURL = urlScheme + "://" + baseURL;
 
-    var applicationContextList = ApplicationManager.getApplicationContexts(versionID);
-    if (applicationContextList != null && applicationContextList.size() > 0 && applicationContextList.get(0) != null){
-        if(!applicationContextList.get(0).startsWith("/")){
-            applicationLaunchURL = applicationLaunchURL + "/";
-        }
-        applicationLaunchURL = applicationLaunchURL + applicationContextList.get(0);
-    }
     if (log.isDebugEnabled()) {
         log.debug("Deployment URL: " + applicationLaunchURL);
     }

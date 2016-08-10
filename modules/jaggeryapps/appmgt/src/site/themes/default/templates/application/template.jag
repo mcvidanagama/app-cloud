@@ -1111,11 +1111,16 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 <select name="container" id="container" class="form-control" ></select>
             </div>
 
-			<div class="form-group">
-                <label for="applicationContext"><%=cloudSpecificApplicationRepresentation%> Context: </label>
-                <input id="applicationContext" name="applicationContext" type="text" class="form-control" value="<%=appType.defaultContext%>" />
-            </div>
-
+            <%
+                if(appType.appContext == 'true') {
+            %>
+                <div class="form-group">
+                    <label for="applicationContext"><%=cloudSpecificApplicationRepresentation%> Context: </label>
+                    <input id="applicationContext" name="applicationContext" type="text" class="form-control" value="<%=appType.defaultContext%>" />
+                </div>
+            <%
+                }
+            %>
             <% if (!newVersion) { %>
                 <div class="form-group">
                     <label for="application-icon">Icon:
