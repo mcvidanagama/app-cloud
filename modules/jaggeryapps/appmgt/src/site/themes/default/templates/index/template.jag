@@ -327,7 +327,7 @@ jagg.template("index", function(inputs, outputs, jagg) {
                     <div class="container-fluid">
                         <div class="row">
                             <div id="progress_table" class="col-xs-12 col-md-12 section-title">
-                            <i class="fa fa-2x fa-circle-o-notch fa-spin"></i>
+                            <i class="fw fw-2x fw-loader2 fw-spin"></i>
                         </div>
                     </div>
                 </div>

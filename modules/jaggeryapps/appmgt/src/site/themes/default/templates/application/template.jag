@@ -189,7 +189,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
             var modalBody = '<div class="container-fluid">'+
                                 '<div class="row">'+
                                     '<div id="progress_table" class="col-xs-12 col-md-12 section-title">' +
-                                        '<i class="fa fa-2x fa-circle-o-notch fa-spin"></i>' +
+                                        '<i class="fw fw-2x fw-loader2 fw-spin"></i>' +
                                     '</div>' +
                                 '</div>' +
                             '</div>';
@@ -383,47 +383,47 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 applicationRevision:$("#applicationRevision").val()
 
             },function (result) {
-
-                $("#progress_table").html("");
                 var result = jQuery.parseJSON(result);
+                if (result.length > 0) {
+                    $("#progress_table").html("");
+                }
                 var table = "<table class='table' style='width:100%; color:black'>" ;
                 for(var i = 0; i < result.length; i++){
                     var statusStyle;
                     var event = result[i];
-
                     if(event.status == "success"){
                         statusStyle = "success";
                         if (event.name === "Status") {
                                 table = table + "<tr class='" + statusStyle + "'><td>Container status</td>" +
                                                 "<td>"+event.description+"</td>" +
-                                                "<td><i class=\"fa fa-check\"></i></td></tr>";
+                                                "<td><i class=\"fw fw-check\"></i></td></tr>";
                         } else {
                                 table = table + "<tr class='" + statusStyle + "'><td>" + event.name + "</td>" +
                                                 "<td></td>" +
-                                                "<td><i class=\"fa fa-check\"></i></td></tr>";
+                                                "<td><i class=\"fw fw-check\"></i></td></tr>";
                         }
                     } else if (event.status == "failed") {
                         statusStyle = "danger";
                         if (event.name === "Status") {
                                 table = table + "<tr class='" + statusStyle + "'><td>Container status</td>" +
                                                 "<td>"+event.description+"</td>" +
-                                                "<td><i class=\"fa fa-times\"></i></td></tr>";
+                                                "<td><i class=\"fw fw-error\"></i></td></tr>";
                         } else {
                                 table = table + "<tr class='" + statusStyle + "'><td>" + event.name + "</td>" +
                                                 "<td></td>" +
-                                                "<td><i class=\"fa fa-times\"></i></td></tr>";
+                                                "<td><i class=\"fw fw-error\"></i></td></tr>";
                         }
                     } else if (event.status == "pending"){
                         if (event.name === "Status") {
                             statusStyle = "active";
                                 table = table + "<tr class='" + statusStyle + "'><td>Container status</td>" +
                                                 "<td>"+event.description+"</td>" +
-                                                "<td><i class=\"fa fa-circle-o-notch fa-spin\"></i></td></tr>";
+                                                "<td><i class=\"fw fw-loader2 fw-spin\"></i></td></tr>";
                         } else {
                             statusStyle = "active";
                                 table = table + "<tr class='" + statusStyle + "'><td>" + event.name + "</td>" +
                                                 "<td></td>" +
-                                                "<td><i class=\"fa fa-circle-o-notch fa-spin\"></i></td></tr>";
+                                                "<td><i class=\"fw fw-loader2 fw-spin\"></i></td></tr>";
                         }
                     }
                 }
@@ -432,11 +432,9 @@ jagg.template("application", function (inputs, outputs, jagg) {
 
                 $("#app-creation-model-body").html(modalBody);
                 $("#app-creation-model-footer").html("");
-                $("#progress_table").html(table);
-                if(result.length == 0){
-                    var msg = "Error retrieving creation events for " + cloudSpecificApplicationRepresentation;
-                    showAppCreationFailedNotification(msg);
-                };
+                if (result.length > 0) {
+                    $("#progress_table").html(table);
+                }
                 for(var i = 0; i < result.length; i++){
                     var statusStyle;
                     var event = result[i];
@@ -663,7 +661,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
         /** end application creation form validations */
 
         $('#url-upload').click(function(){
-            $("#url-upload-progress").html("<i class=\"fa fa-circle-o-notch fa-spin\"></i>");
+            $("#url-upload-progress").html("<i class=\"fw fw-loader2 fw-spin\"></i>");
             isUploadUrlValid()
         });
 
