@@ -76,14 +76,18 @@ function generateDefaultLaunchUrl() {
 
 function loadEndpointView() {
     clearInterval(timerId);
-    // This is implemented for ESB & MSS only.
-    if (application.applicationType == "wso2esb" || application.applicationType == "mss") {
-        showLoadingEndpointView();
-        if(selectedApplicationRevision.status == APPLICATION_RUNNING){
-            var deploymentURL = generateDefaultLaunchUrl();
-            timerId = setInterval(function () {
-                loadEndpoints(deploymentURL, applicationType);
-            }, 2000);
+    // This is not implemented for wso2dataservice and mss 1.0.0 runtimes.
+    if (application.applicationType != "wso2dataservice") {
+        if (application.applicationType == "mss" && selectedApplicationRevision.runtimeId != '2') {
+            // if mss 1.0.0 do not show endpoints section
+        } else {
+            showLoadingEndpointView();
+            if(selectedApplicationRevision.status == APPLICATION_RUNNING){
+                var deploymentURL = generateDefaultLaunchUrl();
+                timerId = setInterval(function () {
+                    loadEndpoints(deploymentURL, applicationType, selectedApplicationRevision.versionId);
+                }, 2000);
+            }
         }
     }
 }
@@ -95,11 +99,12 @@ function showLoadingEndpointView() {
         '</span></h3></div>');
 }
 
-function loadEndpoints(deploymentURL, applicationType) {
+function loadEndpoints(deploymentURL, applicationType, versionId) {
     jagg.post("../blocks/application/application.jag", {
      action: "loadEndpoints",
      appType: applicationType,
-     deploymentURL: deploymentURL
+     deploymentURL: deploymentURL,
+     versionId: versionId
      }, function(result) {
         var endpoints = JSON.parse(result);
         if (endpoints == undefined) {
