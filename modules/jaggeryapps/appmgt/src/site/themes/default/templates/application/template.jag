@@ -678,7 +678,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 appTypeExtension: APP_TYPE_EXTENSION
             },function (result) {
                if(JSON.parse(result) == true){
-                    $("#url-upload-progress").html("<i class=\"fa fa-check\"></i>");
+                    $("#url-upload-progress").html("<i class=\"fw fw-check\"></i>");
                     $("#artifactUrl").prop("disabled", true);
                     urlUploadComplete = true;
                 } else {

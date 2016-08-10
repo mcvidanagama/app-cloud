@@ -1483,6 +1483,7 @@ var changeMappedDomain = function (applicationName, versionName) {
         setDefaultDomain(applicationName, versionName, applicationHashId);
         ApplicationManager.updateDefaultVersion(applicationHashId, versionName);
     }
+    return applicationHashId;
 };
 
 var setCustomDomain = function (applicationName, versionName) {
