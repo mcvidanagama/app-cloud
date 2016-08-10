@@ -18,6 +18,7 @@
  */
 
 include("/jagg/jagg.jag");
+include('/jagg/constants.jag');
 
 jagg.template("index", function(inputs, outputs, jagg) {
     var applications = outputs.applications;
@@ -36,7 +37,7 @@ jagg.template("index", function(inputs, outputs, jagg) {
 
     <script type="text/javascript" xmlns="http://www.w3.org/1999/html" charset="utf-8">
         var applicationList = <%=applications%>;
-        var appOrProject = <%=appOrProject%>;
+        var appOrProject = '<%=appOrProject%>';
         var taggedApplicationsList;
         var searchbox;
 
