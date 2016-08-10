@@ -32,7 +32,7 @@ jagg.template("home", function(inputs, outputs, jagg) {
     var applicationName = application.applicationName;
     var applicationKey = application.hashId;
     var appCreationPageBaseUrl = jagg.getAbsoluteUrl("/site/pages/application.jag");
-    var dashboardBaseUrl = DASHBOARD_BASE_URL;
+    var dashboardBaseUrl = outputs.dashboardUrl;
     var dashboardUrl = dashboardBaseUrl + applicationName + "-" + selectedRevision;
     var encodedLabels = encodeURIComponent(stringify(selectedApplicationRevision.tags), "UTF-8");
     var encodedEnvs = encodeURIComponent(stringify(selectedApplicationRevision.runtimeProperties), "UTF-8");

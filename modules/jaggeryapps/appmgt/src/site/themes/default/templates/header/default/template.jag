@@ -28,6 +28,9 @@ jagg.template("header/default", function(inputs, outputs, jagg) {
     var cloudTitle = outputs.cloudTitle;
     var isGoogleAnalyticsEnabled = outputs.isGoogleAnalyticsEnabled;
     var googleTrackingId = outputs.googleTrackingId;
+    var appCloudURL = outputs.appCloudURL;
+    var apiCloudPublisherURL = outputs.apiCloudPublisherURL;
+    var cloudMgtURL = outputs.cloudMgtURL;
 
     if(isGoogleAnalyticsEnabled) {
 %>
@@ -110,14 +113,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </div>
                 <div id="popover-content" class="hide">
                    <div class="cloud-apps">
-                       <a class="cloud-block" href="https://api.cloud.wso2.com/publisher" target=_blank>
+                       <a class="cloud-block" href="<%=apiCloudPublisherURL%>" target=_blank>
                            <i class="fw fw-api fa-3x"></i>
                            <div class="cloud-name">API Cloud</div>
                        </a>
                         <%
                             if (jagg.getSelectedCloud() == INTEGRATION_CLOUD) {
                         %>
-                        <a class="cloud-block" href="https://apps.cloud.wso2.com/appmgt/" target="_blank">
+                        <a class="cloud-block" href="<%=appCloudURL%>" target="_blank">
                             <i class="fa fa-3x fa-cubes"></i>
                             <div class="cloud-name"> App Cloud</div>
                         </a>
@@ -128,11 +131,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                    </div>
                    <div class="cloud-actions">
                        <h3>Manage your Cloud</h3>
-                        <a class="cloud-block-invert" href="http://cloudmgt.cloud.wso2.com/cloudmgt/site/pages/organization.jag" target=_blank>
+                        <a class="cloud-block-invert" href="<%=cloudMgtURL%>/site/pages/organization.jag" target=_blank>
                             <i class="fa fa-3x  fa-institution"></i>
                             <div class="cloud-name">Organizations</div>
                         </a>
-                       <a class="cloud-block-invert" href="http://cloudmgt.cloud.wso2.com/cloudmgt/site/pages/user.jag" target=_blank>
+                       <a class="cloud-block-invert" href="<%=cloudMgtURL%>/site/pages/user.jag" target=_blank>
                            <i class="fa fa-3x  fa-users"></i>
                            <div class="cloud-name">Members</div>
                        </a>
