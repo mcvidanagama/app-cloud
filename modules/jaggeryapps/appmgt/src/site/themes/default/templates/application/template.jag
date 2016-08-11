@@ -1151,7 +1151,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                         </div>
                         <div id="collapseOne" class="panel-collapse collapse in">
                             <div class="info-block">
-                                If you want to add database specific environment variables type <b>database:</b> tag in the Value text-box.
+                                To add database-specific environment variables, type <b>database:</b> in the Value textbox.
                             </div>
                             <div class="panel-body" id="env-pane">
                                 <div class="form-inline property-seperator">
