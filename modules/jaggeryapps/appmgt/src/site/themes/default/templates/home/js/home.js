@@ -94,7 +94,7 @@ function loadEndpointView() {
 
 function showLoadingEndpointView() {
     $("#app-type-data").html('<div class="block-endpoints "><h5>' +
-        '<span><i class="fw fw-loader4 fw-spin fw-2x"></i></span>' +
+        '<span><i class="fw fw-loader2 fw-spin fw-2x"></i></span>' +
         ' &nbsp; Runtime: ' + selectedApplicationRevision.runtimeName + ' is starting ....</h5></div>');
 }
 
