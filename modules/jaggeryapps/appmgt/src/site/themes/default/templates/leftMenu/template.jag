@@ -51,8 +51,8 @@ jagg.template("leftMenu", function (inputs, outputs, jagg) {
         <li class="<% if (pageName == "Overview") { %>selected<%}%>">
                 <a id="leftMenuOverview" href="/appmgt/site/pages/home.jag?applicationKey=<%=applicationKey%>"><i class="fa fa-laptop"></i> Overview</a>
         </li>
-        <li class="<% if (pageName == "Env Variables") { %>selected<%}%>">
-                <a id="leftMenuEnvVars" href="/appmgt/site/pages/envs.jag?versionKey=<%=versionKey%>&applicationKey=<%=applicationKey%>"><i class="fa fa-wrench"></i> Env Variables</a>
+        <li class="<% if (pageName == "Environment Variables") { %>selected<%}%>">
+                <a id="leftMenuEnvVars" href="/appmgt/site/pages/envs.jag?versionKey=<%=versionKey%>&applicationKey=<%=applicationKey%>"><i class="fa fa-wrench"></i> Environment Variables</a>
         </li>
         <li class="<% if (pageName == "Tags") { %>selected<%}%>">
                 <a id="leftMenuTagSet" href="/appmgt/site/pages/tags.jag?applicationKey=<%=applicationKey%>&versionKey=<%=versionKey%>"><i class="fa fa-tag"></i> Tags</a>

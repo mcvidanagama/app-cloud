@@ -2822,8 +2822,8 @@ ul#appVersionList {
 
 .info-block {
     color: #10171d;
-    font-size: 12px;
-    padding: 5px;
+    font-size: 14px;
+    padding: 15px;
     text-align: justify;
     background: rgb(246,248,249); /* Old browsers */
     background: -moz-linear-gradient(top, rgba(246,248,249,1) 0%, rgba(229,235,238,1) 15%, rgba(215,222,227,1) 78%, rgba(245,247,249,1) 100%); /* FF3.6-15 */
