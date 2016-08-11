@@ -76,13 +76,13 @@ function generateDefaultLaunchUrl() {
 
 function loadEndpointView() {
     clearInterval(timerId);
-    // This is not implemented for wso2dataservice and mss 1.0.0 runtimes.
-    if (application.applicationType != "wso2dataservice") {
-        if (application.applicationType == "mss" && selectedApplicationRevision.runtimeId != '2') {
-            // if mss 1.0.0 do not show endpoints section
-        } else {
-            showLoadingEndpointView();
-            if(selectedApplicationRevision.status == APPLICATION_RUNNING){
+    if (selectedApplicationRevision.status == APPLICATION_RUNNING) {
+        // This is not implemented for wso2dataservice and mss 1.0.0 runtimes.
+        if (application.applicationType != "wso2dataservice") {
+            if (application.applicationType == "mss" && selectedApplicationRevision.runtimeId == 2) {
+                // if mss 1.0.0 do not show endpoints section
+            } else {
+                showLoadingEndpointView();
                 var deploymentURL = generateDefaultLaunchUrl();
                 timerId = setInterval(function () {
                     loadEndpoints(deploymentURL, applicationType, selectedApplicationRevision.versionId);
@@ -93,10 +93,9 @@ function loadEndpointView() {
 }
 
 function showLoadingEndpointView() {
-    $("#app-type-data").html('<div class="block-endpoints"><h3>Endpoints &nbsp;' +
-        '<span> ' +
-        '<i class="fw fw-spin fw-loader2"></i>'+
-        '</span></h3></div>');
+    $("#app-type-data").html('<div class="block-endpoints "><h5>' +
+        '<span><i class="fw fw-loader4 fw-spin fw-2x"></i></span>' +
+        ' &nbsp; Runtime: ' + selectedApplicationRevision.runtimeName + ' is starting ....</h5></div>');
 }
 
 function loadEndpoints(deploymentURL, applicationType, versionId) {
