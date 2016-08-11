@@ -29,6 +29,7 @@ jagg.template("header/default", function(inputs, outputs, jagg) {
     var isGoogleAnalyticsEnabled = outputs.isGoogleAnalyticsEnabled;
     var googleTrackingId = outputs.googleTrackingId;
     var appCloudURL = outputs.appCloudURL;
+    var integrationCloudURL = outputs.integrationCloudURL;
     var apiCloudPublisherURL = outputs.apiCloudPublisherURL;
     var cloudMgtURL = outputs.cloudMgtURL;
 
@@ -125,8 +126,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                             <div class="cloud-name"> App Cloud</div>
                         </a>
                         <%
+                            } else {
+                        %>
+                        <a class="cloud-block" href="<%=integrationCloudURL%>" target="_blank">
+                            <i class="fw fw-3x fw-service"></i>
+                            <div class="cloud-name"> Integration Cloud</div>
+                        </a>
+                        <%
                             }
                         %>
+
                        <div class="clearfix"></div> <!-- to make seperate -->
                    </div>
                    <div class="cloud-actions">
@@ -158,7 +167,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div class="col-md-3 breadcrumb-secondary">
                 <a href="/appmgt/site/pages/index.jag">
                     <%if (jagg.getSelectedCloud() == INTEGRATION_CLOUD) {%>
-                        <i class="fw fw-share visible-xs visible-lg"></i> <!-- Change this once UX team provided a proper icon-->
+                        <i class="fw fw-service visible-xs visible-lg"></i> <!-- Change this once UX team provided a proper icon-->
                     <%} else {%>
                         <i class="fa fa-cubes visible-xs visible-lg"></i>
                     <%}%>
