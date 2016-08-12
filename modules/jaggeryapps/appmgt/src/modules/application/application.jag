@@ -1727,22 +1727,4 @@ var isTagExist = function(versionKey, tagKey) {
     }
     return false;
 }
-
-var setDefaultVersion = function(applicationName, defaultVersion) {
-    var applicationHashId = getApplicationHashIdByName(applicationName);
-    var versions = getVersionListOfApplication(applicationHashId);
-    var isVersionExist = false;
-
-    for (var i = 0; i < versions.length; i++) {
-        if (version[i] == defaultVersion) {
-            isVersionExist = true;
-            break;
-        }
-    }
-    if (isVersionExist) {
-        changeMappedDomain(applicationName, defaultVersion);
-    }
-
-    return isVersionExist;
-}
 %>

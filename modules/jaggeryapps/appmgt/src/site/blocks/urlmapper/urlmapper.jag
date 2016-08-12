@@ -71,19 +71,9 @@ var mod = jagg.module("application");
     } else if (action == "setDefaultVersion") {
         var applicationName = request.getParameter("applicationName");
         var defaultVersion = request.getParameter("versionName");
+        var set = request.getParameter("set");
         try {
-            if (mod.getDefaultVersion(applicationName) == defaultVersion) {
-                response.status = 500;
-                response.content = "Version: " + defaultVersion + " is the default version. Please select another version.";
-            } else {
-                if (mod.setDefaultVersion(applicationName, defaultVersion)) {
-                    response.status = 200;
-                    response.content = "Default version is successfully added.";
-                } else {
-                    response.status = 500;
-                    response.content = "Application version does not exist. Please select valid version.";
-                }
-            }
+            mod.setDefaultVersion(applicationName, defaultVersion, set);
         } catch (e) {
             var message = "Error while setting default url to application : " + applicationName;
             log.error(message);
