@@ -42,6 +42,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
         var defaultVersion = outputs.defaultVersion;
         var appTypeCount = outputs.appTypeCount;
         var cloudSpecificApplicationRepresentation = outputs.cloudSpecificApplicationRepresentation;
+        var applications = outputs.applications;
     %>
 
       <link rel="stylesheet" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/bootstrap-3.2.0/bootstrap.min.css'))%>">
@@ -85,6 +86,8 @@ jagg.template("application", function (inputs, outputs, jagg) {
     var progress;
     var fileMoved = false;
     var envKeyRegex = new RegExp("<%=ENV_KEY_REGEX%>");
+    var applicationList = <%=applications%>;
+
     $(document).ready(function(){
 
             if (newVersion == "true") {
@@ -665,7 +668,6 @@ jagg.template("application", function (inputs, outputs, jagg) {
             isUploadUrlValid()
         });
 
-
         /**
          * This method is to validate the upload url from the front end.
          * @returns {boolean}
@@ -698,16 +700,17 @@ jagg.template("application", function (inputs, outputs, jagg) {
             $('input[name=fileUploadRadioOptions]').prop("disabled",true);
             $('input[name=fileUploadRadioOptions]').prop("title","This option is disabled, Please enter a " + cloudSpecificApplicationRepresentation + " name first");
         }
-        var createNewAppForm = $("#applicationName");
-        createNewAppForm.on('focusout keyup blur click', function () {
-            checkApplicationExistence();
+        var appNameField = $("#applicationName");
+        var createNewAppForm = $("#application-details");
+
+        appNameField.on('blur', function () {
+            checkApplicationExistence(appNameField.val());
             enableRadioButtons();
         });
 
-        var appNameField = $("#application-details");
-                createNewAppForm.on('focusout keyup blur click', function () { // fires on every keyup & blur
-                    activateCreateApplication();
-                    activateUploadButton();
+        createNewAppForm.on('focusout keyup blur click', function () { // fires on every keyup & blur
+            activateCreateApplication();
+            activateUploadButton();
         });
 
         $('#artifactUrl').on('focusout keyup blur click', function () { // fires on every keyup & blur
@@ -759,31 +762,26 @@ jagg.template("application", function (inputs, outputs, jagg) {
 
         }
     }
-    function checkApplicationExistence(){
-        jagg.post("../blocks/application/application.jag", {
-            action:"getApplication",
-            applicationName:$("#applicationName").val()
-        },function (result) {
-            var applicationObject = JSON.parse(result);
-            if (applicationObject.applicationName !== null) {
+    function checkApplicationExistence(newName){
+        for (var i = 0; i < applicationList.length; i++){
+            var existingAppName = applicationList[i].applicationName.toLowerCase();
+            var nameMatch = existingAppName.localeCompare(newName.toLowerCase());
+            if (nameMatch === 0) {
+                var applicationHash = applicationList[i].hashId;
+                var providedName = $("#applicationName").val();
+                $("#applicationName").val('');
                 jagg.popMessage({
                     type: 'confirm',
                     modalStatus: true,
-                    title: 'Delete Tag',
-                    content: cloudSpecificApplicationRepresentation + ' with name: ' + $("#applicationName").val() + ' already exists. ' +
+                    title: 'Error!!!',
+                    content: cloudSpecificApplicationRepresentation + ' with name: ' + providedName + ' already exists. ' +
                         'Do you want to go to the existing ' + cloudSpecificApplicationRepresentation + '?',
                     okCallback: function() {
-                        window.location.replace("home.jag?applicationKey=" + applicationObject.hashId);
-                    }, cancelCallback:function(){
-                        location.reload();
+                        window.location.replace("home.jag?applicationKey=" + applicationHash);
                     }
                 });
             }
-        },function (jqXHR, textStatus, errorThrown) {
-            jagg.message({content: "Error occurred while checking " + cloudSpecificApplicationRepresentation + " existence.", type: 'error', id:'view_log'});
-
-
-        });
+        }
     }
 
      function clearUploadIconField() {

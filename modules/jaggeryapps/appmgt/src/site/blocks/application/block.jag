@@ -47,6 +47,7 @@ jagg.block("application", {
         var defaultVersion = applicationModule.getDefaultVersion(inputs.applicationName);
         var appTypeCount = applicationModule.getAllAppTypes().length;
         var cloudSpecificApplicationRepresentation = jagg.module("manager").getCloudTypeProperties().cloudSpecificApplicationRepresentation;
+        var applications = applicationModule.getAllApplications();
 
 
         return {
@@ -60,7 +61,8 @@ jagg.block("application", {
             "allowedContainerSpecs" : allowedContainerSpecs,
             "defaultVersion" : defaultVersion,
             "appTypeCount" : appTypeCount,
-            "cloudSpecificApplicationRepresentation" : cloudSpecificApplicationRepresentation
+            "cloudSpecificApplicationRepresentation" : cloudSpecificApplicationRepresentation,
+            "applications" : applications
         };
     }
 });
