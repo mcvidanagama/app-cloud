@@ -337,7 +337,6 @@ function loadAppIcon() {
 
 function changeSelectedRevision(newRevision){
     // change app description
-
     //Changing revision dropdown
     putSelectedRevisionToSession(applicationKey, newRevision);
     $('#selected-version').html(newRevision+" ");
@@ -362,6 +361,8 @@ function changeSelectedRevision(newRevision){
 
     //changing runtime
     $("#runtime").html(selectedApplicationRevision.runtimeName);
+    $("#memory").html(selectedApplicationRevision.conSpecMemory);
+    $("#cpu").html(selectedApplicationRevision.conSpecCpu/1000);
 
     //change icon
     loadAppIcon();
