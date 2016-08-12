@@ -337,7 +337,6 @@ function loadAppIcon() {
 
 function changeSelectedRevision(newRevision){
     // change app description
-    console.log(JSON.stringify(application));
     //Changing revision dropdown
     putSelectedRevisionToSession(applicationKey, newRevision);
     $('#selected-version').html(newRevision+" ");
