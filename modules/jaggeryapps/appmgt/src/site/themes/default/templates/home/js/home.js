@@ -89,6 +89,8 @@ function loadEndpointView() {
                 }, 2000);
             }
         }
+    } else {
+        $("#app-type-data").html('');
     }
 }
 
