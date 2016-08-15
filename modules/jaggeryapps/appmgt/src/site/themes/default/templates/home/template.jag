@@ -94,7 +94,7 @@ jagg.template("home", function(inputs, outputs, jagg) {
               </div>
               <div class="app-desc">
                 <h2><%=applicationName%></h2>
-                  <h4 class="app-run-time">Runtime: <span id="runtime"><%=selectedApplicationRevision.runtimeName%></span> &nbsp; | &nbsp; Container Specification : <span id="memory"><%=selectedApplicationRevision.conSpecMemory%></span>MB RAM and <span id="cpu"><%=selectedApplicationRevision.conSpecCpu/1000%></span> vCPU</h4>
+                  <h4 class="app-run-time">Runtime: <span id="runtime"><%=selectedApplicationRevision.runtimeName%></span></h4>
                   <h4 class="app-run-time"></h4>
                 <p id="app-description"><%=(application.description)?application.description:''%></p>
                 <%if (defaultAppLaunchURL != null) { %>
@@ -275,6 +275,17 @@ jagg.template("home", function(inputs, outputs, jagg) {
                   <div class="clearfix"></div>
                 </a>
               </div>
+              <div class="block-con-spec pull-left">
+              <i class="fw fw-computer fw-4x"></i>
+                  <h3>Container Specification</h3>
+                  <div class="block-number pull-right">
+                   <h4 class="pull-right"><span id="memory"><%=selectedApplicationRevision.conSpecMemory%></span>MB RAM and <span id="cpu"><%=selectedApplicationRevision.conSpecCpu/1000%></span> vCPU</h4>
+                   <h4></h4>
+                  </div>
+                  <div class="tag-list ellipsis" id="tag-list"></div>
+                  <div class="clearfix"></div>
+              </div>
+
           </div>
         </div>
     </div><!-- /.container -->
