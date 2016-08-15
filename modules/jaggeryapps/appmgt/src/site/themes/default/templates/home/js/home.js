@@ -108,7 +108,7 @@ function loadEndpoints(deploymentURL, applicationType, versionId) {
      versionId: versionId
      }, function(result) {
         var endpoints = JSON.parse(result);
-        if (!endpoints) {
+        if (endpoints == undefined) {
             loadDefaultEndpointSection();
         } else {
             // Generate SOAP Services Section

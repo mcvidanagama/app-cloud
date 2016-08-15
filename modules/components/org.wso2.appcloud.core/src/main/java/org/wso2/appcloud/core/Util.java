@@ -18,18 +18,12 @@
  */
 package org.wso2.appcloud.core;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.json.JSONObject;
-import org.wso2.appcloud.common.AppCloudException;
-import org.wso2.appcloud.core.endpoints.EndPointExtractor;
 
 public class Util {
 
     private static final long[] byteTable = createLookupTable();
     private static final long HSTART = 0xBB40E64DA205B064L;
     private static final long HMULT = 7664345821815920749L;
-    private static Log log = LogFactory.getLog(Util.class);
 
     public static long hash(byte[] data) {
         long h = HSTART;
@@ -82,31 +76,5 @@ public class Util {
         }
         String idString = tenantId + applicationName;
         return Long.toString(Util.hash(idString));
-    }
-
-    public static String getEndpoints(String className, String deploymentURL, String versionId) throws AppCloudException {
-        try {
-            Class endPointExtractorClass = Class.forName(className);
-            Object endPointExtractor = endPointExtractorClass.newInstance();
-            if(endPointExtractor instanceof  EndPointExtractor){
-                return ((EndPointExtractor) endPointExtractor).getEndPoints(deploymentURL, versionId);
-            } else {
-                String msg = "Endpoint Extractor has to be an implementation of " + EndPointExtractor.class.getName();
-                log.error(msg);
-                throw new AppCloudException(msg);
-            }
-        } catch (ClassNotFoundException e) {
-            String msg = "Class not found : " + className;
-            log.error(msg, e);
-            throw new AppCloudException(msg, e);
-        } catch (InstantiationException e) {
-            String msg = "Error while creating an instance of class : " + className;
-            log.error(msg, e);
-            throw new AppCloudException(msg, e);
-        } catch (IllegalAccessException e) {
-            String msg = "Error while creating an instance of class : " + className;
-            log.error(msg, e);
-            throw new AppCloudException(msg, e);
-        }
     }
 }
