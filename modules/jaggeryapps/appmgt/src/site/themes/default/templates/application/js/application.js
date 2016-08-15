@@ -1,3 +1,20 @@
+/*
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *   WSO2 Inc. licenses this file to you under the Apache License,
+ *   Version 2.0 (the "License"); you may not use this file except
+ *   in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing,
+ *   software distributed under the License is distributed on an
+ *   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *   KIND, either express or implied.  See the License for the
+ *   specific language governing permissions and limitations
+ *   under the License.
+ */
 // Beginning of functions functions for add, edit, cancel save save actions for Evn variables and Labels
 $(document).on('click', '.panel-heading a', function(e){
     var $this = $(this);
@@ -75,22 +92,28 @@ $(document).on('change focusout keyup', '.element-add-key', function () {
 });
 
 $(document).on('click', '.btn-primary-add-val', function () {
+    activateCreateApplication();
     var addBlock = $(this).parent().parent();
     var key = addBlock.find('.element-add-key')[0].value;
     var value = addBlock.find('.element-add-value')[0].value;
-    drawInitialEnvTagPane(addBlock, key, value);
+    var paneId = addBlock.parent().attr('id');
+    var initialValueElement = '<input type="text" class="form-control element-add-value" placeholder="Value">\n';
+    if (paneId === "env-pane") {
+        initialValueElement = '<select id="value" name="value" class="form-control select2 element-add-value"></select>\n';
+    }
+    drawInitialEnvTagPane(addBlock, key, value, initialValueElement);
 });
-function drawInitialEnvTagPane(addBlock, key, value){
+function drawInitialEnvTagPane(addBlock, key, value, initialValueElement){
     var panelBody = addBlock.parent();
     panelBody.append(
         '<div class="form-inline  property-seperator prop-key-vals-holder">\n'+
         '<div class="form-group">\n'+
         '<label class="sr-only" for="key">Key</label>\n'+
-        '<input type="text" class="form-control element-key-holder" id="key" placeholder="Key" value="' + key + '">\n'+
+        '<input type="text" class="form-control element-key-holder" id="key" placeholder="Key" value="' + key + '" disabled>\n'+
         '</div>\n'+
         '<div class="form-group">\n'+
         '<label class="sr-only" for="value">Value</label>\n'+
-        '<input type="text" class="form-control element-value-holder" id="value" placeholder="Value" value="' + value + '">\n'+
+        '<input type="text" class="form-control element-value-holder" id="value" placeholder="Value" value="' + value + '" disabled>\n'+
         '</div>\n'+
         '<div class="form-group edit-key-values">\n'+
         '<span class="fw-stack fw-lg">\n'+
@@ -107,15 +130,18 @@ function drawInitialEnvTagPane(addBlock, key, value){
         '<label class="sr-only" for="key">Key</label>\n'+
         '<input type="text" class="form-control element-add-key" id="key" placeholder="Key">\n'+
         '</div>\n'+
-        '<div class="form-group">\n'+
+        '<div class="form-group custom-env-class-for-demo">\n'+
         '<label class="sr-only" for="value">Value</label>\n'+
-        '<input type="text" class="form-control element-add-value" id="value" placeholder="Value">\n'+
+        initialValueElement +
         '</div>\n'+
         '<div class="form-group">\n'+
         '<button class="btn btn-primary btn-primary-add btn-primary-add-val" disabled>Add</button>\n'+
         '</div>\n'+
         '</div>\n'
     );
+
+    var valueElem = document.getElementById("value");
+    initSelect2(null, valueElem, "");
 }
 function drawEnvTagPane(panelBody, key, value){
     panelBody.append(

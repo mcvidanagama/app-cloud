@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+* Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -296,26 +296,31 @@ public class KubernetesRuntimeProvisioningService implements RuntimeProvisioning
         Map<String, BufferedReader> logOutPut = new HashMap<>();
         KubernetesClient kubernetesClient = KubernetesProvisioningUtils.getFabric8KubernetesClient();
         PodList podList = KubernetesProvisioningUtils.getPods(applicationContext);
-        if (podList != null) {
+	    if (podList != null) {
             try {
                 int podCounter = 1;
-                for (Pod pod : podList.getItems()) {
-                    for (io.fabric8.kubernetes.api.model.Container container : KubernetesHelper.getContainers(pod)) {
-                        if (log.isDebugEnabled()) {
-                            log.debug("Streaming logs in pod : " + pod.getMetadata().getName() + "-" + container
-                                    .getName());
-                        }
-                        LogWatch logs = kubernetesClient.pods().inNamespace(namespace.getMetadata().getName())
-                                .withName(pod.getMetadata().getName()).inContainer(container.getName()).watchLog();
+	            Map<String, LogWatch> watches = new HashMap<>();
+	            for (Pod pod : podList.getItems()) {
+		            for (io.fabric8.kubernetes.api.model.Container container : KubernetesHelper.getContainers(pod)) {
+			            String logWatchKey = container.getName();
+			            if (log.isDebugEnabled()) {
+				            log.debug("Streaming logs in pod : " + pod.getMetadata().getName() + "-" + container
+						            .getName());
+			            }
+			            LogWatch logs = kubernetesClient.pods().inNamespace(namespace.getMetadata().getName())
+			                                            .withName(pod.getMetadata().getName())
+			                                            .inContainer(container.getName()).watchLog();
 
-                        //logStream should close by after the streaming done in front end
-                        //you can use closeLogStream() method in DeploymentStreamLogs
-                        BufferedReader logStream = new BufferedReader(new InputStreamReader(logs.getOutput()));
-                        logOutPut.put("Replica-" + podCounter + "-" + container.getName(), logStream);
-                        deploymentLogStream.setDeploymentLogs(logOutPut);
-                    }
-                    podCounter++;
-                }
+			            //logStream should close by after the streaming done in front end
+			            //you can use closeLogStream() method in DeploymentStreamLogs
+			            BufferedReader logStream = new BufferedReader(new InputStreamReader(logs.getOutput()));
+			            logOutPut.put("Replica-" + podCounter + "-" + container.getName(), logStream);
+			            deploymentLogStream.setDeploymentLogs(logOutPut);
+			            watches.put(logWatchKey, logs);
+		            }
+		            podCounter++;
+	            }
+	            deploymentLogStream.setWatches(watches);
             } catch (KubernetesClientException e) {
                 log.error("Error while streaming runtime logs for application : " + applicationContext.getId()
                         + " tenant domain : " + applicationContext.getTenantInfo().getTenantDomain(), e);
@@ -323,7 +328,7 @@ public class KubernetesRuntimeProvisioningService implements RuntimeProvisioning
                         "Error while streaming runtime logs for application : " + applicationContext.getId()
                                 + " tenant domain : " + applicationContext.getTenantInfo().getTenantDomain(), e);
             }
-        } else {
+	    } else {
             log.error("Pod list returned as null for application : " + applicationContext.getId() + " tenant domain : "
                     + applicationContext.getTenantInfo().getTenantDomain());
             throw new RuntimeProvisioningException(
@@ -340,12 +345,20 @@ public class KubernetesRuntimeProvisioningService implements RuntimeProvisioning
         DeploymentLogs deploymentLogs = new DeploymentLogs();
         Map<String, String> logOutPut = new HashMap<>();
         PrettyLoggable prettyLoggable;
+        PrettyLoggable prettyLoggablePrev = null;
         PodList podList = KubernetesProvisioningUtils.getPods(applicationContext);
         if (podList != null) {
             try {
                 int podCounter = 1;
                 for (Pod pod : podList.getItems()) {
                     for (io.fabric8.kubernetes.api.model.Container container : KubernetesHelper.getContainers(pod)) {
+                        //Get logs from last pod if restart count > 0
+                        if(pod.getStatus().getContainerStatuses().size() > 0 &&
+                           pod.getStatus().getContainerStatuses().get(0).getRestartCount() > 0) {
+                            prettyLoggablePrev = kubernetesClient.pods().inNamespace(namespace.getMetadata().getName())
+                                                                 .withName(pod.getMetadata().getName()).terminated();
+                        }
+                        //Get logs from current pod
                         if (query == null || (query.getDurationInHours() < 0 && query.getTailingLines() < 0)) {
                             prettyLoggable = kubernetesClient.pods().inNamespace(namespace.getMetadata().getName())
                                     .withName(pod.getMetadata().getName()).inContainer(container.getName());
@@ -375,7 +388,11 @@ public class KubernetesRuntimeProvisioningService implements RuntimeProvisioning
                             log.debug("Retrieving logs in pod : " + pod.getMetadata().getName() + "-" + container
                                     .getName());
                         }
-                        String logs = (String) prettyLoggable.getLog(true);
+                        String logs = "";
+                        if(prettyLoggablePrev != null) {
+                            logs = (String) prettyLoggablePrev.getLog(true);
+                        }
+                        logs += (String) prettyLoggable.getLog(true);
                         logOutPut.put("Replica-" + podCounter + "-" + container.getName(), logs);
                         deploymentLogs.setDeploymentLogs(logOutPut);
                     }
@@ -884,13 +901,24 @@ public class KubernetesRuntimeProvisioningService implements RuntimeProvisioning
      * {@inheritDoc}
      */
     @Override
-    public void deleteDeployment() throws RuntimeProvisioningException {
-        deleteK8sKind(KubernetesPovisioningConstants.KIND_REPLICATION_CONTROLLER);
-        deleteK8sKind(KubernetesPovisioningConstants.KIND_DEPLOYMENT);
-        deleteK8sKind(KubernetesPovisioningConstants.KIND_POD);
-        deleteK8sKind(KubernetesPovisioningConstants.KIND_INGRESS);
-        deleteK8sKind(KubernetesPovisioningConstants.KIND_SECRETS);
-        deleteK8sKind(KubernetesPovisioningConstants.KIND_SERVICE);
+    public boolean deleteDeployment() throws RuntimeProvisioningException {
+        try {
+            deleteK8sKind(KubernetesPovisioningConstants.KIND_DEPLOYMENT);
+            KubernetesProvisioningUtils.waitForDeploymentToGetDeleted(applicationContext);
+            deleteK8sKind(KubernetesPovisioningConstants.KIND_REPLICATION_CONTROLLER);
+            KubernetesProvisioningUtils.waitForRCToGetDeleted(applicationContext);
+            deleteK8sKind(KubernetesPovisioningConstants.KIND_POD);
+            KubernetesProvisioningUtils.waitForPodToGetDeleted(applicationContext);
+            deleteK8sKind(KubernetesPovisioningConstants.KIND_INGRESS);
+            KubernetesProvisioningUtils.waitForIngressesToGetDeleted(applicationContext);
+            deleteK8sKind(KubernetesPovisioningConstants.KIND_SECRETS);
+            KubernetesProvisioningUtils.waitForSecretToGetDeleted(applicationContext);
+            deleteK8sKind(KubernetesPovisioningConstants.KIND_SERVICE);
+            KubernetesProvisioningUtils.waitForServiceToGetDeleted(applicationContext);
+            return true;
+        } catch (RuntimeProvisioningException e){
+            return false;
+        }
     }
 
     /**
@@ -937,6 +965,49 @@ public class KubernetesRuntimeProvisioningService implements RuntimeProvisioning
     /**
      * {@inheritDoc}
      */
+    @Override public void deleteK8sKindByName(String k8sKind, String name) throws RuntimeProvisioningException {
+        KubernetesClient kubernetesClient = KubernetesProvisioningUtils.getFabric8KubernetesClient();
+        String namespace = this.namespace.getMetadata().getName();
+
+        if (log.isDebugEnabled()) {
+            log.debug("Kubernetes kind : " + k8sKind + ", object name : " + name);
+        }
+
+        try {
+            switch (k8sKind) {
+            case KubernetesPovisioningConstants.KIND_REPLICATION_CONTROLLER:
+                kubernetesClient.replicationControllers().inNamespace(namespace).withName(name).delete();
+                break;
+            case KubernetesPovisioningConstants.KIND_DEPLOYMENT:
+                kubernetesClient.extensions().deployments().inNamespace(namespace).withName(name).delete();
+                break;
+            case KubernetesPovisioningConstants.KIND_POD:
+                kubernetesClient.pods().inNamespace(namespace).withName(name).delete();
+                break;
+            case KubernetesPovisioningConstants.KIND_INGRESS:
+                kubernetesClient.extensions().ingress().inNamespace(namespace).withName(name).delete();
+                break;
+            case KubernetesPovisioningConstants.KIND_SECRETS:
+                kubernetesClient.secrets().inNamespace(namespace).withName(name).delete();
+                break;
+            case KubernetesPovisioningConstants.KIND_SERVICE:
+                kubernetesClient.services().inNamespace(namespace).withName(name).delete();
+                break;
+            default:
+                String message = "The kubernetes kind : " + k8sKind + " deletion is not supported";
+                throw new IllegalArgumentException(message);
+            }
+        } catch (KubernetesClientException e) {
+            String message = "Error while deleting kubernetes kind : " + k8sKind + " with name : " + name +
+                    " from deployment";
+            log.error(message, e);
+            throw new RuntimeProvisioningException(message, e);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void createService(ServiceProxy serviceProxy) throws RuntimeProvisioningException {
         Service service = getService(serviceProxy);
@@ -951,4 +1022,30 @@ public class KubernetesRuntimeProvisioningService implements RuntimeProvisioning
             throw new RuntimeProvisioningException(message, e);
         }
     }
+
+	@Override
+	public Map<String, String> getPodRestartCounts() throws RuntimeProvisioningException {
+		Map<String, String> podRestartCounts = new HashMap<>();
+		PodList podList = KubernetesProvisioningUtils.getPods(applicationContext);
+		if (podList != null) {
+			int podCounter = 0;
+			for (Pod pod : podList.getItems()) {
+                if(pod.getStatus().getContainerStatuses().size() > 0) {
+                    podRestartCounts.put(String.valueOf(podCounter),
+                                         String.valueOf(pod.getStatus().getContainerStatuses().get(0).getRestartCount()));
+                } else {
+                    //In case query is done before the pod get fully created,
+                    //Restart count wont be available so returning 0
+                    podRestartCounts.put(String.valueOf(podCounter), String.valueOf(0));
+                }
+				podCounter++;
+			}
+			return podRestartCounts;
+		} else {
+			String message = "Couldnot find a pod associated with pod for application : " + applicationContext.getId() +
+			                 ", version : " + applicationContext.getVersion();
+			log.error(message);
+			throw new RuntimeProvisioningException(message);
+		}
+	}
 }

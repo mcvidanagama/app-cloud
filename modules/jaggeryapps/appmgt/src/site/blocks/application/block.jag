@@ -42,6 +42,13 @@ jagg.block("application", {
         var subscriptionPlanBaseURL = modManager.getPropertyValue("SubscriptionPlanBaseURL");
         var notAllowedEnvVariables = applicationModule.getNotAllowedEnvVariables();
         var maxAppCount = applicationModule.getMaxInstanceCount();
+        var allowedContainerSpecs = applicationModule.
+            getAllowedContainerSpecificationsForRuntime(runtimes[0].id);
+        var defaultVersion = applicationModule.getDefaultVersion(inputs.applicationName);
+        var appTypeCount = applicationModule.getAllAppTypes().length;
+        var cloudSpecificApplicationRepresentation = jagg.module("manager").getCloudTypeProperties().cloudSpecificApplicationRepresentation;
+        var applications = applicationModule.getAllApplications();
+
 
         return {
             "runtimes" : runtimes,
@@ -50,7 +57,12 @@ jagg.block("application", {
             "applicationCount" : applicationCount,
             "subscriptionPlanBaseURL" : subscriptionPlanBaseURL,
             "notAllowedEnvVariables" : notAllowedEnvVariables,
-            "maxAppCount" : maxAppCount
+            "maxAppCount" : maxAppCount,
+            "allowedContainerSpecs" : allowedContainerSpecs,
+            "defaultVersion" : defaultVersion,
+            "appTypeCount" : appTypeCount,
+            "cloudSpecificApplicationRepresentation" : cloudSpecificApplicationRepresentation,
+            "applications" : applications
         };
     }
 });

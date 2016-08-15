@@ -1,0 +1,67 @@
+<%
+/*
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *   WSO2 Inc. licenses this file to you under the Apache License,
+ *   Version 2.0 (the "License"); you may not use this file except
+ *   in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing,
+ *   software distributed under the License is distributed on an
+ *   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *   KIND, either express or implied.  See the License for the
+ *   specific language governing permissions and limitations
+ *   under the License.
+ */
+
+include("/jagg/jagg.jag");
+include("/jagg/constants.jag");
+
+var mod = jagg.module("application");
+var validator = require('/site/themes/default/js/custom/validator.js');
+
+(function () {
+    var action = request.getParameter("action");
+    if (!jagg.getUser()) {
+        print(UNAUTHORIZED_ERROR_RESPONSE);
+        return;
+    }
+
+    if (action == "updateDefaultVersion") {
+        var applicationName = request.getParameter("applicationName");
+        var defaultVersion = request.getParameter("defaultVersion");
+        var applicationHashId = mod.getApplicationHashIdByName(applicationName);
+        var versions = mod.getVersionListOfApplication(applicationHashId);
+        var versionValidation = validator.validateApplicationVersionExistence(versions, defaultVersion);
+
+        try {
+            if (mod.getDefaultVersion(applicationName) == defaultVersion) {
+                response.status = 500;
+                response.content = "Version: " + defaultVersion + " is the default version. Please select another version.";
+            } else {
+                if (versionValidation.status) {
+                    var result = mod.changeMappedDomain(applicationName, defaultVersion);
+                    print(result);
+                } else {
+                    response.status = 500;
+                    response.content = versionValidation.msg;
+                }
+            }
+        } catch (e) {
+            var message = "Error while updating version : " + defaultVersion + " to the default version";
+            log.error(message);
+            log.error(e);
+            response.status = 500;
+            response.content = message;
+        }
+    } else {
+        throw new Error("No action specified");
+    }
+
+}());
+
+%>
+

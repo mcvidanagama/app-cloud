@@ -35,17 +35,51 @@ include("/jagg/constants.jag");
 
         var applicationKey = request.getParameter("applicationKey");
         var selectedRevision = request.getParameter("selectedRevision");
+        var isFirstRequest = request.getParameter("isFirstRequest");
         var mod = jagg.module("runtimeLogs");
+        var modApplication = jagg.module("application");
         try {
-            var logMap = mod.getFormattedRuntimeLogs(applicationKey, selectedRevision, "");
+            var applicationType = modApplication.getApplication(applicationKey).applicationType;
+            var logMap = mod.getFormattedRuntimeLogs(applicationKey, selectedRevision, applicationType, isFirstRequest);
             print(logMap);
         } catch(e) {
             var msg = "Error while getting deployment logs";
             log.error(e);
-            log.error(msg+" for application: "+applicationKey+ " revision: "+applicationKey);
+            log.error(msg+" for application: "+applicationKey+ " and revision: "+ selectedRevision);
             response.status = 400;
             response.content = msg;
         }
+    } else if (action == "downloadLogs") {
+
+        var applicationKey = request.getParameter("applicationKey");
+        var selectedRevision = request.getParameter("selectedRevision");
+        var mod = jagg.module("runtimeLogs");
+        var modApplication = jagg.module("application");
+        try {
+            var applicationType = modApplication.getApplication(applicationKey).applicationType;
+            var logMap = mod.getDownloadableRuntimeLogs(applicationKey, selectedRevision, applicationType);
+            print(logMap);
+        } catch(e) {
+            var msg = "Error while getting deployment logs";
+            log.error(e);
+            log.error(msg+" for application: "+applicationKey+ " and revision: "+ selectedRevision);
+            response.status = 400;
+            response.content = msg;
+        }
+    } else if (action == "getApplicationRevisionStatus") {
+        var applicationKey = request.getParameter("applicationKey");
+        var selectedRevision = request.getParameter("selectedRevision");
+        var mod = jagg.module("application");
+
+        try {
+            var status = mod.getApplicationRevisionStatus(applicationKey, selectedRevision);
+            print(status);
+        } catch (e) {
+            var msg = "Error while getting application revision status";
+            response.status = 400;
+            response.content = msg;
+        }
+
     } else {
         log.error("No action specified");
     }

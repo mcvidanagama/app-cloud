@@ -27,7 +27,7 @@ var carbon = require('carbon');
 var server = carbon.server;
 var multitenancy = carbon.multitenancy;
 
-function login(userName, password){
+function login(userName, password, requestURL) {
 	var tenantDomain = SUPER_TENANT_DOMAIN_NAME;
 	if (userName.indexOf("@") != -1) {
 		tenantDomain = userName.substring(userName.lastIndexOf('@') + 1);
@@ -38,20 +38,46 @@ function login(userName, password){
 	var context=multitenancy.getPrivilegedCarbonContext();
  	var tenantManager= multitenancy.getTenantManager();
 	var finalResult={};
+
+       // check whether given tenant domain is valid
+       try {
+           if (tenantManager.getTenantId(tenantDomain) == -1) {
+               finalResult.error = "true";
+               finalResult.message = "Authorization Failed.";
+               finalResult.username = userName;
+	        return stringify(finalResult);
+           }
+       } catch (e) {
+	    log.error("Error while get tenant Id user : " + userName);
+	    log.error(e);
+	    throw e;
+       }
+
+
 	try{
-        	context.startTenantFlow();
-        	context.getThreadLocalCarbonContext().setTenantId(tenantManager.getTenantId(tenantDomain));
-        	context.getThreadLocalCarbonContext().setTenantDomain(tenantDomain);
-        	context.getThreadLocalCarbonContext().setUsername(userName);
+        context.startTenantFlow();
+        context.getThreadLocalCarbonContext().setTenantId(tenantManager.getTenantId(tenantDomain));
+        context.getThreadLocalCarbonContext().setTenantDomain(tenantDomain);
+        context.getThreadLocalCarbonContext().setUsername(userName);
 		var result = server.Server.prototype.authenticate(userName,password);
 		if(result === true){
-			jagg.setUser(userName);
-			finalResult.error="false";
-			finalResult.message="User successfully logged in";
-			finalResult.username=userName;
+		    var permission = modManager.getPropertyValue(LOGIN_PERMISSION);
+            var isUserAuthorized = modManager.checkAuthorizationForUser(userName, permission);
+            if (isUserAuthorized){
+                jagg.setUser(userName);
+                jagg.setSelectedCloud(requestURL);
+                finalResult.error="false";
+                finalResult.message="User successfully logged in";
+                finalResult.username=userName;
+			} else {
+			    finalResult.error="true";
+                           finalResult.message="Authorization Failed.";
+                           finalResult.username=userName;
+			}
 		}else{
 			finalResult.error="true";
 			finalResult.message="Authenitcation Failed.";
+                       finalResult.username=userName;
 		}
 		return stringify(finalResult);
 	} catch(e){

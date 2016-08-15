@@ -1,6 +1,6 @@
 <%
 /*
- * Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *   WSO2 Inc. licenses this file to you under the Apache License,
  *   Version 2.0 (the "License"); you may not use this file except
@@ -76,6 +76,10 @@ jagg.module("databases", {
 		return jagg.require(jagg.getModulesDir()+"databases/templates/add.jag").createTemplateWithAllPermissions.apply(this,arguments);
 	},
 
+    isDatabasePrivilegeTemplateExist:function(){
+        return jagg.require(jagg.getModulesDir()+"databases/templates/add.jag").isDatabasePrivilegeTemplateExist.apply(this,arguments);
+    },
+
 	editTemplate:function() {
 		return jagg.require(jagg.getModulesDir()+"databases/templates/add.jag").editTemplate.apply(this,arguments);
 	},
@@ -143,7 +147,12 @@ jagg.module("databases", {
     getAllDatabasesInfo: function () {
         return jagg.require(jagg.getModulesDir() + "databases/add/add.jag").getAllDatabasesInfo.apply(this, arguments);
     },
-
+    getDatabaseCount: function () {
+        return jagg.require(jagg.getModulesDir() + "databases/add/add.jag").getDatabaseCount.apply(this, arguments);
+    },
+    getMaxDatabaseCount: function () {
+        return jagg.require(jagg.getModulesDir() + "databases/add/add.jag").getMaxDatabaseCount.apply(this, arguments);
+    }
   
 });
 %>

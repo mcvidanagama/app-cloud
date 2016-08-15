@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+* Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package org.wso2.appcloud.provisioning.runtime;
 import org.wso2.appcloud.provisioning.runtime.beans.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public interface RuntimeProvisioningService {
@@ -174,7 +175,7 @@ public interface RuntimeProvisioningService {
      *
      * @throws RuntimeProvisioningException
      */
-    void deleteDeployment() throws RuntimeProvisioningException;
+    boolean deleteDeployment() throws RuntimeProvisioningException;
 
     /**
      * Create a service in K8s.
@@ -183,4 +184,20 @@ public interface RuntimeProvisioningService {
      * @throws RuntimeProvisioningException
      */
     public void createService(ServiceProxy serviceProxy) throws RuntimeProvisioningException;
+
+	/**
+	 * Get restart count for each pod of the application
+	 * @return
+	 * @throws RuntimeProvisioningException
+	 */
+	Map<String, String> getPodRestartCounts() throws RuntimeProvisioningException;
+
+    /**
+     * Delete kubernetes kind by name from the deployment
+     *
+     * @param k8sKind kubernetes kind
+     * @param name    unique name refer in Kubernetes
+     * @throws RuntimeProvisioningException
+     */
+    void deleteK8sKindByName(String k8sKind, String name) throws RuntimeProvisioningException;
 }

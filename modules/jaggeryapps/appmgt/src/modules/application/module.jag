@@ -194,8 +194,8 @@ jagg.module("application", {
         return jagg.require(jagg.getModulesDir() + "application/application.jag").verifyCustomUrl.apply(this, arguments);
     },
 
-    addCustomUrl: function () {
-        return jagg.require(jagg.getModulesDir() + "application/application.jag").addCustomUrl.apply(this, arguments);
+    addCustomDomain: function () {
+        return jagg.require(jagg.getModulesDir() + "application/application.jag").addCustomDomain.apply(this, arguments);
     },
 
     isAplicationVersionExist: function () {
@@ -212,6 +212,66 @@ jagg.module("application", {
 
     stopOtherVersions: function () {
         return jagg.require(jagg.getModulesDir() + "application/application.jag").stopOtherVersions.apply(this, arguments);
+    },
+
+    getApplicationRevisionStatus:function () {
+        return jagg.require(jagg.getModulesDir() + "application/application.jag").getApplicationRevisionStatus.apply(this, arguments);
+    },
+
+    getAppLaunchURL: function () {
+        return jagg.require(jagg.getModulesDir() + "application/application.jag").constructAppLaunchURL.apply(this, arguments);
+    },
+
+    getRestartCounts: function () {
+        return jagg.require(jagg.getModulesDir() + "application/application.jag").getRestartCounts.apply(this, arguments);
+    },
+
+    getRuntimePropertyMap: function () {
+        return jagg.require(jagg.getModulesDir() + "application/application.jag").getRuntimePropertyMap.apply(this, arguments);
+    },
+
+    getVersionsOfApplication: function () {
+        return jagg.require(jagg.getModulesDir() + "application/application.jag").getVersionsOfApplication.apply(this, arguments);
+    },
+
+    getAllowedContainerSpecificationsForRuntime: function () {
+        return jagg.require(jagg.getModulesDir() + "application/application.jag").getAllowedContainerSpecificationsForRuntime.apply(this, arguments);
+    },
+
+    setDefaultVersion: function () {
+        return jagg.require(jagg.getModulesDir() + "application/application.jag").setDefaultVersion.apply(this, arguments);
+    },
+
+    getDefaultVersion: function () {
+        return jagg.require(jagg.getModulesDir() + "application/application.jag").getDefaultVersion.apply(this, arguments);
+    },
+
+    setDefaultDomain: function () {
+        return jagg.require(jagg.getModulesDir() + "application/application.jag").setDefaultDomain.apply(this, arguments);
+    },
+
+    changeMappedDomain: function () {
+        return jagg.require(jagg.getModulesDir() + "application/application.jag").changeMappedDomain.apply(this, arguments);
+    },
+
+    constructDefaultAppLaunchURL: function () {
+        return jagg.require(jagg.getModulesDir() + "application/application.jag").constructDefaultAppLaunchURL.apply(this, arguments);
+    },
+
+    getTaggedApplicationsList: function () {
+        return jagg.require(jagg.getModulesDir() + "application/application.jag").getTaggedApplicationsList.apply(this, arguments);
+    },
+
+    getEndpointsExtractor:function () {
+        return jagg.require(jagg.getModulesDir() + "application/endpoints.jag").getEndpointsExtractor.apply(this, arguments);
+    },
+
+    isEnvironmentVariableExist:function () {
+        return jagg.require(jagg.getModulesDir() + "application/application.jag").isEnvironmentVariableExist.apply(this, arguments);
+    },
+
+    isTagExist:function () {
+        return jagg.require(jagg.getModulesDir() + "application/application.jag").isTagExist.apply(this, arguments);
     }
 });
 %>

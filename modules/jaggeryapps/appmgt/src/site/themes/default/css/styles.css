@@ -1,3 +1,20 @@
+/*
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *   WSO2 Inc. licenses this file to you under the Apache License,
+ *   Version 2.0 (the "License"); you may not use this file except
+ *   in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing,
+ *   software distributed under the License is distributed on an
+ *   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *   KIND, either express or implied.  See the License for the
+ *   specific language governing permissions and limitations
+ *   under the License.
+ */
 body {
     font-family: 'Roboto', sans-serif;
     font-size: 14px;
@@ -101,6 +118,25 @@ button[disabled]{
     opacity: 0.65;
     cursor: not-allowed;
 }
+.fw-cancel, .fw-edit, .fw-save {
+    cursor: pointer;
+}
+
+/* Disable and Enable edit icon */
+.edit-disable, .edit-disable * {
+    cursor: default;
+    pointer-events: none;
+}
+.edit-enable, .edit-enable * {
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+/* Disable select2 selection box */
+.select2-disable, .select2-disable * {
+    background-color: #CACACA;
+    pointer-events: none;
+}
 
 .cu-btn {
     font-size: 1.1em;
@@ -126,7 +162,7 @@ button[disabled]{
     text-decoration: none;
 }
 .cu-btn-md {
-    padding: 10px 22px;
+    padding: 10px 15px;
     line-height: 1.3em;
 }
 .cu-btn-lg {}
@@ -199,6 +235,9 @@ button[disabled]{
     text-align: center;
     margin-right: -4px;
 }
+.add-env[disabled] {
+    cursor: default;
+}
 a.btn-action {
     color: #fff;
     text-decoration: none;
@@ -207,6 +246,7 @@ a.btn-action {
     text-transform: uppercase;
     height: 53px;
     padding: 9px 10px;
+    cursor: pointer;
 }
 /* cloud popover menu related styles */
 
@@ -984,7 +1024,7 @@ a.btn-action {
 }
 .block-general h3,
 .block-team h3,
-.block-database h3 {
+.block-database h3, .block-con-spec h3 {
     font-weight: 300;
     margin-top: 8px;
 }
@@ -1068,6 +1108,7 @@ a.btn-action {
 .block-runtime,
 .block-monitoring,
 .block-team,
+.block-endpoints,
 .block-replica,
 .block-database {
     margin-top: 1em;
@@ -1079,6 +1120,14 @@ a.btn-action {
 }
 .block-database {
     background-color: #0090d9;
+}
+
+.block-con-spec {
+    margin-top: 1em;
+    padding: 18px;
+    background-color: #4abbd9;
+    width: 100%;
+
 }
 .block-life-cycle {
     background-color: #0090d9;
@@ -1095,6 +1144,9 @@ a.btn-action {
 .block-replica {
     background-color: #464646;
     min-height: 24em;
+}
+.block-endpoints {
+    background-color: #464646;
 }
 .block-runtime{
     background-color: #e67e22;
@@ -1660,6 +1712,27 @@ a.btn-action {
     -moz-border-radius: 0px;
     border-radius: 0px;
 }
+
+/* Set width of select2 selection box */
+.form-control[disabled].select2{
+    width: 350px;
+}
+
+/* Remove the arrow of select2 element */
+.select2::-ms-expand {
+    display: none;
+}
+
+.select2 {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.form-control[disabled].element-value-holder{
+    width: 350px;
+}
+
 /* custom URL section */
 .form-section{
     margin-top: 3em;
@@ -1714,7 +1787,7 @@ a.btn-action {
     color: #cecece;
     word-break: break-all;
     word-wrap: break-word;
-    border: 1px solid #444;    
+    border: 1px solid #444;
     background-color:#333;
     border-radius:0;
     max-height: 340px;
@@ -1786,10 +1859,10 @@ a.btn-action {
 
 }
 @media (max-width: 992px) {
- .version-url{
+    .version-url{
         width:45.1%;
     }
-    .block-general h3, .block-team h3, .block-database h3{
+    .block-general h3, .block-team h3, .block-database h3, .block-con-spec h3{
         font-size:20px;
     }
     .block-action-button{
@@ -1848,13 +1921,13 @@ a.btn-action {
         width:100%;
     }
     .version-number{
-      margin-bottom:1px;
+        margin-bottom:1px;
     }
-     .version-number,.version-number button,.version-number .dropdown-menu{
+    .version-number,.version-number button,.version-number .dropdown-menu{
         width:100%;
     }
     .btn-launch-app{
-       width:60%;
+        width:60%;
     }
     .btn-edit-code{
         margin-left:0px;
@@ -1878,7 +1951,7 @@ a.btn-action {
 .btn-edit-code > a{
     border:none;
     line-height:20px;
-    margin-top:-3px;
+    margin-top:0px;
 }
 .invitaiton_list{
     list-style:none;
@@ -1946,19 +2019,19 @@ a.btn-action {
     border-top-color:#464646;
 }
 #password_strength_wrap {
-        border: 1px solid #D5CEC8;
-        display: none;
-        float: left;
-        padding: 10px;
-        position: relative;
-        max-width: 320px;
+    border: 1px solid #D5CEC8;
+    display: none;
+    float: left;
+    padding: 10px;
+    position: relative;
+    max-width: 320px;
 }
 #password_strength_wrap:before, #password_strength_wrap:after{
-        content: ' ';
-        height: 0;
-        position: absolute;
-        width: 0;
-        border: 10px solid transparent; /* arrow size */
+    content: ' ';
+    height: 0;
+    position: absolute;
+    width: 0;
+    border: 10px solid transparent; /* arrow size */
 }
 #password_strength_wrap:before{
     border-bottom: 7px solid rgba(0, 0, 0, 0);
@@ -1981,15 +2054,15 @@ a.btn-action {
     top: 11px;
 }
 #pswd_info ul {
-        list-style-type: none;
-        margin: 5px 0 0;
-        padding: 0;
+    list-style-type: none;
+    margin: 5px 0 0;
+    padding: 0;
 }
 #pswd_info .status_icon{
     margin-right:5px;
 }
 #pswd_info ul li.valid {
-        color: #27ae60;
+    color: #27ae60;
 }
 #passwordStrength {
     display: block;
@@ -2484,7 +2557,7 @@ th.hide-column-data, td.hide-column-data {
 }
 
 .div-search {
-    padding: 31px 0px 5px;
+    padding: 31px 25px 5px;
     background-color: #5F5F5F;
     margin: -15px;
 }
@@ -2507,14 +2580,14 @@ th.hide-column-data, td.hide-column-data {
 .editroles .fw-stack span{
     color:#0498d5;
 }
-#user-name-select + .select2-container .select2-selection--multiple{
+.select2-container .select2-selection--multiple{
     height:34px;
 }
-#user-name-select + .select2-container .select2-selection--multiple li{
+.select2-container .select2-selection--multiple li{
     border:none;
     background-color:#fff;
 }
-#user-name-select + .select2-container .select2-selection--multiple li span.select2-selection__choice__remove{
+.select2-container .select2-selection--multiple li span.select2-selection__choice__remove{
     display:none;
 }
 .modal-header button.close-override{
@@ -2530,29 +2603,37 @@ th.hide-column-data, td.hide-column-data {
 }
 
 .modal {
-  text-align: center;
+    text-align: center;
 }
 
 @media screen and (min-width: 768px) {
-  .modal:before {
-    display: inline-block;
-    vertical-align: middle;
-    content: " ";
-    height: 100%;
-  }
+    .modal:before {
+        display: inline-block;
+        vertical-align: middle;
+        content: " ";
+        height: 100%;
+    }
 }
 
 .modal-dialog {
-  display: inline-block;
-  text-align: left;
-  vertical-align: middle;
+    display: inline-block;
+    text-align: left;
+    vertical-align: middle;
 }
 
+.select2-selection.select2-selection--multiple.custom-env-class-for-demo.select {
+    border-radius: 0px;
+}
 .custom-env-class-for-demo .form-group {
     margin: 1em 3px 0px;
 }
 .custom-env-class-for-demo input[type=text] {
     width: 350px;
+}
+.custom-env-class-for-demo .select{
+    border-radius: 0px;
+    width: 350px;
+    height: 34px;
 }
 .custom-env-class-for-demo .fw-lg{
     margin: 0px 3px;
@@ -2562,7 +2643,7 @@ th.hide-column-data, td.hide-column-data {
 }
 
 .demo-dashboard-block{
-    font-size: 13em;
+    font-size: 900%;
 }
 .block-replicas{
     min-height: 16em;
@@ -2746,3 +2827,78 @@ ul#appVersionList {
     max-height: 150px;
     overflow-y: auto;
 }
+
+.info-block {
+    color: #10171d;
+    font-size: 14px;
+    padding: 15px;
+    text-align: justify;
+    background: rgb(246,248,249); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(246,248,249,1) 0%, rgba(229,235,238,1) 15%, rgba(215,222,227,1) 78%, rgba(245,247,249,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(246,248,249,1) 0%,rgba(229,235,238,1) 15%,rgba(215,222,227,1) 78%,rgba(245,247,249,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(246,248,249,1) 0%,rgba(229,235,238,1) 15%,rgba(215,222,227,1) 78%,rgba(245,247,249,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f6f8f9', endColorstr='#f5f7f9',GradientType=0 );
+}
+
+.ellipsis {
+  text-overflow: ellipsis;
+
+  /* Required for text-overflow to do anything */
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.from-group-margin {
+    margin-bottom: 1.0em;
+}
+
+.wrapper {
+    position: relative;
+    z-index: 90;
+}
+
+.ribbon-wrapper {
+    width: 120px;
+    height: 120px;
+    overflow: hidden;
+    position: absolute;
+    top: -3px;
+    right: -3px;
+}
+
+.ribbon {
+    font: bold 15px Sans-Serif;
+    color: #333;
+    text-align: center;
+    -webkit-transform: rotate(45deg);
+    -moz-transform:    rotate(45deg);
+    -ms-transform:     rotate(45deg);
+    -o-transform:      rotate(45deg);
+    position: relative;
+    padding: 7px 0;
+    left: -10px;
+    top: 31px;
+    width: 165px;
+    background-color: #fff;
+    color: #6a6340;
+    -webkit-box-shadow: 0px 0px 3px rgba(0,0,0,0.3);
+    -moz-box-shadow:    0px 0px 3px rgba(0,0,0,0.3);
+    box-shadow:         0px 0px 3px rgba(0,0,0,0.3);
+}
+
+.ribbon:before, .ribbon:after {
+    content: "";
+    border-top:   3px solid #95a5a6;
+    border-left:  3px solid transparent;
+    border-right: 3px solid transparent;
+    position:absolute;
+    bottom: -3px;
+}
+
+.ribbon:before {
+    left: 0;
+}
+.ribbon:after {
+    right: 0;
+}​
+

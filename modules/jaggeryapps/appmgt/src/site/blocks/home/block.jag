@@ -1,6 +1,6 @@
 <%
 /*
- * Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *   WSO2 Inc. licenses this file to you under the Apache License,
  *   Version 2.0 (the "License"); you may not use this file except
@@ -32,6 +32,7 @@ jagg.block("home", {
     getOutputs:function (inputs) {
         var log = new Log();
         var applicationModule = jagg.module("application");
+        var managerModule = jagg.module("manager");
         var appTypePropertyConfPath = jagg.getAppTypePropertyConfFilePath();
         var parsedObject = parse(appTypePropertyConfPath);
         var appTypesProperties = require(parsedObject);
@@ -42,15 +43,21 @@ jagg.block("home", {
         if(!selectedRevision && application.defaultVersion){
             selectedRevision = application.defaultVersion;
         }
+        var restartCounts = applicationModule.getRestartCounts(application.applicationName, selectedRevision, application.applicationType);
         var selectedVersion = application.versions[selectedRevision];
         var conSpecCpu = selectedVersion.conSpecCpu;
         var conSpecMemory = selectedVersion.conSpecMemory;
+        var dashboardUrl = managerModule.getPropertyValue(DASHBOARD_BASE_URL);
 
+        var pageTitle = managerModule.getCloudTypeProperties().pageTitle;
         return {
             "application" : application,
-            "selectedRevision":selectedRevision,
+            "selectedRevision" : selectedRevision,
             "conSpecCpu" : conSpecCpu,
-            "conSpecMemory" : conSpecMemory
+            "conSpecMemory" : conSpecMemory,
+            "restartCounts" : restartCounts,
+            "pageTitle" : pageTitle,
+            "dashboardUrl" : dashboardUrl
         };
     }
 
