@@ -57,10 +57,10 @@ var addApplication = function (applicationName, versionName, applicationDescript
 
     log.info("Started creating App => Name:" + applicationName + " Version:" + versionName + " Description:" + applicationDescription +
     " RuntimeId:" + runtimeId + " AppType:" + appTypeName + " Runtime Properties:" + JSON.stringify(runtimePropertiesArray) +
-    " Tags:" + JSON.stringify(tagArray) + " App Icon:" + JSON.stringify(appIcon) + " Uploaded FileName:" + uploadedFileName +
-    " New Version:" + isNewVersion + " Allocated Memory:" + conSpecMemory + " Allocated CPU:" + conSpecCpu +
-    " Artifact Url:" + artifactUrl + " App Creation Method:" + appCreationMethod + " Previous HashId:" + oldHashId +
-    " Context:" + applicationContext + " DefaultVersion:" + setDefaultVersion);
+    " Tags:" + JSON.stringify(tagArray) + " Uploaded FileName:" + uploadedFileName + " New Version:" + isNewVersion +
+    " Allocated Memory:" + conSpecMemory + " Allocated CPU:" + conSpecCpu + " Artifact Url:" + artifactUrl +
+    " App Creation Method:" + appCreationMethod + " Previous HashId:" + oldHashId + " Context:" + applicationContext +
+    " DefaultVersion:" + setDefaultVersion);
 
     var tenantId = modManager.getTenantId();
     var applicationHashId = Util.getApplicationHashId(applicationName, tenantId);
