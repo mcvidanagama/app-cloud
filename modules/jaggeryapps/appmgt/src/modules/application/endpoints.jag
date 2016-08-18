@@ -231,7 +231,6 @@ var getEndpointsWithApplicationContext = function (deploymentUrl, versionId) {
 
         endpoints = createJsonResponse(null, null, webEndpoints, null);
     } catch (e) {
-        log.info(e);
         return undefined;
     }
     return endpoints;
