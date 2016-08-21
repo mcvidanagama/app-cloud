@@ -84,9 +84,10 @@ function loadEndpointView() {
             } else {
                 showLoadingEndpointView();
                 var deploymentURL = generateDefaultLaunchUrl();
+                loadEndpoints(deploymentURL, applicationType, selectedApplicationRevision.versionId);
                 timerId = setInterval(function () {
                     loadEndpoints(deploymentURL, applicationType, selectedApplicationRevision.versionId);
-                }, 2000);
+                }, 3000);
             }
         }
     } else {
@@ -97,7 +98,7 @@ function loadEndpointView() {
 function showLoadingEndpointView() {
     $("#app-type-data").html('<div class="block-endpoints "><h5>' +
         '<span><i class="fw fw-loader2 fw-spin fw-2x"></i></span>' +
-        ' &nbsp; Runtime: ' + selectedApplicationRevision.runtimeName + ' is starting ....</h5></div>');
+        ' &nbsp; Runtime: ' + selectedApplicationRevision.runtimeName + ' is starting ...</h5></div>');
 }
 
 function loadEndpoints(deploymentURL, applicationType, versionId) {
@@ -109,7 +110,7 @@ function loadEndpoints(deploymentURL, applicationType, versionId) {
      }, function(result) {
         var endpoints = JSON.parse(result);
         if (endpoints == undefined) {
-            loadDefaultEndpointSection();
+            showLoadingEndpointView();
         } else {
             // Generate SOAP Services Section
             var soap_html = "";

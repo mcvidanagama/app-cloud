@@ -991,20 +991,26 @@ jagg.template("application", function (inputs, outputs, jagg) {
             </div>
 
         <% if(newVersion){ %>
-            <div class="form-group">
-            <label for="application-version"><%=cloudSpecificApplicationRepresentation%> Version:
-                <i class="fa fa-question-circle help-tips" data-toggle="tooltip" data-placement="left" title="Set the version in the form <Major>.<Minor>.<Patch>"></i>
-            </label>
-            <input id="applicationRevision" name="applicationRevision" type="text" class="form-control" value="<%=nextVersion%>"/>
-            </div>
-            <div class="form-group">
-                    <label>Your current default version is <%=defaultVersion%></label>
-                       <div class="checkbox">
+            <div class="row">
+                <div class="col-md-7">
+                    <div class="form-group">
+                        <label for="application-version"><%=cloudSpecificApplicationRepresentation%> Version:
+                            <i class="fa fa-question-circle help-tips" data-toggle="tooltip" data-placement="left" title="Set the version in the form <Major>.<Minor>.<Patch>"></i>
+                        </label>
+                        <input id="applicationRevision" name="applicationRevision" type="text" class="form-control" value="<%=nextVersion%>"/>
+                        <label>Your current default version is <%=defaultVersion%></label>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <div class="checkbox">
                           <label>
                            <input type="checkbox" name="defaultversion" id="default_version" value="deploy-sample" class="custom-checkbox" checked/>Make this the default version
                           </label>
-                       </div>
+                        </div>
                     </div>
+                </div>
+            </div>
                 <% } else { %>
             <div class="form-group">
             <label for="application-version"><%=cloudSpecificApplicationRepresentation%> Version:
