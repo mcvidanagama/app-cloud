@@ -27,8 +27,10 @@ ENV ADMIN_PASS ""
 ENV WSO2_ESB_VERSION 5.0.0
 
 RUN apk update && \
-    apk add pwgen git wget curl && \
+    apk add pwgen git wget curl openjdk8 && \
     addgroup wso2 && adduser -g '' -s /bin/bash -D -G wso2 wso2user
+
+ENV JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk/jre/
 
 USER wso2user
 
