@@ -93,7 +93,7 @@ var addApplication = function (applicationName, versionName, applicationDescript
         }
         renameDirectory(oldHashId, versionHashId, uploadedFileName);
     }
-    var absFileUploadedPath =  createDockerFile(applicationName, versionName, runtimeId, uploadedFileName,
+    var absFileUploadedPath =  createDockerFile(applicationName, versionName, appTypeName, runtimeId, uploadedFileName,
             versionHashId, dockerClient, artifactUrl, hostName, appCreationMethod, runtimeProperties, conSpecMemory);
     var buildDockerImageStatus = buildDockerImage(applicationName, versionName, runtimeId, absFileUploadedPath, applicationRuntime, tagName, versionHashId, dockerClient);
     if (buildDockerImageStatus) {
@@ -327,7 +327,7 @@ var createAppVersionInDataBase = function( versionName,   runtimeId, runtimeProp
 }
 
 
-var createDockerFile = function (applicationName, versionName, runtimeId, uploadedFileName, versionHashId, dockerClient,
+var createDockerFile = function (applicationName, versionName, appTypeName, runtimeId, uploadedFileName, versionHashId, dockerClient,
                                  artifactUrl, hostName, appCreationMethod, runtimeProperties, conSpecMemory) {
     var msg = "Docker file creation successfully triggered in AppCloud";
     addEvent(DOCKER_FILE_CREATE, EVENT_PENDING, msg, versionHashId);
@@ -359,6 +359,12 @@ var createDockerFile = function (applicationName, versionName, runtimeId, upload
         dockerFilePropertyMap.put("HOST_NAME", hostName);
         dockerFilePropertyMap.put("ARTIFACT_URL", artifactUrl);
         dockerFilePropertyMap.put("VAL_TOTAL_MEMORY", conSpecMemory);
+
+        if (appTypeName == "wso2esb") {
+            dockerFilePropertyMap.put("TENANT_ID_VAL", modManager.getTenantId().toString());
+            dockerFilePropertyMap.put("TENANT_DOMAIN_VAL", modManager.getTenantDomain());
+        }
+
         var appRuntimeProperties = getRuntimeProperties(runtimeProperties);
         dockerClient.createDockerFile(dockerFilePath, runtimeId, dockerTemplateFilePath, appCreationMethod, dockerFilePropertyMap, appRuntimeProperties);
     } catch(e){

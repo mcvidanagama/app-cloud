@@ -19,6 +19,8 @@
 
 include("/jagg/jagg.jag");
 include("/jagg/constants.jag");
+var modManager = jagg.module("manager");
+
 var log = new Log();
 var ApplicationManager = Packages.org.wso2.appcloud.core.ApplicationManager;
 /*
@@ -85,7 +87,8 @@ MSSEndpointsExtractor.prototype.getEndpoints = function (deploymentUrl, versionI
 };
 
 ESBEndpointsExtractor.prototype.getEndpoints = function (deploymentUrl, versionId) {
-    var containerApiUrl = deploymentUrl + "/container/endpoints";
+    var tenantDomain = modManager.getTenantDomain();
+    var containerApiUrl = deploymentUrl + "/t/" + tenantDomain + "/container/endpoints";
     var endpoints = undefined;
 
     try {
