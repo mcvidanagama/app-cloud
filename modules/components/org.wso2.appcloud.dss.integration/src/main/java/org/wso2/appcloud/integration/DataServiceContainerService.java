@@ -33,12 +33,13 @@ public class DataServiceContainerService {
 
     public static final String SERVICE_ADMIN_URL = "https://localhost:9443/services/ServiceAdmin";
     public static final String ADMIN_USERNAME = "admin";
+    public static final String ADMIN_PASSWORD = "ADMIN_PASSWORD";
     public static final String SERVICE_FILTER_TYPE = "data_service";
     public static final String SERVICE_SEARCH_STRING = "";
 
     public List<String> getEndpoints() throws Exception {
         ServiceAdminStub serviceAdminStub = new ServiceAdminStub(SERVICE_ADMIN_URL);
-        String adminPassword = System.getenv("ADMIN_PASSWORD");
+        String adminPassword = System.getenv(ADMIN_PASSWORD);
         CarbonUtils.setBasicAccessSecurityHeaders(ADMIN_USERNAME, adminPassword, serviceAdminStub._getServiceClient());
         ServiceMetaDataWrapper wrapper = serviceAdminStub.listServices(SERVICE_FILTER_TYPE, SERVICE_SEARCH_STRING, -1);
         ServiceMetaData[] serviceMetaDatas = wrapper.getServices();
