@@ -1005,7 +1005,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                     <div class="form-group">
                         <div class="checkbox">
                           <label>
-                           <input type="checkbox" name="defaultversion" id="default_version" value="deploy-sample" class="custom-checkbox" checked/>Make this the default version
+                           <input type="checkbox" name="defaultversion" id="default_version" value="deploy-sample" class="custom-checkbox"/>Make this the default version
                           </label>
                         </div>
                     </div>
