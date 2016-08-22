@@ -77,28 +77,39 @@ function generateDefaultLaunchUrl() {
 function loadEndpointView() {
     clearInterval(timerId);
     if (selectedApplicationRevision.status == APPLICATION_RUNNING) {
-        // This is not implemented for wso2dataservice and mss 1.0.0 runtimes.
-        if (application.applicationType != "wso2dataservice") {
-            if (application.applicationType == "mss" && selectedApplicationRevision.runtimeId == 2) {
-                // if mss 1.0.0 do not show endpoints section
-            } else {
-                showLoadingEndpointView();
-                var deploymentURL = generateDefaultLaunchUrl();
-                loadEndpoints(deploymentURL, applicationType, selectedApplicationRevision.versionId);
-                timerId = setInterval(function () {
-                    loadEndpoints(deploymentURL, applicationType, selectedApplicationRevision.versionId);
-                }, 3000);
+        // This is not implemented for mss 1.0.0 runtimes.
+        if (application.applicationType == "mss" && selectedApplicationRevision.runtimeId == 2) {
+            // if mss 1.0.0 do not show endpoints section
+        } else {
+            if (application.applicationType == "wso2dataservice") {
+                displayEndpointNotloadingMessage();
             }
+            showLoadingEndpointView();
+            var deploymentURL = generateDefaultLaunchUrl();
+            loadEndpoints(deploymentURL, applicationType, selectedApplicationRevision.versionId);
+            timerId = setInterval(function () {
+                loadEndpoints(deploymentURL, applicationType, selectedApplicationRevision.versionId);
+            }, 3000);
         }
     } else {
         $("#app-type-data").html('');
     }
 }
 
+function displayEndpointNotloadingMessage() {
+    jagg.message({
+        modalStatus: true,
+        type: 'warning',
+        timeout: 15000,
+        content: "The endpoints of your application might not be available if you created it before <b>2016/8/24</b>." +
+            " Please recreate the application or create a new version of it to see the endpoints."
+    });
+}
+
 function showLoadingEndpointView() {
     $("#app-type-data").html('<div class="block-endpoints "><h5>' +
         '<span><i class="fw fw-loader2 fw-spin fw-2x"></i></span>' +
-        ' &nbsp; Runtime: ' + selectedApplicationRevision.runtimeName + ' is starting ...</h5></div>');
+        ' &nbsp; Endpoints of ' + selectedApplicationRevision.runtimeName + ' runtime is loading ...</h5></div>');
 }
 
 function loadEndpoints(deploymentURL, applicationType, versionId) {
