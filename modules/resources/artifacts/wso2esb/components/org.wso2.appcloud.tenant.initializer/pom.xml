@@ -61,15 +61,15 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Bundle-Activator>
-                            org.wso2.intcloud.tenant.initializer.internal.TenantInitializerActivator
+                            org.wso2.appcloud.tenant.initializer.internal.TenantInitializerActivator
                         </Bundle-Activator>
-                        <Private-Package>org.wso2.intcloud.tenant.initializer.internal</Private-Package>
+                        <Private-Package>org.wso2.appcloud.tenant.initializer.internal</Private-Package>
                         <Import-Package>
                             org.wso2.carbon.user.core.tenant.*,
                             *;resolution:=optional
                         </Import-Package>
                         <Export-Package>
-                            !org.wso2.intcloud.tenant.initializer.internal,
+                            !org.wso2.appcloud.tenant.initializer.internal,
                         </Export-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>

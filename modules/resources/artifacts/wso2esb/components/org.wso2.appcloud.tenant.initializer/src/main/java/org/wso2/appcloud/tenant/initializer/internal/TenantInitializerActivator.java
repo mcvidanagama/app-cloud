@@ -15,7 +15,7 @@
  * under the License.
  */
 
-package org.wso2.intcloud.tenant.initializer.internal;
+package org.wso2.appcloud.tenant.initializer.internal;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;

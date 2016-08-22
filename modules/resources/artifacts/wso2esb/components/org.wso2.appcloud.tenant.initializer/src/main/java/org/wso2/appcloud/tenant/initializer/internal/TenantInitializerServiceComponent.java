@@ -15,7 +15,7 @@
  * under the License.
  */
 
-package org.wso2.intcloud.tenant.initializer.internal;
+package org.wso2.appcloud.tenant.initializer.internal;
 
 import org.apache.axis2.engine.ListenerManager;
 import org.apache.commons.lang.StringUtils;
