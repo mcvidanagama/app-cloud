@@ -986,7 +986,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
 
       <form id="application-details" method="post" action='<%=jagg.getAbsoluteUrl("/site/blocks/application/application.jag")%>' enctype="multipart/form-data">
             <div class="form-group">
-                <label for="application-name"><%=cloudSpecificApplicationRepresentation%> Name: </label>
+                <label for="application-name"><%=cloudSpecificApplicationRepresentation%> Name: *</label>
                 <input id="applicationName" name="applicationName" type="text" class="form-control" placeholder="Enter <%=cloudSpecificApplicationRepresentation.toLowerCase()%> name" />
             </div>
 
@@ -994,7 +994,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
             <div class="row">
                 <div class="col-md-7">
                     <div class="form-group">
-                        <label for="application-version"><%=cloudSpecificApplicationRepresentation%> Version:
+                        <label for="application-version"><%=cloudSpecificApplicationRepresentation%> Version: *
                             <i class="fa fa-question-circle help-tips" data-toggle="tooltip" data-placement="left" title="Set the version in the form <Major>.<Minor>.<Patch>"></i>
                         </label>
                         <input id="applicationRevision" name="applicationRevision" type="text" class="form-control" value="<%=nextVersion%>"/>
@@ -1005,7 +1005,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                     <div class="form-group">
                         <div class="checkbox">
                           <label>
-                           <input type="checkbox" name="defaultversion" id="default_version" value="deploy-sample" class="custom-checkbox" checked/>Make this the default version
+                           <input type="checkbox" name="defaultversion" id="default_version" value="deploy-sample" class="custom-checkbox"/>Make this the default version
                           </label>
                         </div>
                     </div>
@@ -1013,7 +1013,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
             </div>
                 <% } else { %>
             <div class="form-group">
-            <label for="application-version"><%=cloudSpecificApplicationRepresentation%> Version:
+            <label for="application-version"><%=cloudSpecificApplicationRepresentation%> Version: *
                 <i class="fa fa-question-circle help-tips" data-toggle="tooltip" data-placement="left" title="Set the version in the form <Major>.<Minor>.<Patch>"></i>
             </label>
             <input id="applicationRevision" name="applicationRevision" type="text" class="form-control" value="1.0.0"/>
@@ -1102,14 +1102,14 @@ jagg.template("application", function (inputs, outputs, jagg) {
             </div>
 
             <div class="form-group">
-                <label for="runtime">Runtime:
-                    <i class="fa fa-question-circle help-tips" data-toggle="tooltip" data-placement="left" title="Select an appropriate runtime to run your <%=cloudSpecificApplicationRepresentation%>"></i>
+                <label for="runtime">Runtime: *
+                    <i class="fa fa-question-circle help-tips" data-toggle="tooltip" data-placement="left" title="Select an appropriate runtime to run your <%=cloudSpecificApplicationRepresentation.toLowerCase()%>"></i>
                 </label>
                 <select name="runtime" id="runtime" class="form-control"></select>
             </div>
 
 			<div class="form-group">
-                <label for="container">Container Specification: </label>
+                <label for="container">Container Specification: *</label>
                 <select name="container" id="container" class="form-control" ></select>
             </div>
 
@@ -1127,7 +1127,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 <div class="form-group">
                     <label for="application-icon">Icon:
                         <i class="fa fa-question-circle help-tips" data-toggle="tooltip" data-placement="left"
-                    title="Recommended image size: 300x300 pixels and file size: 70KB (maximum)"></i>
+                    title="Recommended image size is 300x300 pixels and the maximum file size is 70KB"></i>
                     </label>
                     <div class="input-group">
                         <input type="text" id="icon" name="icon" class="form-control" readonly>
@@ -1149,11 +1149,11 @@ jagg.template("application", function (inputs, outputs, jagg) {
                             <h4 class="panel-title">
                                 <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
                                     Environment Variables
-                                    <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+                                    <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-down"></i></span>
                                 </a>
                             </h4>
                         </div>
-                        <div id="collapseOne" class="panel-collapse collapse in">
+                        <div id="collapseOne" class="panel-collapse collapse">
                             <div class="info-block">
                                 To add database-specific environment variables, type <b>database:</b> in the Value textbox.
                             </div>

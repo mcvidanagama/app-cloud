@@ -233,7 +233,7 @@ jagg.template("home", function(inputs, outputs, jagg) {
                             </div>
                         </div>
                         <div class="col-xs-12 col-md-3 col-lg-3" data-toggle="tooltip" title="HTTP Monitoring Dashboard is not supported in this release. It will be available soon!">
-                            <a class="block-anch" href="#" onclick="return false;" target="_blank">
+                            <!--<a class="block-anch" href="#" onclick="return false;" target="_blank">-->
                                 <div class="block-monitoring wrapper">
                                     <div class="ribbon-wrapper"><div class="ribbon">Available Soon</div></div>
                                     <h3>HTTP Monitoring Dashboard</h3>
@@ -242,7 +242,7 @@ jagg.template("home", function(inputs, outputs, jagg) {
                                     </div>
                                 <div class="clearfix"></div>
                                 </div>
-                            </a>
+                            <!--</a>-->
                         </div>
                       <div class="clearfix"></div>
                     </div>
