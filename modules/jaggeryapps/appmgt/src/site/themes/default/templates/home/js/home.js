@@ -81,6 +81,9 @@ function loadEndpointView() {
         if (application.applicationType == "mss" && selectedApplicationRevision.runtimeId == 2) {
             // if mss 1.0.0 do not show endpoints section
         } else {
+            if (application.applicationType == "wso2dataservice") {
+                displayEndpointNotloadingMessage();
+            }
             showLoadingEndpointView();
             var deploymentURL = generateDefaultLaunchUrl();
             loadEndpoints(deploymentURL, applicationType, selectedApplicationRevision.versionId);
@@ -91,6 +94,16 @@ function loadEndpointView() {
     } else {
         $("#app-type-data").html('');
     }
+}
+
+function displayEndpointNotloadingMessage() {
+    jagg.message({
+        modalStatus: true,
+        type: 'warning',
+        timeout: 15000,
+        content: "The endpoints of your application might not be available if you created it before <b>2016/8/24</b>." +
+            " Please recreate the application or create a new version of it to see the endpoints."
+    });
 }
 
 function showLoadingEndpointView() {

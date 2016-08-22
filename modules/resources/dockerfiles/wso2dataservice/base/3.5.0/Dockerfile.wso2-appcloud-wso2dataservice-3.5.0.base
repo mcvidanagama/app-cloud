@@ -26,7 +26,7 @@ ENV CARBON_HOME_PATH $INSTALL_PATH/wso2dss-3.5.0
 ENV JAVA_OPTS="-Xms128m -Xmx256m -XX:MaxMetaspaceSize=128m"
 ENV ADMIN_PASS ""
 ENV WSO2_DSS_VERSION 3.5.0
-ENV AXIS2_SERVICE org.wso2.appcloud.dss-1.0.0.aar
+ENV AXIS2_SERVICE org.wso2.appcloud.dss.integration-3.0.0-SNAPSHOT.aar
 
 RUN apk update && \
     apk add pwgen git wget && \

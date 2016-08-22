@@ -16,7 +16,7 @@
  *  under the License.
  *
  */
-package org.wso2.appcloud.dss;
+package org.wso2.appcloud.integration;
 
 import org.wso2.carbon.service.mgt.stub.ServiceAdminStub;
 import org.wso2.carbon.service.mgt.stub.types.carbon.ServiceMetaData;
