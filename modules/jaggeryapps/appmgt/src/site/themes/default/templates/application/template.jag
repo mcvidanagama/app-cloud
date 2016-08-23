@@ -1028,7 +1028,8 @@ jagg.template("application", function (inputs, outputs, jagg) {
             </select>
             </div-->
 
-            <div class="form-group col-md-12">
+            <div class="form-group">
+
                 <label class="radio-inline">
                     <input type="radio" name="fileUploadRadioOptions" id="inlineRadio1" value="upload-from-file"
                            checked="checked" class="custom-radio"> Upload from file system
@@ -1050,6 +1051,9 @@ jagg.template("application", function (inputs, outputs, jagg) {
             </div>
 
             <div class="form-group" id="file-upload-block">
+                <div>
+                    <label for="application-description" >Upload a <b>.<%=appType.extension.toUpperCase()%></b> file: *</label>
+                </div>
                 <div class="input-group">
                     <input id="uploadedFileName" name="uploadedFileName" type="text" class="form-control" readonly>
                     <span class="input-group-btn">
@@ -1064,6 +1068,9 @@ jagg.template("application", function (inputs, outputs, jagg) {
             </div>
 
             <div class="form-group" id="url-upload-block">
+                <div>
+                    <label for="application-description" >Upload a <b>.<%=appType.extension.toUpperCase()%></b> file: *</label>
+                </div>
                 <div class="input-group">
                     <input id="artifactUrl" name="artifactUrl" type="text" class="form-control" placeholder="Enter artifact URL" />
                     <span class="input-group-btn">
