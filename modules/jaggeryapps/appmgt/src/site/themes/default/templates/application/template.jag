@@ -64,7 +64,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
     const APP_TYPE_EXTENSION = "<%=appType.extension%>";
     var applicationName = "<%=applicationName%>";
     var cloudSpecificApplicationRepresentation = "<%=cloudSpecificApplicationRepresentation%>";
-    var applicationCount = <%=applicationCount%>
+    var applicationCount = <%=applicationCount%>;
     var maxApplications = <%=maxApplications%>;
     var conSpecs = <%=conSpecs%>;
     var retryCount = 0;
@@ -99,7 +99,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 containerSpecNamesJson.push(allowedRuntimeContainerSpecJson.data[i].conSpecName);
             }
 
-            //Set conatiner specifications in the select option
+            //Set container specifications in the select option
             if (containerSpecNamesJson.length > 0) {
                 var listItems = '<option selected="selected" onClick="maxApplicationCountValidate()">' +
                     containerSpecNamesJson[0] + '</option>';
@@ -115,16 +115,13 @@ jagg.template("application", function (inputs, outputs, jagg) {
             //Set select2 container
             var valueElem = $('#value')[0];
             initSelect2(null, valueElem, "");
-
-            if (!isNewVersion) {
-                if (applicationCount >= maxApplications) {
-                    $('#outerContainer').empty();
-                    $('#outerContainer').html('<div class="container-fluid"><div class="row row-centered">' +
-                        '<div class="col-centered col-xs-10 col-sm-7  col-md-7 col-lg-6"><div class="cloud-new-content">' +
-                        '<h3>You cannot create more than ' + maxApplications + cloudSpecificApplicationRepresentation + ' on a free subscription. ' +
-                        'Please delete an existing application to continue...</h3></div></div></div></div>');
-                    return;
-                }
+            if (applicationCount >= maxApplications) {
+                $('#outerContainer').empty();
+                $('#outerContainer').html('<div class="container-fluid"><div class="row row-centered">' +
+                    '<div class="col-centered col-xs-10 col-sm-7  col-md-7 col-lg-6"><div class="cloud-new-content">' +
+                    '<h3>You cannot have more than ' + maxApplications + " running " + cloudSpecificApplicationRepresentation.toLowerCase() + ' versions on a free subscription. ' +
+                    'Please stop an existing ' + cloudSpecificApplicationRepresentation.toLowerCase() + ' version to continue.</h3></div></div></div></div>');
+                return;
             }
 
             $("containerSpec").select2();
@@ -273,14 +270,11 @@ jagg.template("application", function (inputs, outputs, jagg) {
                         type: 'POST',
                         data: formData,
                         success: function(data) {
-                            if (isNewVersion) {
-                                jagg.message({
-                                    content: "You can start only one version of an " + cloudSpecificApplicationRepresentation + " at a time on" +
-                                        " a free subscription. Other versions were stopped automatically.",
-                                    type: 'info',
-                                    timeout: 3500
-                                });
-                            }
+                            jagg.message({
+                                content: "Your " + cloudSpecificApplicationRepresentation.toLowerCase() + " started successfully",
+                                type: 'success',
+                                timeout: 3500
+                            });
                         },
                         cache: false,
                         contentType: false,
