@@ -46,3 +46,16 @@ INSERT INTO `AC_RUNTIME_CONTAINER_SPECIFICATIONS` (`id`, `CON_SPEC_ID`) VALUES
 INSERT INTO AC_RUNTIME_TRANSPORT (`transport_id`, `runtime_id`) VALUES
 (3, 10),
 (4, 10);
+
+-- --------------------------------------------------------
+-- Adding Apache Tomcat 8.0.28 / WSO2 Application Server 6.0.0-M3 runtime as a runtime of jaggery app type
+-- --------------------------------------------------------
+INSERT INTO `AC_APP_TYPE_RUNTIME` (`app_type_id`, `runtime_id`) VALUES
+(4, 10);
+
+-- --------------------------------------------------------
+-- Deprecating  Jaggery 0.11.0 runtime
+-- --------------------------------------------------------
+UPDATE `AC_RUNTIME`
+SET `name` = 'Jaggery 0.11.0 - Deprecated (will work until 2016/09/30)'
+WHERE `id`= 5;
