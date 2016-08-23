@@ -81,9 +81,9 @@ function loadEndpointView() {
         if (application.applicationType == "mss" && selectedApplicationRevision.runtimeId == 2) {
             // if mss 1.0.0 do not show endpoints section
         } else {
-            if (application.applicationType == "wso2dataservice") {
+            /*if (application.applicationType == "wso2dataservice") {
                 displayEndpointNotloadingMessage();
-            }
+            }*/
             showLoadingEndpointView();
             var deploymentURL = generateDefaultLaunchUrl();
             loadEndpoints(deploymentURL, applicationType, selectedApplicationRevision.versionId);
@@ -107,9 +107,10 @@ function displayEndpointNotloadingMessage() {
 }
 
 function showLoadingEndpointView() {
-    $("#app-type-data").html('<div class="block-endpoints "><h5>' +
+    $("#app-type-data").html('');
+    /*$("#app-type-data").html('<div class="block-endpoints "><h5>' +
         '<span><i class="fw fw-loader2 fw-spin fw-2x"></i></span>' +
-        ' &nbsp; Endpoints of ' + selectedApplicationRevision.runtimeName + ' runtime is loading ...</h5></div>');
+        ' &nbsp; Endpoints of ' + selectedApplicationRevision.runtimeName + ' runtime is loading ...</h5></div>');*/
 }
 
 function loadEndpoints(deploymentURL, applicationType, versionId) {
