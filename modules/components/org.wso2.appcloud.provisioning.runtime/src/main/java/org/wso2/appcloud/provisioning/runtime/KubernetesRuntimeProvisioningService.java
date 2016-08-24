@@ -265,6 +265,10 @@ public class KubernetesRuntimeProvisioningService implements RuntimeProvisioning
                 .withPorts(servicePorts)
                 .withSessionAffinity(KubernetesPovisioningConstants.SERVICE_SESSION_AFFINITY_MODE).build();
 
+        //Add tenantDomain to label map for the service
+        Map<String, String> labelMap = KubernetesProvisioningUtils.getLableMap(applicationContext);
+        labelMap.put("tenantDomain", applicationContext.getTenantInfo().getTenantDomain());
+
         //Deployment Unique service name is built using deployment name and the service name.
         String serviceName = serviceProxy.getServiceName();
         return new ServiceBuilder()
@@ -272,7 +276,7 @@ public class KubernetesRuntimeProvisioningService implements RuntimeProvisioning
                 .withSpec(serviceSpec)
                 .withMetadata(new ObjectMetaBuilder()
                         .withName(serviceName.toLowerCase())
-                        .withLabels(KubernetesProvisioningUtils.getLableMap(applicationContext))
+                        .withLabels(labelMap)
                         .withAnnotations(annotationMap).build()).build();
     }
 
