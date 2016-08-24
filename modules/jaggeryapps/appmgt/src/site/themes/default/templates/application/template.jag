@@ -869,18 +869,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
 
 //TODO :
     function validateADockerImageRepositoryURL(value){
-        var pattern = "(http|https):\/\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\/|\/([\\w#!:.?+=&%@!\\-\\/]))?";
-        var regex = new RegExp(pattern, "g");
-        if(value && regex.test(value)){
-            if ($('#applicationName').val() && $('#applicationRevision').val()) {
-                $("#url-upload").attr("disabled", false);
-            }
-            return true;
-        } else {
-            $("#url-upload").attr("disabled", true);
-            uploadURLErrorMsg = "Invalid URL. The URL should be in the format : http:\/\/host-name\/username\/repo-name";
-            return false;
-        }
+       // implement the logic to validate docker image repo url
     }
 
     function getUploadURLErrorMsg(){
