@@ -257,7 +257,7 @@ public class DockerClient {
 
     public void pullDockerImage(String imageRepoUrl, String imageTag) throws AppCloudException {
 
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("Docker image pull triggered for repo : " + imageRepoUrl + " with tag : " + imageTag);
         }
 
@@ -305,19 +305,19 @@ public class DockerClient {
         }
     }
 
-    public void tagDockerImage(String oldImage, String oldTag, String newImageName, String newTag) throws AppCloudException {
+    public void tagDockerImage(String oldImage, String oldTag, String newImageName, String newTag)
+            throws AppCloudException {
 
-//        if(log.isDebugEnabled()) {
-//            log.debug("Docker image pull triggered for image : " + imageName);
-//        }
+        if (log.isDebugEnabled()) {
+            log.debug("Docker image tag triggered for image : " + oldImage + " with old tag : " + oldTag + " to new " +
+                      "tag : " + newImageName);
+        }
 
-        log.info("tag docker image called in Docker Client..");
-        boolean dockerStatusCheck = dockerClient.image().withName(oldImage + ":" + oldTag)
-                                        .tag().inRepository(newImageName).withTagName(newTag);
+        boolean dockerStatusCheck = dockerClient.image().withName(oldImage + ":" + oldTag).tag()
+                                                .inRepository(newImageName).withTagName(newTag);
         if (!dockerStatusCheck) {
             log.error("Docker custom image tag failed: " + oldImage);
-            throw new AppCloudException(
-                    "Docker custom image tag failed: " + oldImage);
+            throw new AppCloudException("Docker custom image tag failed: " + oldImage);
         }
     }
 
