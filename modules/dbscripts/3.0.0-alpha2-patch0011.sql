@@ -63,4 +63,4 @@ WHERE `id`= 5;
 -- --------------------------------------------------------
 -- Increasing version length
 -- --------------------------------------------------------
-ALTER TABLE `AppCloudDB`.`AC_VERSION` CHANGE COLUMN `name` `name` VARCHAR(60) NOT NULL;
+ALTER TABLE `AC_VERSION` CHANGE COLUMN `name` `name` VARCHAR(60) NOT NULL;
