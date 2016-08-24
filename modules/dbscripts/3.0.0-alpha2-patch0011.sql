@@ -59,3 +59,8 @@ INSERT INTO `AC_APP_TYPE_RUNTIME` (`app_type_id`, `runtime_id`) VALUES
 UPDATE `AC_RUNTIME`
 SET `name` = 'Jaggery 0.11.0 - Deprecated Runtime (Will continue to work until 2016/9/30)'
 WHERE `id`= 5;
+
+-- --------------------------------------------------------
+-- Increasing version length
+-- --------------------------------------------------------
+ALTER TABLE `AppCloudDB`.`AC_VERSION` CHANGE COLUMN `name` `name` VARCHAR(60) NOT NULL;
