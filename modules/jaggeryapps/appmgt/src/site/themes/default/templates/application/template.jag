@@ -736,6 +736,10 @@ jagg.template("application", function (inputs, outputs, jagg) {
 
         if ($('#applicationName').val() && $('#applicationRevision').val() && $('#container option:selected').val() && $('#runtime').val() > 0 && checkApplicationVersionExistence($('#applicationRevision').val())) {// mandatory validations for all app types
             if(appTypeName == custom){ // validations for custom app type
+<<<<<<< eb7a02a8a66105bc461340c2b1ada18b5a063258
+=======
+
+>>>>>>> initial commit for custom docker images feature
                 if($("#imageRegistryUrl").val() && $("#imageTag").val()) {
                     $("#add-application").prop("disabled", false);
                 }
