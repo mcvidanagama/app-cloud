@@ -53,14 +53,16 @@ var Arrays = Packages.java.util.Arrays;
  */
 var addApplication = function (applicationName, versionName, applicationDescription, replicas, runtimeId, appTypeName,
                                runtimePropertiesArray, tagArray, appIcon, uploadedFileName, isNewVersion, conSpecMemory,
-                               conSpecCpu, artifactUrl, appCreationMethod, oldHashId, applicationContext, setDefaultVersion) {
+                               conSpecCpu, artifactUrl, appCreationMethod, oldHashId, applicationContext, setDefaultVersion,
+                               imageRegistryUrl, imageTag) {
 
     log.info("Started creating App => Name:" + applicationName + " Version:" + versionName + " Description:" + applicationDescription +
     " RuntimeId:" + runtimeId + " AppType:" + appTypeName + " Runtime Properties:" + JSON.stringify(runtimePropertiesArray) +
     " Tags:" + JSON.stringify(tagArray) + " Uploaded FileName:" + uploadedFileName + " New Version:" + isNewVersion +
     " Allocated Memory:" + conSpecMemory + " Allocated CPU:" + conSpecCpu + " Artifact Url:" + artifactUrl +
     " App Creation Method:" + appCreationMethod + " Previous HashId:" + oldHashId + " Context:" + applicationContext +
-    " DefaultVersion:" + setDefaultVersion);
+    " DefaultVersion:" + setDefaultVersion + " Docker Image repository Url : " + imageRegistryUrl +
+    " docker image tag : " + imageTag);
 
     var tenantId = modManager.getTenantId();
     var applicationHashId = Util.getApplicationHashId(applicationName, tenantId);
@@ -92,13 +94,32 @@ var addApplication = function (applicationName, versionName, applicationDescript
         }
         renameDirectory(oldHashId, versionHashId, uploadedFileName);
     }
-    var absFileUploadedPath =  createDockerFile(applicationName, versionName, runtimeId, uploadedFileName,
-            versionHashId, dockerClient, artifactUrl, hostName, appCreationMethod, runtimeProperties, conSpecMemory);
-    var buildDockerImageStatus = buildDockerImage(applicationName, versionName, runtimeId, absFileUploadedPath, applicationRuntime, tagName, versionHashId, dockerClient);
-    if (buildDockerImageStatus) {
-        pushDockerImage(applicationName, versionName, applicationRuntime, tagName, versionHashId, dockerClient);
-        triggerKubernetesDeployment(runtimeProperties, applicationRuntime, tagName, applicationName, versionName, appTypeName, runtimeId, replicas, versionHashId, conSpecMemory, conSpecCpu);
+    var readyToPushDockerImage;
+    var imageName;
+    if(uploadedFileName) {
+        var absFileUploadedPath =  createDockerFile(applicationName, versionName, runtimeId, uploadedFileName,
+                                                    versionHashId, dockerClient, artifactUrl, hostName, appCreationMethod, runtimeProperties, conSpecMemory);
+        buildDockerImage(applicationName, versionName, runtimeId, absFileUploadedPath, applicationRuntime, tagName, versionHashId, dockerClient);
+
+        imageName = modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL) + "/" + applicationRuntime.getImageName();
+
+        pushDockerImage(applicationName, versionName, imageName, tagName, versionHashId, dockerClient);
+        triggerKubernetesDeployment(imageName, runtimeProperties, applicationRuntime, tagName, applicationName, versionName, appTypeName, runtimeId, replicas, versionHashId, conSpecMemory, conSpecCpu);
         putSelectedRevisionToSession(applicationHashId, versionName);
+
+    } else { // for custom docker images
+        // var pull docker image and tag docker image
+        // readyToPushDockerImage = true;
+        pullDockerImage(imageRegistryUrl,imageTag, dockerClient);
+        log.info("Pulling done trying to tag the image");
+        imageName = imageRegistryUrl.split(/\/(.+)?/)[1];
+
+        var newTagName = imageTag + "-" + versionHashId;
+        readyToPushDockerImage = tagDockerImage(imageName, imageTag, imageName, newTagName, dockerClient);
+        pushDockerImage(applicationName, versionName, imageName, newTagName, versionHashId, dockerClient);
+        triggerKubernetesDeployment(imageName, runtimeProperties, applicationRuntime, newTagName, applicationName, versionName, appTypeName, runtimeId, replicas, versionHashId, conSpecMemory, conSpecCpu);
+        putSelectedRevisionToSession(applicationHashId, versionName);
+        
     }
 
     if (isNewVersion == 'true') {
@@ -112,9 +133,9 @@ var addApplication = function (applicationName, versionName, applicationDescript
     }
 };
 
-var triggerKubernetesDeployment = function(runtimeProperties, applicationRuntime, tagName, applicationName, versionName, appTypeName, runtimeId, replicas, versionHashId, conSpecMemory, conSpecCpu){
+var triggerKubernetesDeployment = function(imageName, runtimeProperties, applicationRuntime, tagName, applicationName, versionName, appTypeName, runtimeId, replicas, versionHashId, conSpecMemory, conSpecCpu){
     var appHostURL = constructAppLaunchURL(applicationName, versionName);
-    var containers = getContainers(modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL), applicationRuntime.getImageName(), tagName, versionHashId ,versionHashId, runtimeProperties, runtimeId, appHostURL);
+    var containers = getContainers(imageName, tagName, versionHashId ,versionHashId, runtimeProperties, runtimeId, appHostURL);
     var deploymentConfig = getDeploymentConfig(containers, versionHashId, replicas);
     if (log.isDebugEnabled()) {
         log.debug("Triggering Kubernetes to deploy version:" + versionHashId);
@@ -122,13 +143,14 @@ var triggerKubernetesDeployment = function(runtimeProperties, applicationRuntime
     deployApplication(applicationName, versionName, appTypeName, deploymentConfig, false, versionHashId, "new", conSpecMemory, conSpecCpu);
 }
 
-var pushDockerImage = function (applicationName, versionName, applicationRuntime, tagName, versionHashId, dockerClient){
+var pushDockerImage = function (applicationName, versionName,imageName, tagName, versionHashId, dockerClient){
 
     //Adding docker image push pending event
     var msg = "Docker image push successfully triggered";
     addEvent(DOCKER_REGISTRY_PUSH, EVENT_PENDING, msg, versionHashId);
     try {
-        dockerClient.pushDockerImage(modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL),applicationRuntime.getImageName(), tagName);
+        //dockerClient.pushDockerImage(modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL),applicationRuntime.getImageName(), tagName);
+        dockerClient.pushDockerImage(imageName, tagName);
     } catch (e) {
         var msg = "Error uploading docker image to remote registry";
         addEvent(DOCKER_REGISTRY_PUSH, EVENT_FAILED, msg, versionHashId);
@@ -155,6 +177,33 @@ var pushDockerImage = function (applicationName, versionName, applicationRuntime
     var msg = "Docker image push successfully completed";
     addEvent(DOCKER_REGISTRY_PUSH, EVENT_SUCCEEDED, msg, versionHashId);
 }
+
+var pullDockerImage = function (remoteRepoUrl,imageTag, dockerClient) {
+    var msg = "Docker image pull successfully triggered";
+    //addEvent(DOCKER_IMAGE_PULL, EVENT_PENDING, msg, versionHashId);
+    try {
+        log.info("calling dockerclient.pullDockerImage");
+        dockerClient.pullDockerImage(remoteRepoUrl,imageTag);
+        log.info("PULLING done..... . . ");
+        return true;
+    } catch (e) {
+        log.error(e);
+        throw e;
+    }
+
+    };
+
+var tagDockerImage = function (oldImageName, oldImageTag, newImageName, newTag, dockerClient){
+  try {
+      log.info("calling dockerclient.pullDockerImage");
+      log.info("old image name : " + oldImageName + " old tag : "+ oldImageTag + " repo : " + newImageName + " new tag : " + newTag);
+      dockerClient.tagDockerImage(oldImageName, oldImageTag, newImageName, newTag);
+      return true;
+  } catch (e) {
+        log.error(e);
+        throw e;
+  }
+};
 
 var buildDockerImage = function (applicationName, versionName, runtimeId, absFileUploadedPath, applicationRuntime, tagName, versionHashId, dockerClient){
 
@@ -625,12 +674,12 @@ var buildDeploymentConfigFromDB = function(versionHashId, applicationName, versi
 /**
  * Method for getting all the available application types. e.g : war, mss, car
  */
-function getContainers(tenantDockerRegistryUrl, baseImageName, tag, versionHashId, appServiceName, runtimeProperties, runtimeId, appHostURL){
+function getContainers(imageName, tag, versionHashId, appServiceName, runtimeProperties, runtimeId, appHostURL){
     var containerList = new java.util.ArrayList();
     var container = new Packages.org.wso2.appcloud.provisioning.runtime.beans.Container();
-    var appBaseImageName = tenantDockerRegistryUrl + "/" + baseImageName;
+    //var appBaseImageName = tenantDockerRegistryUrl + "/" + baseImageName;
     container.setContainerName(versionHashId);
-    container.setBaseImageName(appBaseImageName);
+    container.setBaseImageName(imageName);
     container.setBaseImageVersion(tag);
     var envs = getRuntimeProperties(runtimeProperties);
     container.setEnvVariables(envs);

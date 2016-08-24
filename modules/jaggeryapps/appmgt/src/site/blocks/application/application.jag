@@ -157,6 +157,9 @@ var log = new Log();
             applicationContext = null;
         }
 
+        var imageRegistryUrl = request.getParameter("imageRegistryUrl");
+        var imageTag = request.getParameter("imageTag");
+
         var setDefaultVersion = request.getParameter("setDefaultVersion");
         // checking whether an application with same name and same version, already exists or not
         var versionHashId = applicationModule.getVersionHashId(applicationName, applicationRevision);
@@ -209,7 +212,6 @@ var log = new Log();
                     return;
                 }
             }
-
             if (isAppCountLowerThanMax) {
                 if (isFileAttached == 'true') {
                     var fileSuccessfullyUploaded = applicationModule.
@@ -222,12 +224,12 @@ var log = new Log();
                         return ;
                     }
                 }
-                if (uploadedFileName) {
-                    applicationModule.addApplication(applicationName, applicationRevision, applicationDescription,
-                                                     replicas, runtimeId, appTypeName, runtimeProperties, tags,
-                                                     appIcon, uploadedFileName, isNewVersion, conSpecMemory,
-                                                     conSpecCpu, artifactUrl, appCreationMethod, oldHashId,
-                                                     applicationContext, setDefaultVersion);
+                if (uploadedFileName || (imageRegistryUrl && imageTag)) {
+                    applicationModule
+                            .addApplication(applicationName, applicationRevision, applicationDescription, replicas,
+                                            runtimeId, appTypeName, runtimeProperties, tags, appIcon, uploadedFileName,
+                                            isNewVersion, conSpecMemory, conSpecCpu, artifactUrl, appCreationMethod,
+                                            oldHashId, applicationContext, setDefaultVersion,imageRegistryUrl, imageTag);
                 } else {
                     var gitRepoUrl = request.getParameter("gitRepoUrl");
                     var gitRepoBranch = request.getParameter("gitRepoBranch");
