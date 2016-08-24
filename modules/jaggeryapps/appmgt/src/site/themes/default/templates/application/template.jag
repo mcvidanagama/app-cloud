@@ -74,7 +74,11 @@ jagg.template("application", function (inputs, outputs, jagg) {
     var validationFailErrorMsg = "";
     var envVariableErrorMsg = "";
     var uploadURLErrorMsg = "";
+    var custom = "<%=CUSTOM%>";
     var uploadMethod = "file";
+    if(appTypeName== custom){
+        uploadMethod="";
+    }
     var urlUploadComplete = false;
     var applicationHashId;
     var notAllowedEnvVariables = jQuery.parseJSON('<%=notAllowedEnvVariables%>');
@@ -237,6 +241,11 @@ jagg.template("application", function (inputs, outputs, jagg) {
                     var optionSpec = $("#container option:selected").index();
                     formData.append('conSpec', conSpecs[optionSpec]);
                     formData.append('runtime', optionRuntime);
+                    if(appTypeName === custom) {
+                        formData.append('imageRegistryUrl', $("#imageRegistryUrl").val());
+                        formData.append('imageTag', $("#imageTag").val());
+                        formData.append('appCreationMethod', custom);
+                    }
                     if(uploadMethod === "file"){
                         formData.append('uploadedFileName', $("#uploadedFileName").val());
                         formData.append('appCreationMethod', 'default');
@@ -711,29 +720,40 @@ jagg.template("application", function (inputs, outputs, jagg) {
             validateArtifactURL($('#artifactUrl').val());
         });
 
+        $('#imageRegistryUrl').on('focusout keyup blur click', function () { // fires on every keyup & blur
+            activateCreateApplication();
+        });
+
+        $('#imageTag').on('focusout keyup blur click', function () { // fires on every keyup & blur
+            activateCreateApplication();
+        });
     });
 
     function activateCreateApplication() {
-        if ($('#applicationName').val() && $('#applicationRevision').val() && $('#container option:selected').val()
-                        && checkApplicationVersionExistence($('#applicationRevision').val()) && $('#runtime').val() > 0 && ($("#uploadedFileName").val() || $("#artifactUrl").val() || ($("#gitRepoUrl").val()  && $("#gitRepoBranch").val()))) {// checks form for validity
 
-            if($("#uploadedFileName").val() && progress == 100){
-                if(validateArtifactType($("#uploadedFileName").val())){
+        //first disable the button and then enable it only if condions are satisfied
+        $("#add-application").prop("disabled", true);
+
+        if ($('#applicationName').val() && $('#applicationRevision').val() && $('#container option:selected').val() && $('#runtime').val() > 0 && checkApplicationVersionExistence($('#applicationRevision').val())) {// mandatory validations for all app types
+            if(appTypeName == custom){ // validations for custom app type
+                if($("#imageRegistryUrl").val() && $("#imageTag").val()) {
                     $("#add-application").prop("disabled", false);
-                }else{
-                    $("#add-application").prop("disabled", true);
                 }
-            }else if ($("#artifactUrl").val()){
-                if(urlUploadComplete){
-                    $("#add-application").prop("disabled", false);
-                } else {
-                    $("#add-application").prop("disabled", true);
+            } else {
+                if($("#uploadedFileName").val() || $("#artifactUrl").val() || ($("#gitRepoUrl").val()  && $("#gitRepoBranch").val())) { // validations for non custom app types
+                    if($("#uploadedFileName").val() && progress == 100){
+                        if(validateArtifactType($("#uploadedFileName").val())) {
+                            $("#add-application").prop("disabled", false);
+                        }
+                    } else if ($("#artifactUrl").val()) {
+                        if(urlUploadComplete) {
+                            $("#add-application").prop("disabled", false);
+                        }
+                    } else if($("#gitRepoUrl").val()  && $("#gitRepoBranch").val()) {
+		                $("#add-application").prop("disabled", false);
+                    }
                 }
-            }else if($("#gitRepoUrl").val()  && $("#gitRepoBranch").val()){
-		        $("#add-application").prop("disabled", false);
             }
-        } else {
-            $("#add-application").prop("disabled", true);      // enables button
         }
     }
 
@@ -843,6 +863,22 @@ jagg.template("application", function (inputs, outputs, jagg) {
         } else {
             $("#url-upload").attr("disabled", true);
             uploadURLErrorMsg = "Invalid URL. The URL should be in the format : http:\/\/host-name\/file-location\/file-name." + APP_TYPE_EXTENSION;
+            return false;
+        }
+    }
+
+//TODO :
+    function validateADockerImageRepositoryURL(value){
+        var pattern = "(http|https):\/\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\/|\/([\\w#!:.?+=&%@!\\-\\/]))?";
+        var regex = new RegExp(pattern, "g");
+        if(value && regex.test(value)){
+            if ($('#applicationName').val() && $('#applicationRevision').val()) {
+                $("#url-upload").attr("disabled", false);
+            }
+            return true;
+        } else {
+            $("#url-upload").attr("disabled", true);
+            uploadURLErrorMsg = "Invalid URL. The URL should be in the format : http:\/\/host-name\/username\/repo-name";
             return false;
         }
     }
@@ -1042,8 +1078,8 @@ jagg.template("application", function (inputs, outputs, jagg) {
             </select>
             </div-->
 
+            <%if(appType.type != CUSTOM) { %>
             <div class="form-group">
-
                 <label class="radio-inline">
                     <input type="radio" name="fileUploadRadioOptions" id="inlineRadio1" value="upload-from-file"
                            checked="checked" class="custom-radio"> Upload from file system
@@ -1115,7 +1151,20 @@ jagg.template("application", function (inputs, outputs, jagg) {
                     <input id="token" name="token" type="text" class="form-control" placeholder="Enter Personal access token" />
                 </div-->
             </div>
+            <%} else {%>
+             <div class="form-group" id="custom-docker-image-block">
+                <div class="input-group">
+                    <span class="input-group-addon">URL</span>
+                    <input id="imageRegistryUrl" name="imageRegistryUrl" type="text" class="form-control" placeholder="Docker Image Repository URL eg: docker.io/testuser/testimage" />
+                </div>
+                </br>
+                <div class="input-group">
+                    <span class="input-group-addon">Tag</span>
+                    <input id="imageTag" name="imageTag" type="text" class="form-control" placeholder="eg : latest" />
+                </div>
+            </div>
 
+             <%}%>
             <div class="form-group">
                 <label for="runtime">Runtime: *
                     <i class="fa fa-question-circle help-tips" data-toggle="tooltip" data-placement="left" title="Select an appropriate runtime to run your <%=cloudSpecificApplicationRepresentation.toLowerCase()%>"></i>
