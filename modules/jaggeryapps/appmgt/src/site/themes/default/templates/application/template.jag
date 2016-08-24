@@ -696,11 +696,6 @@ jagg.template("application", function (inputs, outputs, jagg) {
         }
         var appNameField = $("#applicationName");
         var createNewAppForm = $("#application-details");
-   /*     var appVerionField = $("#applicationRevision");
-
-        appVerionField.on('blur', function () {
-
-        });*/
 
         appNameField.on('blur', function () {
             checkApplicationExistence(appNameField.val());
