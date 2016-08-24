@@ -177,9 +177,7 @@ var pushDockerImage = function (applicationName, versionName,imageName, tagName,
 }
 
 var pullDockerImage = function (remoteRepoUrl, imageTag, dockerClient, versionHashId) {
-    if (log.isDebugEnabeld()) {
-        log.debug("Trying to pull docker image from repo : " + remoteRepoUrl + " with tag : " + imageTag);
-    }
+
     var msg = "Pulling docker image from remote repo";
     addEvent(DOCKER_IMAGE_PULL, EVENT_PENDING, msg, versionHashId);
     try {
@@ -208,9 +206,7 @@ var pullDockerImage = function (remoteRepoUrl, imageTag, dockerClient, versionHa
 };
 
 var tagDockerImage = function (oldImageName, oldImageTag, newImageName, newTag, dockerClient, versionHashId) {
-    if (log.isDebugEnabeld()) {
-        log.debug("Trying to tag docker image : " + oldImageName + " with tag : " + oldImageTag + " to new tag : " + newTag);
-    }
+    
     var msg = "Tagging docker image in registry";
     addEvent(DOCKER_IMAGE_TAG, EVENT_PENDING, msg, versionHashId);
     try {
