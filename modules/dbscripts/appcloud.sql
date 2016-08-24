@@ -135,7 +135,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `AppCloudDB`.`AC_VERSION` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(13) NULL,
+  `name` VARCHAR(60) NULL,
   `hash_id` VARCHAR(24) NULL,
   `application_id` INT NOT NULL,
   `runtime_id` INT NOT NULL,

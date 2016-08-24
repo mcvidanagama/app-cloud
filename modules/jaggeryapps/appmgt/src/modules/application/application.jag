@@ -262,6 +262,7 @@ var createAppInDataBase = function(applicationName, versionName, applicationDesc
         application.setVersions(versionList);
         ApplicationManager.addApplication(application);
     } catch (e){
+        var msg = "Error while adding application : " + applicationName + " with version : "+ versionName + " to database";
         log.error(msg);
         log.error(e);
         log.info("Application creation failed due to initial application metadata persistence failure and roll back process" +
