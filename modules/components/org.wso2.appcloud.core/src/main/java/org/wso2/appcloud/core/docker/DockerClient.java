@@ -258,7 +258,7 @@ public class DockerClient {
     public void pullDockerImage(String imageRepoUrl, String imageTag) throws AppCloudException {
 
         if(log.isDebugEnabled()) {
-            log.debug("Docker image pull triggered for repo : " + imageRepoUrl);
+            log.debug("Docker image pull triggered for repo : " + imageRepoUrl + " with tag : " + imageTag);
         }
 
         final boolean[] dockerStatusCheck = new boolean[1];
