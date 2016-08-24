@@ -73,7 +73,7 @@ MSSEndpointsExtractor.prototype.getEndpoints = function (deploymentUrl, versionI
     var endpoints = undefined;
     try {
         // check whether accessible
-        get(swaggerUrl, {}, "json");
+        //get(swaggerUrl, {}, "json");
 
         var swaggerEndpoints = [];
         swaggerEndpoints.push({context : "/swagger", url: swaggerUrl});
@@ -255,7 +255,7 @@ var getEndpointsWithApplicationContext = function (deploymentUrl, versionId) {
     var endpoints = undefined;
     try {
         // check whether accessible
-        get(webUrl, {}, "text");
+        // get(webUrl, {}, "text");
 
         endpoints = createJsonResponse(null, null, webEndpoints, null);
     } catch (e) {
