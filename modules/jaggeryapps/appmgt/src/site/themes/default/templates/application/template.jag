@@ -736,7 +736,6 @@ jagg.template("application", function (inputs, outputs, jagg) {
 
         if ($('#applicationName').val() && $('#applicationRevision').val() && $('#container option:selected').val() && $('#runtime').val() > 0 && checkApplicationVersionExistence($('#applicationRevision').val())) {// mandatory validations for all app types
             if(appTypeName == custom){ // validations for custom app type
-
                 if($("#imageRegistryUrl").val() && $("#imageTag").val()) {
                     $("#add-application").prop("disabled", false);
                 }
