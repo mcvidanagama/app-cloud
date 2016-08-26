@@ -196,15 +196,14 @@ public class DockerClient {
 
     /**
      * Push docker images
-     * @param repoUrl - docker registry url
+     *
      * @param imageName - application runtime name
-     * @param tag - tag name
+     * @param tag       - tag name
      * @throws InterruptedException
      * @throws IOException
      * @throws AppCloudException
      */
-    public void pushDockerImage(String imageName, String tag)
-            throws AppCloudException {
+    public void pushDockerImage(String imageName, String tag) throws AppCloudException {
 
         final boolean[] dockerStatusCheck = new boolean[1];
         dockerStatusCheck[0] = true;
@@ -244,14 +243,14 @@ public class DockerClient {
                 handle.close();
             } catch (IOException e) {
                 log.warn("Error occurred while closing output handle after pushing docker image " + imageName +
-                         " with tag : " + tag + " to docker registry. " );
+                         " with tag : " + tag + " to docker registry. ");
             }
         }
 
         if (!dockerStatusCheck[0]) {
             log.error("Docker image push failed: " + imageName + " tag: " + tag);
             throw new AppCloudException(
-                    "Docker image push failed: " + imageName  + " tag: " + tag);
+                    "Docker image push failed: " + imageName + " tag: " + tag);
         }
     }
 
@@ -318,6 +317,7 @@ public class DockerClient {
         if (!dockerStatusCheck) {
             log.error("Docker custom image tag failed: " + oldImage);
             throw new AppCloudException("Docker custom image tag failed: " + oldImage);
+
         }
     }
 
