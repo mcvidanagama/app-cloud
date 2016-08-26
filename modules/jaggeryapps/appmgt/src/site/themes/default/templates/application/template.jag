@@ -35,7 +35,6 @@ jagg.template("application", function (inputs, outputs, jagg) {
         var decodedLabels = parse(decodeURIComponent(encodedLabels, "UTF-8"));
         var decodedEnvs = parse(decodeURIComponent(encodedEnvs, "UTF-8"));
         var newVersion = request.getParameter("newVersion");
-        var nextVersion = request.getParameter("nextVersion");
         var data = null;
         var allowedRuntimeContainerSpecJson = outputs.allowedContainerSpecs;
 		var maxApplications = outputs.maxAppCount;
@@ -43,6 +42,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
         var appTypeCount = outputs.appTypeCount;
         var cloudSpecificApplicationRepresentation = outputs.cloudSpecificApplicationRepresentation;
         var applications = outputs.applications;
+        var versionList = request.getParameter("versionArray");
     %>
 
       <link rel="stylesheet" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/bootstrap-3.2.0/bootstrap.min.css'))%>">
@@ -91,9 +91,9 @@ jagg.template("application", function (inputs, outputs, jagg) {
     var fileMoved = false;
     var envKeyRegex = new RegExp("<%=ENV_KEY_REGEX%>");
     var applicationList = <%=applications%>;
+    var versionList = "<%=versionList%>";
 
     $(document).ready(function(){
-
             if (newVersion == "true") {
                 isNewVersion = true;
             }
@@ -503,8 +503,8 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 },
                 applicationRevision: {
                     required: true,
-                    validateContent: true,
-                    validationApplicationRevisionChar: true
+                    validationApplicationRevisionChar: true,
+                    checkApplicationVersionExistence: true
                 },
                 icon: {                                     // app icon field
                     validateAppIcon: true
@@ -561,6 +561,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
         $.validator.addMethod("validateAppIcon", validateAppIcon, getIconErrorMessage);
         $.validator.addMethod("validateApplicationNameChar", validateApplicationNameChar, getValidationFailErrorMsg);
         $.validator.addMethod("validationApplicationRevisionChar", validationApplicationRevisionChar, getValidationFailErrorMsg);
+        $.validator.addMethod("checkApplicationVersionExistence", checkApplicationVersionExistence, "This version is already exists for this application");
         $.validator.addMethod("validateRuntimeSelection", validateRuntimeSelection, "Please select a valid runtime");
         $.validator.addMethod("validateArtifact", validateArtifact, getArtifactErrorMessage);
         $.validator.addMethod("validateEnvironmentVariable", validateEnvironmentVariable, getEnvVariableErrorMsg);
@@ -633,11 +634,10 @@ jagg.template("application", function (inputs, outputs, jagg) {
         }
 
         function validationApplicationRevisionChar(value) {
-            var patternNonAlphaNum = /^(?:(\d{1,2})\.)?(?:(\d{1,2})\.)?(\*|\d{1,2})$/g;
+            var patternNonAlphaNum = /[^a-zA-Z\d\-\_.]/g;
             var isPatternMatch = patternNonAlphaNum.test(value);
-            validationFailErrorMsg = "Invalid version number - Provide version number in format major.minor.patch";
-
-            return isPatternMatch;
+            validationFailErrorMsg = "Invalid version - Valid characters are [a-z, A-Z, 0-9, _, ., -]";
+            return !isPatternMatch;
         }
 
         function validateRuntimeSelection(value){
@@ -734,8 +734,9 @@ jagg.template("application", function (inputs, outputs, jagg) {
         //first disable the button and then enable it only if condions are satisfied
         $("#add-application").prop("disabled", true);
 
-        if ($('#applicationName').val() && $('#applicationRevision').val() && $('#container option:selected').val() && $('#runtime').val() > 0 ) {// mandatory validations for all app types
-            if(appTypeName== custom){ // validations for custom app type
+        if ($('#applicationName').val() && $('#applicationRevision').val() && $('#container option:selected').val() && $('#runtime').val() > 0 && checkApplicationVersionExistence($('#applicationRevision').val())) {// mandatory validations for all app types
+            if(appTypeName == custom){ // validations for custom app type
+
                 if($("#imageRegistryUrl").val() && $("#imageTag").val()) {
                     $("#add-application").prop("disabled", false);
                 }
@@ -798,6 +799,20 @@ jagg.template("application", function (inputs, outputs, jagg) {
         }
     }
 
+    function checkApplicationVersionExistence(version){
+        var existingVersions = versionList.split(",");
+        var version = version.toLowerCase() ;
+        var verionMatch;
+        for (var i = 0; i < existingVersions.length; i++){
+            var existingVerion = existingVersions[i].toLowerCase();
+            verionMatch = existingVerion.localeCompare(version.toLowerCase());
+            if(verionMatch === 0){
+                break;
+            }
+        }
+        return !(verionMatch === 0);
+    }
+
      function clearUploadIconField() {
          document.getElementById("icon").value = "";
          document.getElementById("appIcon").value = "";
@@ -855,18 +870,8 @@ jagg.template("application", function (inputs, outputs, jagg) {
 
 //TODO :
     function validateADockerImageRepositoryURL(value){
-        var pattern = "(http|https):\/\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\/|\/([\\w#!:.?+=&%@!\\-\\/]))?";
-        var regex = new RegExp(pattern, "g");
-        if(value && regex.test(value)){
-            if ($('#applicationName').val() && $('#applicationRevision').val()) {
-                $("#url-upload").attr("disabled", false);
-            }
-            return true;
-        } else {
-            $("#url-upload").attr("disabled", true);
-            uploadURLErrorMsg = "Invalid URL. The URL should be in the format : http:\/\/host-name\/username\/repo-name";
-            return false;
-        }
+       // implement the logic to validate docker image repo url
+
     }
 
     function getUploadURLErrorMsg(){
@@ -1025,9 +1030,9 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 <div class="col-md-7">
                     <div class="form-group">
                         <label for="application-version"><%=cloudSpecificApplicationRepresentation%> Version: *
-                            <i class="fa fa-question-circle help-tips" data-toggle="tooltip" data-placement="left" title="Set the version in the form <Major>.<Minor>.<Patch>"></i>
+                            <i class="fa fa-question-circle help-tips" data-toggle="tooltip" data-placement="left" title="Valid characters for application version are [a-z, A-Z, 0-9, _, ., -]"></i>
                         </label>
-                        <input id="applicationRevision" name="applicationRevision" type="text" class="form-control" value="<%=nextVersion%>"/>
+                        <input id="applicationRevision" name="applicationRevision" type="text" class="form-control" placeholder="Set the new application version here"/>
                         <label>Your current default version is <%=defaultVersion%></label>
                     </div>
                 </div>
@@ -1044,7 +1049,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 <% } else { %>
             <div class="form-group">
             <label for="application-version"><%=cloudSpecificApplicationRepresentation%> Version: *
-                <i class="fa fa-question-circle help-tips" data-toggle="tooltip" data-placement="left" title="Set the version in the form <Major>.<Minor>.<Patch>"></i>
+                <i class="fa fa-question-circle help-tips" data-toggle="tooltip" data-placement="left" title="Valid characters for application version are [a-z, A-Z, 0-9, _, ., -]"></i>
             </label>
             <input id="applicationRevision" name="applicationRevision" type="text" class="form-control" value="1.0.0"/>
             </div>

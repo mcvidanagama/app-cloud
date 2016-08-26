@@ -27,6 +27,11 @@ jagg.template("home", function(inputs, outputs, jagg) {
     var conSpecCpu = outputs.conSpecCpu;
     var conSpecMemory = outputs.conSpecMemory;
     var versions = application.versions;
+    var keyArray = Object.keys(versions);
+    var versionArray = []
+    for (var x = 0; x < keyArray.length; x++) {
+        versionArray.push(versions[keyArray[x]].versionName);
+    }
     var selectedApplicationRevision = versions[selectedRevision];
     var revisions = outputs.revision;
     var applicationName = application.applicationName;
@@ -70,6 +75,7 @@ jagg.template("home", function(inputs, outputs, jagg) {
     var applicationCount = <%=applicationCount%>;
     var maxApplications = <%=maxApplications%>;
     var cloudSpecificApplicationRepresentation = "<%=cloudSpecificApplicationRepresentation%>";
+    var versionArray = jQuery.parseJSON('<%=versionArray%>');
 </script>
 
     <div class="right-pane">
@@ -127,11 +133,9 @@ jagg.template("home", function(inputs, outputs, jagg) {
                               </button>
                               <ul id="appVersionList" class="dropdown-menu" >
                               <%
-                                var versions = application.versions;
-                                var keyArray = Object.keys(versions);
-                                for (var x = 0; x < keyArray.length; x++) {
+                                for (var x = 0; x < versionArray.length; x++) {
                               %>
-                                  <li ><a href="#"><%=versions[keyArray[x]].versionName%></a></li>
+                                  <li ><a href="#"><%=versionArray[x]%></a></li>
                               <%
                               }
                               %>
@@ -317,20 +321,6 @@ jagg.template("home", function(inputs, outputs, jagg) {
      </div><!-- /.modal -->
 <script>
 
-    function generateNextPossibleVersion(revisionsSet){
-        var revArry = [];
-        for (var x in revisionsSet){
-            var rev = x.split(".")[0];
-            revArry.push(rev);
-        }
-        revArry.sort(function(a, b){return a-b});
-        var x = parseInt(revArry.pop()) + 1;
-        var nextVersion = x + '.0.0';
-
-        return nextVersion;
-    }
-
-
   // stop application
     function redeployApplication(){
         $("#redeploy-in-progress").html("<i class=\"fw fw-loader2 fw-spin\"></i>");
@@ -420,7 +410,6 @@ jagg.template("home", function(inputs, outputs, jagg) {
                 conSpecMemory: conSpecMemory
 
             }, function(result) {
-                var versions = jQuery.parseJSON(result);
                 //check if application has more than one version
                 jagg.message({
                     content: "New version started successfully",

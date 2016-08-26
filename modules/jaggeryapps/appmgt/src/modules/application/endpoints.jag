@@ -147,7 +147,7 @@ DSSEndpointsExtractor.prototype.getEndpoints = function (deploymentUrl, versionI
     var options = new Array();
     options.useSOAP = 1.1;
     options.action = "dss:getEndpoints";
-    var payload = '<dss:getEndpoints xmlns:dss="http://dss.appcloud.wso2.org" />';
+    var payload = '<dss:getEndpoints xmlns:dss="http://integration.dss.appcloud.wso2.org" />';
 
     var endpoints = undefined;
     try {
@@ -157,7 +157,7 @@ DSSEndpointsExtractor.prototype.getEndpoints = function (deploymentUrl, versionI
 
         var soapEndpoints = [];
         if (result != undefined) {
-            var ns = new Namespace("http://dss.appcloud.wso2.org");
+            var ns = new Namespace("http://integration.dss.appcloud.wso2.org");
             var response = result.ns::["return"];
             for (var index=0; index < response.length(); index++) {
                 var entry = response[index];
