@@ -39,7 +39,7 @@ jagg.template("urlmapper", function (inputs, outputs, jagg) { %>
 <!-- BOF App factory menu actionbar -->
 <input type="hidden" maxlength="19" id="defaultDomain" name="defaultDomain" value=""/>
 <div class="action-bar">
-	<a href="/appmgt/site/pages/home.jag?applicationKey=<%=applicationKey%>" class="btn-action" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+	<a href="/appmgt/site/pages/home.jag?applicationKey=<%=applicationKey%>" class="btn-action" data-toggle="tooltip" data-placement="top" title="Back to Application">
          <span class="fw-stack fw-lg btn-action-ico">
              <i class="fw fw-circle-outline fw-stack-2x"></i>
              <i class="fw fw-left-arrow fw-stack-1x"></i>

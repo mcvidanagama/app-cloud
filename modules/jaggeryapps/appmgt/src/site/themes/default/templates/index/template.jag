@@ -265,16 +265,16 @@ jagg.template("index", function(inputs, outputs, jagg) {
 
     <div class="action-bar">
     <% if (appTypeCount == 1) { %>
-        <a href="<%=jagg.getAbsoluteUrl("/site/pages/application.jag")%>?appTypeName=<%=appType%>" class="btn-action" data-toggle="tooltip" data-placement="top" title="Add New Application">
+        <a href="<%=jagg.getAbsoluteUrl("/site/pages/application.jag")%>?appTypeName=<%=appType%>" class="btn-action" data-toggle="tooltip" data-placement="top" title="Create <%=cloudSpecificApplicationRepresentation%>">
     <% } else { %>
-        <a href="/appmgt/site/pages/select-apptype.jag" class="btn-action" data-toggle="tooltip" data-placement="top" title="Add New Application">
+        <a href="/appmgt/site/pages/select-apptype.jag" class="btn-action" data-toggle="tooltip" data-placement="top" title="Create <%=cloudSpecificApplicationRepresentation%>">
     <% } %>
             <span class="fw-stack fw-lg btn-action-ico">
                 <i class="fw fw-circle-outline fw-stack-2x"></i>
                 <i class="fw fw-add fw-stack-1x"></i>
             </span> <span class="hidden-xs">Create <%=cloudSpecificApplicationRepresentation%></span>
         </a>
-        <a href="<%=jagg.getAbsoluteUrl("/site/pages/newdatabase.jag")%>?isEdit=false" class="btn-action" data-toggle="tooltip" data-placement="top" title="Add New Database">
+        <a href="<%=jagg.getAbsoluteUrl("/site/pages/newdatabase.jag")%>?isEdit=false" class="btn-action" data-toggle="tooltip" data-placement="top" title="Create Database">
             <span class="fw-stack fw-lg btn-action-ico">
                 <i class="fw fw-circle-outline fw-stack-2x"></i>
                 <i class="fw fw-add fw-stack-1x"></i>
