@@ -20,7 +20,7 @@
 -- Migration - Adding MSF4J 1.0.0 runtime deprecate notice
 -- --------------------------------------------------------
 UPDATE `AC_RUNTIME`
-SET `name` = 'OpenJDK 8 + WSO2 MSF4J 1.0.0 - Deprecated Runtime (will continue to work until September 30th 2016)'
+SET `name` = 'OpenJDK 8 + WSO2 MSF4J 1.0.0 - Deprecated Runtime (Will continue to work until 2016/9/30)'
 WHERE `id`= 2;
 
 -- --------------------------------------------------------
@@ -46,3 +46,21 @@ INSERT INTO `AC_RUNTIME_CONTAINER_SPECIFICATIONS` (`id`, `CON_SPEC_ID`) VALUES
 INSERT INTO AC_RUNTIME_TRANSPORT (`transport_id`, `runtime_id`) VALUES
 (3, 10),
 (4, 10);
+
+-- --------------------------------------------------------
+-- Adding Apache Tomcat 8.0.28 / WSO2 Application Server 6.0.0-M3 runtime as a runtime of jaggery app type
+-- --------------------------------------------------------
+INSERT INTO `AC_APP_TYPE_RUNTIME` (`app_type_id`, `runtime_id`) VALUES
+(4, 10);
+
+-- --------------------------------------------------------
+-- Deprecating  Jaggery 0.11.0 runtime
+-- --------------------------------------------------------
+UPDATE `AC_RUNTIME`
+SET `name` = 'Jaggery 0.11.0 - Deprecated Runtime (Will continue to work until 2016/9/30)'
+WHERE `id`= 5;
+
+-- --------------------------------------------------------
+-- Increasing version length
+-- --------------------------------------------------------
+ALTER TABLE `AC_VERSION` CHANGE COLUMN `name` `name` VARCHAR(60) NOT NULL;

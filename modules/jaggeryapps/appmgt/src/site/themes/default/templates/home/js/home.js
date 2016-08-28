@@ -23,10 +23,10 @@ $(document).ready(function() {
         submitChangeAppIcon(this);
     });
     initPageView();
-    var nextVersion = generateNextPossibleVersion(application.versions);
     var uploadRevisionUrl = appCreationPageBaseUrl+"?appTypeName="+application.applicationType +
                             "&applicationName="+applicationName + "&encodedLabels="+encodedLabels + "&encodedEnvs="
-                                    + encodedEnvs + "&newVersion=true&nextVersion=" + nextVersion + "&conSpecCpu=" + conSpecCpu + "&conSpecMemory=" + conSpecMemory;
+                                    + encodedEnvs + "&newVersion=true&conSpecCpu=" + conSpecCpu + "&conSpecMemory="
+                                    + conSpecMemory + "&versionArray=" + encodeURI(versionArray);
     $('#upload-revision').attr("href", uploadRevisionUrl);
 
     if(selectedApplicationRevision.status==APPLICATION_INACTIVE){
@@ -101,7 +101,7 @@ function displayEndpointNotloadingMessage() {
         modalStatus: true,
         type: 'warning',
         timeout: 15000,
-        content: "The endpoints of your application might not be available if you created it before <b>2016/8/24</b>." +
+        content: "The endpoints of your application might not be available if you created it before <b>2016/8/25</b>." +
             " Please recreate the application or create a new version of it to see the endpoints."
     });
 }
@@ -462,9 +462,9 @@ function changeSelectedRevision(newRevision){
 
     }
     // Set upload revision btn
-    var uploadRevisionUrl = appCreationPageBaseUrl+"?appTypeName="+application.applicationType + //"&applicationName="+applicationName;
+    var uploadRevisionUrl = appCreationPageBaseUrl+"?appTypeName="+application.applicationType +
                             "&applicationName="+applicationName + "&encodedLabels="+encodedLabels + "&encodedEnvs="
-                                    + encodedEnvs + "&newVersion=true&nextVersion=" + nextVersion;
+                                    + encodedEnvs + "&newVersion=true" + "&versionArray=" + encodeURI(versionArray);
     $('#upload-revision').attr("href", uploadRevisionUrl);
 
     changeRuntimeProps(selectedApplicationRevision);
