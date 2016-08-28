@@ -38,31 +38,41 @@ import org.wso2.carbon.tenant.mgt.services.TenantMgtAdminService;
 public class TenantInitializerServiceComponent {
     private static final Log log = LogFactory.getLog(TenantInitializerServiceComponent.class);
 
+    //constants for tenant creation
+    public static final String DEFAULT_TENANT_PASSWORD = "admin123";
+    public static final String DEFAULT_TENANT_USERNAME = "admin";
+    public static final String USAGE_PLAN = "Demo";
+    public static final String FIRST_NAME = "FirstName";
+    public static final String LAST_NAME = "LastName";
+    public static final String DEFAULT_EMAIL_PREFIX = "admin@";
+
+    private ListenerManager listenerManager;
+
     protected void activate(ComponentContext ctx) {
         TenantMgtAdminService tenantMgtAdminService = new TenantMgtAdminService();
 
+        //get tenant information from environment variables
         String TENANT_PASSWORD = System.getenv("TENANT_PASSWORD");
         String TENANT_ID = System.getenv("TENANT_ID");
         String TENANT_DOMAIN = System.getenv("TENANT_DOMAIN");
         String CREATE_TENANT = System.getenv("CREATE_TENANT");
 
         if (Boolean.parseBoolean(CREATE_TENANT)) {
-
+            //create tenant if flag is set to true
             if (StringUtils.isEmpty(TENANT_PASSWORD)) {
-                TENANT_PASSWORD = "admin123";
+                TENANT_PASSWORD = DEFAULT_TENANT_PASSWORD;
             }
 
             TenantInfoBean tenantInfoBean = new TenantInfoBean();
             tenantInfoBean.setActive(true);
-            tenantInfoBean.setAdmin("admin");
+            tenantInfoBean.setAdmin(DEFAULT_TENANT_USERNAME);
             tenantInfoBean.setAdminPassword(TENANT_PASSWORD);
-            tenantInfoBean.setFirstname("FirstName");
-            tenantInfoBean.setLastname("LastName");
-            tenantInfoBean.setEmail("admin@" + TENANT_DOMAIN);
+            tenantInfoBean.setFirstname(FIRST_NAME);
+            tenantInfoBean.setLastname(LAST_NAME);
+            tenantInfoBean.setEmail(DEFAULT_EMAIL_PREFIX + TENANT_DOMAIN);
             tenantInfoBean.setTenantDomain(TENANT_DOMAIN);
-            tenantInfoBean.setSuccessKey("");
             tenantInfoBean.setTenantId(Integer.parseInt(TENANT_ID));
-            tenantInfoBean.setUsagePlan("Demo");
+            tenantInfoBean.setUsagePlan(USAGE_PLAN);
             try {
                 tenantMgtAdminService.addTenant(tenantInfoBean);
                 log.info("Tenant added with Tenant ID : " + TENANT_ID + " and Tenant Domain : " + TENANT_DOMAIN);
@@ -78,8 +88,10 @@ public class TenantInitializerServiceComponent {
     }
 
     protected void setListenerManager(ListenerManager listenerManager) {
+        this.listenerManager = listenerManager;
     }
 
     protected void unsetListenerManager(ListenerManager listenerManager) {
+        setListenerManager(null);
     }
 }
