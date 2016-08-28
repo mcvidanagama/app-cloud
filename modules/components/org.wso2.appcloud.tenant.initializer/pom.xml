@@ -26,12 +26,10 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
+    <groupId>org.wso2.appcloud.tenant.initializer</groupId>
     <artifactId>org.wso2.appcloud.tenant.initializer</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
-    <name>WSO2 App Cloud Tenant Initializer</name>
-    <description>WSO2 App Cloud Tenant Initializer</description>
-    <url>http://wso2.org</url>
+    <name>WSO2 AppCloud Components - Tenant Initializer</name>
 
     <dependencies>
         <dependency>
