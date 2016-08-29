@@ -21,8 +21,7 @@
 
 # This script build initial base docker images to be used in app cloud setup.
 CURRENT_DIR=`pwd`
-docker build --no-cache -t wso2-appcloud/wso2as:6.0.0-m3-base -f $CURRENT_DIR/wso2as/base/6.0.0-m3/Dockerfile.wso2-appcloud-wso2as-6.0.0-m3.base $CURRENT_DIR/wso2as/base/6.0.0-m3
-exit 0
+
 #msf4j base image
 docker build --no-cache -t wso2-appcloud/msf4j:1.0.0-base -f $CURRENT_DIR/msf4j/base/1.0.0/Dockerfile.wso2-appcloud-msf4j-1.0.0.base $CURRENT_DIR/msf4j/base/1.0.0/
 docker build --no-cache -t wso2-appcloud/msf4j:2.0.0-base -f $CURRENT_DIR/msf4j/base/2.0.0/Dockerfile.wso2-appcloud-msf4j-2.0.0.base $CURRENT_DIR/msf4j/base/2.0.0/
