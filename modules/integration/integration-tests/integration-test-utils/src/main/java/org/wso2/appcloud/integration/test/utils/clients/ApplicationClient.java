@@ -90,9 +90,13 @@ public class ApplicationClient extends BaseClient{
 	protected static final String PARAM_NAME_FILE_UPLOAD = "fileupload";
 	protected static final String PARAM_NAME_IS_NEW_VERSION = "isNewVersion";
 	protected static final String PARAM_NAME_CONTAINER_SPEC = "conSpec";
+	protected static final String PARAM_NAME_GIT_REPO_URL = "gitRepoUrl";
+	protected static final String PARAM_NAME_GIT_REPO_BRANCH = "gitRepoBranch";
+	protected static final String PARAM_NAME_PROJECT_ROOT = "projectRoot";
     public static final String PARAM_NAME_APP_CREATION_METHOD = "appCreationMethod";
     public static final String PARAM_NAME_APP_CONTEXT = "applicationContext";
     public static final String DEFAULT = "default";
+    public static final String GITHUB = "github";
     public static final String PARAM_NAME_SET_DEFAULT_VERSION = "setDefaultVersion";
     protected static final String UPDATE_DEFAULT_VERSION_ACTION = "updateDefaultVersion";
     protected static final String PARAM_NAME_DEFAULT_VERSION = "defaultVersion";
@@ -120,7 +124,8 @@ public class ApplicationClient extends BaseClient{
     public void createNewApplication(String applicationName, String runtime, String appTypeName,
                                      String applicationRevision, String applicationDescription, String uploadedFileName,
                                      String runtimeProperties, String tags, File uploadArtifact, boolean isNewVersion,
-                                     String applicationContext, String conSpec, boolean setDefaultVersion)
+                                     String applicationContext, String conSpec, boolean setDefaultVersion, String appCreationMethod,
+                                     String gitRepoUrl, String gitRepoBranch, String projectRoot)
             throws AppCloudIntegrationTestException {
 
         HttpClient httpclient = null;
@@ -135,9 +140,19 @@ public class ApplicationClient extends BaseClient{
 
             MultipartEntityBuilder builder = MultipartEntityBuilder.create();
             builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-            builder.addPart(PARAM_NAME_FILE_UPLOAD, new FileBody(uploadArtifact));
+
             builder.addPart(PARAM_NAME_ACTION, new StringBody(CREATE_APPLICATION_ACTION, ContentType.TEXT_PLAIN));
-            builder.addPart(PARAM_NAME_APP_CREATION_METHOD, new StringBody(DEFAULT, ContentType.TEXT_PLAIN));
+            builder.addPart(PARAM_NAME_APP_CREATION_METHOD, new StringBody(appCreationMethod, ContentType.TEXT_PLAIN));
+            if (GITHUB.equals(appCreationMethod)) {
+                builder.addPart(PARAM_NAME_GIT_REPO_URL, new StringBody(gitRepoUrl, ContentType.TEXT_PLAIN));
+                builder.addPart(PARAM_NAME_GIT_REPO_BRANCH, new StringBody(gitRepoBranch, ContentType.TEXT_PLAIN));
+                builder.addPart(PARAM_NAME_PROJECT_ROOT, new StringBody(projectRoot, ContentType.TEXT_PLAIN));
+            } else if(DEFAULT.equals(appCreationMethod)) {
+                builder.addPart(PARAM_NAME_FILE_UPLOAD, new FileBody(uploadArtifact));
+                builder.addPart(PARAM_NAME_UPLOADED_FILE_NAME, new StringBody(uploadedFileName, ContentType.TEXT_PLAIN));
+                builder.addPart(PARAM_NAME_IS_FILE_ATTACHED, new StringBody(Boolean.TRUE.toString(),
+                        ContentType.TEXT_PLAIN));//Setting true to send the file in request
+            }
 	        builder.addPart(PARAM_NAME_CONTAINER_SPEC, new StringBody(conSpec, ContentType.TEXT_PLAIN));
             builder.addPart(PARAM_NAME_APPLICATION_NAME, new StringBody(applicationName, ContentType.TEXT_PLAIN));
             builder.addPart(PARAM_NAME_APPLICATION_DESCRIPTION,
@@ -147,11 +162,10 @@ public class ApplicationClient extends BaseClient{
             builder.addPart(PARAM_NAME_APP_CONTEXT, new StringBody(applicationContext, ContentType.TEXT_PLAIN));
             builder.addPart(PARAM_NAME_APPLICATION_REVISION,
                     new StringBody(applicationRevision, ContentType.TEXT_PLAIN));
-            builder.addPart(PARAM_NAME_UPLOADED_FILE_NAME, new StringBody(uploadedFileName, ContentType.TEXT_PLAIN));
+
             builder.addPart(PARAM_NAME_PROPERTIES, new StringBody(runtimeProperties, ContentType.TEXT_PLAIN));
             builder.addPart(PARAM_NAME_TAGS, new StringBody(tags, ContentType.TEXT_PLAIN));
-            builder.addPart(PARAM_NAME_IS_FILE_ATTACHED, new StringBody(Boolean.TRUE.toString(),
-                    ContentType.TEXT_PLAIN));//Setting true to send the file in request
+
             builder.addPart(PARAM_NAME_IS_NEW_VERSION,
                     new StringBody(Boolean.toString(isNewVersion), ContentType.TEXT_PLAIN));
             builder.addPart(PARAM_NAME_SET_DEFAULT_VERSION,
