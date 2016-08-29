@@ -24,13 +24,14 @@ import org.wso2.appcloud.integration.test.utils.AppCloudIntegrationTestUtils;
 
 public class MSF4J200ApplicationTestCase extends AppCloudIntegrationBaseTestCase {
 
-	private static final Log log = LogFactory.getLog(MSF4J200ApplicationTestCase.class);
-	public static final String MSS_SERVER_STARTED_MESSAGE = "Microservices server started in";
-	public static final String MSF4J_APPLICATION_TYPE = "mss";
+    private static final Log log = LogFactory.getLog(MSF4J200ApplicationTestCase.class);
+    public static final String MSS_SERVER_STARTED_MESSAGE = "Microservices server started in";
+    public static final String MSF4J_APPLICATION_TYPE = "mss";
 
     public MSF4J200ApplicationTestCase() {
         super(AppCloudIntegrationTestUtils.getPropertyValue(AppCloudIntegrationTestConstants.MSS200_APP_RUNTIME_ID_KEY),
-                AppCloudIntegrationTestUtils.getPropertyValue(AppCloudIntegrationTestConstants.MSS200_APP_FILE_NAME_KEY),
+                AppCloudIntegrationTestUtils
+                        .getPropertyValue(AppCloudIntegrationTestConstants.MSS200_APP_FILE_NAME_KEY),
                 MSF4J_APPLICATION_TYPE, AppCloudIntegrationTestUtils.getPropertyValue(AppCloudIntegrationTestConstants.
                         MSS_APP_CONTENT), Long.parseLong(AppCloudIntegrationTestUtils
                         .getPropertyValue(AppCloudIntegrationTestConstants.MSS_RUNTIME_START_TIMEOUT)),
@@ -41,10 +42,10 @@ public class MSF4J200ApplicationTestCase extends AppCloudIntegrationBaseTestCase
                 AppCloudIntegrationTestUtils.getPropertyValue(AppCloudIntegrationTestConstants.MSS_DEFAULT_VERSION));
     }
 
-	@Override
-	protected void assertLogContent(String logContent) {
+    @Override
+    protected void assertLogContent(String logContent) {
         Assert.assertTrue(logContent.contains(MSS_SERVER_STARTED_MESSAGE),
-                          "Received log:" + logContent + " but expected line: " + MSS_SERVER_STARTED_MESSAGE);
-	}
+                "Received log:" + logContent + " but expected line: " + MSS_SERVER_STARTED_MESSAGE);
+    }
 
 }

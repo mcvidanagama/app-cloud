@@ -24,12 +24,13 @@ import org.wso2.appcloud.integration.test.utils.AppCloudIntegrationTestUtils;
 
 public class WARAS600M2ApplicationTestCase extends AppCloudIntegrationBaseTestCase {
 
-	private static final Log log = LogFactory.getLog(WARAS600M2ApplicationTestCase.class);
-	public static final String TOMCAT_SERVER_STARTED_MESSAGE = "org.apache.catalina.startup.Catalina.start Server startup in";
-	public static final String WAR_APPLICATION_TYPE = "war";
+    private static final Log log = LogFactory.getLog(WARAS600M2ApplicationTestCase.class);
+    public static final String TOMCAT_SERVER_STARTED_MESSAGE = "org.apache.catalina.startup.Catalina.start Server startup in";
+    public static final String WAR_APPLICATION_TYPE = "war";
 
     public WARAS600M2ApplicationTestCase() {
-        super(AppCloudIntegrationTestUtils.getPropertyValue(AppCloudIntegrationTestConstants.TOMCAT_AS600M2_APP_RUNTIME_ID_KEY),
+        super(AppCloudIntegrationTestUtils
+                        .getPropertyValue(AppCloudIntegrationTestConstants.TOMCAT_AS600M2_APP_RUNTIME_ID_KEY),
                 AppCloudIntegrationTestUtils
                         .getPropertyValue(AppCloudIntegrationTestConstants.TOMCAT_APP_FILE_NAME_KEY),
                 WAR_APPLICATION_TYPE,
@@ -44,9 +45,9 @@ public class WARAS600M2ApplicationTestCase extends AppCloudIntegrationBaseTestCa
                 AppCloudIntegrationTestUtils.getPropertyValue(AppCloudIntegrationTestConstants.TOMCAT_DEFAULT_VERSION));
     }
 
-	@Override
-	protected void assertLogContent(String logContent) {
+    @Override
+    protected void assertLogContent(String logContent) {
         Assert.assertTrue(logContent.contains(TOMCAT_SERVER_STARTED_MESSAGE),
-                          "Received log:" + logContent + " but expected line: " + TOMCAT_SERVER_STARTED_MESSAGE);
+                "Received log:" + logContent + " but expected line: " + TOMCAT_SERVER_STARTED_MESSAGE);
     }
 }

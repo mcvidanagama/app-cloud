@@ -42,8 +42,8 @@ public abstract class AppCloudIntegrationBaseTestCase {
 	private String runtimeID;
 	protected String sampleAppContent;
 	protected long runtimeStartTimeout;
-    protected ApplicationClient applicationClient;
-	private LogsClient logsClient;
+       protected ApplicationClient applicationClient;
+       private LogsClient logsClient;
 	protected String applicationName;
 	protected String applicationType;
 	protected String applicationRevision;
@@ -54,10 +54,10 @@ public abstract class AppCloudIntegrationBaseTestCase {
 	private String conSpec;
 	private boolean setDefaultVersion;
 	private String defaultVersion;
-    protected String gitRepoUrl;
-    protected String gitRepoBranch;
-    protected String projectRoot;
-    protected String appCreationMethod = DEFAULT;
+       protected String gitRepoUrl;
+       protected String gitRepoBranch;
+       protected String projectRoot;
+       protected String appCreationMethod = DEFAULT;
 
 	public AppCloudIntegrationBaseTestCase(String runtimeID, String fileName, String applicationType,
 	                                       String sampleAppContent, long runtimeStartTimeout, String applicationContext,
