@@ -625,10 +625,13 @@ jagg.template("application", function (inputs, outputs, jagg) {
         }
 
         function validationApplicationRevisionChar(value) {
-            var patternNonAlphaNum = /[^a-zA-Z\d\-\_.]/g;
-            var isPatternMatch = patternNonAlphaNum.test(value);
-            validationFailErrorMsg = "Invalid version - Valid characters are [a-z, A-Z, 0-9, _, ., -]";
-            return !isPatternMatch;
+            var versionValidation = validateApplicationVersion(value);
+            if (!versionValidation.status) {
+                envVariableErrorMsg = versionValidation.msg;
+                return false;
+            } else {
+                return true;
+            }
         }
 
         function validateRuntimeSelection(value){
