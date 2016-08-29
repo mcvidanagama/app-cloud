@@ -32,6 +32,7 @@ public abstract class AppCloudIntegrationBaseTestCase {
 	private static final Log log = LogFactory.getLog(AppCloudIntegrationBaseTestCase.class);
 	public static final String PARAM_NAME_KEY = "key";
 	public static final String PARAM_NAME_VALUE = "value";
+	public static final String DEFAULT = "default";
 	protected String defaultAdmin;
 	protected String defaultAdminPassword;
 	protected String defaultAppName;
@@ -41,8 +42,8 @@ public abstract class AppCloudIntegrationBaseTestCase {
 	private String runtimeID;
 	protected String sampleAppContent;
 	protected long runtimeStartTimeout;
-    protected ApplicationClient applicationClient;
-	private LogsClient logsClient;
+       protected ApplicationClient applicationClient;
+       private LogsClient logsClient;
 	protected String applicationName;
 	protected String applicationType;
 	protected String applicationRevision;
@@ -53,6 +54,10 @@ public abstract class AppCloudIntegrationBaseTestCase {
 	private String conSpec;
 	private boolean setDefaultVersion;
 	private String defaultVersion;
+       protected String gitRepoUrl;
+       protected String gitRepoBranch;
+       protected String projectRoot;
+       protected String appCreationMethod = DEFAULT;
 
 	public AppCloudIntegrationBaseTestCase(String runtimeID, String fileName, String applicationType,
 	                                       String sampleAppContent, long runtimeStartTimeout, String applicationContext,
@@ -96,10 +101,13 @@ public abstract class AppCloudIntegrationBaseTestCase {
 	public void createApplication() throws Exception {
 		log.info("Application creation started for application type : " + applicationType);
 		//Application creation
-		File uploadArtifact = new File(TestConfigurationProvider.getResourceLocation() + fileName);
-		applicationClient.createNewApplication(applicationName, this.runtimeID, applicationType, applicationRevision,
-		                                       applicationDescription, this.fileName, properties, tags, uploadArtifact,
-		                                       false, applicationContext, conSpec, true);
+        File uploadArtifact = null;
+        if (DEFAULT.equals(appCreationMethod)) {
+            uploadArtifact = new File(TestConfigurationProvider.getResourceLocation() + fileName);
+        }
+        applicationClient.createNewApplication(applicationName, this.runtimeID, applicationType, applicationRevision,
+                applicationDescription, this.fileName, properties, tags, uploadArtifact,
+                false, applicationContext, conSpec, true, appCreationMethod, gitRepoUrl, gitRepoBranch, projectRoot);
 
 		//Wait until creation finished
 		log.info("Waiting until application comes to running state...");
@@ -297,11 +305,15 @@ public abstract class AppCloudIntegrationBaseTestCase {
 	public void testCreateVersion() throws Exception {
 		String applicationRevision =
 				AppCloudIntegrationTestUtils.getPropertyValue(AppCloudIntegrationTestConstants.APP_NEW_REVISION_KEY);
-		File uploadArtifact = new File(TestConfigurationProvider.getResourceLocation() + fileName);
+        File uploadArtifact = null;
+        if (DEFAULT.equals(appCreationMethod)) {
+           uploadArtifact  = new File(TestConfigurationProvider.getResourceLocation() + fileName);
+        }
         applicationClient.createNewApplication(applicationName, this.runtimeID, applicationType, applicationRevision,
-                                               applicationDescription, this.fileName, properties, tags, uploadArtifact,
-                                               true, applicationContext, conSpec, setDefaultVersion);
-		//Wait until creation finished
+                applicationDescription, this.fileName, properties, tags, uploadArtifact,
+                true, applicationContext, conSpec, setDefaultVersion, appCreationMethod, gitRepoUrl, gitRepoBranch,
+                projectRoot);
+        //Wait until creation finished
 		log.info("Waiting until new version comes to running state");
 		RetryApplicationActions(applicationRevision, AppCloudIntegrationTestConstants.STATUS_RUNNING,
 				"Application version creation");
