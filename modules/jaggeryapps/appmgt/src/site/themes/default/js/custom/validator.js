@@ -1,15 +1,16 @@
 //Regex patterns
 var ALPHA_NUMERIC_PLUS_UNDERSCORE_REGEX = "^[A-Za-z0-9_]+$";
+var ALPHA_NUMERIC_PLUS_UNDERSCORE_REGEX_NOT_STARTING_WITH_NUMBER = "^[A-Za-z_][A-Za-z0-9_]+$";
 var VERSION_REGEX = "^[A-Za-z0-9_.-]+$";
 
 //Environment key validation
 function validateEnvKey(envKey){
-    var envKeyRegex = new RegExp(ALPHA_NUMERIC_PLUS_UNDERSCORE_REGEX);
+    var envKeyRegex = new RegExp(ALPHA_NUMERIC_PLUS_UNDERSCORE_REGEX_NOT_STARTING_WITH_NUMBER);
     var validator;
     if (!envKeyRegex.test(envKey)) {
         validator = {
             status: false,
-            msg: "Only alphanumeric characters and underscore are allowed."
+            msg: "Only alphanumeric characters and underscore are allowed for Environmental Variable key. And cannot start with a number."
         }
     } else {
         validator = {

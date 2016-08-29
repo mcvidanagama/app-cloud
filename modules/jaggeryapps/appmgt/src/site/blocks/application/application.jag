@@ -71,6 +71,14 @@ var log = new Log();
         var runtimeProperties = [];
         if(unparsedRuntimeProps){
             runtimeProperties = parse(unparsedRuntimeProps);
+            for (var i = 0; i < runtimeProperties.length; i++) {
+                var keyValidation = validator.validateEnvKey(runtimeProperties[i].key);
+                if (!keyValidation.status) {
+                    response.status = 400;
+                    response.content = keyValidation.msg;
+                    return;
+                }
+            }
         }
 
         var unparsedTags = request.getParameter("tags");
