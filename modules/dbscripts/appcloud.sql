@@ -498,7 +498,9 @@ INSERT INTO `AC_RUNTIME_CONTAINER_SPECIFICATIONS` (`id`, `CON_SPEC_ID`) VALUES
 (9, 3),
 (9, 4),
 (10, 3),
-(10, 4);
+(10, 4),
+(11, 3),
+(11, 4);
 
 -- -----------------------------------------------------
 -- Table `AppCloudDB`.`AC_CLOUD`
