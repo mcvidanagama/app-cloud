@@ -51,6 +51,9 @@ var DATABASE_ADD = "Adding application to database";
 var DOCKER_FILE_CREATE = "Creating docker file";
 var DOCKER_IMAGE_BUILD = "Building docker image";
 var DOCKER_REGISTRY_PUSH = "Updating docker registry";
+var DOCKER_IMAGE_PULL = "Pulling docker  image from remote repo";
+var DOCKER_IMAGE_TAG = "Tagging docker image in registry";
+var KUBE_DEPLOY = "Initializing deployment";
 var KUBE_DEPLOY = "Initializing deployment";
 var STOP_CONTAINERS = "Stopping Containers";
 var INGRESS = "Creating ingress";
@@ -83,6 +86,8 @@ var APP_CLOUD = "app-cloud";
 var APP_CLOUD_HOSTNAME = "AppCloud.Hostname";
 var INTEGRATION_CLOUD = "integration-cloud";
 var INTEGRATION_CLOUD_HOSTNAME = "IntegrationCloud.Hostname";
+
+var CUSTOM = "custom";
 
 //Regex patterns
 var ENV_KEY_REGEX = "^[A-Za-z0-9_]+$";

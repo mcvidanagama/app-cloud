@@ -47,6 +47,9 @@ public class DockerClient {
 
     final CountDownLatch buildDone = new CountDownLatch(1);
     final CountDownLatch pushDone = new CountDownLatch(1);
+    final CountDownLatch pullDone = new CountDownLatch(1);
+
+    final String TAG_LATEST = "latest";
 
     public DockerClient() {
         Config config = new ConfigBuilder()
@@ -200,14 +203,15 @@ public class DockerClient {
      * @throws IOException
      * @throws AppCloudException
      */
-    public void pushDockerImage(String repoUrl, String imageName, String tag)
+    public void pushDockerImage(String imageName, String tag)
             throws AppCloudException {
 
         final boolean[] dockerStatusCheck = new boolean[1];
         dockerStatusCheck[0] = true;
-        String dockerImageName = repoUrl + "/" + imageName;
+        //String dockerImageName = repoUrl + "/" + imageName;
+        log.info("Docker Client:PUSH imageName : " + imageName + " tag : " + tag);
         try {
-            handle = dockerClient.image().withName(dockerImageName).push()
+            handle = dockerClient.image().withName(imageName).push()
                                  .usingListener(new EventListener() {
                                      @Override
                                      public void onSuccess(String message) {
@@ -232,23 +236,91 @@ public class DockerClient {
         } catch (InterruptedException e) {
 
             String msg = "Error occurred while pushing docker image " + imageName + " with tag : " + tag + " to " +
-                         "docker registry : " + repoUrl;
+                         "docker registry. ";
+            log.error(e);
             throw new AppCloudException(msg, e);
         } finally {
             try {
                 handle.close();
             } catch (IOException e) {
                 log.warn("Error occurred while closing output handle after pushing docker image " + imageName +
-                         " with tag : " + tag + " to docker registry : " + repoUrl);
+                         " with tag : " + tag + " to docker registry. " );
             }
         }
 
         if (!dockerStatusCheck[0]) {
-            log.error("Docker image push failed: " + imageName + " repo: " + repoUrl + " tag: " + tag);
+            log.error("Docker image push failed: " + imageName + " tag: " + tag);
             throw new AppCloudException(
-                    "Docker image push failed: " + imageName + " repo: " + repoUrl + " tag: " + tag);
+                    "Docker image push failed: " + imageName  + " tag: " + tag);
         }
     }
+
+    public void pullDockerImage(String imageRepoUrl, String imageTag) throws AppCloudException {
+
+        if (log.isDebugEnabled()) {
+            log.debug("Docker image pull triggered for repo : " + imageRepoUrl + " with tag : " + imageTag);
+        }
+
+        final boolean[] dockerStatusCheck = new boolean[1];
+        dockerStatusCheck[0] = true;
+        try {
+            handle = dockerClient.image().withName(imageRepoUrl).pull()
+                                 .usingListener(new EventListener() {
+                                     @Override
+                                     public void onSuccess(String message) {
+                                         log.info("Pull Success:" + message);
+                                         pullDone.countDown();
+                                     }
+
+                                     @Override
+                                     public void onError(String message) {
+                                         log.error("Pull Failure:" + message);
+                                         pullDone.countDown();
+                                         dockerStatusCheck[0] = false;
+                                     }
+
+                                     @Override
+                                     public void onEvent(String event) {
+                                         log.info(event);
+                                     }
+                                 }).withTag(imageTag).fromRegistry();
+            pullDone.await();
+
+        } catch (InterruptedException e) {
+
+            String msg = "Error occurred while pulling docker image " + imageRepoUrl + " with tag : " + imageTag;
+            throw new AppCloudException(msg, e);
+        } finally {
+            try {
+                handle.close();
+            } catch (IOException e) {
+                log.warn("Error occurred while closing output handle after pulling docker image " + imageRepoUrl +
+                         " with tag : " + imageTag);
+            }
+        }
+
+        if (!dockerStatusCheck[0]) {
+            log.error("Docker image pull failed : " + imageRepoUrl + " with tag : " + imageTag);
+            throw new AppCloudException("Docker image pull failed: " + imageRepoUrl + " with tag : " + imageTag);
+        }
+    }
+
+    public void tagDockerImage(String oldImage, String oldTag, String newImageName, String newTag)
+            throws AppCloudException {
+
+        if (log.isDebugEnabled()) {
+            log.debug("Docker image tag triggered for image : " + oldImage + " with old tag : " + oldTag + " to new " +
+                      "tag : " + newImageName);
+        }
+
+        boolean dockerStatusCheck = dockerClient.image().withName(oldImage + ":" + oldTag).tag()
+                                                .inRepository(newImageName).withTagName(newTag);
+        if (!dockerStatusCheck) {
+            log.error("Docker custom image tag failed: " + oldImage);
+            throw new AppCloudException("Docker custom image tag failed: " + oldImage);
+        }
+    }
+
 
     public void clientClose() throws IOException {
         dockerClient.close();

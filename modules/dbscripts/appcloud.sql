@@ -56,7 +56,8 @@ INSERT INTO `AC_APP_TYPE` (`id`, `name`, `description`) VALUES
 (3, 'php', 'Allows you to create dynamic web pages and complete server applications using PHP web applications.'),
 (4, 'jaggery', 'Allows you to write all parts of web applications, services and APIs in a completely JavaScript way.'),
 (5, 'wso2dataservice', 'Allows you to deploy a data service that is supported in WSO2 Data Services Server.'),
-(6, 'wso2esb', 'Allows you to deploy a esb configuration that is supported in WSO2 Enterprise Service Bus');
+(6, 'wso2esb', 'Allows you to deploy a esb configuration that is supported in WSO2 Enterprise Service Bus'),
+(7, 'custom', 'Allows you to deploy applications using custom docker images');
 
 -- -----------------------------------------------------
 -- Table `AppCloudDB`.`AC_RUNTIME`
@@ -86,7 +87,8 @@ INSERT INTO `AC_RUNTIME` (`id`, `name`, `repo_url`, `image_name`, `tag`, `descri
 (7, 'WSO2 Data Services Server - 3.5.0','registry.docker.appfactory.private.wso2.com:5000', 'wso2dataservice', '3.5.0', 'OS:Debian, Java Version:7u101'),
 (8, 'OpenJDK 8 + WSO2 MSF4J 2.0.0', 'registry.docker.appfactory.private.wso2.com:5000', 'msf4j', '2.0.0', 'OS:Debian, JAVA Version:8u72'),
 (9, 'WSO2 Enterprise Service Bus - 5.0.0','registry.docker.appfactory.private.wso2.com:5000', 'wso2esb', '5.0.0', 'OS:Debian, Java Version:7u101'),
-(10, 'Apache Tomcat 8.0.28 / WSO2 Application Server 6.0.0-M3','registry.docker.appfactory.private.wso2.com:5000', 'wso2as', '6.0.0-m3', 'OS:Debian, JAVA Version:8u72');
+(10, 'Apache Tomcat 8.0.28 / WSO2 Application Server 6.0.0-M3','registry.docker.appfactory.private.wso2.com:5000', 'wso2as', '6.0.0-m3', 'OS:Debian, JAVA Version:8u72'),
+(11, 'Custom Docker Image runtime', 'registry.docker.appfactory.private.wso2.com:5000', 'customImage', 'customTag', 'OS:Custom, JAVA Version:custom');
 
 
 
@@ -257,7 +259,8 @@ INSERT INTO `AC_APP_TYPE_RUNTIME` (`app_type_id`, `runtime_id`) VALUES
 (2, 8),
 (6, 9),
 (1, 10),
-(4, 10);
+(4, 10),
+(7, 11);
 
 
 -- -----------------------------------------------------
@@ -495,7 +498,9 @@ INSERT INTO `AC_RUNTIME_CONTAINER_SPECIFICATIONS` (`id`, `CON_SPEC_ID`) VALUES
 (9, 3),
 (9, 4),
 (10, 3),
-(10, 4);
+(10, 4),
+(11, 3),
+(11, 4);
 
 -- -----------------------------------------------------
 -- Table `AppCloudDB`.`AC_CLOUD`
@@ -545,7 +550,8 @@ INSERT INTO `AC_CLOUD_APP_TYPE` (`cloud_id`, `app_type_id`) VALUES
 (1, 3),
 (1, 4),
 (1, 5),
-(2, 6);
+(2, 6),
+(1, 7);
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
