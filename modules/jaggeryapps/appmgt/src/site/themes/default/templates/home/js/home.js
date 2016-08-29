@@ -272,7 +272,7 @@ function displayApplicationInactiveMessage() {
                      modalStatus: true,
                      type: 'warning',
                      timeout: 15000,
-                     content: "<b>This application has been stopped due to inactivity for more than 24 hours</b></br>" +
+                     content: "<b>The application is stopped because 12 hours have passed after it was last started.</b></br>" +
                               "This is a limitation of free accounts in " + pageTitle + "</br> To restart, click the <b>Start</b>. button.</br>" +
                               "Click the Support menu to contact us if you need any help."
                  });
