@@ -41,7 +41,8 @@ var ApplicationManager = Packages.org.wso2.appcloud.core.ApplicationManager;
 
 // endpointExtractor interface
 var EndpointsExtractor = {
-    getEndpoints: function (deploymentUrl, versionId) {}
+    getEndpoints: function (deploymentUrl, versionId) {},
+    setDockerEnvironmentVariables: function (dockerFilePropertyMap) {}
 };
 
 // define classes
@@ -265,5 +266,31 @@ var getEndpointsWithApplicationContext = function (deploymentUrl, versionId) {
         return undefined;
     }
     return endpoints;
+};
+
+WarEndpointsExtractor.prototype.setDockerEnvironmentVariables = function (dockerFilePropertyMap) {
+    return;
+};
+
+PHPEndpointsExtractor.prototype.setDockerEnvironmentVariables = function (dockerFilePropertyMap) {
+    return;
+};
+
+MSSEndpointsExtractor.prototype.setDockerEnvironmentVariables = function (dockerFilePropertyMap) {
+    return;
+};
+
+ESBEndpointsExtractor.prototype.setDockerEnvironmentVariables = function (dockerFilePropertyMap) {
+    dockerFilePropertyMap.put("TENANT_ID_VAL", modManager.getTenantId().toString());
+    dockerFilePropertyMap.put("TENANT_DOMAIN_VAL", modManager.getTenantDomain());
+    return;
+};
+
+JaggeryEndpointsExtractor.prototype.setDockerEnvironmentVariables = function (dockerFilePropertyMap) {
+    return;
+};
+
+DSSEndpointsExtractor.prototype.setDockerEnvironmentVariables = function (dockerFilePropertyMap) {
+    return;
 };
 %>

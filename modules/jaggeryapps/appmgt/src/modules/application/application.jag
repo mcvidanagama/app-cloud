@@ -338,10 +338,8 @@ var createDockerFile = function (applicationName, versionName, appTypeName, runt
         dockerFilePropertyMap.put("ARTIFACT_URL", artifactUrl);
         dockerFilePropertyMap.put("VAL_TOTAL_MEMORY", conSpecMemory);
 
-        if (appTypeName == "wso2esb") {
-            dockerFilePropertyMap.put("TENANT_ID_VAL", modManager.getTenantId().toString());
-            dockerFilePropertyMap.put("TENANT_DOMAIN_VAL", modManager.getTenantDomain());
-        }
+        var mod = jagg.module("application");
+        mod.getEndpointsExtractor(appTypeName).setDockerEnvironmentVariables(dockerFilePropertyMap);
 
         var appRuntimeProperties = getRuntimeProperties(runtimeProperties);
         dockerClient.createDockerFile(dockerFilePath, runtimeId, dockerTemplateFilePath, appCreationMethod, dockerFilePropertyMap, appRuntimeProperties);
