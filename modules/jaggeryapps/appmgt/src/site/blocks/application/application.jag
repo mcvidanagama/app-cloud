@@ -83,7 +83,7 @@ var log = new Log();
         if (validateApplicationName("applicationName", applicationName)) {return;}
 
         var applicationRevision = request.getParameter("applicationRevision");
-        if (validationApplicationRevision("applicationRevision", applicationRevision)) {return;}
+        if (!validationApplicationRevision("applicationRevision", applicationRevision)) {return;}
 
         var appTypeName = request.getParameter("appTypeName");
         if (validateRequired("appTypeName", appTypeName)) {return;}
@@ -626,15 +626,15 @@ function validateApplicationName(field, value) {
 
 function validationApplicationRevision(field, value) {
     if (validateRequired(field, value)) {
-        return true;
+        return false;
     }
-    var patternNonAlphaNum = /[^a-zA-Z\d\-\_.]/g;
-    if (patternNonAlphaNum.test(value)) {
+    var versionValidation = validator.validateApplicationVersion(value);
+    if (!versionValidation.status) {
         response.status = 400;
-        response.content = "Bad request : Application version has invalid characters. Valid characters are [a-z, A-Z, 0-9, _, ., -]";
-        return true;
+        response.content = versionValidation.msg;
+        return false;
     }
-    return false;
+    return true;
 }
 
 function validateRequiredAndNumber(field, value) {
