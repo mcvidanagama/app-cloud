@@ -39,13 +39,13 @@ jagg.template("envs", function(inputs, outputs, jagg) {
  <div class="right-pane">
     <!-- BOF App factory menu actionbar -->
     <div class="action-bar">
-        <a href="/appmgt/site/pages/home.jag?applicationKey=<%=applicationKey%>" class="btn-action" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+        <a href="/appmgt/site/pages/home.jag?applicationKey=<%=applicationKey%>" class="btn-action" data-toggle="tooltip" data-placement="top" title="Back to Application">
                 <span class="fw-stack fw-lg btn-action-ico">
                     <i class="fw fw-circle-outline fw-stack-2x"></i>
                     <i class="fw fw-left-arrow fw-stack-1x"></i>
                 </span> <span class="hidden-xs">Back to Application</span>
         </a>
-        <a class="btn-action add-env" data-toggle="tooltip" data-placement="top" title="Add New Environment Variable">
+        <a class="btn-action add-env" data-toggle="tooltip" data-placement="top" title="Add Environment Variable">
                 <span class="fw-stack fw-lg btn-action-ico">
                     <i class="fw fw-circle-outline fw-stack-2x"></i>
                     <i class="fw fw-add fw-stack-1x"></i>

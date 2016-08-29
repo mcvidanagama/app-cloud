@@ -28,7 +28,7 @@ var dbName = request.getParameter("dbName");
     <!-- BOF App factory menu actionbar -->
     <div class="action-bar">
         <a href="<%=jagg.getAbsoluteUrl("/site/pages/databases.jag")%>"
-         class="btn-action"  title="Back to Database">
+         class="btn-action"  title="Back to Databases">
                 <span class="fw-stack fw-lg btn-action-ico">
                     <i class="fw fw-circle-outline fw-stack-2x"></i>
                     <i class="fw fw-left-arrow fw-stack-1x"></i>
