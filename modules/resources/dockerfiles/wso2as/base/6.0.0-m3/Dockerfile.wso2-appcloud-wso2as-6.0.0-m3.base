@@ -21,9 +21,7 @@
 FROM anapsix/alpine-java:8_server-jre_unlimited
 
 ENV WSO2_AS_VERSION 6.0.0-m3
-#ENV CATALINA_HOME /opt/tomcat
 ENV INSTALL_PATH /home/wso2user/
-#ENV PATH $PATH:$CATALINA_HOME/bin
 ENV ADMIN_PASS ""
 ENV CERT_PASS ""
 ENV JAVA_OPTS="-Xms128m -Xmx256m -XX:MaxMetaspaceSize=256m"
@@ -31,7 +29,6 @@ ENV JAVA_OPTS="-Xms128m -Xmx256m -XX:MaxMetaspaceSize=256m"
 # Add the startup script
 ADD init.sh /init.sh
 ADD wso2as-${WSO2_AS_VERSION}.zip /wso2as-${WSO2_AS_VERSION}.zip
-ADD wso2carbon.jks /wso2carbon.jks
 
 # line 2-3. Add WSO2 user
 # line 4-9. Get and unpack Tomcat
@@ -50,12 +47,9 @@ RUN cp /wso2as-${WSO2_AS_VERSION}.zip $INSTALL_PATH/catalina.zip && \
     rm $INSTALL_PATH/catalina.zip && \
     rm -rf $INSTALL_PATH/wso2as-${WSO2_AS_VERSION}/webapps/examples
 
-COPY catalina.properties $INSTALL_PATH/wso2as-${WSO2_AS_VERSION}/conf/
 COPY wso2as-web.xml $INSTALL_PATH/wso2as-${WSO2_AS_VERSION}/conf/wso2/
 COPY lib/ $INSTALL_PATH/wso2as-${WSO2_AS_VERSION}/lib/
-COPY client-truststore.jks $INSTALL_PATH/wso2as-${WSO2_AS_VERSION}/conf/wso2/
 
 EXPOSE 8080 8443
-USER wso2user
 CMD ["bash", "-c", "source /init.sh"]
 
