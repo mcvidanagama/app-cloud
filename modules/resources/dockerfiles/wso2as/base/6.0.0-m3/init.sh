@@ -62,8 +62,6 @@ sed -i "s/unpackWARs=\"true\"/unpackWARs=\"false\"/g" $TOMCAT_HOME_DIR/conf/serv
 
 sed -i "/\/Host/i  \\\t<Context path=\"""\" docBase=\"$APP_WAR\" debug=\"0\" reloadable=\"true\"></Context>" $TOMCAT_HOME_DIR/conf/server.xml
 
-sed -i '/<Context>/a <JarScanner scanClassPath="false" />' $TOMCAT_HOME_DIR/conf/context.xml
-
 #Check whether JAVA_OPTS env variable is defined and is not empty
 if [[ $JAVA_OPTS && ${JAVA_OPTS-_} ]]; then
 	export JAVA_OPTS=$JAVA_OPTS
