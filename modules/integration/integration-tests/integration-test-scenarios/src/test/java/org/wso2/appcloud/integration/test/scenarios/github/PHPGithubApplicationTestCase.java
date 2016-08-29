@@ -25,9 +25,9 @@ import org.wso2.appcloud.integration.test.utils.AppCloudIntegrationTestUtils;
 
 public class PHPGithubApplicationTestCase extends AppCloudIntegrationBaseTestCase {
 
-	private static final Log log = LogFactory.getLog(PHPGithubApplicationTestCase.class);
-	public static final String PHP_SERVER_STARTED_MESSAGE = "apache2 -D FOREGROUND";
-	public static final String PHP_APPLICATION_TYPE = "php";
+    private static final Log log = LogFactory.getLog(PHPGithubApplicationTestCase.class);
+    public static final String PHP_SERVER_STARTED_MESSAGE = "apache2 -D FOREGROUND";
+    public static final String PHP_APPLICATION_TYPE = "php";
     public static final String GIT_REPO_URL = "https://github.com/amalkasubasinghe/php_sample";
     public static final String GIT_REPO_BRANCH = "master";
     public static final String PROJECT_ROOT = "/";
@@ -38,10 +38,13 @@ public class PHPGithubApplicationTestCase extends AppCloudIntegrationBaseTestCas
                 null,
                 PHP_APPLICATION_TYPE,
                 AppCloudIntegrationTestUtils.getPropertyValue(AppCloudIntegrationTestConstants.PHP_APP_CONTENT),
-                Long.parseLong(AppCloudIntegrationTestUtils.getPropertyValue(AppCloudIntegrationTestConstants.PHP_RUNTIME_START_TIMEOUT)),
-                AppCloudIntegrationTestUtils.getPropertyValue(AppCloudIntegrationTestConstants.PHP_AS600M3_APPLICATION_CONTEXT),
+                Long.parseLong(AppCloudIntegrationTestUtils
+                        .getPropertyValue(AppCloudIntegrationTestConstants.PHP_RUNTIME_START_TIMEOUT)),
+                AppCloudIntegrationTestUtils
+                        .getPropertyValue(AppCloudIntegrationTestConstants.PHP_AS600M3_APPLICATION_CONTEXT),
                 AppCloudIntegrationTestUtils.getPropertyValue(AppCloudIntegrationTestConstants.PHP_CONTAINER_SPEC),
-                Boolean.parseBoolean(AppCloudIntegrationTestUtils.getPropertyValue(AppCloudIntegrationTestConstants.PHP_SET_DEFAULT_VERSION)),
+                Boolean.parseBoolean(AppCloudIntegrationTestUtils
+                        .getPropertyValue(AppCloudIntegrationTestConstants.PHP_SET_DEFAULT_VERSION)),
                 AppCloudIntegrationTestUtils.getPropertyValue(AppCloudIntegrationTestConstants.PHP_DEFAULT_VERSION));
         this.gitRepoUrl = GIT_REPO_URL;
         this.gitRepoBranch = GIT_REPO_BRANCH;
@@ -52,6 +55,6 @@ public class PHPGithubApplicationTestCase extends AppCloudIntegrationBaseTestCas
     @Override
     protected void assertLogContent(String logContent) {
         Assert.assertTrue(logContent.contains(PHP_SERVER_STARTED_MESSAGE),
-                          "Received log:" + logContent + " but expected line: " + PHP_SERVER_STARTED_MESSAGE);
+                "Received log:" + logContent + " but expected line: " + PHP_SERVER_STARTED_MESSAGE);
     }
 }

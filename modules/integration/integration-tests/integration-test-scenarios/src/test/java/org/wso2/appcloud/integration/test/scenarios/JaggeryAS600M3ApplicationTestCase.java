@@ -28,16 +28,18 @@ public class JaggeryAS600M3ApplicationTestCase extends AppCloudIntegrationBaseTe
     public static final String TOMCAT_SERVER_STARTED_MESSAGE = "org.apache.catalina.startup.Catalina.start Server startup in";
     public static final String JAGGERY_APPLICATION_TYPE = "jaggery";
 
-
     public JaggeryAS600M3ApplicationTestCase() {
-        super(AppCloudIntegrationTestUtils.getPropertyValue(AppCloudIntegrationTestConstants.JAGGERY_AS600M3_APP_RUNTIME_ID_KEY),
-              AppCloudIntegrationTestUtils.getPropertyValue(AppCloudIntegrationTestConstants.JAGGERY_AS600M3_APP_FILE_NAME_KEY),
-              JAGGERY_APPLICATION_TYPE,
-              AppCloudIntegrationTestUtils.getPropertyValue(AppCloudIntegrationTestConstants.JAGGERY_AS600M3_APP_CONTENT),
-              Long.parseLong(AppCloudIntegrationTestUtils.getPropertyValue(AppCloudIntegrationTestConstants.
-                                                                                   JAGGERY_RUNTIME_START_TIMEOUT)),
-              AppCloudIntegrationTestUtils
-                      .getPropertyValue(AppCloudIntegrationTestConstants.JAGGERY_AS600M3_APPLICATION_CONTEXT),
+        super(AppCloudIntegrationTestUtils
+                        .getPropertyValue(AppCloudIntegrationTestConstants.JAGGERY_AS600M3_APP_RUNTIME_ID_KEY),
+                AppCloudIntegrationTestUtils
+                        .getPropertyValue(AppCloudIntegrationTestConstants.JAGGERY_AS600M3_APP_FILE_NAME_KEY),
+                JAGGERY_APPLICATION_TYPE,
+                AppCloudIntegrationTestUtils
+                        .getPropertyValue(AppCloudIntegrationTestConstants.JAGGERY_AS600M3_APP_CONTENT),
+                Long.parseLong(AppCloudIntegrationTestUtils.getPropertyValue(AppCloudIntegrationTestConstants.
+                        JAGGERY_RUNTIME_START_TIMEOUT)),
+                AppCloudIntegrationTestUtils
+                        .getPropertyValue(AppCloudIntegrationTestConstants.JAGGERY_AS600M3_APPLICATION_CONTEXT),
                 AppCloudIntegrationTestUtils.getPropertyValue(AppCloudIntegrationTestConstants.JAGGERY_CONTAINER_SPEC),
                 Boolean.parseBoolean(AppCloudIntegrationTestUtils
                         .getPropertyValue(AppCloudIntegrationTestConstants.JAGGERY_SET_DEFAULT_VERSION)),
@@ -48,7 +50,7 @@ public class JaggeryAS600M3ApplicationTestCase extends AppCloudIntegrationBaseTe
     @Override
     protected void assertLogContent(String logContent) {
         Assert.assertTrue(logContent.contains(TOMCAT_SERVER_STARTED_MESSAGE),
-                          "Received log:" + logContent + " but expected line: " + TOMCAT_SERVER_STARTED_MESSAGE);
+                "Received log:" + logContent + " but expected line: " + TOMCAT_SERVER_STARTED_MESSAGE);
 
     }
 
