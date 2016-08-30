@@ -500,8 +500,8 @@ var redeployVersion = function(applicationName, versionName, versionHashId, appT
     if (isDeleted) {
         updateApplicationStatus(versionHashId, APPLICATION_STOPPED);
         msg = "Successfully completed stopping container";
-        redeployApplication(applicationName, versionName, versionHashId, appTypeName);
         addEvent(STOP_CONTAINERS, EVENT_SUCCEEDED, msg, versionHashId);
+        redeployApplication(applicationName, versionName, versionHashId, appTypeName);
         return true;
     } else {
         if (log.isDebugEnabled()) {
