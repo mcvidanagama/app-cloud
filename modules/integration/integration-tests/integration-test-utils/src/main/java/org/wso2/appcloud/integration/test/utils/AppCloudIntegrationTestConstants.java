@@ -72,7 +72,6 @@ public class AppCloudIntegrationTestConstants {
 	public static final String JAGGERY_APPLICATION_CONTEXT = "//appCloudProperties/application/applicationContexts/context[@key='jaggery']";
 	public static final String JAGGERY_AS600M3_APPLICATION_CONTEXT = "//appCloudProperties/application/applicationContexts/context[@key='jaggery-as600m3']";
 	public static final String PHP_APPLICATION_CONTEXT = "//appCloudProperties/application/applicationContexts/context[@key='php']";
-	public static final String PHP_AS600M3_APPLICATION_CONTEXT = "//appCloudProperties/application/applicationContexts/context[@key='php-as600m3']";
 	public static final String MSS_APPLICATION_CONTEXT = "//appCloudProperties/application/applicationContexts/context[@key='msf4j']";
 	public static final String DSS_APPLICATION_CONTEXT = "//appCloudProperties/application/applicationContexts/context[@key='wso2dataservice']";
 	public static final String TOMCAT_APPLICATION_CONTEXT = "//appCloudProperties/application/applicationContexts/context[@key='war']";

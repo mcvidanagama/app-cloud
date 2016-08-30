@@ -28,20 +28,21 @@ public class PHPGithubApplicationTestCase extends AppCloudIntegrationBaseTestCas
     private static final Log log = LogFactory.getLog(PHPGithubApplicationTestCase.class);
     public static final String PHP_SERVER_STARTED_MESSAGE = "apache2 -D FOREGROUND";
     public static final String PHP_APPLICATION_TYPE = "php";
-    public static final String GIT_REPO_URL = "https://github.com/amalkasubasinghe/php_sample";
+    public static final String GIT_REPO_URL = "https://github.com/wso2/app-cloud";
     public static final String GIT_REPO_BRANCH = "master";
-    public static final String PROJECT_ROOT = "/";
+    public static final String PROJECT_ROOT = "/samples/php_info_sample/";
     public static final String APP_CREATION_METHOD = "github";
+    public static final String SAMPLE_CONTENT = "WSO2 App Cloud PHP Sample";
 
     public PHPGithubApplicationTestCase() {
         super(AppCloudIntegrationTestUtils.getPropertyValue(AppCloudIntegrationTestConstants.PHP_APP_RUNTIME_ID_KEY),
                 null,
                 PHP_APPLICATION_TYPE,
-                AppCloudIntegrationTestUtils.getPropertyValue(AppCloudIntegrationTestConstants.PHP_APP_CONTENT),
+                SAMPLE_CONTENT,
                 Long.parseLong(AppCloudIntegrationTestUtils
                         .getPropertyValue(AppCloudIntegrationTestConstants.PHP_RUNTIME_START_TIMEOUT)),
                 AppCloudIntegrationTestUtils
-                        .getPropertyValue(AppCloudIntegrationTestConstants.PHP_AS600M3_APPLICATION_CONTEXT),
+                        .getPropertyValue(AppCloudIntegrationTestConstants.PHP_APPLICATION_CONTEXT),
                 AppCloudIntegrationTestUtils.getPropertyValue(AppCloudIntegrationTestConstants.PHP_CONTAINER_SPEC),
                 Boolean.parseBoolean(AppCloudIntegrationTestUtils
                         .getPropertyValue(AppCloudIntegrationTestConstants.PHP_SET_DEFAULT_VERSION)),
