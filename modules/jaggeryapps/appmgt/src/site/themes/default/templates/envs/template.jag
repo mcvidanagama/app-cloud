@@ -166,6 +166,12 @@ $(document).ready(function() {
             prevKey = keyElem.value;
             prevValue = valueElem.value;
 
+            var data = [];
+            var prevData = {};
+            prevData.id = prevValue;
+            prevData.text = prevValue;
+            data.push(prevData);
+
             //Hide edit icon and display save icon
             $(this).hide();
             $(this).parent().find('#saveIcon').show();
@@ -173,7 +179,8 @@ $(document).ready(function() {
             //Remove displayed value and reinitialize select2 container
             $(valueElem).children('option').remove();
             $(valueElem).prop('disabled', false);
-            initSelect2(null, valueElem, "");
+            var select2 = initSelect2(data, valueElem, "");
+            select2.val(prevValue).trigger("change");
 
         });
 
