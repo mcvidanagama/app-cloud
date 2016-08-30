@@ -27,4 +27,3 @@ WHERE `id`= 3;
 -- Migration - Removing old events
 -----------------------------------------------------------
 DELETE FROM `AC_EVENT`;
-
