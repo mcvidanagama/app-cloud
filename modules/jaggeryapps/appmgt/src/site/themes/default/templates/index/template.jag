@@ -321,13 +321,16 @@ jagg.template("index", function(inputs, outputs, jagg) {
         <div class="modal-dialog modal-dialog-margin-top-md ">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="modal-title"></h4>
+                    <div class="col-md-3">
+                        <h3 class="modal-title" id="modal-title"></h3>
+                    </div>
+                    <div class="col-md-9" id="modal-header-spinner">
+                        <i class="fw fw-2x fw-loader2 fw-spin"></i>
+                    </div>
                 </div>
                 <div class="modal-body">
                     <div class="container-fluid">
                         <div class="row">
-                            <div id="progress_table" class="col-xs-12 col-md-12 section-title">
-                            <i class="fw fw-2x fw-loader2 fw-spin"></i>
                         </div>
                     </div>
                 </div>
