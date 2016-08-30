@@ -51,6 +51,7 @@ jagg.block("leftMenu", {
         }
 
         var cloudTitle = jagg.module("manager").getCloudTypeProperties().cloudTitle;
+        var cloudIcon = jagg.module("manager").getCloudTypeProperties().cloudIcon;
 
         return {
             "applicationKey": applicationKey,
@@ -58,7 +59,8 @@ jagg.block("leftMenu", {
             "selectedRevision": selectedRevision,
             "versionKey": versionKey,
             "pageName": pageName,
-            "cloudTitle" : cloudTitle
+            "cloudTitle" : cloudTitle,
+            "cloudIcon" : cloudIcon
         };
     }
 

@@ -26,6 +26,7 @@ jagg.template("leftMenu", function (inputs, outputs, jagg) {
     var selectedRevision = outputs.selectedRevision;
     var pageName = outputs.pageName;
     var cloudTitle = outputs.cloudTitle;
+    var cloudIcon = outputs.cloudIcon;
 
     // converting application name to camel case ; to display in breadcumb
     var camelizedAppName = applicationName.split(' ').map(function(item){
@@ -44,17 +45,7 @@ jagg.template("leftMenu", function (inputs, outputs, jagg) {
             </div>
             <div class="col-md-8 breadcrumb-secondary">
                 <a href="/appmgt/site/pages/index.jag">
-                <%
-                    if (jagg.getSelectedCloud() == INTEGRATION_CLOUD) {
-                %>
-                    <i class="fw fw-service visible-xs visible-lg"></i>
-                <%
-                    } else {
-                %>
-                    <i class="fa fa-cubes visible-xs visible-lg"></i>
-                <%
-                    }
-                %>
+                    <i class="<%=cloudIcon%> visible-xs visible-lg"></i>
                 </a>
                 <span class="hidden-xs"><a href="/appmgt/site/pages/index.jag"><%=cloudTitle%></a> / <a href="/appmgt/site/pages/home.jag?applicationKey=<%=applicationKey%>"> <%=camelizedAppName%></a> / <%=pageName%></span>
             </div>
