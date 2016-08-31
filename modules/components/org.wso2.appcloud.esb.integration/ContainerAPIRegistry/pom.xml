@@ -10,7 +10,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.example.ContainerAPIRegistry</groupId>
+    <groupId>org.wso2.appcloud.esb.integration.ContainerAPIRegistry</groupId>
     <artifactId>ContainerAPIRegistry</artifactId>
     <packaging>pom</packaging>
     <name>ContainerAPIRegistry</name>

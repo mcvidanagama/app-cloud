@@ -11,99 +11,105 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.example.ContainerAPICompositeApplication</groupId>
+    <groupId>org.wso2.appcloud.esb.integration.ContainerAPICompositeApplication</groupId>
     <artifactId>ContainerAPICompositeApplication</artifactId>
     <packaging>carbon/application</packaging>
     <name>ContainerAPICompositeApplication</name>
     <description>ContainerAPICompositeApplication</description>
     <properties>
-        <com.example.ContainerAPIRegistry.resource_._APIDataMapper>capp/EnterpriseServiceBus
-        </com.example.ContainerAPIRegistry.resource_._APIDataMapper>
-        <com.example.ContainerAPI.endpoint_._AuthenticationEndpoint>capp/EnterpriseServiceBus
-        </com.example.ContainerAPI.endpoint_._AuthenticationEndpoint>
-        <com.example.ContainerAPIRegistry.resource_._ProxyDataMapper>capp/EnterpriseServiceBus
-        </com.example.ContainerAPIRegistry.resource_._ProxyDataMapper>
-        <com.example.ContainerAPIRegistry.resource_._ProxyDataMapperArr_outputSchema>capp/EnterpriseServiceBus
-        </com.example.ContainerAPIRegistry.resource_._ProxyDataMapperArr_outputSchema>
+        <org.wso2.appcloud.esb.integration.ContainerAPIRegistry.resource_._APIDataMapper>capp/EnterpriseServiceBus
+        </org.wso2.appcloud.esb.integration.ContainerAPIRegistry.resource_._APIDataMapper>
+        <org.wso2.appcloud.esb.integration.ContainerAPI.endpoint_._AuthenticationEndpoint>capp/EnterpriseServiceBus
+        </org.wso2.appcloud.esb.integration.ContainerAPI.endpoint_._AuthenticationEndpoint>
+        <org.wso2.appcloud.esb.integration.ContainerAPIRegistry.resource_._ProxyDataMapper>capp/EnterpriseServiceBus
+        </org.wso2.appcloud.esb.integration.ContainerAPIRegistry.resource_._ProxyDataMapper>
+        <org.wso2.appcloud.esb.integration.ContainerAPIRegistry.resource_._ProxyDataMapperArr_outputSchema>
+            capp/EnterpriseServiceBus
+        </org.wso2.appcloud.esb.integration.ContainerAPIRegistry.resource_._ProxyDataMapperArr_outputSchema>
         <artifact.types>
             jaggery/app=zip,synapse/priority-executor=xml,synapse/inbound-endpoint=xml,service/rule=aar,synapse/message-store=xml,event/stream=json,service/meta=xml,synapse/proxy-service=xml,bpel/workflow=zip,synapse/sequence=xml,synapse/endpointTemplate=xml,carbon/application=car,wso2/gadget=dar,synapse/api=xml,synapse/event-source=xml,synapse/message-processors=xml,event/receiver=xml,lib/dataservice/validator=jar,synapse/template=xml,synapse/endpoint=xml,lib/carbon/ui=jar,lib/synapse/mediator=jar,event/publisher=xml,synapse/local-entry=xml,synapse/task=xml,webapp/jaxws=war,registry/resource=zip,synapse/configuration=xml,service/axis2=aar,synapse/lib=zip,synapse/sequenceTemplate=xml,event/execution-plan=siddhiql,service/dataservice=dbs,web/application=war,lib/library/bundle=jar
         </artifact.types>
-        <com.example.ContainerAPI.proxy-service_._AuthenticateProxy>capp/EnterpriseServiceBus
-        </com.example.ContainerAPI.proxy-service_._AuthenticateProxy>
-        <com.example.ContainerAPIRegistry.resource_._ProxyDataMapper_outputSchema>capp/EnterpriseServiceBus
-        </com.example.ContainerAPIRegistry.resource_._ProxyDataMapper_outputSchema>
-        <com.example.ContainerAPI.api_._ContainerAPI>capp/EnterpriseServiceBus
-        </com.example.ContainerAPI.api_._ContainerAPI>
-        <com.example.ContainerAPIRegistry.resource_._ProxyDataMapperArr>capp/EnterpriseServiceBus
-        </com.example.ContainerAPIRegistry.resource_._ProxyDataMapperArr>
-        <com.example.ContainerAPIRegistry.resource_._APIDataMapper_inputSchema>capp/EnterpriseServiceBus
-        </com.example.ContainerAPIRegistry.resource_._APIDataMapper_inputSchema>
-        <com.example.ContainerAPIRegistry.resource_._ProxyDataMapper_inputSchema>capp/EnterpriseServiceBus
-        </com.example.ContainerAPIRegistry.resource_._ProxyDataMapper_inputSchema>
-        <com.example.ContainerAPIRegistry.resource_._ProxyDataMapperArr_inputSchema>capp/EnterpriseServiceBus
-        </com.example.ContainerAPIRegistry.resource_._ProxyDataMapperArr_inputSchema>
-        <com.example.ContainerAPIRegistry.resource_._APIDataMapper_outputSchema>capp/EnterpriseServiceBus
-        </com.example.ContainerAPIRegistry.resource_._APIDataMapper_outputSchema>
-        <com.example.ContainerAPI.proxy-service_._TestProxy>capp/EnterpriseServiceBus
-        </com.example.ContainerAPI.proxy-service_._TestProxy>
+        <org.wso2.appcloud.esb.integration.ContainerAPI.proxy-service_._AuthenticateProxy>capp/EnterpriseServiceBus
+        </org.wso2.appcloud.esb.integration.ContainerAPI.proxy-service_._AuthenticateProxy>
+        <org.wso2.appcloud.esb.integration.ContainerAPIRegistry.resource_._ProxyDataMapper_outputSchema>
+            capp/EnterpriseServiceBus
+        </org.wso2.appcloud.esb.integration.ContainerAPIRegistry.resource_._ProxyDataMapper_outputSchema>
+        <org.wso2.appcloud.esb.integration.ContainerAPI.api_._ContainerAPI>capp/EnterpriseServiceBus
+        </org.wso2.appcloud.esb.integration.ContainerAPI.api_._ContainerAPI>
+        <org.wso2.appcloud.esb.integration.ContainerAPIRegistry.resource_._ProxyDataMapperArr>capp/EnterpriseServiceBus
+        </org.wso2.appcloud.esb.integration.ContainerAPIRegistry.resource_._ProxyDataMapperArr>
+        <org.wso2.appcloud.esb.integration.ContainerAPIRegistry.resource_._APIDataMapper_inputSchema>
+            capp/EnterpriseServiceBus
+        </org.wso2.appcloud.esb.integration.ContainerAPIRegistry.resource_._APIDataMapper_inputSchema>
+        <org.wso2.appcloud.esb.integration.ContainerAPIRegistry.resource_._ProxyDataMapper_inputSchema>
+            capp/EnterpriseServiceBus
+        </org.wso2.appcloud.esb.integration.ContainerAPIRegistry.resource_._ProxyDataMapper_inputSchema>
+        <org.wso2.appcloud.esb.integration.ContainerAPIRegistry.resource_._ProxyDataMapperArr_inputSchema>
+            capp/EnterpriseServiceBus
+        </org.wso2.appcloud.esb.integration.ContainerAPIRegistry.resource_._ProxyDataMapperArr_inputSchema>
+        <org.wso2.appcloud.esb.integration.ContainerAPIRegistry.resource_._APIDataMapper_outputSchema>
+            capp/EnterpriseServiceBus
+        </org.wso2.appcloud.esb.integration.ContainerAPIRegistry.resource_._APIDataMapper_outputSchema>
+        <org.wso2.appcloud.esb.integration.ContainerAPI.proxy-service_._TestProxy>capp/EnterpriseServiceBus
+        </org.wso2.appcloud.esb.integration.ContainerAPI.proxy-service_._TestProxy>
     </properties>
     <dependencies>
         <dependency>
-            <groupId>com.example.ContainerAPI.api</groupId>
+            <groupId>org.wso2.appcloud.esb.integration.ContainerAPI.api</groupId>
             <artifactId>ContainerAPI</artifactId>
             <version>1.0.0</version>
             <type>xml</type>
         </dependency>
         <dependency>
-            <groupId>com.example.ContainerAPIRegistry.resource</groupId>
+            <groupId>org.wso2.appcloud.esb.integration.ContainerAPIRegistry.resource</groupId>
             <artifactId>APIDataMapper</artifactId>
             <version>1.0.0</version>
             <type>zip</type>
         </dependency>
         <dependency>
-            <groupId>com.example.ContainerAPIRegistry.resource</groupId>
+            <groupId>org.wso2.appcloud.esb.integration.ContainerAPIRegistry.resource</groupId>
             <artifactId>APIDataMapper_inputSchema</artifactId>
             <version>1.0.0</version>
             <type>zip</type>
         </dependency>
         <dependency>
-            <groupId>com.example.ContainerAPIRegistry.resource</groupId>
+            <groupId>org.wso2.appcloud.esb.integration.ContainerAPIRegistry.resource</groupId>
             <artifactId>APIDataMapper_outputSchema</artifactId>
             <version>1.0.0</version>
             <type>zip</type>
         </dependency>
         <dependency>
-            <groupId>com.example.ContainerAPIRegistry.resource</groupId>
+            <groupId>org.wso2.appcloud.esb.integration.ContainerAPIRegistry.resource</groupId>
             <artifactId>ProxyDataMapper</artifactId>
             <version>1.0.0</version>
             <type>zip</type>
         </dependency>
         <dependency>
-            <groupId>com.example.ContainerAPIRegistry.resource</groupId>
+            <groupId>org.wso2.appcloud.esb.integration.ContainerAPIRegistry.resource</groupId>
             <artifactId>ProxyDataMapperArr</artifactId>
             <version>1.0.0</version>
             <type>zip</type>
         </dependency>
         <dependency>
-            <groupId>com.example.ContainerAPIRegistry.resource</groupId>
+            <groupId>org.wso2.appcloud.esb.integration.ContainerAPIRegistry.resource</groupId>
             <artifactId>ProxyDataMapperArr_inputSchema</artifactId>
             <version>1.0.0</version>
             <type>zip</type>
         </dependency>
         <dependency>
-            <groupId>com.example.ContainerAPIRegistry.resource</groupId>
+            <groupId>org.wso2.appcloud.esb.integration.ContainerAPIRegistry.resource</groupId>
             <artifactId>ProxyDataMapperArr_outputSchema</artifactId>
             <version>1.0.0</version>
             <type>zip</type>
         </dependency>
         <dependency>
-            <groupId>com.example.ContainerAPIRegistry.resource</groupId>
+            <groupId>org.wso2.appcloud.esb.integration.ContainerAPIRegistry.resource</groupId>
             <artifactId>ProxyDataMapper_inputSchema</artifactId>
             <version>1.0.0</version>
             <type>zip</type>
         </dependency>
         <dependency>
-            <groupId>com.example.ContainerAPIRegistry.resource</groupId>
+            <groupId>org.wso2.appcloud.esb.integration.ContainerAPIRegistry.resource</groupId>
             <artifactId>ProxyDataMapper_outputSchema</artifactId>
             <version>1.0.0</version>
             <type>zip</type>
