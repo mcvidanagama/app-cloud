@@ -2,6 +2,7 @@
     "app-cloud" : {
         "pageTitle": "WSO2 App Cloud",
         "cloudTitle" : "Application Cloud",
+        "cloudIcon" : "fa fa-cubes",
         "cloudSpecificApplicationRepresentation" : "Application",
         "properties" : {
             "documentationUrl": "AppCloud.Documentation.Url",
@@ -11,6 +12,7 @@
     "integration-cloud" : {
         "pageTitle": "WSO2 Integration Cloud",
         "cloudTitle" : "Integration Cloud",
+        "cloudIcon" : "fw fw-service",
         "cloudSpecificApplicationRepresentation" : "Project",
         "properties" : {
             "documentationUrl": "IntegrationCloud.Documentation.Url",

@@ -166,6 +166,12 @@ $(document).ready(function() {
             prevKey = keyElem.value;
             prevValue = valueElem.value;
 
+            var data = [];
+            var prevData = {};
+            prevData.id = prevValue;
+            prevData.text = prevValue;
+            data.push(prevData);
+
             //Hide edit icon and display save icon
             $(this).hide();
             $(this).parent().find('#saveIcon').show();
@@ -173,7 +179,8 @@ $(document).ready(function() {
             //Remove displayed value and reinitialize select2 container
             $(valueElem).children('option').remove();
             $(valueElem).prop('disabled', false);
-            initSelect2(null, valueElem, "");
+            var select2 = initSelect2(data, valueElem, "");
+            select2.val(prevValue).trigger("change");
 
         });
 
@@ -228,6 +235,7 @@ $(document).ready(function() {
             var updatedKey = $(this).parent().parent().parent().find('.element-key-holder')[0].value;
             var updatedValue = $(this).parent().parent().parent().find('.element-value-holder')[0].value;
             var keyValidation = validateEnvKey(updatedKey);
+            var element = $(this);
             if (!updatedKey || !updatedValue) { //Validation when user submits empty keys and values
                 jagg.message({
                     content: "Please fill the necessary details before saving.",
@@ -241,44 +249,56 @@ $(document).ready(function() {
                 });
                 return;
             }
-            var isNewAddition = $(this).hasClass('save-new-entry');
-            if (isNewAddition) {
-                addRuntimeAttribute(updatedKey, updatedValue);
-                $(this).removeClass('save-new-entry');
-                $(this).parent().parent().find('.cancel-new-entry').removeClass('cancel-new-entry');
-            } else {
-                updateRuntimeAttribute(prevKey, updatedKey, updatedValue);
-            }
-            $(this).parent().find('#saveIcon').hide();
-            $(this).parent().find('#editIcon').show();
-            $(this).parent().parent().parent().find('.element-key-holder')[0].readOnly = true;
-            $(this).parent().parent().parent().find('.element-value-holder')[0].readOnly = true;
-
-            displayAppRedeployNotification();
-
-            //Enable "Add Environment Variable" button
-            $(".add-env").css('pointer-events', 'auto');
-            $(".add-env").attr("title", "Add Environment Variable");
-
-            //Enable Other environment variables "Edit" button
-            var parentElement = $(this).parent().filter('.edit-env')[0];
-            $('.edit-env').each(function() {
-                var currentElement = $(this).get(0);
-                if(currentElement !== parentElement){
-                    $(this).removeClass("edit-disable");
+            jagg.post("../blocks/application/application.jag", {
+                action: "isEnvironmentVariableExist",
+                versionKey: '<%=versionKey%>',
+                key: updatedKey,
+            }, function (result) {
+                if (result && result.trim() == "true") {
+                    jagg.message({
+                        content: "Environmental variable with key : " + updatedKey + " already exists.",
+                        type: 'error'
+                    });
+                    return;
                 }
+                var isNewAddition = element.hasClass('save-new-entry');
+                if (isNewAddition) {
+                    addRuntimeAttribute(updatedKey, updatedValue);
+                    element.removeClass('save-new-entry');
+                    element.parent().parent().find('.cancel-new-entry').removeClass('cancel-new-entry');
+                } else {
+                    updateRuntimeAttribute(prevKey, updatedKey, updatedValue);
+                }
+                element.parent().find('#saveIcon').hide();
+                element.parent().find('#editIcon').show();
+                element.parent().parent().parent().find('.element-key-holder')[0].readOnly = true;
+                element.parent().parent().parent().find('.element-value-holder')[0].readOnly = true;
+
+                displayAppRedeployNotification();
+
+                //Enable "Add Environment Variable" button
+                $(".add-env").css('pointer-events', 'auto');
+                $(".add-env").attr("title", "Add Environment Variable");
+
+                //Enable Other environment variables "Edit" button
+                var parentElement = element.parent().filter('.edit-env')[0];
+                $('.edit-env').each(function() {
+                    var currentElement = element.get(0);
+                    if(currentElement !== parentElement){
+                        element.removeClass("edit-disable");
+                    }
+                });
+
+                //Disable current env variables Value text-box
+                var valueSelectionBox = element.parent().parent().parent().find('.select2-container')[0];
+                $(valueSelectionBox).addClass('select2-disable');
+                var selectionRenderedBox = element.parent().parent().parent().find('.select2-selection__rendered')[0];
+                $(selectionRenderedBox).css('height', "100%");
+                var inlineBox = element.parent().parent().parent().find('.select2-search--inline')[0];
+                $(inlineBox).hide();
+                var rootParent = element.parent().parent().parent()[0];
+                $(rootParent).removeClass('property-seperator');
             });
-
-            //Disable current env variables Value text-box
-            var valueSelectionBox = $(this).parent().parent().parent().find('.select2-container')[0];
-            $(valueSelectionBox).addClass('select2-disable');
-            var selectionRenderedBox = $(this).parent().parent().parent().find('.select2-selection__rendered')[0];
-            $(selectionRenderedBox).css('height', "100%");
-            var inlineBox = $(this).parent().parent().parent().find('.select2-search--inline')[0];
-            $(inlineBox).hide();
-            var rootParent = $(this).parent().parent().parent()[0];
-            $(rootParent).removeClass('property-seperator');
-
         });
     });
 

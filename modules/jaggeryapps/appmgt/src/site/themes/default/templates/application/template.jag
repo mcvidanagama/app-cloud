@@ -191,13 +191,10 @@ jagg.template("application", function (inputs, outputs, jagg) {
             });
 
             var modalBody = '<div class="container-fluid">'+
-                                '<div class="row">'+
-                                    '<div id="progress_table" class="col-xs-12 col-md-12 section-title">' +
-                                        '<i class="fw fw-2x fw-loader2 fw-spin"></i>' +
-                                    '</div>' +
+                                '<div class="row" id="modal-body-row">'+
+                                    '<div id="progress_table" class="col-xs-12 col-md-12 section-title"></div>' +
                                 '</div>' +
                             '</div>';
-
 
             $('#application-details').submit(function(e){
 
@@ -281,11 +278,6 @@ jagg.template("application", function (inputs, outputs, jagg) {
                         type: 'POST',
                         data: formData,
                         success: function(data) {
-                            jagg.message({
-                                content: "Your " + cloudSpecificApplicationRepresentation.toLowerCase() + " started successfully",
-                                type: 'success',
-                                timeout: 3500
-                            });
                         },
                         cache: false,
                         contentType: false,
@@ -394,6 +386,8 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 var result = jQuery.parseJSON(result);
                 if (result.length > 0) {
                     $("#progress_table").html("");
+                    $("#modal-title").text("Progress...");
+                    $("#modal-header-spinner").html("");
                 }
                 var table = "<table class='table' style='width:100%; color:black'>" ;
                 for(var i = 0; i < result.length; i++){
@@ -474,13 +468,15 @@ jagg.template("application", function (inputs, outputs, jagg) {
         }
 
         function showAppCreationFailedNotification(error){
-            var alert = "<p>" + cloudSpecificApplicationRepresentation + " creation failed. " + error + "</p>";
+            var alert = "<div class=\"col-md-12\"><p>" + cloudSpecificApplicationRepresentation + " creation failed. " + error + "</p></div>";
             var retry_button = "<button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\" onclick=\"redirectAppListing();\">Cancel</button>" +
                                "<button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\" onclick=\"retryAppCreation();\">Back to " + cloudSpecificApplicationRepresentation + " Creation</button>";
             setTimeout(showErrorPopup, 1000);
             function showErrorPopup(){
-                $("#app-creation-model-body").html(alert);
+                $("#modal-body-row").html(alert);
                 $("#app-creation-model-footer").html(retry_button);
+                $("#modal-title").text("Failure");
+                $("#modal-header-spinner").html("");
             }
             clearInterval(polleventsID);
         }
@@ -636,10 +632,13 @@ jagg.template("application", function (inputs, outputs, jagg) {
         }
 
         function validationApplicationRevisionChar(value) {
-            var patternNonAlphaNum = /[^a-zA-Z\d\-\_.]/g;
-            var isPatternMatch = patternNonAlphaNum.test(value);
-            validationFailErrorMsg = "Invalid version - Valid characters are [a-z, A-Z, 0-9, _, ., -]";
-            return !isPatternMatch;
+            var versionValidation = validateApplicationVersion(value);
+            if (!versionValidation.status) {
+                envVariableErrorMsg = versionValidation.msg;
+                return false;
+            } else {
+                return true;
+            }
         }
 
         function validateRuntimeSelection(value){
@@ -1328,11 +1327,15 @@ jagg.template("application", function (inputs, outputs, jagg) {
         <div class="modal-dialog modal-dialog-margin-top-md ">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="modal-title"><%=cloudSpecificApplicationRepresentation%> Creation Progress</h4>
+                    <div class="col-md-6">
+                        <h3 class="modal-title" id="modal-title">Initializing <%=cloudSpecificApplicationRepresentation%></h3>
+                    </div>
+                    <div class="col-md-6" id="modal-header-spinner">
+                        <i class="fw fw-2x fw-loader2 fw-spin"></i>
+                    </div>
                 </div>
-                <div class="modal-body" id="app-creation-model-body">
-                </div>
-                <div class="modal-body" id="app-creation-model-footer"></div>
+                <div class="modal-body" id="app-creation-model-body"></div>
+                <div class="modal-footer" id="app-creation-model-footer"></div>
             </div><!-- /.modal-content -->
         </div>
      </div><!-- /.modal -->

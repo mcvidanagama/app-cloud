@@ -154,24 +154,37 @@ $(document).ready(function () {
         $(document).on('click', '.fw-save', function () {
             var updatedKey = $(this).parent().parent().parent().find('#key')[0].value;
             var updatedValue = $(this).parent().parent().parent().find('#value')[0].value;
-
+            var element = $(this);
             if(!updatedKey || !updatedValue){
                 return;
             }
 
-            var isNewAddition = $(this).hasClass('save-new-entry');
-            if (isNewAddition) {
-                addTag(updatedKey, updatedValue);
-                $(this).removeClass('save-new-entry');
-                $(this).parent().parent().find('.cancel-new-entry').removeClass('cancel-new-entry');
-            } else {
-                updateTag(prevKey, updatedKey, updatedValue);
-            }
-            $(this).parent().find('#saveIcon').hide();
-            $(this).parent().find('#editIcon').show();
-            $(this).parent().parent().parent().find('#key')[0].readOnly = true;
-            $(this).parent().parent().parent().find('#value')[0].readOnly = true;
+            jagg.post("../blocks/application/application.jag", {
+                action: "isTagExist",
+                versionKey: '<%=versionKey%>',
+                key: updatedKey,
+            }, function (result) {
+                if (result && result.trim() == "true") {
+                    jagg.message({
+                        content: "Environmental variable with key : " + updatedKey + " already exists.",
+                        type: 'error'
+                    });
+                    return;
+                }
 
+                var isNewAddition = element.hasClass('save-new-entry');
+                if (isNewAddition) {
+                    addTag(updatedKey, updatedValue);
+                    element.removeClass('save-new-entry');
+                    element.parent().parent().find('.cancel-new-entry').removeClass('cancel-new-entry');
+                } else {
+                    updateTag(prevKey, updatedKey, updatedValue);
+                }
+                element.parent().find('#saveIcon').hide();
+                element.parent().find('#editIcon').show();
+                element.parent().parent().parent().find('#key')[0].readOnly = true;
+                element.parent().parent().parent().find('#value')[0].readOnly = true;
+            });
         });
     });
 

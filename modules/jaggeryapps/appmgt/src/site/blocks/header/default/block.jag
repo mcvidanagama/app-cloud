@@ -42,6 +42,7 @@ jagg.block("header/default", {
         var docUrl = manager.getPropertyValue(cloudTypeProperties.properties.documentationUrl);
         var supportUrl = manager.getPropertyValue(cloudTypeProperties.properties.supportUrl);
         var cloudTitle = cloudTypeProperties.cloudTitle;
+        var cloudIcon = cloudTypeProperties.cloudIcon;
 
         var isGoogleAnalyticsEnabled = manager.getPropertyValue(GOOGLE_ANALYTICS_ENABLED);
         var googleTrackingId = manager.getPropertyValue(GOOGLE_TRACKING_ID);
@@ -62,7 +63,8 @@ jagg.block("header/default", {
             "appCloudURL" : appCloudURL,
             "integrationCloudURL" : integrationCloudURL,
             "apiCloudPublisherURL" : apiCloudPublisherURL,
-            "cloudMgtURL" : cloudMgtURL
+            "cloudMgtURL" : cloudMgtURL,
+            "cloudIcon" : cloudIcon
         };
     }
 });

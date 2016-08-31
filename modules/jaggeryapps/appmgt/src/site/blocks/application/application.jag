@@ -71,6 +71,14 @@ var log = new Log();
         var runtimeProperties = [];
         if(unparsedRuntimeProps){
             runtimeProperties = parse(unparsedRuntimeProps);
+            for (var i = 0; i < runtimeProperties.length; i++) {
+                var keyValidation = validator.validateEnvKey(runtimeProperties[i].key);
+                if (!keyValidation.status) {
+                    response.status = 400;
+                    response.content = keyValidation.msg;
+                    return;
+                }
+            }
         }
 
         var unparsedTags = request.getParameter("tags");
@@ -83,7 +91,7 @@ var log = new Log();
         if (validateApplicationName("applicationName", applicationName)) {return;}
 
         var applicationRevision = request.getParameter("applicationRevision");
-        if (validationApplicationRevision("applicationRevision", applicationRevision)) {return;}
+        if (!validationApplicationRevision("applicationRevision", applicationRevision)) {return;}
 
         var appTypeName = request.getParameter("appTypeName");
         if (validateRequired("appTypeName", appTypeName)) {return;}
@@ -327,16 +335,27 @@ var log = new Log();
             }
         }
     } else if(action == "startApplication"){
-        var applicationName = request.getParameter("applicationName");
-        var applicationRevision = request.getParameter("applicationRevision");
-        var versionKey = request.getParameter("versionKey");
-        var applicationHashId = applicationModule.getApplicationHashIdByName(applicationName);
-        var versions = applicationModule.getVersionListOfApplication(applicationHashId);
-        var applicationType = applicationModule.getApplication(applicationHashId).applicationType;
+        var applicationCount = applicationModule.getRunningApplicationVersionCount();
+        var maxAppCount = applicationModule.getMaxInstanceCount();
+        if (applicationCount < maxAppCount) {
+            var applicationName = request.getParameter("applicationName");
+            var applicationRevision = request.getParameter("applicationRevision");
+            var versionKey = request.getParameter("versionKey");
+            var applicationHashId = applicationModule.getApplicationHashIdByName(applicationName);
+            var versions = applicationModule.getVersionListOfApplication(applicationHashId);
+            var applicationType = applicationModule.getApplication(applicationHashId).applicationType;
 
-        // redeploy application from kubernetes
-        applicationModule.redeployApplication(applicationName, applicationRevision, versionKey, applicationType);
-        print(stringify(versions));
+            // redeploy application from kubernetes
+            applicationModule.redeployApplication(applicationName, applicationRevision, versionKey, applicationType);
+            print(stringify(versions));
+        } else {
+            logMessage = "Application creation request not accepted because the application count has " +
+                    "reached maximum limit of " + maxAppCount;
+            log.warn(logMessage);
+            response.status = 406;
+            response.content = logMessage;
+            return;
+        }
 
     } else if (action == "getApplicationCreationEvents") {
         try {
@@ -367,12 +386,27 @@ var log = new Log();
         var events = mod.getEnvVariablesOfVersion(versionKey);
         print(events);
 
+    } else if (action == "isEnvironmentVariableExist"){
+        var versionKey = request.getParameter("versionKey");
+        var key = request.getParameter("key");
+        print(applicationModule.isEnvironmentVariableExist(versionKey, key));
+
+    } else if (action == "isTagExist"){
+        var versionKey = request.getParameter("versionKey");
+        var key = request.getParameter("key");
+        print(applicationModule.isTagExist(versionKey, key));
+
     } else if (action == "updateRuntimeProperty"){
         var versionKey = request.getParameter("versionKey");
         var prevKey = request.getParameter("prevKey");
         var newKey = request.getParameter("newKey");
         var newValue = request.getParameter("newValue");
 
+        if (applicationModule.isEnvironmentVariableExist(versionKey, newKey)) {
+            response.status = 400;
+            response.content = "Environmental variable with key : " + newKey + " already exists.";
+            return;
+        }
         if (applicationModule.isEnvironmentVariableExist(versionKey, prevKey)) {
             var keyValidation = validator.validateEnvKey(newKey);
             if (!keyValidation.status) {
@@ -404,6 +438,11 @@ var log = new Log();
         var versionKey = request.getParameter("versionKey");
         var key = request.getParameter("key");
         var value = request.getParameter("value");
+        if (applicationModule.isEnvironmentVariableExist(versionKey, key)) {
+            response.status = 400;
+            response.content = "Environmental variable with key : " + key + " already exists.";
+            return;
+        }
         var keyValidation = validator.validateEnvKey(key);
         if (!keyValidation.status) {
             response.status = 400;
@@ -437,6 +476,12 @@ var log = new Log();
         var key = request.getParameter("key");
         var value = request.getParameter("value");
 
+        if (applicationModule.isTagExist(versionKey, key)) {
+            response.status = 400;
+            response.content = "Tag with key : " + key + " already exists.";
+            return;
+        }
+
         var mod = jagg.module("application");
         mod.addTag(versionKey,key,value);
         response.status = 200;
@@ -459,6 +504,12 @@ var log = new Log();
         var prevKey = request.getParameter("prevKey");
         var newKey = request.getParameter("newKey");
         var newValue = request.getParameter("newValue");
+
+        if (applicationModule.isTagExist(versionKey, newKey)) {
+            response.status = 400;
+            response.content = "Tag with key : " + newKey + " already exists.";
+            return;
+        }
 
         if (applicationModule.isTagExist(versionKey, prevKey)) {
             applicationModule.updateTag(versionKey, prevKey, newKey, newValue);
@@ -631,15 +682,15 @@ function validateApplicationName(field, value) {
 
 function validationApplicationRevision(field, value) {
     if (validateRequired(field, value)) {
-        return true;
+        return false;
     }
-    var patternNonAlphaNum = /[^a-zA-Z\d\-\_.]/g;
-    if (patternNonAlphaNum.test(value)) {
+    var versionValidation = validator.validateApplicationVersion(value);
+    if (!versionValidation.status) {
         response.status = 400;
-        response.content = "Bad request : Application version has invalid characters. Valid characters are [a-z, A-Z, 0-9, _, ., -]";
-        return true;
+        response.content = versionValidation.msg;
+        return false;
     }
-    return false;
+    return true;
 }
 
 function validateRequiredAndNumber(field, value) {

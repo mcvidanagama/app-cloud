@@ -306,13 +306,17 @@ jagg.template("home", function(inputs, outputs, jagg) {
         <div class="modal-dialog modal-dialog-margin-top-md ">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="modal-title"></h4>
+                    <div class="col-md-7">
+                        <h3 class="modal-title" id="modal-title"></h3>
+                    </div>
+                    <div class="col-md-5" id="modal-header-spinner">
+                        <i class="fw fw-2x fw-loader2 fw-spin"></i>
+                    </div>
                 </div>
                 <div class="modal-body">
                     <div class="container-fluid">
                         <div class="row">
                             <div id="progress_table" class="col-xs-12 col-md-12 section-title">
-                            <i class="fw fw-2x fw-loader2 fw-spin"></i>
                         </div>
                     </div>
                 </div>
@@ -324,7 +328,7 @@ jagg.template("home", function(inputs, outputs, jagg) {
   // stop application
     function redeployApplication(){
         $("#redeploy-in-progress").html("<i class=\"fw fw-loader2 fw-spin\"></i>");
-        executeAsync(drawProgressWindow("Redeploying..."));
+        executeAsync(drawProgressWindow("Initializing Redeployment"));
         jagg.post("../blocks/application/application.jag", {
             action: "redeployApplication",
             applicationName: applicationName,
@@ -400,7 +404,7 @@ jagg.template("home", function(inputs, outputs, jagg) {
                 '<h3>You cannot have more than ' + maxApplications + " running " + cloudSpecificApplicationRepresentation.toLowerCase() + ' versions on a free subscription. ' +
                 'Please stop an existing ' + cloudSpecificApplicationRepresentation.toLowerCase() + ' version to continue.</h3></div></div></div></div>');
         } else {
-            executeAsync(drawProgressWindow("Restarting..."));
+            executeAsync(drawProgressWindow("Initializing Deployment"));
             jagg.post("../blocks/application/application.jag", {
                 action: "startApplication",
                 applicationName: applicationName,
@@ -441,6 +445,9 @@ jagg.template("home", function(inputs, outputs, jagg) {
             var result = jQuery.parseJSON(result);
             if (result.length > 0) {
                 $("#progress_table").html("");
+                $("#modal-header-spinner").html("");
+                $("#modal-title").text("Progress...");
+
             }
             var table = "<table class='table' style='width:100%; color:black'>" ;
             for(var i = 0; i < result.length; i++){
