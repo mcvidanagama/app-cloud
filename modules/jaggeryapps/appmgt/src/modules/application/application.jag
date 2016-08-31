@@ -54,7 +54,7 @@ var Arrays = Packages.java.util.Arrays;
 var addApplication = function (applicationName, versionName, applicationDescription, replicas, runtimeId, appTypeName,
                                runtimePropertiesArray, tagArray, appIcon, uploadedFileName, isNewVersion, conSpecMemory,
                                conSpecCpu, artifactUrl, appCreationMethod, oldHashId, applicationContext, setDefaultVersion,
-                               imageRegistryUrl, imageTag) {
+                               imageRegistryUrl, imageTag, userName, password) {
 
     log.info("Started creating App => Name:" + applicationName + " Version:" + versionName + " Description:" + applicationDescription +
     " RuntimeId:" + runtimeId + " AppType:" + appTypeName + " Runtime Properties:" + JSON.stringify(runtimePropertiesArray) +
@@ -104,18 +104,20 @@ var addApplication = function (applicationName, versionName, applicationDescript
                          versionHashId, dockerClient);
         // eg: registry.docker.appcloud.wso2.com:5000/wso2as
         imageName = modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL) + "/" + applicationRuntime.getImageName();
-        newTagName = tagName;
+       // newTagName = tagName;
+        pushDockerImage(applicationName, versionName, imageName, newTagName, versionHashId, dockerClient);
 
     } else { // for custom docker images
-        pullDockerImage(imageRegistryUrl,imageTag, dockerClient, versionHashId);
+    //    pullDockerImage(imageRegistryUrl,imageTag, dockerClient, versionHashId);
         // eg : maheshcwso2/test_app
-        imageName = imageRegistryUrl.split(/\/(.+)?/)[1];
-        newTagName = imageTag + "-" + versionHashId;
-        tagDockerImage(imageName, imageTag, imageName, newTagName, dockerClient, versionHashId);
+       // imageName = imageRegistryUrl.split(/\/(.+)?/)[1];
+        //newTagName = imageTag + "-" + versionHashId;
+      //  tagDockerImage(imageName, imageTag, imageName, newTagName, dockerClient, versionHashId);
+        imageName = imageRegistryUrl;
     }
 
-    pushDockerImage(applicationName, versionName, imageName, newTagName, versionHashId, dockerClient);
-    triggerKubernetesDeployment(imageName, runtimeProperties, applicationRuntime, newTagName, applicationName,
+   // pushDockerImage(applicationName, versionName, imageName, newTagName, versionHashId, dockerClient);
+    triggerKubernetesDeployment(imageName, runtimeProperties, applicationRuntime, tagName, applicationName,
                                 versionName, appTypeName, runtimeId, replicas, versionHashId, conSpecMemory, conSpecCpu);
     putSelectedRevisionToSession(applicationHashId, versionName);
 

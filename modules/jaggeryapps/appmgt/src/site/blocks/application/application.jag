@@ -159,6 +159,8 @@ var log = new Log();
 
         var imageRegistryUrl = request.getParameter("imageRegistryUrl");
         var imageTag = request.getParameter("imageTag");
+        var userName = request.getParameter("userName");
+        var password = request.getParameter("password");
 
         var setDefaultVersion = request.getParameter("setDefaultVersion");
         // checking whether an application with same name and same version, already exists or not
@@ -229,7 +231,8 @@ var log = new Log();
                             .addApplication(applicationName, applicationRevision, applicationDescription, replicas,
                                             runtimeId, appTypeName, runtimeProperties, tags, appIcon, uploadedFileName,
                                             isNewVersion, conSpecMemory, conSpecCpu, artifactUrl, appCreationMethod,
-                                            oldHashId, applicationContext, setDefaultVersion,imageRegistryUrl, imageTag);
+                                            oldHashId, applicationContext, setDefaultVersion,imageRegistryUrl, imageTag,
+                                            userName, password);
                 } else {
                     var gitRepoUrl = request.getParameter("gitRepoUrl");
                     var gitRepoBranch = request.getParameter("gitRepoBranch");
