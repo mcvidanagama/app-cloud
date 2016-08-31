@@ -76,6 +76,7 @@ jagg.template("home", function(inputs, outputs, jagg) {
     var maxApplications = <%=maxApplications%>;
     var cloudSpecificApplicationRepresentation = "<%=cloudSpecificApplicationRepresentation%>";
     var versionArray = jQuery.parseJSON('<%=versionArray%>');
+    var requestNewAppTypeURL = "<%=outputs.requestNewAppTypeURL%>";
 </script>
 
     <div class="right-pane">
@@ -167,10 +168,19 @@ jagg.template("home", function(inputs, outputs, jagg) {
                                       </a>
                                     </div>
                                 <%
-                                } else if(selectedApplicationRevision.status==APPLICATION_STOPPED || selectedApplicationRevision.status==APPLICATION_INACTIVE){
+                                } else if(selectedApplicationRevision.status==APPLICATION_STOPPED){
                                 %>
                                     <div class="btn-group ctrl-edit-button btn-edit-code">
                                       <a type="button" class="btn cu-btn cu-btn-md cu-btn-blue" onclick="startApplication();">Start</a>
+                                    </div>
+                                <%
+                                } else if(selectedApplicationRevision.status==APPLICATION_INACTIVE){
+                                %>
+                                    <div class="btn-group ctrl-edit-button btn-edit-code">
+                                      <a type="button" class="btn cu-btn cu-btn-md cu-btn-blue" onclick="startApplication();">Start</a>
+                                    </div>
+                                    <div class="btn-group ctrl-edit-button btn-edit-code">
+                                      <a type="button" class="btn cu-btn cu-btn-md cu-btn-gray" onclick="requestToExtend();">Request to keep application running continuously</a>
                                     </div>
                                 <%
                                 } else {

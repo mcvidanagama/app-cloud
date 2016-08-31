@@ -49,6 +49,14 @@ jagg.block("application", {
         var cloudSpecificApplicationRepresentation = jagg.module("manager").getCloudTypeProperties().cloudSpecificApplicationRepresentation;
         var applications = applicationModule.getAllApplications();
 
+        var requestNewAppTypeSubjectMessage = 'Requesting a new runtime for application type: '+inputs.appTypeName+' by tenant: ' + modManager.getTenantDomain();
+        var requestNewAppTypeURL = modManager.getPropertyValue(modManager.getCloudTypeProperties().properties.supportUrl) +
+                '&subject=' + requestNewAppTypeSubjectMessage;
+
+        var requestMoreAppsSubjectMessage = 'Requesting to run more than '+maxAppCount+' applications for tenant: ' + modManager.getTenantDomain();
+        var requestMoreAppseURL = modManager.getPropertyValue(modManager.getCloudTypeProperties().properties.supportUrl) +
+                '&subject=' + requestMoreAppsSubjectMessage;
+
 
         return {
             "runtimes" : runtimes,
@@ -62,7 +70,9 @@ jagg.block("application", {
             "defaultVersion" : defaultVersion,
             "appTypeCount" : appTypeCount,
             "cloudSpecificApplicationRepresentation" : cloudSpecificApplicationRepresentation,
-            "applications" : applications
+            "applications" : applications,
+            "requestNewAppTypeURL" : requestNewAppTypeURL,
+            "requestMoreAppseURL" : requestMoreAppseURL
         };
     }
 });
