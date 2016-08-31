@@ -219,7 +219,7 @@
         <module>modules/components/org.wso2.appcloud.common</module>
         <module>modules/components/org.wso2.appcloud.core</module>
         <module>modules/components/org.wso2.appcloud.dss.integration</module>
-        <module>modules/components/org.wso2.appcloud.esb.integration</module>
+        <!--<module>modules/components/org.wso2.appcloud.esb.integration</module>-->
         <module>modules/components/org.wso2.appcloud.provisioning.runtime</module>
         <module>modules/components/org.wso2.appcloud.tenant.initializer</module>
         <module>modules/jaggeryapps/appmgt</module>
