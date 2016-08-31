@@ -244,6 +244,8 @@ jagg.template("application", function (inputs, outputs, jagg) {
                     if(appTypeName === custom) {
                         formData.append('imageRegistryUrl', $("#imageRegistryUrl").val());
                         formData.append('imageTag', $("#imageTag").val());
+                        formData.append('userName', $("#userName").val());
+                        formData.append('password', $("#password").val());
                         formData.append('appCreationMethod', custom);
                     }
                     if(uploadMethod === "file"){
@@ -1152,10 +1154,20 @@ jagg.template("application", function (inputs, outputs, jagg) {
                     <span class="input-group-addon">Tag</span>
                     <input id="imageTag" name="imageTag" type="text" class="form-control" placeholder="eg : latest" />
                 </div>
+                <br>
+                <div class="input-group">
+                    <span class="input-group-addon">User name</span>
+                    <input id="userName" name="userName" type="text" class="form-control" placeholder="required only if repo is private" />
+                </div>
+                <br>
+                <div class="input-group">
+                    <span class="input-group-addon">Password</span>
+                    <input id="password" name="password" type="password" class="form-control" placeholder="required only if repo is private" />
+                </div>
             </div>
 
              <%}%>
-            <div class="form-group">
+            <div class="form-group <%if(appType.type == CUSTOM) { %>hidden <% } %>">
                 <label for="runtime">Runtime: *
                     <i class="fa fa-question-circle help-tips" data-toggle="tooltip" data-placement="left" title="Select an appropriate runtime to run your <%=cloudSpecificApplicationRepresentation.toLowerCase()%>"></i>
                 </label>
