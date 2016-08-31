@@ -43,6 +43,8 @@ jagg.template("application", function (inputs, outputs, jagg) {
         var cloudSpecificApplicationRepresentation = outputs.cloudSpecificApplicationRepresentation;
         var applications = outputs.applications;
         var versionList = request.getParameter("versionArray");
+        var requestNewAppTypeURL = outputs.requestNewAppTypeURL;
+        var requestMoreAppseURL = outputs.requestMoreAppseURL;
     %>
 
       <link rel="stylesheet" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/bootstrap-3.2.0/bootstrap.min.css'))%>">
@@ -119,8 +121,9 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 $('#outerContainer').empty();
                 $('#outerContainer').html('<div class="container-fluid"><div class="row row-centered">' +
                     '<div class="col-centered col-xs-10 col-sm-7  col-md-7 col-lg-6"><div class="cloud-new-content">' +
-                    '<h3>You cannot have more than ' + maxApplications + " running " + cloudSpecificApplicationRepresentation.toLowerCase() + ' versions on a free subscription. ' +
-                    'Please stop an existing ' + cloudSpecificApplicationRepresentation.toLowerCase() + ' version to continue.</h3></div></div></div></div>');
+                    '<h2>You can run only up to '+ maxApplications +' applications/versions simultaneously on a free subscription.</h2>' +
+                    '1. Stop an existing application/version to continue.<br>'+
+                    '2. <a href="<%=requestMoreAppseURL%>" target="_blank">Submit a request</a> to run more applications on free subscription.</div></div></div></div>');
                 return;
             }
 
@@ -159,6 +162,14 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 $("#runtime").attr('title', function () {
                     return value.description;
                 });
+            });
+
+            // Adding a new runtime option for requesting missing runtimes through mails.
+            $("#runtime").append('<option value="requestNewRuntime">Request New Runtime</option>');
+            $('#runtime').change(function(){
+               if(this.value == 'requestNewRuntime'){
+                    $("<a>").attr("href", '<%=requestNewAppTypeURL%>').attr("target", "_blank")[0].click();
+               }
             });
 
             $.each(<%=conSpecs%>,function(key,value){
