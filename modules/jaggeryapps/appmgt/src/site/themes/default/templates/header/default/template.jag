@@ -26,6 +26,7 @@ jagg.template("header/default", function(inputs, outputs, jagg) {
     var docUrl = outputs.docUrl;
     var supportUrl = outputs.supportUrl;
     var cloudTitle = outputs.cloudTitle;
+    var cloudIcon = outputs.cloudIcon;
     var isGoogleAnalyticsEnabled = outputs.isGoogleAnalyticsEnabled;
     var googleTrackingId = outputs.googleTrackingId;
     var appCloudURL = outputs.appCloudURL;
@@ -81,7 +82,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                class="hidden-md hidden-sm hidden-lg cloud-menu-popover">
                 <i class="fw fw-tiles"></i>
             </a>
-            <a class="navbar-brand" href="/appmgt/site/pages/index.jag">
+            <a class="navbar-brand" href="<%=cloudMgtURL%>">
             <img src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile("images/logo.png"))%>" alt="wso2-logo" > Cloud</a>
         </div>
         <div class="collapse navbar-collapse">
@@ -128,6 +129,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                         <%
                             } else {
                         %>
+                        <!--to-do: need to fix this properly when integration cloud available to public-->
                         <!--a class="cloud-block" href="<%=integrationCloudURL%>" target="_blank">
                             <i class="fw fw-3x fw-service"></i>
                             <div class="cloud-name"> Integration Cloud</div>
@@ -166,11 +168,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <div class="row">
             <div class="col-md-3 breadcrumb-secondary">
                 <a href="/appmgt/site/pages/index.jag">
-                    <%if (jagg.getSelectedCloud() == INTEGRATION_CLOUD) {%>
-                        <i class="fw fw-service visible-xs visible-lg"></i> <!-- Change this once UX team provided a proper icon-->
-                    <%} else {%>
-                        <i class="fa fa-cubes visible-xs visible-lg"></i>
-                    <%}%>
+                    <i class="<%=cloudIcon%> visible-xs visible-lg"></i>
                 </a>
     <span class="hidden-xs"><a href="/appmgt/site/pages/index.jag"><%=cloudTitle%></a></span>
             </div>

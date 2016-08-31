@@ -307,10 +307,14 @@
             <newRevision>2.0.0</newRevision>
             <runtimeIDs>
                 <runtimeID key="tomcat">1</runtimeID>
+                <runtimeID key="tomcat-as600m2">6</runtimeID>
+                <runtimeID key="tomcat-as600m3">10</runtimeID>
                 <runtimeID key="msf4j">2</runtimeID>
+                <runtimeID key="msf4j200">8</runtimeID>
                 <runtimeID key="php">3</runtimeID>
                 <runtimeID key="wso2dataservice">7</runtimeID>
                 <runtimeID key="jaggery">5</runtimeID>
+                <runtimeID key="jaggery-as600m3">10</runtimeID>
             </runtimeIDs>
             <runtimeStartTimeouts>
                 <runtimeStartTimeout key="tomcat">120000</runtimeStartTimeout>
@@ -325,14 +329,17 @@
                 <sampleAppContent key="php">Hello</sampleAppContent>
                 <sampleAppContent key="wso2dataservice">CSVSampleService</sampleAppContent>
                 <sampleAppContent key="jaggery">Hello</sampleAppContent>
+                <sampleAppContent key="jaggery-as600m3">Coffee House</sampleAppContent>
             </sampleAppContents>
 
             <files>
                 <file type="war">sample.war</file>
                 <file type="msf4j">helloworld.jar</file>
+                <file type="msf4j200">microservices_sample.jar</file>
                 <file type="php">sample.zip</file>
                 <file type="wso2dataservice">CSVSampleService.car</file>
                 <file type="jaggery">hellojaggery.zip</file>
+                <file type="jaggery-as600m3">coffeeshop.war</file>
             </files>
             <applicationContexts>
                 <context key="war">/</context>
@@ -340,6 +347,7 @@
                 <context key="php">/</context>
                 <context key="wso2dataservice">/</context>
                 <context key="jaggery">/hellojaggery</context>
+                <context key="jaggery-as600m3">/coffeeshop</context>
             </applicationContexts>
             <containerSpecifications>
                 <spec type="war">3</spec>

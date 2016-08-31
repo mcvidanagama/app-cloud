@@ -95,7 +95,6 @@ var addApplication = function (applicationName, versionName, applicationDescript
         renameDirectory(oldHashId, versionHashId, uploadedFileName);
     }
     var imageName;
-    var newTagName;
     if(uploadedFileName) { //for custom images uploadedFIleName=null
         var absFileUploadedPath =
                 createDockerFile(applicationName, versionName, runtimeId, uploadedFileName, versionHashId, dockerClient,
@@ -105,7 +104,7 @@ var addApplication = function (applicationName, versionName, applicationDescript
         // eg: registry.docker.appcloud.wso2.com:5000/wso2as
         imageName = modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL) + "/" + applicationRuntime.getImageName();
        // newTagName = tagName;
-        pushDockerImage(applicationName, versionName, imageName, newTagName, versionHashId, dockerClient);
+        pushDockerImage(applicationName, versionName, imageName, tagName, versionHashId, dockerClient);
 
     } else { // for custom docker images
     //    pullDockerImage(imageRegistryUrl,imageTag, dockerClient, versionHashId);
@@ -382,7 +381,7 @@ var createAppVersionInDataBase = function( versionName,   runtimeId, runtimeProp
 }
 
 
-var createDockerFile = function (applicationName, versionName, runtimeId, uploadedFileName, versionHashId, dockerClient,
+var createDockerFile = function (applicationName, versionName, appTypeName, runtimeId, uploadedFileName, versionHashId, dockerClient,
                                  artifactUrl, hostName, appCreationMethod, runtimeProperties, conSpecMemory) {
     var msg = "Docker file creation successfully triggered in AppCloud";
     addEvent(DOCKER_FILE_CREATE, EVENT_PENDING, msg, versionHashId);
@@ -414,6 +413,10 @@ var createDockerFile = function (applicationName, versionName, runtimeId, upload
         dockerFilePropertyMap.put("HOST_NAME", hostName);
         dockerFilePropertyMap.put("ARTIFACT_URL", artifactUrl);
         dockerFilePropertyMap.put("VAL_TOTAL_MEMORY", conSpecMemory);
+
+        var mod = jagg.module("application");
+        mod.getEndpointsExtractor(appTypeName).setDockerEnvironmentVariables(dockerFilePropertyMap);
+
         var appRuntimeProperties = getRuntimeProperties(runtimeProperties);
         dockerClient.createDockerFile(dockerFilePath, runtimeId, dockerTemplateFilePath, appCreationMethod, dockerFilePropertyMap, appRuntimeProperties);
     } catch(e){
@@ -577,8 +580,8 @@ var redeployVersion = function(applicationName, versionName, versionHashId, appT
     if (isDeleted) {
         updateApplicationStatus(versionHashId, APPLICATION_STOPPED);
         msg = "Successfully completed stopping container";
-        redeployApplication(applicationName, versionName, versionHashId, appTypeName);
         addEvent(STOP_CONTAINERS, EVENT_SUCCEEDED, msg, versionHashId);
+        redeployApplication(applicationName, versionName, versionHashId, appTypeName);
         return true;
     } else {
         if (log.isDebugEnabled()) {

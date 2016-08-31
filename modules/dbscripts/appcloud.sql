@@ -80,7 +80,7 @@ ENGINE = InnoDB;
 INSERT INTO `AC_RUNTIME` (`id`, `name`, `repo_url`, `image_name`, `tag`, `description`) VALUES
 (1, 'Apache Tomcat 8.0.28 / WSO2 Application Server 6.0.0-M1 - Deprecated (will work until 2016/09/30)', 'registry.docker.appfactory.private.wso2.com:5000', 'wso2as', '6.0.0-m1', 'OS:Debian, JAVA Version:8u72'),
 (2, 'OpenJDK 8 + WSO2 MSF4J 1.0.0 - Deprecated Runtime (Will continue to work until 2016/9/30)', 'registry.docker.appfactory.private.wso2.com:5000', 'msf4j', '1.0.0', 'OS:Debian, JAVA Version:8u72'),
-(3, 'Apache 2.4.10', 'registry.docker.appfactory.private.wso2.com:5000','php','5.6', 'OS:Debian, PHP Version:5.6.20'),
+(3, 'Apache 2.4.10 (PHP Version 7.0.5)', 'registry.docker.appfactory.private.wso2.com:5000','php','5.6', 'OS:Debian, PHP Version:5.6.20'),
 (4, 'Carbon 4.2.0', 'registry.docker.appfactory.private.wso2.com:5000','carbon','4.2.0', 'OS:Debian, Java Version:7u101'),
 (5, 'Jaggery 0.11.0 - Deprecated Runtime (Will continue to work until 2016/9/30)', 'registry.docker.appfactory.private.wso2.com:5000', 'jaggery', '0.11.0', 'OS:Debian, Java Version:7u101'),
 (6, 'Apache Tomcat 8.0.28 / WSO2 Application Server 6.0.0-M2', 'registry.docker.appfactory.private.wso2.com:5000', 'wso2as', '6.0.0-m2', 'OS:Debian, JAVA Version:8u72'),

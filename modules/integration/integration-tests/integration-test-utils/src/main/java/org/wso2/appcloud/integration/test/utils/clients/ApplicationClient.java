@@ -52,52 +52,56 @@ import java.util.List;
 
 public class ApplicationClient extends BaseClient{
     private static final Log log = LogFactory.getLog(ApplicationClient.class);
-	protected static final String CREATE_APPLICATION_ACTION = "createApplication";
-	protected static final String DELETE_APPLICATION_ACTION = "deleteApplication";
-	protected static final String STOP_APPLICATION_ACTION = "stopApplication";
-	protected static final String START_APPLICATION_ACTION = "startApplication";
-	protected static final String GET_APPLICATION_ACTION = "getApplication";
-	protected static final String GET_VERSION_HASH_ACTION = "getVersionHashId";
-	protected static final String GET_APPLICATION_HASH_ACTION = "getApplicationHashIdByName";
-	protected static final String GET_ENV_VAR_ACTION = "getEnvVariablesOfVersion";
-	protected static final String ADD_ENV_VAR_ACTION = "addRuntimeProperty";
-	protected static final String UPDATE_ENV_VAR_ACTION = "updateRuntimeProperty";
-	protected static final String DELETE_ENV_VAR_ACTION = "deleteRuntimeProperty";
-	protected static final String GET_TAG_ACTION = "getTags";
-	protected static final String ADD_TAG_ACTION = "addTag";
-	protected static final String UPDATE_TAG_ACTION = "updateTag";
-	protected static final String DELETE_TAG_ACTION = "deleteTag";
-	protected static final String DELETE_REVISION_ACTION = "deleteVersion";
-	protected static final String GET_REVISIONS_ACTION = "getExistingRevisions";
-	protected static final String CHANGE_APP_ICON_ACTION = "changeAppIcon";
-	protected static final String PARAM_NAME_APPLICATION_NAME = "applicationName";
-	protected static final String PARAM_NAME_APPLICATION_HASH_ID = "applicationKey";
-	protected static final String PARAM_NAME_APPLICATION_DESCRIPTION = "applicationDescription";
-	protected static final String PARAM_NAME_RUNTIME = "runtime";
-	protected static final String PARAM_NAME_APP_TYPE_NAME = "appTypeName";
-	protected static final String PARAM_NAME_APPLICATION_REVISION = "applicationRevision";
-	protected static final String PARAM_NAME_UPLOADED_FILE_NAME = "uploadedFileName";
-	protected static final String PARAM_NAME_PROPERTIES = "runtimeProperties";
-	protected static final String PARAM_NAME_TAGS = "tags";
-	protected static final String PARAM_NAME_VERSION_KEY = "versionKey";
-	protected static final String PARAM_NAME_KEY = "key";
-	protected static final String PARAM_NAME_PREVIOUS_KEY = "prevKey";
-	protected static final String PARAM_NAME_NEW_KEY = "newKey";
-	protected static final String PARAM_NAME_VALUE = "value";
-	protected static final String PARAM_NAME_NEW_VALUE = "newValue";
-	protected static final String PARAM_NAME_IS_FILE_ATTACHED = "isFileAttached";
-	protected static final String PARAM_NAME_CHANGE_ICON = "changeIcon";
-	protected static final String PARAM_NAME_FILE_UPLOAD = "fileupload";
-	protected static final String PARAM_NAME_IS_NEW_VERSION = "isNewVersion";
-	protected static final String PARAM_NAME_CONTAINER_SPEC = "conSpec";
+    protected static final String CREATE_APPLICATION_ACTION = "createApplication";
+    protected static final String DELETE_APPLICATION_ACTION = "deleteApplication";
+    protected static final String STOP_APPLICATION_ACTION = "stopApplication";
+    protected static final String START_APPLICATION_ACTION = "startApplication";
+    protected static final String GET_APPLICATION_ACTION = "getApplication";
+    protected static final String GET_VERSION_HASH_ACTION = "getVersionHashId";
+    protected static final String GET_APPLICATION_HASH_ACTION = "getApplicationHashIdByName";
+    protected static final String GET_ENV_VAR_ACTION = "getEnvVariablesOfVersion";
+    protected static final String ADD_ENV_VAR_ACTION = "addRuntimeProperty";
+    protected static final String UPDATE_ENV_VAR_ACTION = "updateRuntimeProperty";
+    protected static final String DELETE_ENV_VAR_ACTION = "deleteRuntimeProperty";
+    protected static final String GET_TAG_ACTION = "getTags";
+    protected static final String ADD_TAG_ACTION = "addTag";
+    protected static final String UPDATE_TAG_ACTION = "updateTag";
+    protected static final String DELETE_TAG_ACTION = "deleteTag";
+    protected static final String DELETE_REVISION_ACTION = "deleteVersion";
+    protected static final String GET_REVISIONS_ACTION = "getExistingRevisions";
+    protected static final String CHANGE_APP_ICON_ACTION = "changeAppIcon";
+    protected static final String PARAM_NAME_APPLICATION_NAME = "applicationName";
+    protected static final String PARAM_NAME_APPLICATION_HASH_ID = "applicationKey";
+    protected static final String PARAM_NAME_APPLICATION_DESCRIPTION = "applicationDescription";
+    protected static final String PARAM_NAME_RUNTIME = "runtime";
+    protected static final String PARAM_NAME_APP_TYPE_NAME = "appTypeName";
+    protected static final String PARAM_NAME_APPLICATION_REVISION = "applicationRevision";
+    protected static final String PARAM_NAME_UPLOADED_FILE_NAME = "uploadedFileName";
+    protected static final String PARAM_NAME_PROPERTIES = "runtimeProperties";
+    protected static final String PARAM_NAME_TAGS = "tags";
+    protected static final String PARAM_NAME_VERSION_KEY = "versionKey";
+    protected static final String PARAM_NAME_KEY = "key";
+    protected static final String PARAM_NAME_PREVIOUS_KEY = "prevKey";
+    protected static final String PARAM_NAME_NEW_KEY = "newKey";
+    protected static final String PARAM_NAME_VALUE = "value";
+    protected static final String PARAM_NAME_NEW_VALUE = "newValue";
+    protected static final String PARAM_NAME_IS_FILE_ATTACHED = "isFileAttached";
+    protected static final String PARAM_NAME_CHANGE_ICON = "changeIcon";
+    protected static final String PARAM_NAME_FILE_UPLOAD = "fileupload";
+    protected static final String PARAM_NAME_IS_NEW_VERSION = "isNewVersion";
+    protected static final String PARAM_NAME_CONTAINER_SPEC = "conSpec";
+    protected static final String PARAM_NAME_GIT_REPO_URL = "gitRepoUrl";
+    protected static final String PARAM_NAME_GIT_REPO_BRANCH = "gitRepoBranch";
+    protected static final String PARAM_NAME_PROJECT_ROOT = "projectRoot";
     public static final String PARAM_NAME_APP_CREATION_METHOD = "appCreationMethod";
     public static final String PARAM_NAME_APP_CONTEXT = "applicationContext";
     public static final String DEFAULT = "default";
+    public static final String GITHUB = "github";
     public static final String PARAM_NAME_SET_DEFAULT_VERSION = "setDefaultVersion";
     protected static final String UPDATE_DEFAULT_VERSION_ACTION = "updateDefaultVersion";
     protected static final String PARAM_NAME_DEFAULT_VERSION = "defaultVersion";
 
-	private String endpoint;
+    private String endpoint;
     private String settingsEndpoint;
 
 
@@ -120,7 +124,8 @@ public class ApplicationClient extends BaseClient{
     public void createNewApplication(String applicationName, String runtime, String appTypeName,
                                      String applicationRevision, String applicationDescription, String uploadedFileName,
                                      String runtimeProperties, String tags, File uploadArtifact, boolean isNewVersion,
-                                     String applicationContext, String conSpec, boolean setDefaultVersion)
+                                     String applicationContext, String conSpec, boolean setDefaultVersion, String appCreationMethod,
+                                     String gitRepoUrl, String gitRepoBranch, String projectRoot)
             throws AppCloudIntegrationTestException {
 
         HttpClient httpclient = null;
@@ -135,10 +140,20 @@ public class ApplicationClient extends BaseClient{
 
             MultipartEntityBuilder builder = MultipartEntityBuilder.create();
             builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-            builder.addPart(PARAM_NAME_FILE_UPLOAD, new FileBody(uploadArtifact));
+
             builder.addPart(PARAM_NAME_ACTION, new StringBody(CREATE_APPLICATION_ACTION, ContentType.TEXT_PLAIN));
-            builder.addPart(PARAM_NAME_APP_CREATION_METHOD, new StringBody(DEFAULT, ContentType.TEXT_PLAIN));
-	        builder.addPart(PARAM_NAME_CONTAINER_SPEC, new StringBody(conSpec, ContentType.TEXT_PLAIN));
+            builder.addPart(PARAM_NAME_APP_CREATION_METHOD, new StringBody(appCreationMethod, ContentType.TEXT_PLAIN));
+            if (GITHUB.equals(appCreationMethod)) {
+                builder.addPart(PARAM_NAME_GIT_REPO_URL, new StringBody(gitRepoUrl, ContentType.TEXT_PLAIN));
+                builder.addPart(PARAM_NAME_GIT_REPO_BRANCH, new StringBody(gitRepoBranch, ContentType.TEXT_PLAIN));
+                builder.addPart(PARAM_NAME_PROJECT_ROOT, new StringBody(projectRoot, ContentType.TEXT_PLAIN));
+            } else if(DEFAULT.equals(appCreationMethod)) {
+                builder.addPart(PARAM_NAME_FILE_UPLOAD, new FileBody(uploadArtifact));
+                builder.addPart(PARAM_NAME_UPLOADED_FILE_NAME, new StringBody(uploadedFileName, ContentType.TEXT_PLAIN));
+                builder.addPart(PARAM_NAME_IS_FILE_ATTACHED, new StringBody(Boolean.TRUE.toString(),
+                        ContentType.TEXT_PLAIN));//Setting true to send the file in request
+            }
+	    builder.addPart(PARAM_NAME_CONTAINER_SPEC, new StringBody(conSpec, ContentType.TEXT_PLAIN));
             builder.addPart(PARAM_NAME_APPLICATION_NAME, new StringBody(applicationName, ContentType.TEXT_PLAIN));
             builder.addPart(PARAM_NAME_APPLICATION_DESCRIPTION,
                     new StringBody(applicationDescription, ContentType.TEXT_PLAIN));
@@ -147,11 +162,10 @@ public class ApplicationClient extends BaseClient{
             builder.addPart(PARAM_NAME_APP_CONTEXT, new StringBody(applicationContext, ContentType.TEXT_PLAIN));
             builder.addPart(PARAM_NAME_APPLICATION_REVISION,
                     new StringBody(applicationRevision, ContentType.TEXT_PLAIN));
-            builder.addPart(PARAM_NAME_UPLOADED_FILE_NAME, new StringBody(uploadedFileName, ContentType.TEXT_PLAIN));
+
             builder.addPart(PARAM_NAME_PROPERTIES, new StringBody(runtimeProperties, ContentType.TEXT_PLAIN));
             builder.addPart(PARAM_NAME_TAGS, new StringBody(tags, ContentType.TEXT_PLAIN));
-            builder.addPart(PARAM_NAME_IS_FILE_ATTACHED, new StringBody(Boolean.TRUE.toString(),
-                    ContentType.TEXT_PLAIN));//Setting true to send the file in request
+
             builder.addPart(PARAM_NAME_IS_NEW_VERSION,
                     new StringBody(Boolean.toString(isNewVersion), ContentType.TEXT_PLAIN));
             builder.addPart(PARAM_NAME_SET_DEFAULT_VERSION,
