@@ -28,7 +28,6 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.wso2.appcloud.esb.integration</groupId>
     <artifactId>org.wso2.appcloud.esb.integration</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 AppCloud Components - ESB Integration</name>
@@ -38,18 +37,5 @@
         <module>ContainerAPIRegistry</module>
         <module>ContainerAPICompositeApplication</module>
     </modules>
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-eclipse-plugin</artifactId>
-                <version>2.9</version>
-                <configuration>
-                    <buildcommands/>
-                    <projectnatures>
-                        <projectnature>org.wso2.developerstudio.eclipse.mavenmultimodule.project.nature</projectnature>
-                    </projectnatures>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+
 </project>
