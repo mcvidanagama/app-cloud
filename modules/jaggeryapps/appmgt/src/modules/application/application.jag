@@ -62,7 +62,7 @@ var addApplication = function (applicationName, versionName, applicationDescript
     " Allocated Memory:" + conSpecMemory + " Allocated CPU:" + conSpecCpu + " Artifact Url:" + artifactUrl +
     " App Creation Method:" + appCreationMethod + " Previous HashId:" + oldHashId + " Context:" + applicationContext +
     " DefaultVersion:" + setDefaultVersion + " Docker Image repository Url : " + imageRegistryUrl +
-    " docker image tag : " + imageTag);
+    " docker image tag : " + imageTag + "remote repo user name : " + userName);
 
     var tenantId = modManager.getTenantId();
     var applicationHashId = Util.getApplicationHashId(applicationName, tenantId);
