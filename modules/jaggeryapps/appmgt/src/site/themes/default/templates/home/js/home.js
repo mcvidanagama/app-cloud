@@ -274,10 +274,13 @@ function displayApplicationInactiveMessage() {
                      timeout: 15000,
                      content: "<b>The application is stopped because 12 hours have passed after it was last started.</b></br>" +
                               "This is a limitation of free accounts in " + pageTitle + "</br> To restart, click the <b>Start</b>. button.</br>" +
-                              "Click the Support menu to contact us if you need any help."
+                              "<a href='"+requestNewAppTypeURL+"' target='_blank'>Contact us</a> if you need any help."
                  });
 }
 
+function requestToExtend() {
+    $("<a>").attr("href", requestNewAppTypeURL).attr("target", "_blank")[0].click();
+}
 function displayRestartCountMessage() {
     jagg.message({
         modalStatus: false,
