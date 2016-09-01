@@ -70,7 +70,13 @@ var log = new Log();
         var unparsedRuntimeProps = request.getParameter("runtimeProperties");
         var runtimeProperties = [];
         if(unparsedRuntimeProps){
-            runtimeProperties = parse(unparsedRuntimeProps);
+            try {
+                runtimeProperties = parse(unparsedRuntimeProps);
+            } catch (e) {
+                response.status = 400;
+                response.content = "Invalid Json for runtimeProperties. Please validate the json.";
+                return;
+            }
             for (var i = 0; i < runtimeProperties.length; i++) {
                 var keyValidation = validator.validateEnvKey(runtimeProperties[i].key);
                 if (!keyValidation.status) {
@@ -84,7 +90,13 @@ var log = new Log();
         var unparsedTags = request.getParameter("tags");
         var tags = [];
         if(unparsedTags){
-            tags = parse(unparsedTags);
+            try {
+                tags = parse(unparsedTags);
+            } catch (e) {
+                response.status = 400;
+                response.content = "Invalid Json for tags. Please validate the json.";
+                return;
+            }
         }
 
         var applicationName = request.getParameter("applicationName");
