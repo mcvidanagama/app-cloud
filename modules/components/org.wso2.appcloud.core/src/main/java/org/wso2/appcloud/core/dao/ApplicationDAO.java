@@ -2228,14 +2228,18 @@ public class ApplicationDAO {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
-            preparedStatement = dbConnection.prepareStatement(SQLQueryConstants.GET_ENV_VARIABLE);
+            preparedStatement = dbConnection.prepareStatement(SQLQueryConstants.GET_MATCHING_ENV_VARIABLE_COUNT);
             preparedStatement.setString(1, versionKey);
             preparedStatement.setInt(2, tenantId);
             preparedStatement.setString(3, envVariableKey);
             preparedStatement.setInt(4, tenantId);
             resultSet = preparedStatement.executeQuery();
-            resultSet.last();
-            return (resultSet.getRow() > 0);
+
+            if (resultSet.next()) {
+                return (resultSet.getInt(SQLQueryConstants.MATCHING_ENV_VARIABLE_COUNT) > 0);
+            } else {
+                return false;
+            }
         } catch (SQLException e) {
             String msg = "Error while checking if environment variable exists for version hash id: " + versionKey +
                     " and tenant id: " + tenantId + ".";
@@ -2261,14 +2265,18 @@ public class ApplicationDAO {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
-            preparedStatement = dbConnection.prepareStatement(SQLQueryConstants.GET_TAG);
+            preparedStatement = dbConnection.prepareStatement(SQLQueryConstants.GET_MATCHING_TAG_COUNT);
             preparedStatement.setString(1, versionKey);
             preparedStatement.setInt(2, tenantId);
             preparedStatement.setString(3, tagKey);
             preparedStatement.setInt(4, tenantId);
             resultSet = preparedStatement.executeQuery();
-            resultSet.last();
-            return (resultSet.getRow() > 0);
+
+            if (resultSet.next()) {
+                return (resultSet.getInt(SQLQueryConstants.MATCHING_TAG_COUNT) > 0);
+            } else {
+                return false;
+            }
         } catch (SQLException e) {
             String msg = "Error while checking if tag exists for version hash id: " + versionKey + " and tenant id: "
                     + tenantId + ".";
@@ -2294,14 +2302,18 @@ public class ApplicationDAO {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
-            preparedStatement = dbConnection.prepareStatement(SQLQueryConstants.GET_VERSION);
+            preparedStatement = dbConnection.prepareStatement(SQLQueryConstants.GET_MATCHING_VERSION_COUNT);
             preparedStatement.setInt(1, tenantId);
             preparedStatement.setString(2, versionName);
             preparedStatement.setString(3, applicationName);
             preparedStatement.setInt(4, tenantId);
             resultSet = preparedStatement.executeQuery();
-            resultSet.last();
-            return (resultSet.getRow() > 0);
+
+            if (resultSet.next()) {
+                return (resultSet.getInt(SQLQueryConstants.MATCHING_VERSION_COUNT) > 0);
+            } else {
+                return false;
+            }
         } catch (SQLException e) {
             String msg = "Error while checking if version exists for application name: " + applicationName +
                     ", version: " + versionName + " and tenant id: " + tenantId + ".";

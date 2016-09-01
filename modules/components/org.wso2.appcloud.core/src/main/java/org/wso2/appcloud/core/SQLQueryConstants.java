@@ -58,7 +58,9 @@ public class SQLQueryConstants {
     public static final String TAG_VALUE = "tag_value";
     public static final String CONTEXT = "context";
     public static final String ACTIVE_CONTAINERS_COUNT = "ACTIVE_CONTAINERS_COUNT";
-
+    public static final String MATCHING_ENV_VARIABLE_COUNT = "matching_env_variable_count";
+    public static final String MATCHING_TAG_COUNT = "matching_tag_count";
+    public static final String MATCHING_VERSION_COUNT = "matching_version_count";
 
 
     /*==============================
@@ -213,16 +215,20 @@ public class SQLQueryConstants {
 
     public static final String GET_ALL_CLOUDS = "SELECT * FROM AC_CLOUD";
 
-    public static final String GET_ENV_VARIABLE = "SELECT * FROM AC_RUNTIME_PROPERTY WHERE version_id=" +
-            "(SELECT id FROM AC_VERSION WHERE hash_id=? AND AC_VERSION.tenant_id=?) AND name COLLATE utf8_bin =? " +
-            "AND AC_RUNTIME_PROPERTY.tenant_id=?";
+    //"COLLATE utf8_bin" is added to perform a case sensitive search on the name
+    public static final String GET_MATCHING_ENV_VARIABLE_COUNT = "SELECT COUNT(id) as matching_env_variable_count " +
+            "FROM AC_RUNTIME_PROPERTY WHERE version_id= (SELECT id FROM AC_VERSION WHERE hash_id=? AND " +
+            "AC_VERSION.tenant_id=?) AND name COLLATE utf8_bin =? AND AC_RUNTIME_PROPERTY.tenant_id=?";
 
-    public static final String GET_TAG = "SELECT * FROM AC_TAG WHERE version_id=(SELECT id FROM AC_VERSION WHERE" +
-            " hash_id=? AND AC_VERSION.tenant_id=?) AND name COLLATE utf8_bin =? AND AC_TAG.tenant_id=?";
+    //"COLLATE utf8_bin" is added to perform a case sensitive search on the name
+    public static final String GET_MATCHING_TAG_COUNT = "SELECT COUNT(id) as matching_tag_count FROM AC_TAG WHERE " +
+            "version_id=(SELECT id FROM AC_VERSION WHERE hash_id=? AND AC_VERSION.tenant_id=?) AND name " +
+            "COLLATE utf8_bin =? AND AC_TAG.tenant_id=?";
 
-    public static final String GET_VERSION = "SELECT * FROM AC_VERSION WHERE AC_VERSION.tenant_id=? and name " +
-            "COLLATE utf8_bin =? and application_id=(SELECT id FROM AC_APPLICATION WHERE name=? AND " +
-            "AC_APPLICATION.tenant_id=?)";
+    //"COLLATE utf8_bin" is added to perform a case sensitive search on the name
+    public static final String GET_MATCHING_VERSION_COUNT = "SELECT COUNT(id) as matching_version_count FROM " +
+            "AC_VERSION WHERE AC_VERSION.tenant_id=? and name COLLATE utf8_bin =? and application_id=(SELECT id FROM " +
+            "AC_APPLICATION WHERE name=? AND AC_APPLICATION.tenant_id=?)";
 
     /* Update Queries */
     public static final String GET_ALL_APPLICATIONS_LIST_WITH_TAG =
