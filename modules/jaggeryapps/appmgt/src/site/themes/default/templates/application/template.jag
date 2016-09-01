@@ -832,6 +832,11 @@ jagg.template("application", function (inputs, outputs, jagg) {
          validator.element( "#icon" );
      }
 
+     function clearEnvFile() {
+         document.getElementById("envFile").value = "";
+         document.getElementById("env").value = "";
+     }
+
     // Return whether the app icon is validated or not
     function validateAppIcon(value) {
         var file = $("#appIcon");
@@ -968,6 +973,22 @@ jagg.template("application", function (inputs, outputs, jagg) {
 
     function goBack() {
         window.history.back();
+    }
+
+    function readEnvPropsFromFile(event){
+        var input = event.target;
+        var reader = new FileReader();
+        reader.onload = function(){
+            var text = reader.result;
+            var jsonObj = JSON.parse(text);
+            for (var key in jsonObj) {
+              if (jsonObj.hasOwnProperty(key)) {
+                var val = jsonObj[key];
+                addEnvFromFile(key, val);
+              }
+            }
+        };
+        reader.readAsText(input.files[0]);
     }
  </script>
 
@@ -1233,8 +1254,21 @@ jagg.template("application", function (inputs, outputs, jagg) {
                             <div class="info-block">
                                 To add database-specific environment variables, type <b>database:</b> in the Value textbox.
                             </div>
+                            <div class="panel-body">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="env" readonly placeholder="Upload via .json file">
+                                    <span class="input-group-btn">
+                                        <span class="btn btn-primary btn-file">
+                                            Browse <input type="file" id="envFile" name="envFile" onchange="readEnvPropsFromFile(event)"/>
+                                        </span>
+                                        <span class="btn btn-primary btn-file" onclick="clearEnvFile()" id="clear">
+                                            Clear
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
                             <div class="panel-body" id="env-pane">
-                                <div class="form-inline property-seperator">
+                                <div class="form-inline property-seperator" id="env-body">
                                     <div class="form-group">
                                         <label class="sr-only" for="key">Key</label>
                                         <input type="text" class="form-control element-add-key" placeholder="Key">
@@ -1244,7 +1278,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                                         <select id="value" name="value" class="form-control select2 element-add-value"></select>
                                     </div>
                                     <div class="form-group">
-                                        <button class="btn btn-primary btn-primary-add btn-primary-add-val" disabled>Add</button>
+                                        <button class="btn btn-primary btn-primary-add btn-primary-add-val-env" disabled>Add</button>
                                     </div>
                                 </div>
                             </div>
