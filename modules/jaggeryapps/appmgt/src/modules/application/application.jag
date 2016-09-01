@@ -384,7 +384,7 @@ var deployApplication = function(applicationName, versionName, appTypeName, depl
         }
     } else {
         conSpecMemory = conSpecMemoryLimit;
-        conSpecCpu = conSpecMemoryLimit;
+        conSpecCpu = conSpecCpuLimit;
     }
 
     var resourceQuotaLimit = new ResourceQuotaLimit();
