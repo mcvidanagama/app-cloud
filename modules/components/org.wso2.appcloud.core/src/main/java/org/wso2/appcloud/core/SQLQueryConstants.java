@@ -262,10 +262,12 @@ public class SQLQueryConstants {
     /*Delete Queries*/
 
     public static final String DELETE_RUNTIME_PROPERTY =
-            "DELETE FROM AC_RUNTIME_PROPERTY WHERE version_id=(SELECT id FROM AC_VERSION WHERE hash_id=?) AND name=? AND tenant_id=?";
+            "DELETE FROM AC_RUNTIME_PROPERTY WHERE version_id=(SELECT id FROM AC_VERSION WHERE hash_id=?) AND " +
+            "name COLLATE utf8_bin =? AND tenant_id=?";
 
     public static final String DELETE_TAG =
-            "DELETE FROM AC_TAG WHERE version_id=(SELECT id FROM AC_VERSION WHERE hash_id=?) AND name=? AND tenant_id=?";
+            "DELETE FROM AC_TAG WHERE version_id=(SELECT id FROM AC_VERSION WHERE hash_id=?) AND " +
+            "name COLLATE utf8_bin =? AND tenant_id=?";
 
     public static final String DELETE_APPLICATION = "DELETE FROM AC_APPLICATION WHERE hash_id=? AND tenant_id=?";
 
