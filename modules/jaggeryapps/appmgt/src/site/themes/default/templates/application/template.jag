@@ -121,9 +121,9 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 $('#outerContainer').empty();
                 $('#outerContainer').html('<div class="container-fluid"><div class="row row-centered">' +
                     '<div class="col-centered col-xs-10 col-sm-7  col-md-7 col-lg-6"><div class="cloud-new-content">' +
-                    '<h2>You can run only up to '+ maxApplications +' applications/versions simultaneously on a free subscription.</h2>' +
-                    '1. Stop an existing application/version to continue.<br>'+
-                    '2. <a href="<%=requestMoreAppseURL%>" target="_blank">Submit a request</a> to run more applications on free subscription.</div></div></div></div>');
+                    '<h2>You can run only up to '+ maxApplications +' '+ cloudSpecificApplicationRepresentation.toLowerCase() + 's/versions simultaneously on a free subscription.</h2>' +
+                    '1. Stop an existing ' + cloudSpecificApplicationRepresentation.toLowerCase() + '/version to continue.<br>'+
+                    '2. <a href="<%=requestMoreAppseURL%>" target="_blank">Submit a request</a> to run more ' + cloudSpecificApplicationRepresentation.toLowerCase() + 's on free subscription.</div></div></div></div>');
                 return;
             }
 
@@ -559,7 +559,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
         $.validator.addMethod("validateAppIcon", validateAppIcon, getIconErrorMessage);
         $.validator.addMethod("validateApplicationNameChar", validateApplicationNameChar, getValidationFailErrorMsg);
         $.validator.addMethod("validationApplicationRevisionChar", validationApplicationRevisionChar, getValidationFailErrorMsg);
-        $.validator.addMethod("checkApplicationVersionExistence", checkApplicationVersionExistence, "This version is already exists for this application");
+        $.validator.addMethod("checkApplicationVersionExistence", checkApplicationVersionExistence, "This version is already exists for this " + cloudSpecificApplicationRepresentation.toLowerCase());
         $.validator.addMethod("validateRuntimeSelection", validateRuntimeSelection, "Please select a valid runtime");
         $.validator.addMethod("validateArtifact", validateArtifact, getArtifactErrorMessage);
         $.validator.addMethod("validateEnvironmentVariable", validateEnvironmentVariable, getEnvVariableErrorMsg);
@@ -1069,9 +1069,9 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 <div class="col-md-7">
                     <div class="form-group">
                         <label for="application-version"><%=cloudSpecificApplicationRepresentation%> Version: *
-                            <i class="fa fa-question-circle help-tips" data-toggle="tooltip" data-placement="left" title="Valid characters for application version are [a-z, A-Z, 0-9, _, ., -]"></i>
+                            <i class="fa fa-question-circle help-tips" data-toggle="tooltip" data-placement="left" title="Valid characters for <%=cloudSpecificApplicationRepresentation.toLowerCase()%> version are [a-z, A-Z, 0-9, _, ., -]"></i>
                         </label>
-                        <input id="applicationRevision" name="applicationRevision" type="text" class="form-control" placeholder="Set the new application version here"/>
+                        <input id="applicationRevision" name="applicationRevision" type="text" class="form-control" placeholder="Set the new <%=cloudSpecificApplicationRepresentation.toLowerCase()%> version here"/>
                         <label>Your current default version is <%=defaultVersion%></label>
                     </div>
                 </div>
@@ -1088,7 +1088,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 <% } else { %>
             <div class="form-group">
             <label for="application-version"><%=cloudSpecificApplicationRepresentation%> Version: *
-                <i class="fa fa-question-circle help-tips" data-toggle="tooltip" data-placement="left" title="Valid characters for application version are [a-z, A-Z, 0-9, _, ., -]"></i>
+                <i class="fa fa-question-circle help-tips" data-toggle="tooltip" data-placement="left" title="Valid characters for <%=cloudSpecificApplicationRepresentation.toLowerCase()%> version are [a-z, A-Z, 0-9, _, ., -]"></i>
             </label>
             <input id="applicationRevision" name="applicationRevision" type="text" class="form-control" value="1.0.0"/>
             </div>
