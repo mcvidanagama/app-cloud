@@ -120,7 +120,7 @@ function loadEndpoints(deploymentURL, applicationType, versionId) {
      versionId: versionId
      }, function(result) {
         var endpoints = JSON.parse(result);
-        if (endpoints == undefined) {
+        if (endpoints == null) {
             showLoadingEndpointView();
         } else {
             // Generate SOAP Services Section
