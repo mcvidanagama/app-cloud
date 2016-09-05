@@ -1633,7 +1633,7 @@ public class ApplicationDAO {
         ResultSet resultSet = null;
         int appCount = 0;
         try {
-            preparedStatement = dbConnection.prepareStatement(SQLQueryConstants.GET_TENANT_RUNNING_CONTAINER_COUNT);
+            preparedStatement = dbConnection.prepareStatement(SQLQueryConstants.RUNNING_APPLICATION_VERSION_COUNT);
             preparedStatement.setInt(1, tenantId);
             preparedStatement.setString(2, cloudType);
             resultSet = preparedStatement.executeQuery();

@@ -345,11 +345,6 @@ jagg.template("home", function(inputs, outputs, jagg) {
             applicationRevision: selectedRevision,
             versionKey: selectedApplicationRevision.hashId
         }, function(result) {
-            jagg.message({
-                content: cloudSpecificApplicationRepresentation + " was successfully redeployed.",
-                type: 'info',
-                timeout: '5000'
-            });
         }, function(jqXHR, textStatus, errorThrown) {
             setTimeout(reloadAppHome, 5000);
             jagg.message({
@@ -424,12 +419,6 @@ jagg.template("home", function(inputs, outputs, jagg) {
                 conSpecMemory: conSpecMemory
 
             }, function(result) {
-                //check if application has more than one version
-                jagg.message({
-                    content: "New version started successfully",
-                    type: 'info',
-                    timeout: 3500
-                });
             });
         }
     }
