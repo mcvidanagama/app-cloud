@@ -216,13 +216,13 @@ var log = new Log();
             } else {
                 //Since the user is trying to create a new application we check if the existing application count is
                 //less than the maximum amount of applications that can be created
-                var applicationCount = applicationModule.getRunningApplicationVersionCount();
-                var maxAppCount = applicationModule.getMaxInstanceCount();
-                if (applicationCount < maxAppCount) {
+                var RunningApplicationCount = applicationModule.getRunningApplicationVersionCount();
+                var maxRunningAppCount = applicationModule.getMaxInstanceCount();
+                if (RunningApplicationCount < maxRunningAppCount) {
                     isAppCountLowerThanMax = true;
                 } else {
                     logMessage = "Application creation request not accepted because the application count has " +
-                            "reached maximum limit of " + maxAppCount;
+                            "reached maximum limit of " + maxRunningAppCount;
                     log.warn(logMessage);
                     response.status = 200;
                     response.content = logMessage;
@@ -262,7 +262,7 @@ var log = new Log();
                 response.content = logMessage;
                 return;
             } else {
-                logMessage = "Maximum number of applications that you can create is " + maxAppCount;
+                logMessage = "Maximum number of applications that you can create is " + maxRunningAppCount;
                 log.warn(logMessage)
                 response.status = 200;
                 response.content = logMessage;
@@ -342,9 +342,9 @@ var log = new Log();
             }
         }
     } else if(action == "startApplication"){
-        var applicationCount = applicationModule.getRunningApplicationVersionCount();
-        var maxAppCount = applicationModule.getMaxInstanceCount();
-        if (applicationCount < maxAppCount) {
+        var RunningApplicationCount = applicationModule.getRunningApplicationVersionCount();
+        var maxRunningAppCount = applicationModule.getMaxInstanceCount();
+        if (RunningApplicationCount < maxRunningAppCount) {
             var applicationName = request.getParameter("applicationName");
             var applicationRevision = request.getParameter("applicationRevision");
             var versionKey = request.getParameter("versionKey");
@@ -357,7 +357,7 @@ var log = new Log();
             print(stringify(versions));
         } else {
             logMessage = "Application creation request not accepted because the application count has " +
-                    "reached maximum limit of " + maxAppCount;
+                    "reached maximum limit of " + maxRunningAppCount;
             log.warn(logMessage);
             response.status = 406;
             response.content = logMessage;

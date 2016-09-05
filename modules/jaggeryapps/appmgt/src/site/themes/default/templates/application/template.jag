@@ -23,7 +23,7 @@ include("/jagg/jagg.jag");
 jagg.template("application", function (inputs, outputs, jagg) {
         var runtimes = outputs.runtimes;
         var appType = outputs.appType;
-        var applicationCount = outputs.applicationCount;
+        var runningApplicationCount = outputs.runninngApplicationCount;
         var appTypeName = appType.type;
         var notAllowedEnvVariables = outputs.notAllowedEnvVariables;
         var isAppTypeBuildable = appType.buildable;
@@ -66,7 +66,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
     const APP_TYPE_EXTENSION = "<%=appType.extension%>";
     var applicationName = "<%=applicationName%>";
     var cloudSpecificApplicationRepresentation = "<%=cloudSpecificApplicationRepresentation%>";
-    var applicationCount = <%=applicationCount%>;
+    var runningApplicationCount = <%=runningApplicationCount%>;
     var maxApplications = <%=maxApplications%>;
     var conSpecs = <%=conSpecs%>;
     var retryCount = 0;
@@ -117,7 +117,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
             //Set select2 container
             var valueElem = $('#value')[0];
             initSelect2(null, valueElem, "");
-            if (applicationCount >= maxApplications) {
+            if (runningApplicationCount >= maxApplications) {
                 $('#outerContainer').empty();
                 $('#outerContainer').html('<div class="container-fluid"><div class="row row-centered">' +
                     '<div class="col-centered col-xs-10 col-sm-7  col-md-7 col-lg-6"><div class="cloud-new-content">' +
@@ -1361,7 +1361,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
 
       <script>
       function maxApplicationCountValidate() {
-         if (applicationCount < maxApplications ) {
+         if (runningApplicationCount < maxApplications ) {
              $("#add-application").prop("disabled", false);
          } else {
              $("#add-application").prop("disabled", true);

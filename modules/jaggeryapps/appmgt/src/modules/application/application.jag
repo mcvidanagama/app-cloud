@@ -204,7 +204,7 @@ var buildDockerImage = function (applicationName, versionName, runtimeId, absFil
 
         log.error(msg);
         log.error(e);
-        log.info("Application creation failed because dokcer image build failed and roll back process" +
+        log.warn("Application creation failed because dokcer image build failed and roll back process" +
                  " is started for application : "+applicationName+" with revision : "+versionName);
         deleteVersion(versionHashId, true, false);
         throw e;
@@ -265,9 +265,9 @@ var createAppInDataBase = function(applicationName, versionName, applicationDesc
         var msg = "Error while adding application : " + applicationName + " with version : "+ versionName + " to database";
         log.error(msg);
         log.error(e);
-        log.info("Application creation failed due to initial application metadata persistence failure and roll back process" +
+        log.warn("Application creation failed due to initial application metadata persistence failure and roll back process" +
                  " is started for application : "+applicationName+" with version : "+ versionName);
-        //Not deleting the uploaded artifact, we need to handle the retry logic
+        //Not deleting the uploaded artifact, in the retry option we need previously uploaded artifact to exist.
         throw e;
     }
     return application;
