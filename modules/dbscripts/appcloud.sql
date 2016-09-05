@@ -88,7 +88,7 @@ INSERT INTO `AC_RUNTIME` (`id`, `name`, `repo_url`, `image_name`, `tag`, `descri
 (8, 'OpenJDK 8 + WSO2 MSF4J 2.0.0', 'registry.docker.appfactory.private.wso2.com:5000', 'msf4j', '2.0.0', 'OS:Debian, JAVA Version:8u72'),
 (9, 'WSO2 Enterprise Service Bus - 5.0.0','registry.docker.appfactory.private.wso2.com:5000', 'wso2esb', '5.0.0', 'OS:Debian, Java Version:7u101'),
 (10, 'Apache Tomcat 8.0.28 / WSO2 Application Server 6.0.0-M3','registry.docker.appfactory.private.wso2.com:5000', 'wso2as', '6.0.0-m3', 'OS:Debian, JAVA Version:8u72'),
-(11, 'Custom Docker Image runtime', 'registry.docker.appfactory.private.wso2.com:5000', 'customImage', 'customTag', 'OS:Custom, JAVA Version:custom');
+(11, 'Custom Docker Image runtime', 'registry.docker.appfactory.private.wso2.com:5000', 'custom', 'customTag', 'OS:Custom, JAVA Version:custom');
 
 
 
@@ -463,7 +463,9 @@ INSERT INTO `AC_RUNTIME_TRANSPORT` (`transport_id`, `runtime_id`) VALUES
 (7, 9),
 (8, 9),
 (3, 10),
-(4, 10);
+(4, 10),
+(3, 11),
+(4, 11);
 
 INSERT INTO `AC_CONTAINER_SPECIFICATIONS` (`CON_SPEC_NAME`, `CPU`, `MEMORY`, `COST_PER_HOUR`) VALUES
 ('128MB RAM and 0.1x vCPU', 100, 128, 1),

@@ -177,10 +177,10 @@ var log = new Log();
             applicationContext = null;
         }
 
-        var imageRegistryUrl = request.getParameter("imageRegistryUrl");
+        var remoteImageUrl = request.getParameter("remoteImageUrl");
         var imageTag = request.getParameter("imageTag");
-        var userName = request.getParameter("userName");
-        var password = request.getParameter("password");
+        //var userName = request.getParameter("userName");
+        //var password = request.getParameter("password");
 
         var setDefaultVersion = request.getParameter("setDefaultVersion");
         // checking whether an application with same name and same version, already exists or not
@@ -221,13 +221,13 @@ var log = new Log();
             } else {
                 //Since the user is trying to create a new application we check if the existing application count is
                 //less than the maximum amount of applications that can be created
-                var applicationCount = applicationModule.getRunningApplicationVersionCount();
-                var maxAppCount = applicationModule.getMaxInstanceCount();
-                if (applicationCount < maxAppCount) {
+                var RunningApplicationCount = applicationModule.getRunningApplicationVersionCount();
+                var maxRunningAppCount = applicationModule.getMaxInstanceCount();
+                if (RunningApplicationCount < maxRunningAppCount) {
                     isAppCountLowerThanMax = true;
                 } else {
                     logMessage = "Application creation request not accepted because the application count has " +
-                            "reached maximum limit of " + maxAppCount;
+                            "reached maximum limit of " + maxRunningAppCount;
                     log.warn(logMessage);
                     response.status = 200;
                     response.content = logMessage;
@@ -246,13 +246,12 @@ var log = new Log();
                         return ;
                     }
                 }
-                if (uploadedFileName || (imageRegistryUrl && imageTag)) {
+                if (uploadedFileName || (remoteImageUrl && imageTag)) {
                     applicationModule
                             .addApplication(applicationName, applicationRevision, applicationDescription, replicas,
                                             runtimeId, appTypeName, runtimeProperties, tags, appIcon, uploadedFileName,
                                             isNewVersion, conSpecMemory, conSpecCpu, artifactUrl, appCreationMethod,
-                                            oldHashId, applicationContext, setDefaultVersion,imageRegistryUrl, imageTag,
-                                            userName, password);
+                                            oldHashId, applicationContext, setDefaultVersion,remoteImageUrl, imageTag);
                 } else {
                     var gitRepoUrl = request.getParameter("gitRepoUrl");
                     var gitRepoBranch = request.getParameter("gitRepoBranch");
@@ -267,7 +266,7 @@ var log = new Log();
                 response.content = logMessage;
                 return;
             } else {
-                logMessage = "Maximum number of applications that you can create is " + maxAppCount;
+                logMessage = "Maximum number of applications that you can create is " + maxRunningAppCount;
                 log.warn(logMessage)
                 response.status = 200;
                 response.content = logMessage;
@@ -347,9 +346,9 @@ var log = new Log();
             }
         }
     } else if(action == "startApplication"){
-        var applicationCount = applicationModule.getRunningApplicationVersionCount();
-        var maxAppCount = applicationModule.getMaxInstanceCount();
-        if (applicationCount < maxAppCount) {
+        var RunningApplicationCount = applicationModule.getRunningApplicationVersionCount();
+        var maxRunningAppCount = applicationModule.getMaxInstanceCount();
+        if (RunningApplicationCount < maxRunningAppCount) {
             var applicationName = request.getParameter("applicationName");
             var applicationRevision = request.getParameter("applicationRevision");
             var versionKey = request.getParameter("versionKey");
@@ -362,7 +361,7 @@ var log = new Log();
             print(stringify(versions));
         } else {
             logMessage = "Application creation request not accepted because the application count has " +
-                    "reached maximum limit of " + maxAppCount;
+                    "reached maximum limit of " + maxRunningAppCount;
             log.warn(logMessage);
             response.status = 406;
             response.content = logMessage;
@@ -580,7 +579,6 @@ var log = new Log();
             if (versions.length > 1 && (defaultVersionHashId == versionKey)) {
                 var msg = "You are trying to delete the default version, if you want to delete this particular version, " +
                           "please select some other version as the default version and try again";
-                log.error(msg);
                 response.status = 400;
                 response.content = msg;
             } else {
@@ -648,17 +646,26 @@ var log = new Log();
         var xhr = new XMLHttpRequest();
         xhr.open("GET", url);
         xhr.send();
-        if (appTypeExtension.equals(currentExtension) && xhr.status == 200) {
-            print(true);
+        if (appTypeName == 'jaggery') { //Remove this check after removing AS 5.3.0 jaggery runtime
+            if ((appTypeExtension.equals(currentExtension) || currentExtension.equals("zip")) && xhr.status == 200) {
+                print(true);
+            } else {
+                print(false);
+            }
         } else {
-            print(false);
+            if (appTypeExtension.equals(currentExtension) && xhr.status == 200) {
+                print(true);
+            } else {
+                print(false);
+            }
         }
+
     } else if (action == "loadEndpoints") {
         var deploymentURL = request.getParameter("deploymentURL");
         var appType = request.getParameter("appType");
         var versionId = request.getParameter("versionId");
         var mod = jagg.module("application");
-        var endpoints = mod.getEndpointsExtractor(appType).getEndpoints(deploymentURL, versionId);
+        var endpoints = mod.getAppTypeUtil(appType).getEndpoints(deploymentURL, versionId);
         print(endpoints);
     } else {
         throw new Error("No action specified for: " + action);
