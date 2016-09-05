@@ -74,11 +74,11 @@ function login(userName, password, requestURL) {
             log.debug("Successfully authenticated user:" + userName + " in tenant:" + tenantDomain + " in:" +
                                                     (endTime_authenticate - startTime_authenticate) + " milliseconds");
             var startTime_authorize = new Date().getTime();
-            var permission = modManager.getPropertyValue(jagg.findSelectedCloud(request.getRequestURL()) + LOGIN_PERMISSION);
+            jagg.setSelectedCloud(request.getRequestURL());
+            var permission = modManager.getPropertyValue(jagg.getSelectedCloud() + LOGIN_PERMISSION);
             var isUserAuthorized = modManager.checkAuthorizationForUser(userName, permission);
             if (isUserAuthorized){
                 jagg.setUser(userName);
-                jagg.setSelectedCloud(requestURL);
                 finalResult.error="false";
                 finalResult.message="User successfully logged in";
                 finalResult.username=userName;
@@ -90,6 +90,7 @@ function login(userName, password, requestURL) {
                 finalResult.message="Authorization Failed.";
                 finalResult.username=userName;
                 log.debug("Authorization failed for user:" + userName + " in tenant:" + tenantDomain);
+                session.invalidate();
             }
         }else{
             finalResult.error="true";

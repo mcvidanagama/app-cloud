@@ -415,7 +415,7 @@ var createDockerFile = function (applicationName, versionName, appTypeName, runt
         dockerFilePropertyMap.put("VAL_TOTAL_MEMORY", conSpecMemory);
 
         var mod = jagg.module("application");
-        mod.getEndpointsExtractor(appTypeName).setDockerEnvironmentVariables(dockerFilePropertyMap);
+        mod.getAppTypeUtil(appTypeName).setDockerEnvironmentVariables(dockerFilePropertyMap);
 
         var appRuntimeProperties = getRuntimeProperties(runtimeProperties);
         dockerClient.createDockerFile(dockerFilePath, runtimeId, dockerTemplateFilePath, appCreationMethod, dockerFilePropertyMap, appRuntimeProperties);
