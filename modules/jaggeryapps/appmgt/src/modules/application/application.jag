@@ -159,7 +159,7 @@ var pushDockerImage = function (applicationName, versionName, applicationRuntime
 var buildDockerImage = function (applicationName, versionName, runtimeId, absFileUploadedPath, applicationRuntime, tagName, versionHashId, dockerClient){
 
     //Adding docker build pending event
-    var msg = "Docker image build successfully triggered in appcloud";
+    var msg = "Docker image build successfully triggered;
     addEvent(DOCKER_IMAGE_BUILD, EVENT_PENDING, msg, versionHashId);
     if (log.isDebugEnabled()) {
         log.debug("Start building docker image for version:" + versionHashId);
@@ -307,7 +307,7 @@ var createAppVersionInDataBase = function( versionName,   runtimeId, runtimeProp
 
 var createDockerFile = function (applicationName, versionName, appTypeName, runtimeId, uploadedFileName, versionHashId, dockerClient,
                                  artifactUrl, hostName, appCreationMethod, runtimeProperties, conSpecMemory) {
-    var msg = "Docker file creation successfully triggered in AppCloud";
+    var msg = "Docker file creation successfully triggered";
     addEvent(DOCKER_FILE_CREATE, EVENT_PENDING, msg, versionHashId);
     if (log.isDebugEnabled()) {
         log.debug("Start creating docker file for version:" + versionHashId);
