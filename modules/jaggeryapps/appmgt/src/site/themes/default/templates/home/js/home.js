@@ -514,7 +514,7 @@ function submitChangeAppIcon(newIconObj) {
     if(validated) {
         $('#changeAppIcon').submit();
     } else {
-        jagg.message({content: "Only jpg and png file types are allowed for the the " + cloudSpecificApplicationRepresentation.toLowerCase() + "'s icon.", type: 'error', id:'notification'});
+        jagg.message({content: "Only .jpg and .png file types are allowed for the the " + cloudSpecificApplicationRepresentation.toLowerCase() + "'s icon.", type: 'error', id:'notification'});
     }
 }
 
