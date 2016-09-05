@@ -127,7 +127,7 @@ jagg.template("home", function(inputs, outputs, jagg) {
         <div class="row padding-bottom-xlg">
           <div class="col-xs-12 col-md-9 col-lg-9">
               <div class="block-general" style="background-color: #303030;">
-                      <div class="col-xs-12 col-md-12 col-lg-9" style="padding-right: 15px; margin-right: -15px;">
+                      <div class="col-xs-12 col-md-12 col-lg-8">
                           <div class="btn-group pull-left version-number">
                               <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                               <span id="selected-version"><%=selectedRevision%> </span><span class="caret"></span>
@@ -193,7 +193,7 @@ jagg.template("home", function(inputs, outputs, jagg) {
                                %>
                           </div>
                       </div>
-                      <div class="col-xs-12 col-md-12 col-lg-3" style="padding: 0px; margin-right: 15px;">
+                      <div class="col-xs-12 col-md-12 col-lg-4">
                           <a id="delete-version" onclick="deleteApplicationPopUp();">
                               <div class="btn-create-version">
                                   <span class="fw-stack fw-lg btn-action-ico">
