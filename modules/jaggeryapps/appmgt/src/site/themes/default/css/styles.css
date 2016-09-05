@@ -887,15 +887,16 @@ a.btn-action {
     background-color: #005578
 }
 .right-pane {
+    left: 18em;
     position: absolute;
-    width: 100%;
+    width: 100% - 18em;
 }
 .left-pane {
     position: fixed;
     width: 18em;
     z-index: 100;
     background-color: #222222;
-    left: -18em;
+    left: 0em;
     top: 53px;
     min-height: 100%;
     overflow-y: auto;
