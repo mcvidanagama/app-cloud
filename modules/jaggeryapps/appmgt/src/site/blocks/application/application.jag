@@ -178,6 +178,18 @@ var log = new Log();
         }
 
         var remoteImageUrl = request.getParameter("remoteImageUrl");
+
+        // this is temporary code, will be removed when custom docker images feature is fully completed
+        // this is to enforce use only the local registry images to create apps via custom docker images
+        var localRegistry = modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL)
+        if(remoteImageUrl.indexOf(localRegistry) == -1) {
+            logMessage = "Bad request : Allowed docker images only from local registry : " + localRegistry;
+            log.warn(logMessage);
+            response.status = 400;
+            response.content = logMessage;
+            return;
+        }
+
         var imageTag = request.getParameter("imageTag");
         //var userName = request.getParameter("userName");
         //var password = request.getParameter("password");
