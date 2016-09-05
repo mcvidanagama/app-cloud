@@ -643,17 +643,26 @@ var log = new Log();
         var xhr = new XMLHttpRequest();
         xhr.open("GET", url);
         xhr.send();
-        if (appTypeExtension.equals(currentExtension) && xhr.status == 200) {
-            print(true);
+        if (appTypeName == 'jaggery') { //Remove this check after removing AS 5.3.0 jaggery runtime
+            if ((appTypeExtension.equals(currentExtension) || currentExtension.equals("zip")) && xhr.status == 200) {
+                print(true);
+            } else {
+                print(false);
+            }
         } else {
-            print(false);
+            if (appTypeExtension.equals(currentExtension) && xhr.status == 200) {
+                print(true);
+            } else {
+                print(false);
+            }
         }
+
     } else if (action == "loadEndpoints") {
         var deploymentURL = request.getParameter("deploymentURL");
         var appType = request.getParameter("appType");
         var versionId = request.getParameter("versionId");
         var mod = jagg.module("application");
-        var endpoints = mod.getEndpointsExtractor(appType).getEndpoints(deploymentURL, versionId);
+        var endpoints = mod.getAppTypeUtil(appType).getEndpoints(deploymentURL, versionId);
         print(endpoints);
     } else {
         throw new Error("No action specified for: " + action);
