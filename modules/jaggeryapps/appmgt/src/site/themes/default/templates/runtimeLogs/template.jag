@@ -47,7 +47,7 @@ jagg.template("runtimeLogs", function (inputs, outputs, jagg) {
 </script>
 
    <!-- right pane wrapper -->
- <div class="right-pane">
+ <div class="right-pane visible">
 
         <!-- BOF App factory menu actionbar -->
         <div class="action-bar">

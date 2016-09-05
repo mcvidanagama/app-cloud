@@ -37,7 +37,7 @@ jagg.template("urlmapper", function (inputs, outputs, jagg) { %>
     var cloudSpecificApplicationRepresentation = "<%=cloudSpecificApplicationRepresentation%>";
 </script><!-- end of setting global javascript variable -->
 
-<div class="right-pane">
+<div class="right-pane visible">
 <!-- BOF App factory menu actionbar -->
 <input type="hidden" maxlength="19" id="defaultDomain" name="defaultDomain" value=""/>
 <div class="action-bar">
