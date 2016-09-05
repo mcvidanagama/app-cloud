@@ -57,6 +57,7 @@ public class SQLQueryConstants {
     public static final String TAG_KEY = "tag_key";
     public static final String TAG_VALUE = "tag_value";
     public static final String CONTEXT = "context";
+    public static final String ACTIVE_CONTAINERS_COUNT = "ACTIVE_CONTAINERS_COUNT";
 
 
 
