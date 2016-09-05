@@ -610,9 +610,5 @@ function redirectAppHome() {
 }
 
 function getVersionCount(){
-    var versionCount = 0;
-    for (var version in application.versions){
-        versionCount++;
-    }
-    return versionCount;
+    return Object.keys(application.versions).length;
 }

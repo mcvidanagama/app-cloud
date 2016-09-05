@@ -575,7 +575,6 @@ var log = new Log();
             if (versions.length > 1 && (defaultVersionHashId == versionKey)) {
                 var msg = "You are trying to delete the default version, if you want to delete this particular version, " +
                           "please select some other version as the default version and try again";
-                log.error(msg);
                 response.status = 400;
                 response.content = msg;
             } else {
