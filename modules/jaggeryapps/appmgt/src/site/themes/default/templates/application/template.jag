@@ -250,10 +250,10 @@ jagg.template("application", function (inputs, outputs, jagg) {
                     formData.append('conSpec', conSpecs[optionSpec]);
                     formData.append('runtime', optionRuntime);
                     if(appTypeName === custom) {
-                        formData.append('imageRegistryUrl', $("#imageRegistryUrl").val());
+                        formData.append('remoteImageUrl', $("#remoteImageUrl").val());
                         formData.append('imageTag', $("#imageTag").val());
-                        formData.append('userName', $("#userName").val());
-                        formData.append('password', $("#password").val());
+                       // formData.append('userName', $("#userName").val());
+                       // formData.append('password', $("#password").val());
                         formData.append('appCreationMethod', custom);
                     }
                     if(uploadMethod === "file"){
@@ -281,7 +281,14 @@ jagg.template("application", function (inputs, outputs, jagg) {
                             tags.push(property);
                         }
                     }
-                    formData.append('tags', JSON.stringify(tags));
+                    if(appTypeName === custom) {
+                        var tagArray = new Array();
+                        var tagObj = { "key":"Base Image", "value":$("#remoteImageUrl").val() + ":" + $("#imageTag").val() };
+                        tagArray.push(tagObj);
+                        formData.append('tags',JSON.stringify(tagArray));
+                    } else {
+                        formData.append('tags', JSON.stringify(tags));
+                    }
                     var checkedDefaultVersion = $("#default_version").is(":checked");
                     formData.append('setDefaultVersion', checkedDefaultVersion);
                     $.ajax({
@@ -740,7 +747,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
             validateArtifactURL($('#artifactUrl').val());
         });
 
-        $('#imageRegistryUrl').on('focusout keyup blur click', function () { // fires on every keyup & blur
+        $('#remoteImageUrl').on('focusout keyup blur click', function () { // fires on every keyup & blur
             activateCreateApplication();
         });
 
@@ -757,7 +764,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
         if ($('#applicationName').val() && $('#applicationRevision').val() && $('#container option:selected').val() && $('#runtime').val() > 0 && checkApplicationVersionExistence($('#applicationRevision').val())) {// mandatory validations for all app types
             if(appTypeName == custom){ // validations for custom app type
 
-                if($("#imageRegistryUrl").val() && $("#imageTag").val()) {
+                if($("#remoteImageUrl").val() && $("#imageTag").val()) {
                     $("#add-application").prop("disabled", false);
                 }
             } else {
@@ -1226,7 +1233,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
              <div class="form-group" id="custom-docker-image-block">
                 <div class="input-group">
                     <span class="input-group-addon">URL</span>
-                    <input id="imageRegistryUrl" name="imageRegistryUrl" type="text" class="form-control" placeholder="Docker Image Repository URL eg: docker.io/testuser/testimage" />
+                    <input id="remoteImageUrl" name="remoteImageUrl" type="text" class="form-control" placeholder="Docker Image Repository URL eg: docker.io/testuser/testimage" />
                 </div>
                 </br>
                 <div class="input-group">
@@ -1234,7 +1241,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                     <input id="imageTag" name="imageTag" type="text" class="form-control" placeholder="eg : latest" />
                 </div>
                 <br>
-                <div class="input-group">
+               <!-- <div class="input-group">
                     <span class="input-group-addon">User name</span>
                     <input id="userName" name="userName" type="text" class="form-control" placeholder="required only if repo is private" />
                 </div>
@@ -1242,7 +1249,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 <div class="input-group">
                     <span class="input-group-addon">Password</span>
                     <input id="password" name="password" type="password" class="form-control" placeholder="required only if repo is private" />
-                </div>
+                </div> -->
             </div>
 
              <%}%>
