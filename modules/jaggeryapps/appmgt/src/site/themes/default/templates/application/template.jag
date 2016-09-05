@@ -673,10 +673,12 @@ jagg.template("application", function (inputs, outputs, jagg) {
             var url = $("#artifactUrl").val();
             var currentExtension = url.split(/[. ]+/).pop();
 
-            if (currentExtension.toLowerCase() === "zip"){
-                document.getElementById('runtime').selectedIndex = 1;
-            } else {
-                document.getElementById('runtime').selectedIndex = 0;
+            if(appTypeName == 'jaggery') {
+                if (currentExtension.toLowerCase() === "zip"){
+                    document.getElementById('runtime').selectedIndex = 1;
+                } else {
+                    document.getElementById('runtime').selectedIndex = 0;
+                }
             }
         });
 
@@ -733,7 +735,9 @@ jagg.template("application", function (inputs, outputs, jagg) {
 
     function activateCreateApplication() {
         if ($('#applicationName').val() && $('#applicationRevision').val() && $('#container option:selected').val()
-                        && checkApplicationVersionExistence($('#applicationRevision').val()) && $('#runtime').val() > 0 && ($("#uploadedFileName").val() || $("#artifactUrl").val() || ($("#gitRepoUrl").val()  && $("#gitRepoBranch").val()))) {// checks form for validity
+                        && checkApplicationVersionExistence($('#applicationRevision').val()) && $('#runtime').val() > 0
+                        && ($("#uploadedFileName").val() || $("#artifactUrl").val() || ($("#gitRepoUrl").val()
+                        && $("#gitRepoBranch").val()))) {// checks form for validity
 
             if($("#uploadedFileName").val() && progress == 100){
                 if(validateArtifactType($("#uploadedFileName").val())){
@@ -1072,7 +1076,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                     <div class="form-group">
                         <div class="checkbox">
                           <label>
-                           <input type="checkbox" name="defaultversion" id="default_version" value="deploy-sample" class="custom-checkbox"/>Make this the default version
+                           <input type="checkbox" name="defaultversion" id="default_version" class="custom-checkbox"/>Make this the default version
                           </label>
                         </div>
                     </div>
