@@ -799,15 +799,8 @@ jagg.template("application", function (inputs, outputs, jagg) {
     function checkApplicationVersionExistence(version){
         var existingVersions = versionList.split(",");
         var version = version.toLowerCase() ;
-        var verionMatch;
-        for (var i = 0; i < existingVersions.length; i++){
-            var existingVerion = existingVersions[i].toLowerCase();
-            verionMatch = existingVerion.localeCompare(version.toLowerCase());
-            if(verionMatch === 0){
-                break;
-            }
-        }
-        return !(verionMatch === 0);
+        var index = existingVersions.indexOf(version);
+        return (index < 0);
     }
 
      function clearUploadIconField() {
