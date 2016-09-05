@@ -76,7 +76,7 @@ function generateDefaultLaunchUrl() {
 
 function loadEndpointView() {
     clearInterval(timerId);
-    if (selectedApplicationRevision.status == APPLICATION_RUNNING) {
+    if (selectedApplicationRevision.status == APPLICATION_RUNNING && application.applicationType != custom) { // endpoints will not be loaded and displayed for custom docker image applications
         // This is not implemented for mss 1.0.0 runtimes.
         if (application.applicationType == "mss" && selectedApplicationRevision.runtimeId == 2) {
             // if mss 1.0.0 do not show endpoints section
@@ -514,7 +514,7 @@ function submitChangeAppIcon(newIconObj) {
     if(validated) {
         $('#changeAppIcon').submit();
     } else {
-        jagg.message({content: "Only jpg and png file types are allowed for the the " + cloudSpecificApplicationRepresentation.toLowerCase() + "'s icon.", type: 'error', id:'notification'});
+        jagg.message({content: "Only .jpg and .png file types are allowed for the the " + cloudSpecificApplicationRepresentation.toLowerCase() + "'s icon.", type: 'error', id:'notification'});
     }
 }
 
@@ -610,9 +610,5 @@ function redirectAppHome() {
 }
 
 function getVersionCount(){
-    var versionCount = 0;
-    for (var version in application.versions){
-        versionCount++;
-    }
-    return versionCount;
+    return Object.keys(application.versions).length;
 }

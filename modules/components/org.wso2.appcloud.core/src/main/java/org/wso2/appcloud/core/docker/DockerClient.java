@@ -16,6 +16,7 @@
 
 package org.wso2.appcloud.core.docker;
 
+import com.google.common.base.Strings;
 import io.fabric8.docker.client.Config;
 import io.fabric8.docker.client.ConfigBuilder;
 import io.fabric8.docker.client.DefaultDockerClient;
@@ -196,9 +197,9 @@ public class DockerClient {
 
     /**
      * Push docker images
-     * @param repoUrl - docker registry url
+     *
      * @param imageName - application runtime name
-     * @param tag - tag name
+     * @param tag       - tag name
      * @throws InterruptedException
      * @throws IOException
      * @throws AppCloudException
@@ -255,6 +256,8 @@ public class DockerClient {
         }
     }
 
+// Commenting pullDockerImage and tagDockerImage because at the moment we dont use them. might be usefull when security scanning comes
+/*
     public void pullDockerImage(String imageRepoUrl, String imageTag) throws AppCloudException {
 
         if (log.isDebugEnabled()) {
@@ -325,4 +328,5 @@ public class DockerClient {
     public void clientClose() throws IOException {
         dockerClient.close();
     }
+*/
 }
