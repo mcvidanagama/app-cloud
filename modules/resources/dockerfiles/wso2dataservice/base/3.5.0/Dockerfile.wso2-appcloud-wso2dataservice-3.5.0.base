@@ -29,10 +29,8 @@ ENV WSO2_DSS_VERSION 3.5.0
 ENV AXIS2_SERVICE org.wso2.appcloud.dss.integration-3.0.0-SNAPSHOT.aar
 
 RUN apk update && \
-    apk add pwgen git wget openjdk8 && \
+    apk add pwgen git wget && \
     addgroup wso2 && adduser -g '' -s /bin/bash -D -G wso2 wso2user
-
-ENV JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk/jre/
 
 USER wso2user
 

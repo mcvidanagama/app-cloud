@@ -82,7 +82,7 @@ jagg.template("home", function(inputs, outputs, jagg) {
     <div class="right-pane">
     <!-- BOF App factory menu actionbar -->
     <div class="action-bar">
-        <a href="<%=jagg.getAbsoluteUrl("/site/pages/index.jag")%>" class="btn-action"  title="Back to Application listing">
+        <a href="<%=jagg.getAbsoluteUrl("/site/pages/index.jag")%>" class="btn-action"  title="Back to <%=cloudSpecificApplicationRepresentation%> listing">
                 <span class="fw-stack fw-lg btn-action-ico">
                     <i class="fw fw-circle-outline fw-stack-2x"></i>
                     <i class="fw fw-left-arrow fw-stack-1x"></i>
@@ -180,7 +180,7 @@ jagg.template("home", function(inputs, outputs, jagg) {
                                       <a type="button" class="btn cu-btn cu-btn-md cu-btn-blue" onclick="startApplication();">Start</a>
                                     </div>
                                     <div class="btn-group ctrl-edit-button btn-edit-code">
-                                      <a type="button" class="btn cu-btn cu-btn-md cu-btn-gray" onclick="requestToExtend();">Request to keep application running continuously</a>
+                                      <a type="button" class="btn cu-btn cu-btn-md cu-btn-gray" onclick="requestToExtend();">Request to keep <%=cloudSpecificApplicationRepresentation.toLowerCase()%> running continuously</a>
                                     </div>
                                 <%
                                 } else {
@@ -244,7 +244,7 @@ jagg.template("home", function(inputs, outputs, jagg) {
                                         <figcaption>
                                           <span class="fw-stack fw-lg ">
                                               <i class="fw fw-circle-outline fw-stack-2x"></i>
-                                              <i class="fw fw-add fw-stack-1x" data-toggle="tooltip" title="Adding replicas to your application will not support in this release."></i>
+                                              <i class="fw fw-add fw-stack-1x" data-toggle="tooltip" title="Adding replicas to your <%=cloudSpecificApplicationRepresentation.toLowerCase()%> will not support in this release."></i>
                                           </span>
                                         </figcaption>
                                     </figure>
@@ -346,7 +346,7 @@ jagg.template("home", function(inputs, outputs, jagg) {
             versionKey: selectedApplicationRevision.hashId
         }, function(result) {
             jagg.message({
-                content: "Application was successfully redeployed.",
+                content: cloudSpecificApplicationRepresentation + " was successfully redeployed.",
                 type: 'info',
                 timeout: '5000'
             });
@@ -386,7 +386,7 @@ jagg.template("home", function(inputs, outputs, jagg) {
         }, function(result) {
             setTimeout(reloadAppHome, 2000);
             jagg.message({
-                content: "Application was successfully stopped.",
+                content: cloudSpecificApplicationRepresentation + " was successfully stopped.",
                 type: 'info',
                 timeout: '5000'
             });
@@ -521,7 +521,7 @@ jagg.template("home", function(inputs, outputs, jagg) {
                     //application deletion is involved with the "Stopping Containers" event if the event name is
                     //"Stopping Containers" the following message is not displayed
                     if (event.name !== "Stopping Containers") {
-                        jagg.message({content: "Error occurred while creating application.", type: 'error'});
+                        jagg.message({content: "Error occurred while creating " + cloudSpecificApplicationRepresentation.toLowerCase() + ".", type: 'error'});
                     }
                     setTimeout(redirectAppListing, 5000);
                     function redirectAppListing(){
@@ -530,7 +530,7 @@ jagg.template("home", function(inputs, outputs, jagg) {
                 }
             }
         },function (jqXHR, textStatus, errorThrown) {
-             jagg.message({content: "Error occurred while restarting application.", type: 'error'});
+             jagg.message({content: "Error occurred while restarting " + cloudSpecificApplicationRepresentation.toLowerCase() + ".", type: 'error'});
         });
     }
 
