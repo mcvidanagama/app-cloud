@@ -105,13 +105,13 @@ ESBAppTypeUtil.prototype.getEndpoints = function (deploymentUrl, versionId) {
                 for (var i = 0; i < proxies.length; i++) {
                     var proxy = proxies[i];
                     var wsdl1 = deploymentUrl + "/" + (proxy.wsdl[0]).substring((proxy.wsdl[0]).indexOf('services'));
-		    var wsdlWithoutTenant = wsdl1.replace(tenantPrefix, "");
+		            var wsdlWithoutTenant = wsdl1.replace(tenantPrefix, "");
                     soapEndpoints.push({name : proxy.name, wsdl :wsdlWithoutTenant});
                 }
             } else {
                 var proxy = proxies;
                 var wsdl1 = deploymentUrl + "/" + (proxy.wsdl[0]).substring((proxy.wsdl[0]).indexOf('services'));
-		var wsdlWithoutTenant = wsdl1.replace(tenantPrefix, "");
+		        var wsdlWithoutTenant = wsdl1.replace(tenantPrefix, "");
                 soapEndpoints.push({name : proxy.name, wsdl :wsdlWithoutTenant});
             }
         }
@@ -122,7 +122,7 @@ ESBAppTypeUtil.prototype.getEndpoints = function (deploymentUrl, versionId) {
                 for (var j = 0; j < apis.length; j++) {
                     var api = apis[j];
                     var url = deploymentUrl + api.context;
-		    var urlWithoutTenant = url.replace(tenantPrefix, "");
+		            var urlWithoutTenant = url.replace(tenantPrefix, "");
                     if (api.name != "ContainerAPI") {
                         restEndpoints.push({"name" : api.name, "url" : urlWithoutTenant});
                     }
@@ -130,7 +130,7 @@ ESBAppTypeUtil.prototype.getEndpoints = function (deploymentUrl, versionId) {
             } else {
                 var api = apis;
                 var url = deploymentUrl + api.context;
-		var urlWithoutTenant = url.replace(tenantPrefix, "");
+		        var urlWithoutTenant = url.replace(tenantPrefix, "");
                 if (api.name != "ContainerAPI") {
                     restEndpoints.push({"name" : api.name, "url" : urlWithoutTenant});
                 }
