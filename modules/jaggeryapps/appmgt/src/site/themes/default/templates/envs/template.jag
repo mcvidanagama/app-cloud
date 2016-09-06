@@ -265,67 +265,68 @@ $(document).ready(function() {
                     return;
                 }
                 if (isNewAddition) {
-                    addRuntimeAttribute(updatedKey, updatedValue);
-                    element.removeClass('save-new-entry');
-                    element.parent().parent().find('.cancel-new-entry').removeClass('cancel-new-entry');
+                    addRuntimeAttribute(updatedKey, updatedValue, element);
                 } else {
-                    updateRuntimeAttribute(prevKey, updatedKey, updatedValue);
+                    updateRuntimeAttribute(prevKey, updatedKey, updatedValue, element);
                 }
-                element.parent().find('#saveIcon').hide();
-                element.parent().find('#editIcon').show();
-                element.parent().parent().parent().find('.element-key-holder')[0].readOnly = true;
-                element.parent().parent().parent().find('.element-value-holder')[0].readOnly = true;
-
-                displayAppRedeployNotification();
-
-                //Enable "Add Environment Variable" button
-                $(".add-env").css('pointer-events', 'auto');
-                $(".add-env").attr("title", "Add Environment Variable");
-
-                //Enable Other environment variables "Edit" button
-                var parentElement = element.parent().filter('.edit-env')[0];
-                $('.edit-env').each(function() {
-                    var currentElement = element.get(0);
-                    if(currentElement !== parentElement){
-                        element.removeClass("edit-disable");
-                    }
-                });
-
-                //Disable current env variables Value text-box
-                var valueSelectionBox = element.parent().parent().parent().find('.select2-container')[0];
-                $(valueSelectionBox).addClass('select2-disable');
-                var selectionRenderedBox = element.parent().parent().parent().find('.select2-selection__rendered')[0];
-                $(selectionRenderedBox).css('height', "100%");
-                var inlineBox = element.parent().parent().parent().find('.select2-search--inline')[0];
-                $(inlineBox).hide();
-                var rootParent = element.parent().parent().parent()[0];
-                $(rootParent).removeClass('property-seperator');
             });
         });
     });
 
-    function updateRuntimeAttribute(prevKey, newKey, newValue) {
+    function postEnvAddUpdate(element){
+        element.parent().find('#saveIcon').hide();
+        element.parent().find('#editIcon').show();
+        element.parent().parent().parent().find('.element-key-holder')[0].readOnly = true;
+        element.parent().parent().parent().find('.element-value-holder')[0].readOnly = true;
+
+        displayAppRedeployNotification();
+
+        //Enable "Add Environment Variable" button
+        $(".add-env").css('pointer-events', 'auto');
+        $(".add-env").attr("title", "Add Environment Variable");
+
+        //Enable Other environment variables "Edit" button
+        var parentElement = element.parent().filter('.edit-env')[0];
+        $('.edit-env').each(function() {
+            var currentElement = element.get(0);
+            if(currentElement !== parentElement){
+                element.removeClass("edit-disable");
+            }
+        });
+
+        //Disable current env variables Value text-box
+        var valueSelectionBox = element.parent().parent().parent().find('.select2-container')[0];
+        $(valueSelectionBox).addClass('select2-disable');
+        var selectionRenderedBox = element.parent().parent().parent().find('.select2-selection__rendered')[0];
+        $(selectionRenderedBox).css('height', "100%");
+        var inlineBox = element.parent().parent().parent().find('.select2-search--inline')[0];
+        $(inlineBox).hide();
+        var rootParent = element.parent().parent().parent()[0];
+        $(rootParent).removeClass('property-seperator');
+    }
+
+    function updateRuntimeAttribute(prevKey, newKey, newValue, element) {
         jagg.post("../blocks/application/application.jag", {
             action: "updateRuntimeProperty",
             versionKey: '<%=versionKey%>',
             prevKey: prevKey,
             newKey: newKey,
             newValue: newValue
-
         }, function (result) {
-
+            postEnvAddUpdate(element);
         });
     }
 
-    function addRuntimeAttribute(newKey, newValue) {
+    function addRuntimeAttribute(newKey, newValue, element) {
         jagg.post("../blocks/application/application.jag", {
             action: "addRuntimeProperty",
             versionKey: '<%=versionKey%>',
             key: newKey,
             value: newValue
-
         }, function (result) {
-
+            element.removeClass('save-new-entry');
+            element.parent().parent().find('.cancel-new-entry').removeClass('cancel-new-entry');
+            postEnvAddUpdate(element);
         });
     }
 
@@ -341,6 +342,13 @@ $(document).ready(function() {
         });
     }
 
+    function displayAppRedeployNotification() {
+        jagg.message({
+            content: "Please redeploy the " + cloudSpecificApplicationRepresentation.toLowerCase() + " for the updated runtime variables to take effect.",
+            type: 'info'
+        });
+    }
+
 });
 
 $(document).on('click', '.panel-heading a', function (e) {
@@ -352,12 +360,6 @@ $(document).on('click', '.panel-heading a', function (e) {
     }
 });
 
-function displayAppRedeployNotification() {
-    jagg.message({
-        content: "Please redeploy the " + cloudSpecificApplicationRepresentation.toLowerCase() + " for the updated runtime variables to take effect.",
-        type: 'info'
-    });
-}
 </script >
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
