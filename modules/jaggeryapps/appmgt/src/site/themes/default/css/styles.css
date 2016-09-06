@@ -889,6 +889,7 @@ a.btn-action {
     left: 15%;
     position: absolute;
     width: 85%;
+    margin-bottom: 50px;
 }
 .left-pane {
     position: fixed;
@@ -2209,6 +2210,11 @@ a.btn-action {
 }
 
 .tag-list{
+    float: left;
+    padding-left: 30px;
+}
+
+.env-list{
     float: left;
     padding-left: 30px;
 }
