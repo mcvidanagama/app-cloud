@@ -165,52 +165,53 @@ $(document).ready(function () {
                 versionKey: '<%=versionKey%>',
                 key: updatedKey,
             }, function (result) {
-                if (result && result.trim() == "true") {
+                var isNewAddition = element.hasClass('save-new-entry');
+                if ((isNewAddition || (prevKey && prevKey != updatedKey)) && result && result.trim() == "true") {
                     jagg.message({
-                        content: "Environmental variable with key : " + updatedKey + " already exists.",
+                        content: "Tag with key : " + updatedKey + " already exists.",
                         type: 'error'
                     });
                     return;
                 }
-
-                var isNewAddition = element.hasClass('save-new-entry');
                 if (isNewAddition) {
-                    addTag(updatedKey, updatedValue);
-                    element.removeClass('save-new-entry');
-                    element.parent().parent().find('.cancel-new-entry').removeClass('cancel-new-entry');
+                    addTag(updatedKey, updatedValue, element);
                 } else {
-                    updateTag(prevKey, updatedKey, updatedValue);
+                    updateTag(prevKey, updatedKey, updatedValue, element);
                 }
-                element.parent().find('#saveIcon').hide();
-                element.parent().find('#editIcon').show();
-                element.parent().parent().parent().find('#key')[0].readOnly = true;
-                element.parent().parent().parent().find('#value')[0].readOnly = true;
+
             });
         });
     });
 
-    function updateTag(prevKey, newKey, newValue) {
+    function postAddUpdate(element){
+        element.parent().find('#saveIcon').hide();
+        element.parent().find('#editIcon').show();
+        element.parent().parent().parent().find('#key')[0].readOnly = true;
+        element.parent().parent().parent().find('#value')[0].readOnly = true;
+    }
+
+    function updateTag(prevKey, newKey, newValue, element) {
         jagg.post("../blocks/application/application.jag", {
             action: "updateTag",
             versionKey: '<%=versionKey%>',
             prevKey: prevKey,
             newKey: newKey,
             newValue: newValue
-
         }, function (result) {
-
+            postAddUpdate(element);
         });
     }
 
-    function addTag(newKey, newValue) {
+    function addTag(newKey, newValue, element) {
         jagg.post("../blocks/application/application.jag", {
             action: "addTag",
             versionKey: '<%=versionKey%>',
             key: newKey,
             value: newValue
-
         }, function (result) {
-
+            element.removeClass('save-new-entry');
+            element.parent().parent().find('.cancel-new-entry').removeClass('cancel-new-entry');
+            postAddUpdate(element);
         });
     }
 
