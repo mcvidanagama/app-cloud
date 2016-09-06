@@ -23,7 +23,7 @@ include("/jagg/jagg.jag");
 jagg.template("application", function (inputs, outputs, jagg) {
         var runtimes = outputs.runtimes;
         var appType = outputs.appType;
-        var applicationCount = outputs.applicationCount;
+        var runningApplicationCount = outputs.runninngApplicationCount;
         var appTypeName = appType.type;
         var notAllowedEnvVariables = outputs.notAllowedEnvVariables;
         var isAppTypeBuildable = appType.buildable;
@@ -66,7 +66,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
     const APP_TYPE_EXTENSION = "<%=appType.extension%>";
     var applicationName = "<%=applicationName%>";
     var cloudSpecificApplicationRepresentation = "<%=cloudSpecificApplicationRepresentation%>";
-    var applicationCount = <%=applicationCount%>;
+    var runningApplicationCount = <%=runningApplicationCount%>;
     var maxApplications = <%=maxApplications%>;
     var conSpecs = <%=conSpecs%>;
     var retryCount = 0;
@@ -117,7 +117,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
             //Set select2 container
             var valueElem = $('#value')[0];
             initSelect2(null, valueElem, "");
-            if (applicationCount >= maxApplications) {
+            if (runningApplicationCount >= maxApplications) {
                 $('#outerContainer').empty();
                 $('#outerContainer').html('<div class="container-fluid"><div class="row row-centered">' +
                     '<div class="col-centered col-xs-10 col-sm-7  col-md-7 col-lg-6"><div class="cloud-new-content">' +
@@ -673,10 +673,12 @@ jagg.template("application", function (inputs, outputs, jagg) {
             var url = $("#artifactUrl").val();
             var currentExtension = url.split(/[. ]+/).pop();
 
-            if (currentExtension.toLowerCase() === "zip"){
-                document.getElementById('runtime').selectedIndex = 1;
-            } else {
-                document.getElementById('runtime').selectedIndex = 0;
+            if(appTypeName == 'jaggery') {
+                if (currentExtension.toLowerCase() === "zip"){
+                    document.getElementById('runtime').selectedIndex = 1;
+                } else {
+                    document.getElementById('runtime').selectedIndex = 0;
+                }
             }
         });
 
@@ -733,7 +735,9 @@ jagg.template("application", function (inputs, outputs, jagg) {
 
     function activateCreateApplication() {
         if ($('#applicationName').val() && $('#applicationRevision').val() && $('#container option:selected').val()
-                        && checkApplicationVersionExistence($('#applicationRevision').val()) && $('#runtime').val() > 0 && ($("#uploadedFileName").val() || $("#artifactUrl").val() || ($("#gitRepoUrl").val()  && $("#gitRepoBranch").val()))) {// checks form for validity
+                        && checkApplicationVersionExistence($('#applicationRevision').val()) && $('#runtime').val() > 0
+                        && ($("#uploadedFileName").val() || $("#artifactUrl").val() || ($("#gitRepoUrl").val()
+                        && $("#gitRepoBranch").val()))) {// checks form for validity
 
             if($("#uploadedFileName").val() && progress == 100){
                 if(validateArtifactType($("#uploadedFileName").val())){
@@ -1072,7 +1076,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                     <div class="form-group">
                         <div class="checkbox">
                           <label>
-                           <input type="checkbox" name="defaultversion" id="default_version" value="deploy-sample" class="custom-checkbox"/>Make this the default version
+                           <input type="checkbox" name="defaultversion" id="default_version" class="custom-checkbox"/>Make this the default version
                           </label>
                         </div>
                     </div>
@@ -1361,7 +1365,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
 
       <script>
       function maxApplicationCountValidate() {
-         if (applicationCount < maxApplications ) {
+         if (runningApplicationCount < maxApplications ) {
              $("#add-application").prop("disabled", false);
          } else {
              $("#add-application").prop("disabled", true);
