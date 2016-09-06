@@ -95,7 +95,7 @@ var addApplication = function (applicationName, versionName, applicationDescript
         renameDirectory(oldHashId, versionHashId, uploadedFileName);
     }
     var imageName;
-    if(uploadedFileName) { //for custom images uploadedFIleName=null
+    if (appTypeName != CUSTOM) { //for custom images uploadedFIleName=null
         var absFileUploadedPath = createDockerFile(applicationName, versionName, appTypeName, runtimeId, uploadedFileName,
                                                    versionHashId, dockerClient, artifactUrl, hostName, appCreationMethod,
                                                    runtimeProperties, conSpecMemory);
@@ -106,11 +106,6 @@ var addApplication = function (applicationName, versionName, applicationDescript
         pushDockerImage(applicationName, versionName, imageName, tagName, versionHashId, dockerClient);
 
     } else { // for custom docker images
-        // pullDockerImage(remoteImageUrl,imageTag, dockerClient, versionHashId);
-        // eg : maheshcwso2/test_app
-        // imageName = remoteImageUrl.split(/\/(.+)?/)[1];
-        // newTagName = imageTag + "-" + versionHashId;
-        // tagDockerImage(imageName, imageTag, imageName, newTagName, dockerClient, versionHashId);
         imageName = remoteImageUrl;
         tagName = imageTag;
     }
@@ -142,13 +137,12 @@ var triggerKubernetesDeployment = function(imageName, runtimeProperties, applica
     deployApplication(applicationName, versionName, appTypeName, deploymentConfig, false, versionHashId, "new", conSpecMemory, conSpecCpu);
 }
 
-var pushDockerImage = function (applicationName, versionName,imageName, tagName, versionHashId, dockerClient){
+var pushDockerImage = function (applicationName, versionName, imageName, tagName, versionHashId, dockerClient){
 
     //Adding docker image push pending event
     var msg = "Docker image push successfully triggered";
     addEvent(DOCKER_REGISTRY_PUSH, EVENT_PENDING, msg, versionHashId);
     try {
-        //dockerClient.pushDockerImage(modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL),applicationRuntime.getImageName(), tagName);
         dockerClient.pushDockerImage(imageName, tagName);
     } catch (e) {
         var msg = "Error uploading docker image to remote registry";
@@ -177,8 +171,7 @@ var pushDockerImage = function (applicationName, versionName,imageName, tagName,
     addEvent(DOCKER_REGISTRY_PUSH, EVENT_SUCCEEDED, msg, versionHashId);
 }
 
-// These methods are commented because custom docker feature is partially completed.
-/*
+
 var pullDockerImage = function (remoteRepoUrl, imageTag, dockerClient, versionHashId) {
     var msg = "Pulling docker image from remote repo";
     addEvent(DOCKER_IMAGE_PULL, EVENT_PENDING, msg, versionHashId);
@@ -232,7 +225,7 @@ var tagDockerImage = function (oldImageName, oldImageTag, newImageName, newTag, 
     }
 };
 
-*/
+
 var buildDockerImage = function (applicationName, versionName, runtimeId, absFileUploadedPath, applicationRuntime, tagName, versionHashId, dockerClient){
 
     //Adding docker build pending event
@@ -248,7 +241,7 @@ var buildDockerImage = function (applicationName, versionName, runtimeId, absFil
     try {
 
         var dockerRegTenantSpace = modManager.getTenantDomain().replace(".","-");
-        dockerClient.buildDockerImage(modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL) ,applicationRuntime.getImageName(), tagName, absFileUploadedPath);
+        dockerClient.buildDockerImage(modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL), applicationRuntime.getImageName(), tagName, absFileUploadedPath);
 
     } catch (e){
 
@@ -257,7 +250,7 @@ var buildDockerImage = function (applicationName, versionName, runtimeId, absFil
             try{
                 log.info("Retrying docker build retry counter value : " + i);
                 var dockerRegTenantSpace = modManager.getTenantDomain().replace(".","-");
-                dockerClient.buildDockerImage(modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL) ,applicationRuntime.getImageName(), tagName, absFileUploadedPath);
+                dockerClient.buildDockerImage(modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL), applicationRuntime.getImageName(), tagName, absFileUploadedPath);
                 //Adding docker build success event
                 var msg = "Docker image build successfully built";
                 addEvent(DOCKER_IMAGE_BUILD, EVENT_SUCCEEDED, msg, versionHashId);
