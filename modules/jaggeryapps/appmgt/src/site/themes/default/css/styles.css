@@ -888,7 +888,8 @@ a.btn-action {
 }
 .right-pane {
     position: absolute;
-    width: 100%;
+    width: 85%;
+    margin-bottom: 50px;
 }
 .left-pane {
     position: fixed;
@@ -2213,6 +2214,11 @@ a.btn-action {
     padding-left: 30px;
 }
 
+.env-list{
+    float: left;
+    padding-left: 30px;
+}
+
 .view-tag{
     font-size: 11px;
     background-color: #0B4C5F;
@@ -2907,4 +2913,8 @@ ul#appVersionList {
 .ribbon:after {
     right: 0;
 }​
+
+.noleftpadding {
+    padding-left : 0;
+}
 
