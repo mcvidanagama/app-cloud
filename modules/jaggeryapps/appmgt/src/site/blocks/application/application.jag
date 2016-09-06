@@ -178,6 +178,18 @@ var log = new Log();
         }
 
         var remoteImageUrl = request.getParameter("remoteImageUrl");
+
+        // this is temporary code, will be removed when custom docker images feature is fully completed
+        // this is to enforce use only the local registry images to create apps via custom docker images
+        var localRegistry = modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL)
+        if(remoteImageUrl.indexOf(localRegistry) == -1) {
+            logMessage = "Bad request : Allowed docker images only from local registry : " + localRegistry;
+            log.warn(logMessage);
+            response.status = 400;
+            response.content = logMessage;
+            return;
+        }
+
         var imageTag = request.getParameter("imageTag");
         //var userName = request.getParameter("userName");
         //var password = request.getParameter("password");
@@ -413,7 +425,7 @@ var log = new Log();
         var newKey = request.getParameter("newKey");
         var newValue = request.getParameter("newValue");
 
-        if (applicationModule.isEnvironmentVariableExist(versionKey, newKey)) {
+        if (newKey != prevKey && applicationModule.isEnvironmentVariableExist(versionKey, newKey)) {
             response.status = 400;
             response.content = "Environmental variable with key : " + newKey + " already exists.";
             return;
@@ -516,12 +528,11 @@ var log = new Log();
         var newKey = request.getParameter("newKey");
         var newValue = request.getParameter("newValue");
 
-        if (applicationModule.isTagExist(versionKey, newKey)) {
+        if (newKey != prevKey && applicationModule.isTagExist(versionKey, newKey)) {
             response.status = 400;
             response.content = "Tag with key : " + newKey + " already exists.";
             return;
         }
-
         if (applicationModule.isTagExist(versionKey, prevKey)) {
             applicationModule.updateTag(versionKey, prevKey, newKey, newValue);
             response.status = 200;

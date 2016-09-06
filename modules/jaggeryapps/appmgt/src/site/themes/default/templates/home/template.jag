@@ -105,11 +105,11 @@ jagg.template("home", function(inputs, outputs, jagg) {
                     <input id="applicationKey" type="hidden" name="applicationKey" value="<%=applicationKey%>"/>
                 </form>
               </div>
-              <div class="app-desc">
+              <div class="app-desc col-md-6">
                 <h2><%=applicationName%></h2>
                   <h4 class="app-run-time">Runtime: <span id="runtime"><%=selectedApplicationRevision.runtimeName%></span></h4>
                   <h4 class="app-run-time"></h4>
-                <p id="app-description"><%=(application.description)?application.description:''%></p>
+                <div id="app-description" title="<%=(application.description)?application.description:''%>" class="ellipsis"><%=(application.description)?application.description:''%></div>
                 <%if (defaultAppLaunchURL != null) { %>
                 <div class="app-preview-action-bar" id="custom-url-block">
                     <div class="sec prod-url" id="launch-default-url-block">
@@ -128,7 +128,7 @@ jagg.template("home", function(inputs, outputs, jagg) {
         <div class="row padding-bottom-xlg">
           <div class="col-xs-12 col-md-9 col-lg-9">
               <div class="block-general" style="background-color: #303030;">
-                      <div class="col-xs-12 col-md-12 col-lg-8">
+                      <div class="col-xs-12 col-md-12 col-lg-7">
                           <div class="btn-group pull-left version-number">
                               <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                               <span id="selected-version"><%=selectedRevision%> </span><span class="caret"></span>
@@ -143,7 +143,7 @@ jagg.template("home", function(inputs, outputs, jagg) {
                               %>
                               </ul>
                           </div>
-                          <div id="version-url-link" class="version-url">
+                          <div id="version-url-link" class="version-url" title="<%=selectedApplicationRevision.deploymentURL%>">
                           <% if(selectedApplicationRevision.status==APPLICATION_RUNNING){ %>
                             <a id="launch-version-url-a" href="<%=selectedApplicationRevision.deploymentURL%>" target="_blank">
                                 <span><%=selectedApplicationRevision.deploymentURL%></span>
@@ -194,23 +194,25 @@ jagg.template("home", function(inputs, outputs, jagg) {
                                %>
                           </div>
                       </div>
-                      <div class="col-xs-12 col-md-12 col-lg-4">
-                          <a id="delete-version" onclick="deleteApplicationPopUp();">
-                              <div class="btn-create-version">
-                                  <span class="fw-stack fw-lg btn-action-ico">
-                                    <i class="fw fw-circle-outline fw-stack-2x"></i>
-                                    <i class="fw fw-delete fw-stack-1x"></i>
-                                  </span> Delete Version
-                              </div>
-                          </a>
-                          <a id="upload-revision" href="<%=appCreationPageBaseUrl%>?appTypeName=<%=application.applicationType%>&applicationKey=<%=applicationKey%>&encodedLabels=<%=encodedLabels%>&encodedEnvs=<%=encodedEnvs%>&newVersion=true&conSpecCpu=<%=conSpecCpu%>&conSpecMemory=<%=conSpecMemory%>">
-                              <div class="btn-create-version">
-                                  <span class="fw-stack fw-lg btn-action-ico">
-                                     <i class="fw fw-circle-outline fw-stack-2x"></i>
-                                     <i class="fw fw-add fw-stack-1x"></i>
-                                  </span> Upload Version
-                              </div>
-                          </a>
+                      <div class="col-xs-12 col-md-12 col-lg-5 noleftpadding">
+                          <div class="row">
+                              <a id="delete-version" onclick="deleteApplicationPopUp();">
+                                  <div class="btn-create-version">
+                                      <span class="fw-stack fw-lg btn-action-ico">
+                                        <i class="fw fw-circle-outline fw-stack-2x"></i>
+                                        <i class="fw fw-delete fw-stack-1x"></i>
+                                      </span> Delete Version
+                                  </div>
+                              </a>
+                              <a id="upload-revision" href="<%=appCreationPageBaseUrl%>?appTypeName=<%=application.applicationType%>&applicationKey=<%=applicationKey%>&encodedLabels=<%=encodedLabels%>&encodedEnvs=<%=encodedEnvs%>&newVersion=true&conSpecCpu=<%=conSpecCpu%>&conSpecMemory=<%=conSpecMemory%>">
+                                  <div class="btn-create-version">
+                                      <span class="fw-stack fw-lg btn-action-ico">
+                                         <i class="fw fw-circle-outline fw-stack-2x"></i>
+                                         <i class="fw fw-add fw-stack-1x"></i>
+                                      </span> Upload Version
+                                  </div>
+                              </a>
+                          </div>
                       </div>
 
                       <div id="app-type-data" class="col-xs-12 col-md-12 col-lg-12">
@@ -383,7 +385,7 @@ jagg.template("home", function(inputs, outputs, jagg) {
             setTimeout(reloadAppHome, 2000);
             jagg.message({
                 content: cloudSpecificApplicationRepresentation + " was successfully stopped.",
-                type: 'info',
+                type: 'success',
                 timeout: '5000'
             });
         }, function(jqXHR, data, errorThrown) {
