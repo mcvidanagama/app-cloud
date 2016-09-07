@@ -45,7 +45,7 @@ var log = new Log();
             } else {
                 var msg = "Error while uploading file: " + uploadedArtifact.getName();
                 log.error(msg);
-                response.status = 504;
+                response.status = 400;
                 response.content = msg + ". Please retry uploading";
             }
         } catch (e) {
@@ -237,7 +237,7 @@ var log = new Log();
                     if (!fileSuccessfullyUploaded) {
                         logMessage = "Error while uploading file: " + uploadedArtifact.getName();
                         log.error(logMessage);
-                        response.status = 504;
+                        response.status = 400;
                         response.content = logMessage + ". Please retry uploading";
                         return ;
                     }
@@ -287,7 +287,7 @@ var log = new Log();
                 response.status = 200;
                 response.message = "Application is successfully stopped.";
             } else {
-                response.status = 504;
+                response.status = 400;
                 response.content = "Unable to stop application. Please submit request again.";
             }
         } catch (e) {
@@ -309,11 +309,11 @@ var log = new Log();
 
         // redeploy application from kubernetes
         if(applicationName == null){
-            response.status = 500;
+            response.status = 400;
             response.content = "applicationName cannot be null. Please retry the request with the correct application name";
         }
         if(applicationRevision == null){
-            response.status = 500;
+            response.status = 400;
             response.content = "applicationRevision cannot be null. Please retry the request with the correct application version";
         }
         if(versionKey == null){
@@ -427,7 +427,7 @@ var log = new Log();
                 response.content = keyValidation.msg;
             }
         } else {
-            response.status = 500;
+            response.status = 400;
             response.content = "No environment variable with key: " + prevKey + ". Please enter valid key.";
         }
     } else if (action == "deleteRuntimeProperty"){
@@ -439,7 +439,7 @@ var log = new Log();
             response.status = 200;
             response.content = "Runtime property successfully deleted.";
         } else {
-            response.status = 500;
+            response.status = 400;
             response.content = "No environment variable with key: " + key + ". Please enter valid key.";
         }
     } else if (action == "addRuntimeProperty"){
@@ -504,7 +504,7 @@ var log = new Log();
             response.status = 200;
             response.content = "Tag successfully deleted.";
         } else {
-            response.status = 500;
+            response.status = 400;
             response.content = "No tag with key: " + key + ". Please enter valid key.";
         }
     } else if (action == "updateTag"){
@@ -523,7 +523,7 @@ var log = new Log();
             response.status = 200;
             response.content = "Tag successfully updated.";
         } else {
-            response.status = 500;
+            response.status = 400;
             response.content = "No tag with key: " + prevKey + ". Please enter valid key.";
         }
     } else if (action == "getTags"){

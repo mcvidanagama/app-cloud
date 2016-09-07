@@ -51,7 +51,7 @@ var databaseModule = jagg.module("databases");
             isDatabaseExists = false;
         }
         if(isDatabaseExists == "true"){
-            response.status = 500;
+            response.status = 400;
             response.content = "Database already exists";
             return;
         }
@@ -90,7 +90,7 @@ var databaseModule = jagg.module("databases");
             respObj.userName = userName;
             print(stringify(respObj));
         } catch (e) {
-            response.status = 500;
+            response.status = 400;
             response.content = "Error while creating database";
         }
 
@@ -101,7 +101,7 @@ var databaseModule = jagg.module("databases");
             result = mod.attachNewUser(dbname, userName, DEFAULT_TEMPLATE);
             print(result);
         } catch (e) {
-            var msg = "Error while attching user " + userName + " to the db : " + dbname;
+            var msg = "Error while attaching user " + userName + " to the db : " + dbname;
             log.error(msg);
             log.error(e);
             throw e;
