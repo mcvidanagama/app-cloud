@@ -320,8 +320,9 @@ var log = new Log();
             versionKey = mod.getVersionHashId(applicationName, applicationRevision)
         }
         if (status == APPLICATION_STOPPED || status == APPLICATION_INACTIVE) {
-            response.status = 500;
-            response.content = "Unable to redeploy since the application version was stopped. Please start the application version.";
+            applicationModule.redeployApplication(applicationName, applicationRevision, versionKey, applicationType);
+            response.status = 200;
+            response.content = "Application is successfully started.";
         } else {
             try {
                 if (applicationModule.redeployVersion(applicationName, applicationRevision, versionKey, applicationType)) {
