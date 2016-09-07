@@ -78,8 +78,8 @@ jagg.template("application", function (inputs, outputs, jagg) {
     var uploadURLErrorMsg = "";
     var custom = "<%=CUSTOM%>";
     var uploadMethod = "file";
-    if(appTypeName== custom){
-        uploadMethod="";
+    if(appTypeName == custom){
+        uploadMethod = "";
     }
     var urlUploadComplete = false;
     var applicationHashId;
@@ -251,7 +251,6 @@ jagg.template("application", function (inputs, outputs, jagg) {
                     formData.append('runtime', optionRuntime);
                     if(appTypeName === custom) {
                         formData.append('remoteImageUrl', $("#remoteImageUrl").val());
-                        formData.append('imageTag', $("#imageTag").val());
                        // formData.append('userName', $("#userName").val());
                        // formData.append('password', $("#password").val());
                         formData.append('appCreationMethod', custom);
@@ -281,9 +280,9 @@ jagg.template("application", function (inputs, outputs, jagg) {
                             tags.push(property);
                         }
                     }
-                    if(appTypeName === custom) {
+                    if (appTypeName === custom) {
                         var tagArray = new Array();
-                        var tagObj = { "key":"Base Image", "value":$("#remoteImageUrl").val() + ":" + $("#imageTag").val() };
+                        var tagObj = { "key":"Base Image", "value":$("#remoteImageUrl").val() };
                         tagArray.push(tagObj);
                         formData.append('tags',JSON.stringify(tagArray));
                     } else {
@@ -751,9 +750,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
             activateCreateApplication();
         });
 
-        $('#imageTag').on('focusout keyup blur click', function () { // fires on every keyup & blur
-            activateCreateApplication();
-        });
+
     });
 
     function activateCreateApplication() {
@@ -761,23 +758,23 @@ jagg.template("application", function (inputs, outputs, jagg) {
         //first disable the button and then enable it only if condions are satisfied
         $("#add-application").prop("disabled", true);
 
-        if ($('#applicationName').val() && $('#applicationRevision').val() && $('#container option:selected').val() && $('#runtime').val() > 0 && checkApplicationVersionExistence($('#applicationRevision').val())) {// mandatory validations for all app types
-            if(appTypeName == custom){ // validations for custom app type
-
-                if($("#remoteImageUrl").val() && $("#imageTag").val()) {
+        if ($('#applicationName').val() && $('#applicationRevision').val() && $('#container option:selected').val() &&
+            $('#runtime').val() > 0 && checkApplicationVersionExistence($('#applicationRevision').val())) {// mandatory validations for all app types
+            if (appTypeName == custom) { // validations for custom app type
+                if ($("#remoteImageUrl").val()) {
                     $("#add-application").prop("disabled", false);
                 }
             } else {
-                if($("#uploadedFileName").val() || $("#artifactUrl").val() || ($("#gitRepoUrl").val()  && $("#gitRepoBranch").val())) { // validations for non custom app types
-                    if($("#uploadedFileName").val() && progress == 100){
-                        if(validateArtifactType($("#uploadedFileName").val())) {
+                if ($("#uploadedFileName").val() || $("#artifactUrl").val() || ($("#gitRepoUrl").val()  && $("#gitRepoBranch").val())) { // validations for non custom app types
+                    if ($("#uploadedFileName").val() && progress == 100) {
+                        if (validateArtifactType($("#uploadedFileName").val())) {
                             $("#add-application").prop("disabled", false);
                         }
                     } else if ($("#artifactUrl").val()) {
-                        if(urlUploadComplete) {
+                        if (urlUploadComplete) {
                             $("#add-application").prop("disabled", false);
                         }
-                    } else if($("#gitRepoUrl").val()  && $("#gitRepoBranch").val()) {
+                    } else if ($("#gitRepoUrl").val() && $("#gitRepoBranch").val()) {
 		                $("#add-application").prop("disabled", false);
                     }
                 }
@@ -909,7 +906,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
     }
 
 //TODO :
-    function validateADockerImageRepositoryURL(value){
+    function validateDockerImageRepositoryURL(value) {
        // implement the logic to validate docker image repo url
     }
 
@@ -1232,15 +1229,10 @@ jagg.template("application", function (inputs, outputs, jagg) {
             <%} else {%>
              <div class="form-group" id="custom-docker-image-block">
                 <div class="input-group">
-                    <span class="input-group-addon">URL</span>
-                    <input id="remoteImageUrl" name="remoteImageUrl" type="text" class="form-control" placeholder="Docker Image Repository URL eg: docker.io/testuser/testimage" />
+                    <span class="input-group-addon">Image ID</span>
+                    <input id="remoteImageUrl" name="remoteImageUrl" type="text" class="form-control" placeholder="docker.io/testuser/testimage:testtag" />
                 </div>
                 </br>
-                <div class="input-group">
-                    <span class="input-group-addon">Tag</span>
-                    <input id="imageTag" name="imageTag" type="text" class="form-control" placeholder="eg : latest" />
-                </div>
-                <br>
                <!-- <div class="input-group">
                     <span class="input-group-addon">User name</span>
                     <input id="userName" name="userName" type="text" class="form-control" placeholder="required only if repo is private" />

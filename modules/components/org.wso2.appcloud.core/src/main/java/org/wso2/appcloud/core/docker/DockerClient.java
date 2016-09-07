@@ -209,8 +209,6 @@ public class DockerClient {
 
         final boolean[] dockerStatusCheck = new boolean[1];
         dockerStatusCheck[0] = true;
-        //String dockerImageName = repoUrl + "/" + imageName;
-        log.info("Docker Client:PUSH imageName : " + imageName + " tag : " + tag);
         try {
             handle = dockerClient.image().withName(imageName).push()
                                  .usingListener(new EventListener() {
@@ -256,8 +254,6 @@ public class DockerClient {
         }
     }
 
-// Commenting pullDockerImage and tagDockerImage because at the moment we dont use them. might be usefull when security scanning comes
-/*
     public void pullDockerImage(String imageRepoUrl, String imageTag) throws AppCloudException {
 
         if (log.isDebugEnabled()) {
@@ -328,5 +324,4 @@ public class DockerClient {
     public void clientClose() throws IOException {
         dockerClient.close();
     }
-*/
 }
