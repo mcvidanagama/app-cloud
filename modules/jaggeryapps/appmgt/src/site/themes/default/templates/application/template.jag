@@ -251,7 +251,6 @@ jagg.template("application", function (inputs, outputs, jagg) {
                     formData.append('runtime', optionRuntime);
                     if(appTypeName === custom) {
                         formData.append('remoteImageUrl', $("#remoteImageUrl").val());
-                        formData.append('imageTag', $("#imageTag").val());
                        // formData.append('userName', $("#userName").val());
                        // formData.append('password', $("#password").val());
                         formData.append('appCreationMethod', custom);
@@ -283,7 +282,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                     }
                     if (appTypeName === custom) {
                         var tagArray = new Array();
-                        var tagObj = { "key":"Base Image", "value":$("#remoteImageUrl").val() + ":" + $("#imageTag").val() };
+                        var tagObj = { "key":"Base Image", "value":$("#remoteImageUrl").val() };
                         tagArray.push(tagObj);
                         formData.append('tags',JSON.stringify(tagArray));
                     } else {
@@ -751,9 +750,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
             activateCreateApplication();
         });
 
-        $('#imageTag').on('focusout keyup blur click', function () { // fires on every keyup & blur
-            activateCreateApplication();
-        });
+
     });
 
     function activateCreateApplication() {
@@ -764,7 +761,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
         if ($('#applicationName').val() && $('#applicationRevision').val() && $('#container option:selected').val() &&
             $('#runtime').val() > 0 && checkApplicationVersionExistence($('#applicationRevision').val())) {// mandatory validations for all app types
             if (appTypeName == custom) { // validations for custom app type
-                if ($("#remoteImageUrl").val() && $("#imageTag").val()) {
+                if ($("#remoteImageUrl").val()) {
                     $("#add-application").prop("disabled", false);
                 }
             } else {
@@ -1232,15 +1229,10 @@ jagg.template("application", function (inputs, outputs, jagg) {
             <%} else {%>
              <div class="form-group" id="custom-docker-image-block">
                 <div class="input-group">
-                    <span class="input-group-addon">URL</span>
-                    <input id="remoteImageUrl" name="remoteImageUrl" type="text" class="form-control" placeholder="Docker Image Repository URL eg: docker.io/testuser/testimage" />
+                    <span class="input-group-addon">Image ID</span>
+                    <input id="remoteImageUrl" name="remoteImageUrl" type="text" class="form-control" placeholder="docker.io/testuser/testimage:testtag" />
                 </div>
                 </br>
-                <div class="input-group">
-                    <span class="input-group-addon">Tag</span>
-                    <input id="imageTag" name="imageTag" type="text" class="form-control" placeholder="eg : latest" />
-                </div>
-                <br>
                <!-- <div class="input-group">
                     <span class="input-group-addon">User name</span>
                     <input id="userName" name="userName" type="text" class="form-control" placeholder="required only if repo is private" />

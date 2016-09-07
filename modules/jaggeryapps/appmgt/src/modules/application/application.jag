@@ -54,15 +54,14 @@ var Arrays = Packages.java.util.Arrays;
 var addApplication = function (applicationName, versionName, applicationDescription, replicas, runtimeId, appTypeName,
                                runtimePropertiesArray, tagArray, appIcon, uploadedFileName, isNewVersion, conSpecMemory,
                                conSpecCpu, artifactUrl, appCreationMethod, oldHashId, applicationContext, setDefaultVersion,
-                               remoteImageUrl, imageTag) {
+                               remoteImageUrl) {
 
     log.info("Started creating App => Name:" + applicationName + " Version:" + versionName + " Description:" + applicationDescription +
     " RuntimeId:" + runtimeId + " AppType:" + appTypeName + " Runtime Properties:" + stringify(runtimePropertiesArray) +
     " Tags:" + stringify(tagArray) + " Uploaded FileName:" + uploadedFileName + " New Version:" + isNewVersion +
     " Allocated Memory:" + conSpecMemory + " Allocated CPU:" + conSpecCpu + " Artifact Url:" + artifactUrl +
     " App Creation Method:" + appCreationMethod + " Previous HashId:" + oldHashId + " Context:" + applicationContext +
-    " DefaultVersion:" + setDefaultVersion + " Docker Image repository Url : " + remoteImageUrl +
-    " docker image tag : " + imageTag);
+    " DefaultVersion:" + setDefaultVersion + " Docker Image Id : " + remoteImageUrl);
 
     var tenantId = modManager.getTenantId();
     var applicationHashId = Util.getApplicationHashId(applicationName, tenantId);
@@ -106,8 +105,18 @@ var addApplication = function (applicationName, versionName, applicationDescript
         pushDockerImage(applicationName, versionName, imageName, tagName, versionHashId, dockerClient);
 
     } else { // for custom docker images
-        imageName = remoteImageUrl;
-        tagName = imageTag;
+        var elementArray = remoteImageUrl.split(":");
+        log.info("element array length : " + elementArray.length);
+        if (elementArray.length == 3 ) { // registry : port : tag
+            imageName = elementArray[0] + ":" + elementArray[1];
+            tagName = elementArray[2];
+            log.info("image name : " + imageName + "tag name : " + tagName)
+        } else { // registry : tag
+            imageName = elementArray[0];
+            tagName = elementArray[1];
+            log.info("image name : " + imageName + "tag name : " + tagName)
+
+        }
     }
 
    // pushDockerImage(applicationName, versionName, imageName, newTagName, versionHashId, dockerClient);

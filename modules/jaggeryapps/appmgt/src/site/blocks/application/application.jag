@@ -190,7 +190,6 @@ var log = new Log();
             return;
         }
 
-        var imageTag = request.getParameter("imageTag");
         //var userName = request.getParameter("userName");
         //var password = request.getParameter("password");
 
@@ -258,12 +257,12 @@ var log = new Log();
                         return ;
                     }
                 }
-                if (uploadedFileName || (remoteImageUrl && imageTag)) {
+                if (uploadedFileName || (remoteImageUrl)) {
                     applicationModule
                             .addApplication(applicationName, applicationRevision, applicationDescription, replicas,
                                             runtimeId, appTypeName, runtimeProperties, tags, appIcon, uploadedFileName,
                                             isNewVersion, conSpecMemory, conSpecCpu, artifactUrl, appCreationMethod,
-                                            oldHashId, applicationContext, setDefaultVersion, remoteImageUrl, imageTag);
+                                            oldHashId, applicationContext, setDefaultVersion, remoteImageUrl);
                 } else {
                     var gitRepoUrl = request.getParameter("gitRepoUrl");
                     var gitRepoBranch = request.getParameter("gitRepoBranch");
