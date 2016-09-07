@@ -50,7 +50,7 @@ var databaseModule = jagg.module("databases");
             log.error(e);
             isDatabaseExists = false;
         }
-        if(isDatabaseExists){
+        if(isDatabaseExists == "true"){
             response.status = 500;
             response.content = "Database already exists";
             return;
