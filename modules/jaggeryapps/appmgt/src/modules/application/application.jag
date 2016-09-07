@@ -1770,24 +1770,14 @@ var getAllowedContainerSpecificationsForRuntime = function(runtimeID) {
  }
 
 var isEnvironmentVariableExist = function(versionKey, envVariableKey) {
-    var envVariables = getEnvVariablesOfVersion(versionKey);
-
-    for (var i = 0; i < envVariables.length; i++) {
-        if (envVariables[i]["key"] == envVariableKey) {
-            return true;
-        }
-    }
-    return false;
+    return ApplicationManager.isEnvironmentVariableExist(versionKey, envVariableKey);
 }
 
 var isTagExist = function(versionKey, tagKey) {
-    var tags = getTags(versionKey);
+    return ApplicationManager.isTagExist(versionKey, tagKey);
+}
 
-    for (var i = 0; i < tags.length; i++) {
-        if (tags[i]["key"] == tagKey) {
-            return true;
-        }
-    }
-    return false;
+var isVersionExist = function(applicationName, versionName) {
+    return ApplicationManager.isVersionExist(applicationName, versionName);
 }
 %>
