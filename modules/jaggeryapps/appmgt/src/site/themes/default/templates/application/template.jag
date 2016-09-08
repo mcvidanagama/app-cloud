@@ -386,8 +386,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 var result = jQuery.parseJSON(result);
                 if (result.length > 0) {
                     $("#progress_table").html("");
-                    $("#modal-title").text("Progress...");
-                    $("#modal-header-spinner").html("");
+                    $("#modal-title").text("Creating the " + cloudSpecificApplicationRepresentation.toLowerCase() + "...");
                 }
                 var table = "<table class='table' style='width:100%; color:black'>" ;
                 for(var i = 0; i < result.length; i++){
@@ -1383,12 +1382,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
         <div class="modal-dialog modal-dialog-margin-top-md ">
             <div class="modal-content">
                 <div class="modal-header">
-                    <div class="col-md-6">
-                        <h3 class="modal-title" id="modal-title">Initializing <%=cloudSpecificApplicationRepresentation%></h3>
-                    </div>
-                    <div class="col-md-6" id="modal-header-spinner">
-                        <i class="fw fw-2x fw-loader2 fw-spin"></i>
-                    </div>
+                    <h3 class="modal-title" id="modal-title">Creating the <%=cloudSpecificApplicationRepresentation.toLowerCase()%>...</h3>
                 </div>
                 <div class="modal-body" id="app-creation-model-body"></div>
                 <div class="modal-footer" id="app-creation-model-footer"></div>

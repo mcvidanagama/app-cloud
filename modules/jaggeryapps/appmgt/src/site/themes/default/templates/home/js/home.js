@@ -558,7 +558,7 @@ function deleteApplication(){
 
     $('#app_creation_progress_modal').modal({ backdrop: 'static', keyboard: false});
     $("#app_creation_progress_modal").show();
-    $("#modal-title").text("Deleting selected version..");
+    $("#modal-title").text("Deleting the " + cloudSpecificApplicationRepresentation.toLowerCase() + " version...");
 
     jagg.post("../blocks/application/application.jag", {
         action:"deleteVersion",
