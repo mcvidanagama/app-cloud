@@ -165,7 +165,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
             });
 
             // Adding a new runtime option for requesting missing runtimes through mails.
-            $("#runtime").append('<option value="requestNewRuntime">Request New Runtime</option>');
+            $("#runtime").append('<option value="requestNewRuntime">Request new runtime...</option>');
             $('#runtime').change(function(){
                if(this.value == 'requestNewRuntime'){
                     $("<a>").attr("href", '<%=requestNewAppTypeURL%>').attr("target", "_blank")[0].click();
