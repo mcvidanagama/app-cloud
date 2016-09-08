@@ -162,8 +162,12 @@ button[disabled]{
     text-decoration: none;
 }
 .cu-btn-md {
-    padding: 10px 15px;
+    padding: 10px 12px;
     line-height: 1.3em;
+}
+
+.overview-version-btn {
+    padding-left: 10px;!important;
 }
 .cu-btn-lg {}
 .cu-btn-sm {
