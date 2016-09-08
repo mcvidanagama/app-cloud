@@ -2917,4 +2917,8 @@ ul#appVersionList {
 .noleftpadding {
     padding-left : 0;
 }
+ 
+ .left-menu-icon {
+     width: 30px;
+ }
 
