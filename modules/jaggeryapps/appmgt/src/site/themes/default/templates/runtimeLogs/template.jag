@@ -75,7 +75,7 @@ jagg.template("runtimeLogs", function (inputs, outputs, jagg) {
                 <div class="div-search">
                     <div class="form-horizontal" role="form">
                         <div class="form-group">
-                            <label for="log-search" class="col-md-2 control-label">Revision : </label>
+                            <label for="log-search" class="col-md-1 control-label">Revision : </label>
                             <div class="col-md-4">
                                 <select class="form-control" id="revision" disabled>
                                     <% for(var i = 0; i < revisionsList.length; i++){
@@ -98,7 +98,7 @@ jagg.template("runtimeLogs", function (inputs, outputs, jagg) {
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="log-search" class="col-md-2 control-label">Search : </label>
+                            <label for="log-search" class="col-md-1 control-label">Search : </label>
                             <div class="col-md-4">
                                 <div class="input-group">
                                     <input type="text" class="form-control log-search" id="log-search" placeholder="Enter search text">
