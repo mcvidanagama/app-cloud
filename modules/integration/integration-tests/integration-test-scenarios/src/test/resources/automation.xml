@@ -317,11 +317,11 @@
                 <runtimeID key="jaggery-as600m3">10</runtimeID>
             </runtimeIDs>
             <runtimeStartTimeouts>
-                <runtimeStartTimeout key="tomcat">120000</runtimeStartTimeout>
-                <runtimeStartTimeout key="msf4j">60000</runtimeStartTimeout>
-                <runtimeStartTimeout key="php">60000</runtimeStartTimeout>
-                <runtimeStartTimeout key="wso2dataservice">130000</runtimeStartTimeout>
-                <runtimeStartTimeout key="jaggery">130000</runtimeStartTimeout>
+                <runtimeStartTimeout key="tomcat">180000</runtimeStartTimeout>
+                <runtimeStartTimeout key="msf4j">180000</runtimeStartTimeout>
+                <runtimeStartTimeout key="php">180000</runtimeStartTimeout>
+                <runtimeStartTimeout key="wso2dataservice">180000</runtimeStartTimeout>
+                <runtimeStartTimeout key="jaggery">180000</runtimeStartTimeout>
             </runtimeStartTimeouts>
             <sampleAppContents>
                 <sampleAppContent key="tomcat">Hello</sampleAppContent>

@@ -177,7 +177,7 @@ jagg.template("index", function(inputs, outputs, jagg) {
 
         $('#app_creation_progress_modal').modal({ backdrop: 'static', keyboard: false});
         $("#app_creation_progress_modal").show();
-        $("#modal-title").text("Deleting...");
+        $("#modal-title").text("Deleting the " + cloudSpecificApplicationRepresentation.toLowerCase() + "...");
 
         jagg.post("../blocks/application/application.jag", {
             action:"deleteApplication",
@@ -321,12 +321,7 @@ jagg.template("index", function(inputs, outputs, jagg) {
         <div class="modal-dialog modal-dialog-margin-top-md ">
             <div class="modal-content">
                 <div class="modal-header">
-                    <div class="col-md-3">
-                        <h3 class="modal-title" id="modal-title"></h3>
-                    </div>
-                    <div class="col-md-9" id="modal-header-spinner">
-                        <i class="fw fw-2x fw-loader2 fw-spin"></i>
-                    </div>
+                    <h3 class="modal-title" id="modal-title"></h3>
                 </div>
                 <div class="modal-body">
                     <div class="container-fluid">
