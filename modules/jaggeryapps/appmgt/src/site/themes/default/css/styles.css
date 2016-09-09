@@ -2944,3 +2944,7 @@ ul#appVersionList {
     width : 100%;
 }
 
+.app-creation-loader i {
+    margin-top: -1em;
+}
+
