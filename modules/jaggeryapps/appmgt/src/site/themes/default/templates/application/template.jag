@@ -387,6 +387,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 if (result.length > 0) {
                     $("#progress_table").html("");
                     $("#modal-title").text("Creating the " + cloudSpecificApplicationRepresentation.toLowerCase() + "...");
+                    $("#app-creation-header-loader").html("");
                 }
                 var table = "<table class='table' style='width:100%; color:black'>" ;
                 for(var i = 0; i < result.length; i++){
@@ -1383,6 +1384,9 @@ jagg.template("application", function (inputs, outputs, jagg) {
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="modal-title" id="modal-title">Creating the <%=cloudSpecificApplicationRepresentation.toLowerCase()%>...</h3>
+                    <span class="app-creation-loader" id="app-creation-header-loader">
+                        <i class="fw fw-loader2 fw-spin fw-2x pull-right"></i>
+                    </span>
                 </div>
                 <div class="modal-body" id="app-creation-model-body"></div>
                 <div class="modal-footer" id="app-creation-model-footer"></div>
