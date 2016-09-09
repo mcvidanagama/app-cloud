@@ -186,7 +186,7 @@ $(document).ready(function () {
                 key: updatedKey,
             }, function (result) {
                 var isNewAddition = element.hasClass('save-new-entry');
-                if ((isNewAddition || (prevKey && prevKey != updatedKey)) && result && result.trim() == "true") {
+                if ((isNewAddition || (prevKey && prevKey != updatedKey)) && JSON.parse(result)) {
                     jagg.message({
                         content: "Tag with key : " + updatedKey + " already exists.",
                         type: 'error'
