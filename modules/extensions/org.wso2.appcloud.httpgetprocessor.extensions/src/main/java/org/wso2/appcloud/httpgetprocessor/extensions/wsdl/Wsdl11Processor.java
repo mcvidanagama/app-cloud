@@ -36,13 +36,23 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Iterator;
 
+/**
+ * Wsdl generator for wsdl 1.1 requests
+ */
 public class Wsdl11Processor extends org.wso2.carbon.core.transports.util.Wsdl11Processor {
     private static final Log log = LogFactory.getLog(Wsdl11Processor.class);
 
+    /**
+     * Process wsdl 1.1 request, generate wsdl from axis2 and update tenant information
+     * @param request CarbonHttpRequest with request information
+     * @param response CarbonHttpResponse with generated wsdl stream
+     * @param configurationContext Axis2 Configuration Context related to the request
+     * @throws Exception
+     */
     public void process(final CarbonHttpRequest request, final CarbonHttpResponse response, final ConfigurationContext configurationContext) throws Exception {
         OverflowBlob temporaryData = new OverflowBlob(256, 4048, WsdlUtils.tempPrefixWsdl11, WsdlUtils.tempSuffix);
         CarbonHttpResponse updatedResponse = new CarbonHttpResponse(temporaryData.getOutputStream());
-
+        //Generate wsdl from axis2 wsdl 1.1 processor
         super.process(request, updatedResponse, configurationContext);
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
