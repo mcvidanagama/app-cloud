@@ -44,8 +44,9 @@ public class Wsdl20Processor extends org.wso2.carbon.core.transports.util.Wsdl20
 
     /**
      * Process wsdl 2.0 request, generate wsdl from axis2 and update tenant information
-     * @param request CarbonHttpRequest with request information
-     * @param response CarbonHttpResponse with generated wsdl stream
+     *
+     * @param request              CarbonHttpRequest with request information
+     * @param response             CarbonHttpResponse with generated wsdl stream
      * @param configurationContext Axis2 Configuration Context related to the request
      * @throws Exception
      */

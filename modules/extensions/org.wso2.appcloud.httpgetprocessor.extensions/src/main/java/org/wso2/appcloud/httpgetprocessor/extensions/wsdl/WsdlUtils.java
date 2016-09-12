@@ -21,6 +21,9 @@ import org.wso2.carbon.core.transports.CarbonHttpResponse;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Util class for wsdl processors
+ */
 public class WsdlUtils {
     public static final String tenantInfoRegex = "\\/t\\/\\w+(\\.\\w+|\\w)\\/";
     public static final String tenantInfoReplaceChar = "\\/";
@@ -37,7 +40,13 @@ public class WsdlUtils {
     public static final String tempPrefixWsdl11 = "_nhttp_wsdl11";
     public static final String tempPrefixWsdl20 = "_nhttp_wsdl20";
 
-    public static CarbonHttpResponse populateResponse(CarbonHttpResponse updatedResponse, CarbonHttpResponse httpResponse){
+    /**
+     * Populate headers and other parameters from updated response to the original response
+     *
+     * @param updatedResponse Updated CarbonHttpResponse which contains generated wsdl info
+     * @param httpResponse    Original CarbonHttpResponse which will be sent back to the client
+     */
+    public static void populateResponse(CarbonHttpResponse updatedResponse, CarbonHttpResponse httpResponse){
         httpResponse.setStatus(updatedResponse.getStatusCode());
         httpResponse.setError(updatedResponse.isError());
         Map<String, String> headers = updatedResponse.getHeaders();
@@ -49,6 +58,5 @@ public class WsdlUtils {
                 }
             }
         }
-        return httpResponse;
     }
 }
