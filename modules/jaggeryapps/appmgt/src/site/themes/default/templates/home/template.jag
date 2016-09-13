@@ -455,75 +455,71 @@ jagg.template("home", function(inputs, outputs, jagg) {
             if (result.length > 0) {
                 $("#progress_table").html("");
                 $("#app-creation-header-loader").html("");
+                var table = "<table class='table' style='width:100%; color:black'>" ;
+                for(var i = 0; i < result.length; i++){
+                    var statusStyle;
+                    var event = result[i];
 
-            }
-            var table = "<table class='table' style='width:100%; color:black'>" ;
-            for(var i = 0; i < result.length; i++){
-                var statusStyle;
-                var event = result[i];
-
-                if(event.status == "success"){
-                    statusStyle = "success";
-                    if (event.name === "Status") {
+                    if(event.status == "success"){
+                        statusStyle = "success";
+                        if (event.name === "Status") {
                             table = table + "<tr class='" + statusStyle + "'><td>Container status</td>" +
-                                            "<td>"+event.description+"</td>" +
+                                            "<td>" + event.description + "</td>" +
                                             "<td><i class=\"fw fw-check\"></i></td></tr>";
-                    } else {
+                        } else {
                             table = table + "<tr class='" + statusStyle + "'><td>" + event.name + "</td>" +
                                             "<td></td>" +
                                             "<td><i class=\"fw fw-check\"></i></td></tr>";
-                    }
-                } else if (event.status == "failed") {
-                    statusStyle = "danger";
-                    if (event.name === "Status") {
+                        }
+                    } else if (event.status == "failed") {
+                        statusStyle = "danger";
+                        if (event.name === "Status") {
                             table = table + "<tr class='" + statusStyle + "'><td>Container status</td>" +
-                                            "<td>"+event.description+"</td>" +
+                                            "<td>" + event.description + "</td>" +
                                             "<td><i class=\"fw fw-error\"></i></td></tr>";
-                    } else {
+                        } else {
                             table = table + "<tr class='" + statusStyle + "'><td>" + event.name + "</td>" +
                                             "<td></td>" +
                                             "<td><i class=\"fw fw-error\"></i></td></tr>";
-                    }
-                } else if (event.status == "pending"){
-                    if (event.name === "Status") {
-                        statusStyle = "active";
+                        }
+                    } else if (event.status == "pending"){
+                        if (event.name === "Status") {
+                            statusStyle = "active";
                             table = table + "<tr class='" + statusStyle + "'><td>Container status</td>" +
-                                            "<td>"+event.description+"</td>" +
+                                            "<td>" + event.description + "</td>" +
                                             "<td><i class=\"fw fw-loader2 fw-spin\"></i></td></tr>";
-                    } else {
-                        statusStyle = "active";
+                        } else {
+                            statusStyle = "active";
                             table = table + "<tr class='" + statusStyle + "'><td>" + event.name + "</td>" +
                                             "<td></td>" +
                                             "<td><i class=\"fw fw-loader2 fw-spin\"></i></td></tr>";
+                        }
                     }
                 }
-            }
-
-            table = table + "</table>";
-            if (result.length > 0) {
+                table = table + "</table>";
                 $("#progress_table").html(table);
-            }
-            for(var i = 0; i < result.length; i++){
-                var statusStyle;
-                var event = result[i];
-                if (event.name === "Status" && event.status === "success") {
-                    setTimeout(redirectAppHome, 4250);
-                    function redirectAppHome(){
-                        deleteAppCreationEvents();
-                        window.location.replace("home.jag?applicationKey=<%=applicationKey%>");
-                    }
-                } else if(event.status == "failed") {
-                    //When redeploying an application the associated pod is deleted and an event with the name
-                    //"Stopping Containers" is persisted in the database. Due to the pod not getting deleted within the
-                    //specified time period the "Stopping Containers" event gets a status of "failed". Since only
-                    //application deletion is involved with the "Stopping Containers" event if the event name is
-                    //"Stopping Containers" the following message is not displayed
-                    if (event.name !== "Stopping Containers") {
-                        jagg.message({content: "Error occurred while creating " + cloudSpecificApplicationRepresentation.toLowerCase() + ".", type: 'error'});
-                    }
-                    setTimeout(redirectAppListing, 5000);
-                    function redirectAppListing(){
-                        window.location.replace("index.jag");
+                for(var i = 0; i < result.length; i++){
+                    var statusStyle;
+                    var event = result[i];
+                    if (event.name === "Status" && event.status === "success") {
+                        setTimeout(redirectAppHome, 4250);
+                        function redirectAppHome(){
+                            deleteAppCreationEvents();
+                            window.location.replace("home.jag?applicationKey=<%=applicationKey%>");
+                        }
+                    } else if(event.status == "failed") {
+                        //When redeploying an application the associated pod is deleted and an event with the name
+                        //"Stopping Containers" is persisted in the database. Due to the pod not getting deleted within the
+                        //specified time period the "Stopping Containers" event gets a status of "failed". Since only
+                        //application deletion is involved with the "Stopping Containers" event if the event name is
+                        //"Stopping Containers" the following message is not displayed
+                        if (event.name !== "Stopping Containers") {
+                            jagg.message({content: "Error occurred while creating " + cloudSpecificApplicationRepresentation.toLowerCase() + ".", type: 'error'});
+                        }
+                        setTimeout(redirectAppListing, 5000);
+                        function redirectAppListing(){
+                            window.location.replace("index.jag");
+                        }
                     }
                 }
             }
