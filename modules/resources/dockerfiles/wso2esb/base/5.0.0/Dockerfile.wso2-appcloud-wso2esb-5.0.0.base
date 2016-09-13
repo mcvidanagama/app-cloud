@@ -43,6 +43,7 @@ RUN unzip $INSTALL_PATH/$WSO2CARBON_ZIP -d $INSTALL_PATH/
 
 COPY patches/ $CARBON_HOME_PATH/repository/components/patches/
 COPY dropins/ $CARBON_HOME_PATH/repository/components/dropins/
+COPY lib/ $CARBON_HOME_PATH/repository/components/lib/
 COPY conf/ $RESOURCES_PATH/conf
 COPY carbonapps/ $RESOURCES_PATH/carbonapps
 
