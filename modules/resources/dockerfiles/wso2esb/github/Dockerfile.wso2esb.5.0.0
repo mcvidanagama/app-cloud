@@ -32,8 +32,8 @@ RUN git clone GIT_REPO_URL --branch GIT_REPO_BRANCH --single-branch "$MNT/" && \
     rm -rf $MNT/* && \
     sed -i '/<!--HostName>/c\\t<HostName>'$APP_HOST'</HostName>' $CARBON_HOME_PATH/repository/conf/carbon.xml && \
     sed -i '/<!--MgtHostName>/c\\t<MgtHostName>'$APP_HOST'</MgtHostName>' $CARBON_HOME_PATH/repository/conf/carbon.xml && \
-    sed -i '/<Class>org.wso2.carbon.core.transports.util.Wsdl11Processor/c\\t\t<Class>org.wso2.appcloud.httpgetprocessor.extensions.wsdl.Wsdl11Processor</Class>' carbon.xml && \
-    sed -i '/<Class>org.wso2.carbon.core.transports.util.Wsdl20Processor/c\\t\t<Class>org.wso2.appcloud.httpgetprocessor.extensions.wsdl.Wsdl20Processor</Class>' carbon.xml
+    sed -i '/<Class>org.wso2.carbon.core.transports.util.Wsdl11Processor/c\\t\t<Class>org.wso2.appcloud.httpgetprocessor.extensions.wsdl.Wsdl11Processor</Class>' $CARBON_HOME_PATH/repository/conf/carbon.xml && \
+    sed -i '/<Class>org.wso2.carbon.core.transports.util.Wsdl20Processor/c\\t\t<Class>org.wso2.appcloud.httpgetprocessor.extensions.wsdl.Wsdl20Processor</Class>' $CARBON_HOME_PATH/repository/conf/carbon.xml
 RUN sed -i '/<!--parameter name=\"WSDLEPRPrefix/c<parameter name=\"WSDLEPRPrefix\" locked=\"false\">'$APP_HOST'</parameter>' $CARBON_HOME_PATH/repository/conf/axis2/axis2.xml
 RUN sed -i '/<StratosPublicCloudSetup>/c\\t<StratosPublicCloudSetup>false</StratosPublicCloudSetup>' $CARBON_HOME_PATH/repository/conf/multitenancy/stratos.xml
 
