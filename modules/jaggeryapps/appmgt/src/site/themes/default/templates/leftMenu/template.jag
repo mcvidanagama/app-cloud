@@ -41,7 +41,7 @@ jagg.template("leftMenu", function (inputs, outputs, jagg) {
     <div class="container-fliud">
         <div class="row">
              <div class="side-pane-trigger">
-                <i class="fa fa-reorder"></i>
+                <i class="fa fa-arrow-left"></i>
             </div>
             <div class="col-md-8 breadcrumb-secondary">
                 <a href="/appmgt/site/pages/index.jag">
@@ -59,22 +59,28 @@ jagg.template("leftMenu", function (inputs, outputs, jagg) {
 <div class="left-pane ">
     <ul>
         <li class="<% if (pageName == "Overview") { %>selected<%}%>">
-                <a id="leftMenuOverview" href="/appmgt/site/pages/home.jag?applicationKey=<%=applicationKey%>"><i class="fw fw-laptop"></i> Overview</a>
+                <a id="leftMenuOverview" href="/appmgt/site/pages/home.jag?applicationKey=<%=applicationKey%>">
+                <i class="left-menu-icon fw fw-laptop"></i>Overview</a>
         </li>
         <li class="<% if (pageName == "Environment Variables") { %>selected<%}%>">
-                <a id="leftMenuEnvVars" href="/appmgt/site/pages/envs.jag?versionKey=<%=versionKey%>&applicationKey=<%=applicationKey%>"><i class="fw fw-gadget"></i> Environment Variables</a>
+                <a id="leftMenuEnvVars" href="/appmgt/site/pages/envs.jag?versionKey=<%=versionKey%>&applicationKey=<%=applicationKey%>">
+                <i class="left-menu-icon fw fw-gadget"></i>Environment Variables</a>
         </li>
         <li class="<% if (pageName == "Tags") { %>selected<%}%>">
-                <a id="leftMenuTagSet" href="/appmgt/site/pages/tags.jag?applicationKey=<%=applicationKey%>&versionKey=<%=versionKey%>"><i class="fw fw-tag"></i> Tags</a>
+                <a id="leftMenuTagSet" href="/appmgt/site/pages/tags.jag?applicationKey=<%=applicationKey%>&versionKey=<%=versionKey%>">
+                <i class="left-menu-icon fw fw-tag"></i>Tags</a>
         </li>
         <li class="<% if (pageName == "Runtime Logs") { %>selected<%}%>">
-                <a href="/appmgt/site/pages/runtimeLogs.jag?applicationKey=<%=applicationKey%>&selectedRevision=<%=selectedRevision%>&versionKey=<%=versionKey%>"><i class="fw fw-hdd"></i>Runtime Logs</a>
+                <a href="/appmgt/site/pages/runtimeLogs.jag?applicationKey=<%=applicationKey%>&selectedRevision=<%=selectedRevision%>&versionKey=<%=versionKey%>">
+                <i class="left-menu-icon fw fw-hdd"></i>Runtime Logs</a>
         </li>
         <li class="<% if (pageName == "Custom URL") { %>selected<%}%>">
-                <a href="/appmgt/site/pages/customurl.jag?applicationKey=<%=applicationKey%>&selectedRevision=<%=selectedRevision%>"><i class="fw fw-uri"></i>Custom URL</a>
+                <a href="/appmgt/site/pages/customurl.jag?applicationKey=<%=applicationKey%>&selectedRevision=<%=selectedRevision%>">
+                <i class="left-menu-icon fw fw-uri"></i>Custom URL</a>
         </li>
         <li class="<% if (pageName == "Settings") { %>selected<%}%>">
-                <a href="/appmgt/site/pages/settings.jag?applicationKey=<%=applicationKey%>&selectedRevision=<%=selectedRevision%>"><i class="fw fw-settings"></i>Settings</a>
+                <a href="/appmgt/site/pages/settings.jag?applicationKey=<%=applicationKey%>&selectedRevision=<%=selectedRevision%>">
+                <i class="left-menu-icon fw fw-settings"></i>Settings</a>
         </li>
 
     </ul>
@@ -86,12 +92,12 @@ $('.side-pane-trigger').click(function(){
         var rightPane = $('.right-pane');
         var leftPane = $('.left-pane');
         if (rightPane.hasClass('visible')){
-            rightPane.animate({"left":"0em"}, "slow").removeClass('visible');
-            leftPane.animate({"left":"-18em"}, "slow");
+            rightPane.animate({"left":"0%", "width":"100%"}, "slow").removeClass('visible');
+            leftPane.animate({"left":"-15%"}, "slow");
             $(this).find('i').removeClass('fa-arrow-left').addClass('fa-reorder');
         } else {
-            rightPane.animate({"left":"18em"}, "slow").addClass('visible');
-            leftPane.animate({"left":"0em"}, "slow");
+            rightPane.animate({"left":"15%", "width":"85%"}, "slow").addClass('visible');
+            leftPane.animate({"left":"0%"}, "slow");
             $(this).find('i').removeClass('fa-reorder').addClass('fa-arrow-left');
         }
     });

@@ -45,7 +45,7 @@ var log = new Log();
             } else {
                 var msg = "Error while uploading file: " + uploadedArtifact.getName();
                 log.error(msg);
-                response.status = 504;
+                response.status = 400;
                 response.content = msg + ". Please retry uploading";
             }
         } catch (e) {
@@ -216,13 +216,13 @@ var log = new Log();
             } else {
                 //Since the user is trying to create a new application we check if the existing application count is
                 //less than the maximum amount of applications that can be created
-                var applicationCount = applicationModule.getRunningApplicationVersionCount();
-                var maxAppCount = applicationModule.getMaxInstanceCount();
-                if (applicationCount < maxAppCount) {
+                var RunningApplicationCount = applicationModule.getRunningApplicationVersionCount();
+                var maxRunningAppCount = applicationModule.getMaxInstanceCount();
+                if (RunningApplicationCount < maxRunningAppCount) {
                     isAppCountLowerThanMax = true;
                 } else {
                     logMessage = "Application creation request not accepted because the application count has " +
-                            "reached maximum limit of " + maxAppCount;
+                            "reached maximum limit of " + maxRunningAppCount;
                     log.warn(logMessage);
                     response.status = 200;
                     response.content = logMessage;
@@ -237,7 +237,7 @@ var log = new Log();
                     if (!fileSuccessfullyUploaded) {
                         logMessage = "Error while uploading file: " + uploadedArtifact.getName();
                         log.error(logMessage);
-                        response.status = 504;
+                        response.status = 400;
                         response.content = logMessage + ". Please retry uploading";
                         return ;
                     }
@@ -262,7 +262,7 @@ var log = new Log();
                 response.content = logMessage;
                 return;
             } else {
-                logMessage = "Maximum number of applications that you can create is " + maxAppCount;
+                logMessage = "Maximum number of applications that you can create is " + maxRunningAppCount;
                 log.warn(logMessage)
                 response.status = 200;
                 response.content = logMessage;
@@ -287,7 +287,7 @@ var log = new Log();
                 response.status = 200;
                 response.message = "Application is successfully stopped.";
             } else {
-                response.status = 504;
+                response.status = 400;
                 response.content = "Unable to stop application. Please submit request again.";
             }
         } catch (e) {
@@ -309,19 +309,20 @@ var log = new Log();
 
         // redeploy application from kubernetes
         if(applicationName == null){
-            response.status = 500;
+            response.status = 400;
             response.content = "applicationName cannot be null. Please retry the request with the correct application name";
         }
         if(applicationRevision == null){
-            response.status = 500;
+            response.status = 400;
             response.content = "applicationRevision cannot be null. Please retry the request with the correct application version";
         }
         if(versionKey == null){
             versionKey = mod.getVersionHashId(applicationName, applicationRevision)
         }
         if (status == APPLICATION_STOPPED || status == APPLICATION_INACTIVE) {
-            response.status = 500;
-            response.content = "Unable to redeploy since the application version was stopped. Please start the application version.";
+            applicationModule.redeployApplication(applicationName, applicationRevision, versionKey, applicationType);
+            response.status = 200;
+            response.content = "Application is successfully started.";
         } else {
             try {
                 if (applicationModule.redeployVersion(applicationName, applicationRevision, versionKey, applicationType)) {
@@ -342,9 +343,9 @@ var log = new Log();
             }
         }
     } else if(action == "startApplication"){
-        var applicationCount = applicationModule.getRunningApplicationVersionCount();
-        var maxAppCount = applicationModule.getMaxInstanceCount();
-        if (applicationCount < maxAppCount) {
+        var RunningApplicationCount = applicationModule.getRunningApplicationVersionCount();
+        var maxRunningAppCount = applicationModule.getMaxInstanceCount();
+        if (RunningApplicationCount < maxRunningAppCount) {
             var applicationName = request.getParameter("applicationName");
             var applicationRevision = request.getParameter("applicationRevision");
             var versionKey = request.getParameter("versionKey");
@@ -357,7 +358,7 @@ var log = new Log();
             print(stringify(versions));
         } else {
             logMessage = "Application creation request not accepted because the application count has " +
-                    "reached maximum limit of " + maxAppCount;
+                    "reached maximum limit of " + maxRunningAppCount;
             log.warn(logMessage);
             response.status = 406;
             response.content = logMessage;
@@ -409,7 +410,7 @@ var log = new Log();
         var newKey = request.getParameter("newKey");
         var newValue = request.getParameter("newValue");
 
-        if (applicationModule.isEnvironmentVariableExist(versionKey, newKey)) {
+        if (newKey != prevKey && applicationModule.isEnvironmentVariableExist(versionKey, newKey)) {
             response.status = 400;
             response.content = "Environmental variable with key : " + newKey + " already exists.";
             return;
@@ -426,7 +427,7 @@ var log = new Log();
                 response.content = keyValidation.msg;
             }
         } else {
-            response.status = 500;
+            response.status = 400;
             response.content = "No environment variable with key: " + prevKey + ". Please enter valid key.";
         }
     } else if (action == "deleteRuntimeProperty"){
@@ -438,7 +439,7 @@ var log = new Log();
             response.status = 200;
             response.content = "Runtime property successfully deleted.";
         } else {
-            response.status = 500;
+            response.status = 400;
             response.content = "No environment variable with key: " + key + ". Please enter valid key.";
         }
     } else if (action == "addRuntimeProperty"){
@@ -503,7 +504,7 @@ var log = new Log();
             response.status = 200;
             response.content = "Tag successfully deleted.";
         } else {
-            response.status = 500;
+            response.status = 400;
             response.content = "No tag with key: " + key + ". Please enter valid key.";
         }
     } else if (action == "updateTag"){
@@ -512,18 +513,17 @@ var log = new Log();
         var newKey = request.getParameter("newKey");
         var newValue = request.getParameter("newValue");
 
-        if (applicationModule.isTagExist(versionKey, newKey)) {
+        if (newKey != prevKey && applicationModule.isTagExist(versionKey, newKey)) {
             response.status = 400;
             response.content = "Tag with key : " + newKey + " already exists.";
             return;
         }
-
         if (applicationModule.isTagExist(versionKey, prevKey)) {
             applicationModule.updateTag(versionKey, prevKey, newKey, newValue);
             response.status = 200;
             response.content = "Tag successfully updated.";
         } else {
-            response.status = 500;
+            response.status = 400;
             response.content = "No tag with key: " + prevKey + ". Please enter valid key.";
         }
     } else if (action == "getTags"){
@@ -575,7 +575,6 @@ var log = new Log();
             if (versions.length > 1 && (defaultVersionHashId == versionKey)) {
                 var msg = "You are trying to delete the default version, if you want to delete this particular version, " +
                           "please select some other version as the default version and try again";
-                log.error(msg);
                 response.status = 400;
                 response.content = msg;
             } else {

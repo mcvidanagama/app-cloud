@@ -23,7 +23,7 @@ include("/jagg/jagg.jag");
 jagg.template("application", function (inputs, outputs, jagg) {
         var runtimes = outputs.runtimes;
         var appType = outputs.appType;
-        var applicationCount = outputs.applicationCount;
+        var runningApplicationCount = outputs.runninngApplicationCount;
         var appTypeName = appType.type;
         var notAllowedEnvVariables = outputs.notAllowedEnvVariables;
         var isAppTypeBuildable = appType.buildable;
@@ -66,7 +66,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
     const APP_TYPE_EXTENSION = "<%=appType.extension%>";
     var applicationName = "<%=applicationName%>";
     var cloudSpecificApplicationRepresentation = "<%=cloudSpecificApplicationRepresentation%>";
-    var applicationCount = <%=applicationCount%>;
+    var runningApplicationCount = <%=runningApplicationCount%>;
     var maxApplications = <%=maxApplications%>;
     var conSpecs = <%=conSpecs%>;
     var retryCount = 0;
@@ -117,7 +117,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
             //Set select2 container
             var valueElem = $('#value')[0];
             initSelect2(null, valueElem, "");
-            if (applicationCount >= maxApplications) {
+            if (runningApplicationCount >= maxApplications) {
                 $('#outerContainer').empty();
                 $('#outerContainer').html('<div class="container-fluid"><div class="row row-centered">' +
                     '<div class="col-centered col-xs-10 col-sm-7  col-md-7 col-lg-6"><div class="cloud-new-content">' +
@@ -165,7 +165,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
             });
 
             // Adding a new runtime option for requesting missing runtimes through mails.
-            $("#runtime").append('<option value="requestNewRuntime">Request New Runtime</option>');
+            $("#runtime").append('<option value="requestNewRuntime">Request new runtime...</option>');
             $('#runtime').change(function(){
                if(this.value == 'requestNewRuntime'){
                     $("<a>").attr("href", '<%=requestNewAppTypeURL%>').attr("target", "_blank")[0].click();
@@ -386,8 +386,8 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 var result = jQuery.parseJSON(result);
                 if (result.length > 0) {
                     $("#progress_table").html("");
-                    $("#modal-title").text("Progress...");
-                    $("#modal-header-spinner").html("");
+                    $("#modal-title").text("Creating the " + cloudSpecificApplicationRepresentation.toLowerCase() + "...");
+                    $("#app-creation-header-loader").html("");
                 }
                 var table = "<table class='table' style='width:100%; color:black'>" ;
                 for(var i = 0; i < result.length; i++){
@@ -673,10 +673,12 @@ jagg.template("application", function (inputs, outputs, jagg) {
             var url = $("#artifactUrl").val();
             var currentExtension = url.split(/[. ]+/).pop();
 
-            if (currentExtension.toLowerCase() === "zip"){
-                document.getElementById('runtime').selectedIndex = 1;
-            } else {
-                document.getElementById('runtime').selectedIndex = 0;
+            if(appTypeName == 'jaggery') {
+                if (currentExtension.toLowerCase() === "zip"){
+                    document.getElementById('runtime').selectedIndex = 1;
+                } else {
+                    document.getElementById('runtime').selectedIndex = 0;
+                }
             }
         });
 
@@ -733,7 +735,9 @@ jagg.template("application", function (inputs, outputs, jagg) {
 
     function activateCreateApplication() {
         if ($('#applicationName').val() && $('#applicationRevision').val() && $('#container option:selected').val()
-                        && checkApplicationVersionExistence($('#applicationRevision').val()) && $('#runtime').val() > 0 && ($("#uploadedFileName").val() || $("#artifactUrl").val() || ($("#gitRepoUrl").val()  && $("#gitRepoBranch").val()))) {// checks form for validity
+                        && checkApplicationVersionExistence($('#applicationRevision').val()) && $('#runtime').val() > 0
+                        && ($("#uploadedFileName").val() || $("#artifactUrl").val() || ($("#gitRepoUrl").val()
+                        && $("#gitRepoBranch").val()))) {// checks form for validity
 
             if($("#uploadedFileName").val() && progress == 100){
                 if(validateArtifactType($("#uploadedFileName").val())){
@@ -799,15 +803,8 @@ jagg.template("application", function (inputs, outputs, jagg) {
     function checkApplicationVersionExistence(version){
         var existingVersions = versionList.split(",");
         var version = version.toLowerCase() ;
-        var verionMatch;
-        for (var i = 0; i < existingVersions.length; i++){
-            var existingVerion = existingVersions[i].toLowerCase();
-            verionMatch = existingVerion.localeCompare(version.toLowerCase());
-            if(verionMatch === 0){
-                break;
-            }
-        }
-        return !(verionMatch === 0);
+        var index = existingVersions.indexOf(version);
+        return (index < 0);
     }
 
      function clearUploadIconField() {
@@ -1079,7 +1076,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                     <div class="form-group">
                         <div class="checkbox">
                           <label>
-                           <input type="checkbox" name="defaultversion" id="default_version" value="deploy-sample" class="custom-checkbox"/>Make this the default version
+                           <input type="checkbox" name="defaultversion" id="default_version" class="custom-checkbox"/>Make this the default version
                           </label>
                         </div>
                     </div>
@@ -1368,7 +1365,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
 
       <script>
       function maxApplicationCountValidate() {
-         if (applicationCount < maxApplications ) {
+         if (runningApplicationCount < maxApplications ) {
              $("#add-application").prop("disabled", false);
          } else {
              $("#add-application").prop("disabled", true);
@@ -1386,12 +1383,10 @@ jagg.template("application", function (inputs, outputs, jagg) {
         <div class="modal-dialog modal-dialog-margin-top-md ">
             <div class="modal-content">
                 <div class="modal-header">
-                    <div class="col-md-6">
-                        <h3 class="modal-title" id="modal-title">Initializing <%=cloudSpecificApplicationRepresentation%></h3>
-                    </div>
-                    <div class="col-md-6" id="modal-header-spinner">
-                        <i class="fw fw-2x fw-loader2 fw-spin"></i>
-                    </div>
+                    <h3 class="modal-title" id="modal-title">Creating the <%=cloudSpecificApplicationRepresentation.toLowerCase()%>...</h3>
+                    <span class="app-creation-loader" id="app-creation-header-loader">
+                        <i class="fw fw-loader2 fw-spin fw-2x pull-right"></i>
+                    </span>
                 </div>
                 <div class="modal-body" id="app-creation-model-body"></div>
                 <div class="modal-footer" id="app-creation-model-footer"></div>
