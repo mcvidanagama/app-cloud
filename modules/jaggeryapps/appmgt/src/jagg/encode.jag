@@ -23,7 +23,6 @@
  * org.owasp.encoder.Encode library is used , and encoder_1.2.0.wso2v1.jar is used.
  *
  * No need to handle null cases because it will return the encoded null.
- * @type {Log}
  */
 
 var encode = Packages.org.owasp.encoder.Encode;
