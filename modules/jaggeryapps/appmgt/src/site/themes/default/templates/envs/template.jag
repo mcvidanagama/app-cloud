@@ -81,7 +81,7 @@ $(document).ready(function() {
         var parsedResult = JSON.parse(result);
         if(parsedResult.length == 0){
             $(".env-list").prepend(
-                '<div class="row"><div id="push"></div><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">No Environmental Variables are created yet. </div></div>');
+                '<div class="row"><div id="push"></div><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">No environment variables are created yet. </div></div>');
         } else {
             for (var i = 0; i < parsedResult.length; i++) {
                 $(".env-list").prepend(
@@ -293,9 +293,9 @@ $(document).ready(function() {
                 key: updatedKey,
             }, function (result) {
                 var isNewAddition = element.hasClass('save-new-entry');
-                if ((isNewAddition || (prevKey && prevKey != updatedKey)) && result && result.trim() == "true") {
+                if ((isNewAddition || (prevKey && prevKey != updatedKey)) && JSON.parse(result)) {
                     jagg.message({
-                        content: "Environmental variable with key : " + updatedKey + " already exists.",
+                        content: "Environment variable with key : " + updatedKey + " already exists.",
                         type: 'error'
                     });
                     return;
