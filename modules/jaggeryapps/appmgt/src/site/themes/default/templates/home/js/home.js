@@ -272,7 +272,7 @@ function displayApplicationInactiveMessage() {
                      modalStatus: true,
                      type: 'warning',
                      timeout: 15000,
-                     content: "<b>The " + cloudSpecificApplicationRepresentation.toLowerCase() + " is stopped because 12 hours have passed after it was last started.</b></br>" +
+                     content: "<b>This " + cloudSpecificApplicationRepresentation.toLowerCase() + " is stopped because 12 hours have passed after it was last started.</b></br>" +
                               "This is a limitation of free accounts in " + pageTitle + "</br> To restart, click the <b>Start</b>. button.</br>" +
                               "<a href='"+requestNewAppTypeURL+"' target='_blank'>Contact us</a> if you need any help."
                  });
@@ -298,18 +298,21 @@ function listTags(){
         tagListLength = tags.length;
     }
     var tagString = '';
+    var tagTitleString = '';
     for(var i = 0; i < tagListLength; i++){
         if(i >= 3){
             break;
         }
         tagString += tags[i].labelName + " : " + tags[i].labelValue + "</br>";
+        tagTitleString += tags[i].labelName + " : " + tags[i].labelValue + "\n";
     }
     if(tagListLength > 3) {
         tagString += "</br><a class='view-tag' href='/appmgt/site/pages/tags.jag?applicationKey=" + applicationKey
-                             + "&versionKey=" + selectedApplicationRevision.hashId + "'>View All Tags</a>";
+                             + "&versionKey=" + selectedApplicationRevision.hashId + "' title='View All envs'>View All Tags</a>";
     }
 
     $('#tag-list').html(tagString);
+    $('#tag-list').prop('title', tagTitleString);
 }
 
 function listEnvs(){
@@ -319,18 +322,21 @@ function listEnvs(){
         envListLength = envs.length;
     }
     var envString = '';
+    var envTitleString = '';
     for(var i = 0; i < envListLength; i++){
         if(i >= 3){
             break;
         }
         envString += envs[i].propertyName + " : " + envs[i].propertyValue + "</br>";
+        envTitleString += envs[i].propertyName + " : " + envs[i].propertyValue + "\n";
     }
     if(envListLength > 3) {
         envString += "</br><a class='view-tag' href='/appmgt/site/pages/envs.jag?applicationKey=" + applicationKey
-                             + "&versionKey=" + selectedApplicationRevision.hashId + "'>View All envs</a>";
+                             + "&versionKey=" + selectedApplicationRevision.hashId + "' title='View All envs'>View All envs</a>";
     }
 
     $('#env-list').html(envString);
+    $('#env-list').prop('title', envTitleString);
 }
 
 // Icon initialization
@@ -558,7 +564,7 @@ function deleteApplication(){
 
     $('#app_creation_progress_modal').modal({ backdrop: 'static', keyboard: false});
     $("#app_creation_progress_modal").show();
-    $("#modal-title").text("Deleting selected version..");
+    $("#modal-title").text("Deleting the " + cloudSpecificApplicationRepresentation.toLowerCase() + " version...");
 
     jagg.post("../blocks/application/application.jag", {
         action:"deleteVersion",

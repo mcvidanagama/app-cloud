@@ -49,11 +49,11 @@ jagg.block("application", {
         var cloudSpecificApplicationRepresentation = modManager.getCloudTypeProperties().cloudSpecificApplicationRepresentation;
         var applications = applicationModule.getAllApplications();
 
-        var requestNewAppTypeSubjectMessage = 'Requesting a new runtime for application type: '+inputs.appTypeName+' by tenant: ' + modManager.getTenantDomain();
+        var requestNewAppTypeSubjectMessage = 'Requesting a new runtime for ' + cloudSpecificApplicationRepresentation + ' type: ' + inputs.appTypeName;
         var requestNewAppTypeURL = modManager.getPropertyValue(modManager.getCloudTypeProperties().properties.supportUrl) +
                 '&subject=' + requestNewAppTypeSubjectMessage;
 
-        var requestMoreAppsSubjectMessage = 'Requesting to run more than '+maxAppCount+' applications for tenant: ' + modManager.getTenantDomain();
+        var requestMoreAppsSubjectMessage = 'Requesting to run more than ' + maxAppCount + ' ' + cloudSpecificApplicationRepresentation + 's';
         var requestMoreAppseURL = modManager.getPropertyValue(modManager.getCloudTypeProperties().properties.supportUrl) +
                 '&subject=' + requestMoreAppsSubjectMessage;
 
