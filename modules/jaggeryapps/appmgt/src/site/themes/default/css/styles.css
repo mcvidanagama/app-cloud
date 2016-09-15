@@ -2948,3 +2948,10 @@ ul#appVersionList {
     margin-top: -1em;
 }
 
+.env-error{
+    background-color: #e74c3c !important;
+    font-weight: 900 !important;
+    padding: 10px !important;
+    margin-top: -15px !important;
+}
+

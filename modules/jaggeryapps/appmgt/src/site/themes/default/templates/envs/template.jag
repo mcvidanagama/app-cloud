@@ -25,6 +25,8 @@ jagg.template("envs", function(inputs, outputs, jagg) {
     var applicationKey = request.getParameter("applicationKey");
     var selectedRevision = outputs.selectedRevision;
     var cloudSpecificApplicationRepresentation = outputs.cloudSpecificApplicationRepresentation;
+    var allDBInfo = outputs.allDBInfo;
+    var noOfDbs = outputs.noOfDbs;
 %>
 
       <!-- Bootstrap -->
@@ -70,6 +72,8 @@ jagg.template("envs", function(inputs, outputs, jagg) {
 
 </div>
 <script >
+var allDBInfo = jQuery.parseJSON('<%=allDBInfo%>');
+var noOfDbs = <%=noOfDbs%>;
 $(document).ready(function() {
     var cloudSpecificApplicationRepresentation = '<%=cloudSpecificApplicationRepresentation%>';
     var prevKey, prevValue;
@@ -84,6 +88,12 @@ $(document).ready(function() {
                 '<div class="row"><div id="push"></div><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">No environment variables are created yet. </div></div>');
         } else {
             for (var i = 0; i < parsedResult.length; i++) {
+                var valueControl;
+                if(noOfDbs == 0){
+                    valueControl = '<input type="text" class="form-control element-value-holder" id="value" value="' + parsedResult[i].value  + '">';
+                } else {
+                    valueControl = '<select name="value" class="form-control select2 element-value-holder" disabled><option>' + parsedResult[i].value + '</option></select>';
+                }
                 $(".env-list").prepend(
                     '<div class="form-inline custom-env-class-for-demo">' +
                     '<div class="form-group">' +
@@ -114,6 +124,13 @@ $(document).ready(function() {
             $(this).css('pointer-events', 'none');
             $(this).attr("title", "Save Environment Variable to Enable");
 
+            var valueControl;
+            if(noOfDbs == 0){
+                valueControl = '<input type="text" class="form-control element-value-holder" id="value" placeholder="Value">';
+            } else {
+                valueControl = '<select name="value" class="form-control select2 element-value-holder"></select>';
+            }
+
             $(".env-list").prepend(
                 '<div class="form-inline  property-seperator custom-env-class-for-demo">' +
                 '<div class="form-group">' +
@@ -122,7 +139,7 @@ $(document).ready(function() {
                 '</div>' +
                 '<div class="form-group">' +
                 '<label class="sr-only" for="value">Value</label>' +
-                '<select name="value" class="form-control select2 element-value-holder"></select>' +
+                valueControl +
                 '</div>' +
                 '<div class="form-group edit-key-values">' +
                 '<span class="fw-stack fw-lg edit-env">' +
@@ -139,7 +156,9 @@ $(document).ready(function() {
 
             //Initialize select2 container on newly added env variable
             var valueElem = $(this).parent().parent().parent().find('.element-value-holder')[0];
-            initSelect2(null, valueElem, "");
+            if(noOfDbs != 0){
+                initSelect2(null, valueElem, "", allDBInfo);
+            }
 
             //Disable Other environment variables "Edit" button
             $(".fw-edit").each( function(i) {
@@ -151,45 +170,54 @@ $(document).ready(function() {
         });
 
         $(document).on('click', '.fw-edit', function() {
-            //Disable "Add Environment Variable" Button
-            $(".add-env").css('pointer-events', 'none');
-            $(".add-env").attr("title", "Save Environment Variable to Enable");
-            $(this).parent().parent().find('.fw-delete').removeClass('fw-delete').addClass('fw-cancel');
+            if(noOfDbs == 0){
+                $(this).parent().parent().find('.fw-delete').removeClass('fw-delete').addClass('fw-cancel');
+                $(this).parent().parent().parent().find('.element-key-holder')[0].readOnly = false;
+                $(this).parent().parent().parent().find('.element-value-holder')[0].readOnly = false;
+                $(this).hide();
+                $(this).parent().find('#saveIcon').show();
+                prevKey = $(this).parent().parent().parent().find('.element-key-holder')[0].value;
+                prevValue = $(this).parent().parent().parent().find('.element-value-holder')[0].value;
+            } else {
+                //Disable "Add Environment Variable" Button
+                $(".add-env").css('pointer-events', 'none');
+                $(".add-env").attr("title", "Save Environment Variable to Enable");
+                $(this).parent().parent().find('.fw-delete').removeClass('fw-delete').addClass('fw-cancel');
 
-            //Disable Other environment variables "Edit" button
-            var parentElement = $(this).parent().filter('.edit-env')[0];
-            $('.edit-env').each(function() {
-                var currentElement = $(this).get(0);
-                if(currentElement !== parentElement) {
-                    if( $(this).hasClass('edit-enable')){
-                        $(this).removeClass('edit-enable');
+                //Disable Other environment variables "Edit" button
+                var parentElement = $(this).parent().filter('.edit-env')[0];
+                $('.edit-env').each(function() {
+                    var currentElement = $(this).get(0);
+                    if(currentElement !== parentElement) {
+                        if( $(this).hasClass('edit-enable')){
+                            $(this).removeClass('edit-enable');
+                        }
+                        $(this).addClass('edit-disable');
                     }
-                    $(this).addClass('edit-disable');
-                }
-            });
+                });
 
-            var keyElem = $(this).parent().parent().parent().find('.element-key-holder')[0];
-            var valueElem = $(this).parent().parent().parent().find('.element-value-holder')[0];
-            keyElem.readOnly = false;
-            prevKey = keyElem.value;
-            prevValue = valueElem.value;
+                var keyElem = $(this).parent().parent().parent().find('.element-key-holder')[0];
+                var valueElem = $(this).parent().parent().parent().find('.element-value-holder')[0];
+                keyElem.readOnly = false;
+                prevKey = keyElem.value;
+                prevValue = valueElem.value;
 
-            var data = [];
-            var prevData = {};
-            prevData.id = prevValue;
-            prevData.text = prevValue;
-            data.push(prevData);
+                var data = [];
+                var prevData = {};
+                prevData.id = prevValue;
+                prevData.text = prevValue;
+                data.push(prevData);
 
-            //Hide edit icon and display save icon
-            $(this).hide();
-            $(this).parent().find('#saveIcon').show();
+                //Hide edit icon and display save icon
+                $(this).hide();
+                $(this).parent().find('#saveIcon').show();
 
-            //Remove displayed value and reinitialize select2 container
-            $(valueElem).children('option').remove();
-            $(valueElem).prop('disabled', false);
-            var select2 = initSelect2(data, valueElem, "");
-            select2.val(prevValue).trigger("change");
-
+                //Remove displayed value and reinitialize select2 container
+                $(valueElem).children('option').remove();
+                $(valueElem).prop('disabled', false);
+                var select2 = initSelect2(data, valueElem, "", allDBInfo);
+                select2.val(prevValue).trigger("change");
+            }
         });
 
         $(document).on('click', '.fw-cancel', function() {
