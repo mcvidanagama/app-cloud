@@ -121,10 +121,8 @@ function as_setup(){
     cp $LIB_LOCATION/jackson-dataformat-yaml-2.7.5.jar $1/repository/components/dropins/
     cp $LIB_LOCATION/slf4j-api-1.7.13.jar $1/repository/components/dropins/
     cp $LIB_LOCATION/snakeyaml-1.17.jar $1/repository/components/dropins/
-
     cp $LIB_LOCATION/mysql-connector-java-5.1.27-bin.jar $1/repository/components/lib/
     cp $LIB_LOCATION/junixsocket-common-2.0.4.wso2v1.jar $1/repository/components/dropins/
-
     cp $LIB_LOCATION/logging-interceptor-2.7.5.wso2v1.jar $1/repository/components/dropins/
     cp $LIB_LOCATION/okhttp-2.7.5.wso2v1.jar $1/repository/components/dropins/
     cp $LIB_LOCATION/okhttp-ws-2.7.5.wso2v1.jar $1/repository/components/dropins/
@@ -134,7 +132,6 @@ function as_setup(){
     cp $LIB_LOCATION/dnsjava-2.1.7.wso2v1.jar $1/repository/components/dropins/
     cp $LIB_LOCATION/json-20160212.jar $1/repository/components/dropins/
     cp $LIB_LOCATION/fabric8-utils-2.2.100.jar $1/repository/components/dropins/
-
     cp $CONF_LOCATION/$AS_VERSION/repository/conf/datasources/master-datasources.xml $1/repository/conf/datasources/
     cp $CONF_LOCATION/$AS_VERSION/repository/conf/datasources/appcloud-datasources.xml $1/repository/conf/datasources/
     cp $APP_CLOUD_SRC_HOME/modules/components/org.wso2.appcloud.core/target/org.wso2.appcloud.core-3.0.0-SNAPSHOT.jar $1/repository/components/dropins/
