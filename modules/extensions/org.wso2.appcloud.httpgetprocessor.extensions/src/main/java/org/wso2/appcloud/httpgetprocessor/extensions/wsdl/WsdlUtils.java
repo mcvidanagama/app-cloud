@@ -24,6 +24,7 @@ import org.wso2.carbon.core.transports.CarbonHttpResponse;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.Set;
 
@@ -31,23 +32,23 @@ import java.util.Set;
  * Util class for wsdl processors which contains url overwrite methods and properties
  */
 public class WsdlUtils {
-    private static final Log log = LogFactory.getLog(WsdlUtils.class);
 
+    private static final Log log = LogFactory.getLog(WsdlUtils.class);
+    private static final String hostName = System.getenv("APP_HOST");
+    private static final String regexPattern = ":\\/\\/" + hostName + "(:?)(\\d*)\\/(.*?)\\/t\\/.*?\\/";
+    private static final String replacementString = ":\\/\\/" + hostName + "$1$2\\/$3/";
+    private static final String DEFAULT_CHARSET = "UTF-8";
     //Temp File Prefixes/suffixes
     public static final String tempSuffix = ".dat";
     public static final String tempPrefixWsdl11 = "_nhttp_wsdl11";
     public static final String tempPrefixWsdl20 = "_nhttp_wsdl20";
 
-    public static final String hostName = System.getenv("APP_HOST");
-    public static final String regexPattern = ":\\/\\/" + hostName + "(:?)(\\d*)\\/(.*?)\\/t\\/.*?\\/";
-    public static final String replacementString = ":\\/\\/" + hostName + "$1$2\\/$3/";
-
     /**
      * Overwrite wsdl endpoint urls contained in response and populate updatedResponse with the result
      *
      * @param clientResponse CarbonHttpResponse which contains updated information
-     * @param axis2Response CarbonHttpResponse created from axis2 wsdl processors
-     * @throws Exception
+     * @param axis2Response  CarbonHttpResponse created from axis2 wsdl processors
+     * @throws Exception StreamCopyException or UnsupportedEncodingException thrown
      */
     public static void updateResponse(CarbonHttpResponse clientResponse, CarbonHttpResponse axis2Response) throws Exception {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -59,6 +60,9 @@ public class WsdlUtils {
             } catch (StreamCopyException streamCopyException) {
                 log.error("Error in updating WSDL : fail to read response output stream ", streamCopyException);
                 throw new Exception(streamCopyException);
+            } catch (UnsupportedEncodingException encodingException) {
+                log.error("Error in updating WSDL : exception in encoding ", encodingException);
+                throw new Exception(encodingException);
             }
 
             //Populate other properties to new response
@@ -66,24 +70,26 @@ public class WsdlUtils {
             clientResponse.setError(axis2Response.isError());
             Map<String, String> headers = axis2Response.getHeaders();
             if (headers != null) {
-                Set<String> itr = headers.keySet();
-                if (itr != null) {
-                    for (String elem : itr) {
-                        clientResponse.addHeader(elem, headers.get(elem));
+                Set<Map.Entry<String, String>> itr = headers.entrySet();
+                for (Map.Entry elem : itr) {
+                    if(elem.getKey() != null && elem.getValue() != null) {
+                        clientResponse.addHeader(elem.getKey().toString(), elem.getValue().toString());
                     }
                 }
             }
         }
     }
 
+
     /**
      * Remove tenant information (/t/(tenant-id)) from endpoint urls
      *
      * @param data byte array of data to be updated
      * @return byte array of updated data
+     * @throws UnsupportedEncodingException If encoding is not supported
      */
-    private static byte[] removeTenantInfo(byte[] data) {
-        String wsdlString = new String(data);
-        return wsdlString.replaceAll(regexPattern, replacementString).getBytes();
+    private static byte[] removeTenantInfo(byte[] data) throws UnsupportedEncodingException {
+        String wsdlString = new String(data, DEFAULT_CHARSET);
+        return wsdlString.replaceAll(regexPattern, replacementString).getBytes(DEFAULT_CHARSET);
     }
 }

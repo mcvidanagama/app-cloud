@@ -18,17 +18,15 @@ package org.wso2.appcloud.httpgetprocessor.extensions.wsdl;
 
 import org.apache.axiom.util.blob.OverflowBlob;
 import org.apache.axis2.context.ConfigurationContext;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.core.transports.CarbonHttpRequest;
 import org.wso2.carbon.core.transports.CarbonHttpResponse;
+import org.wso2.carbon.core.transports.util.Wsdl20Processor;
 
 /**
  * Wsdl generator for wsdl 2.0 requests which overwrites axis2 wsdl 2.0 processor result. This class overwrites address
  * urls by removing tenant information
  */
-public class Wsdl20Processor extends org.wso2.carbon.core.transports.util.Wsdl20Processor {
-    private static final Log log = LogFactory.getLog(Wsdl20Processor.class);
+public class Wsdl20UrlTenantInfoProcessor extends Wsdl20Processor {
 
     /**
      * Process wsdl 2.0 request, generate wsdl from axis2 and update tenant information
@@ -41,9 +39,13 @@ public class Wsdl20Processor extends org.wso2.carbon.core.transports.util.Wsdl20
     public void process(final CarbonHttpRequest request, final CarbonHttpResponse response, final ConfigurationContext configurationContext) throws Exception {
         OverflowBlob temporaryData = new OverflowBlob(256, 4048, WsdlUtils.tempPrefixWsdl20, WsdlUtils.tempSuffix);
         CarbonHttpResponse updatedResponse = new CarbonHttpResponse(temporaryData.getOutputStream());
-        //Generate wsdl from axis2 wsdl 2.0 processor
-        super.process(request, updatedResponse, configurationContext);
-        //Overwrite endpoint urls
-        WsdlUtils.updateResponse(response, updatedResponse);
+        try {
+            //Generate wsdl from axis2 wsdl 2.0 processor
+            super.process(request, updatedResponse, configurationContext);
+            //Overwrite endpoint urls
+            WsdlUtils.updateResponse(response, updatedResponse);
+        } finally {
+            temporaryData.release();
+        }
     }
 }

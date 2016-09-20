@@ -18,17 +18,15 @@ package org.wso2.appcloud.httpgetprocessor.extensions.wsdl;
 
 import org.apache.axiom.util.blob.OverflowBlob;
 import org.apache.axis2.context.ConfigurationContext;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.core.transports.CarbonHttpRequest;
 import org.wso2.carbon.core.transports.CarbonHttpResponse;
+import org.wso2.carbon.core.transports.util.Wsdl11Processor;
 
 /**
  * Wsdl generator for wsdl 1.1 requests which overwrites axis2 wsdl 1.1 processor result. This class overwrites address
  * urls by removing tenant information
  */
-public class Wsdl11Processor extends org.wso2.carbon.core.transports.util.Wsdl11Processor {
-    private static final Log log = LogFactory.getLog(Wsdl11Processor.class);
+public class Wsdl11UrlTenantInfoProcessor extends Wsdl11Processor {
 
     /**
      * Process wsdl 1.1 request, generate wsdl from axis2 and update tenant information
