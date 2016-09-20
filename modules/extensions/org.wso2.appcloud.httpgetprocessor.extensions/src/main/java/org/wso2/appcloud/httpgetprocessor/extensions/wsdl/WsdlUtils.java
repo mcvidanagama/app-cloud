@@ -70,12 +70,7 @@ public class WsdlUtils {
             clientResponse.setError(axis2Response.isError());
             Map<String, String> headers = axis2Response.getHeaders();
             if (headers != null) {
-                Set<Map.Entry<String, String>> itr = headers.entrySet();
-                for (Map.Entry elem : itr) {
-                    if(elem.getKey() != null && elem.getValue() != null) {
-                        clientResponse.addHeader(elem.getKey().toString(), elem.getValue().toString());
-                    }
-                }
+                clientResponse.getHeaders().putAll(headers);
             }
         }
     }
