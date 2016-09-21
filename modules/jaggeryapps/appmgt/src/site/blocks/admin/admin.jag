@@ -160,6 +160,16 @@ var log = new Log('site/blocks/admin/admin.jag');
             response.status = 400;
             response.content = "Failed to delete tenant:" + tenantDomain + ' completely due to ' + e.message;
         }
+    } else if (action == "redeployAllApplications") {
+        try {
+            adminModule.redeployAllApplications();
+            response.status = 200;
+            response.content = "Applications of all tenants were successfully redeployed.";
+        } catch (e) {
+            log.error(e);
+            response.status = 400;
+            response.content = 'Failed to redeploy all applications of all tenants due to ' + e.message;
+        }
     } else {
         throw new Error("No action specified for: " + action);
     }

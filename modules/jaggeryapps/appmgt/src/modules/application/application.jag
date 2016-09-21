@@ -373,7 +373,7 @@ var deployApplication = function(applicationName, versionName, appTypeName, depl
     var conSpecCpu;
     //If create application call then pass spec values or else (redeploy) query the database
     if (!(conSpecMemoryLimit && conSpecCpuLimit)) {
-       var applicationHashId = Util.getApplicationHashId(applicationName, modManager.getTenantId());
+       var applicationHashId = Util.getApplicationHashId(applicationName, modManager.getTenantId(true));
        var application = getApplication(applicationHashId);
        if (application.versions) {
             if (application.versions[versionName]) {
@@ -401,7 +401,7 @@ var deployApplication = function(applicationName, versionName, appTypeName, depl
     addEvent(KUBE_DEPLOY, EVENT_PENDING, msg, versionHashId);
     //Creating basic deployment
     var applicationCtx = KubernetesProvisioningUtils.getApplicationContext(
-            applicationName, versionName, appTypeName , modManager.getTenantId(), modManager.getTenantDomain(), versionHashId);
+            applicationName, versionName, appTypeName , modManager.getTenantId(true), modManager.getTenantDomain(true), versionHashId);
     var kubService = new KubernetesRuntime(applicationCtx, resourceQuotaLimit);
     if (log.isDebugEnabled()) {
         log.debug("Deploying application: " + applicationName);
@@ -468,7 +468,7 @@ var deployApplication = function(applicationName, versionName, appTypeName, depl
 var getRestartCounts = function (applicationName, versionName, applicationType){
     var versionHashId = getVersionHashId(applicationName, versionName);
     var applicationCtx = KubernetesProvisioningUtils.getApplicationContext(
-            applicationName, versionName, applicationType , modManager.getTenantId(), modManager.getTenantDomain(), versionHashId);
+            applicationName, versionName, applicationType , modManager.getTenantId(true), modManager.getTenantDomain(true), versionHashId);
     var kubService = new KubernetesRuntime(applicationCtx);
     var restartCounts = kubService.getPodRestartCounts();
     return restartCounts;
@@ -478,7 +478,7 @@ var getRestartCounts = function (applicationName, versionName, applicationType){
 var constructAppLaunchURL = function(applicationName, versionName){
     applicationName = KubernetesProvisioningUtils.getKubernetesValidAppName(applicationName);
     applicationName = applicationName.toLowerCase();
-    var urlPrefix = modManager.getTenantDomain()
+    var urlPrefix = modManager.getTenantDomain(true)
                             + "-" + applicationName + "-" + versionName;
     var appLaunchURL = urlPrefix.replace(/\./g, '-')
                                +  "." + modManager.getPropertyValue("ApplicationLaunchBaseURL");
@@ -769,7 +769,7 @@ var getAllApplications = function(){
 }
 
 var generateApplicationHashId = function(applicationName){
-    var tenantId = modManager.getTenantId();
+    var tenantId = modManager.getTenantId(true);
     try {
         return Util.getApplicationHashId(applicationName, tenantId);
     } catch (e){
@@ -783,7 +783,7 @@ var generateApplicationHashId = function(applicationName){
 
 var getApplicationHashIdByName = function(applicationName){
     try {
-        var tenantId = modManager.getTenantId();
+        var tenantId = modManager.getTenantId(true);
         var applicationHashId = Util.getApplicationHashId(applicationName, tenantId);
         return applicationHashId;
     } catch (e){
@@ -1134,13 +1134,13 @@ var deleteSelectedVersionFromSession = function(applicationKey){
 };
 
 var getVersionHashId = function(applicationName, versionName){
-    var tenantId = modManager.getTenantId();
+    var tenantId = modManager.getTenantId(true);
     var versionHashId = Util.getVersionHashId(applicationName, versionName, tenantId)
     return versionHashId;
 }
 
 var getApplicationCreationEvents = function(applicationName, versionName) {
-    var tenantId = modManager.getTenantId();
+    var tenantId = modManager.getTenantId(true);
     var versionHashId = Util.getVersionHashId(applicationName, versionName, tenantId);
     var eventsManager = new EventsManager();
     var eventsArray = [];
@@ -1335,7 +1335,7 @@ var deleteApplicationUploadedPath = function(versionHashId) {
 var deleteApplicationFromKubernetes = function(versionHashId) {
 
     try{
-        var applicationCtx = KubernetesProvisioningUtils.getApplicationContext(null, null, null, modManager.getTenantId(),
+        var applicationCtx = KubernetesProvisioningUtils.getApplicationContext(null, null, null, modManager.getTenantId(true),
                                                                                modManager.getTenantDomain(true), versionHashId);
         var kubernetesRuntimeProvisioningService = new KubernetesRuntime(applicationCtx);
         return kubernetesRuntimeProvisioningService.deleteDeployment();
@@ -1409,7 +1409,7 @@ var addCustomDomain = function (applicationName, customDomain) {
     var defaultVersion = getDefaultVersion(applicationName);
     deleteService(applicationName, defaultVersion);
     createServiceWithHostName(applicationName, defaultVersion, customDomain);
-    var tenantId = modManager.getTenantId();
+    var tenantId = modManager.getTenantId(true);
     var applicationHashId = Util.getApplicationHashId(applicationName, tenantId);
     ApplicationManager.updateCustomDomain(applicationHashId, customDomain);
 };
@@ -1439,7 +1439,7 @@ var getDefaultVersion = function (applicationName) {
 };
 
 var redeployMappedDomain = function (applicationName, versionName) {
-    var tenantId = modManager.getTenantId();
+    var tenantId = modManager.getTenantId(true);
     var applicationHashId = Util.getApplicationHashId(applicationName, tenantId);
     var versionHashId = getVersionHashId(applicationName, versionName);
 

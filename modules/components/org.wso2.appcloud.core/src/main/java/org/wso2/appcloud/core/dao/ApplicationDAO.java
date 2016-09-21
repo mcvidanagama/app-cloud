@@ -40,8 +40,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -2315,6 +2317,36 @@ public class ApplicationDAO {
         } catch (SQLException e) {
             String msg = "Error while checking if version exists for application name: " + applicationName +
                     ", version: " + versionName + " and tenant id: " + tenantId + ".";
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeResultSet(resultSet);
+            DBUtil.closePreparedStatement(preparedStatement);
+        }
+    }
+
+    public Map<Integer, List<Application>> getRunningApplicationsOfAllTenants(Connection dbConnection) throws AppCloudException {
+        Map<Integer, List<Application>> tenantApplications = new HashMap<>();
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            preparedStatement = dbConnection.prepareStatement(SQLQueryConstants.GET_RUNNING_APPLICATIONS_OF_ALL_TENANTS);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                int tenantId = resultSet.getInt("tenant_id");
+                if (tenantApplications.get(tenantId) == null) {
+                    tenantApplications.put(tenantId, new ArrayList<Application>());
+                }
+                Application application = new Application();
+                application.setDefaultVersion(resultSet.getString("VERSION_NAME"));
+                application.setHashId(resultSet.getString("VERSION_HASH_ID"));
+                application.setApplicationName(resultSet.getString("APPLICATION_NAME"));
+                application.setApplicationType(resultSet.getString("APP_TYPE_NAME"));
+                tenantApplications.get(tenantId).add(application);
+            }
+            return tenantApplications;
+        } catch (SQLException e) {
+            String msg = "Error while getting all running applications of all tenants.";
             throw new AppCloudException(msg, e);
         } finally {
             DBUtil.closeResultSet(resultSet);
