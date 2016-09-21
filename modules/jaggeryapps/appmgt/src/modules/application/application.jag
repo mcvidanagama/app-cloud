@@ -723,7 +723,6 @@ var getAllRuntimes = function(appType){
             runtimeObject.id = runtime.id;
             runtimeObject.runtimeName = runtime.runtimeName;
             runtimeObject.imageName = runtime.imageName;
-            runtimeObject.repoURL = runtime.repoURL;
             runtimeObject.tag = runtime.tag;
             runtimeObject.description = runtime.description;
 

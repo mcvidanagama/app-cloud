@@ -1194,7 +1194,6 @@ public class ApplicationDAO {
                 applicationRuntime.setId(resultSet.getInt(SQLQueryConstants.ID));
                 applicationRuntime.setRuntimeName(resultSet.getString(SQLQueryConstants.NAME));
                 applicationRuntime.setImageName(resultSet.getString(SQLQueryConstants.RUNTIME_IMAGE_NAME));
-                applicationRuntime.setRepoURL(resultSet.getString(SQLQueryConstants.RUNTIME_REPO_URL));
                 applicationRuntime.setTag(resultSet.getString(SQLQueryConstants.RUNTIME_TAG));
                 applicationRuntime.setDescription(resultSet.getString(SQLQueryConstants.DESCRIPTION));
 
@@ -1236,7 +1235,6 @@ public class ApplicationDAO {
             while (resultSet.next()) {
                 applicationRuntime.setId(resultSet.getInt(SQLQueryConstants.ID));
                 applicationRuntime.setImageName(resultSet.getString(SQLQueryConstants.RUNTIME_IMAGE_NAME));
-                applicationRuntime.setRepoURL(resultSet.getString(SQLQueryConstants.RUNTIME_REPO_URL));
                 applicationRuntime.setRuntimeName(resultSet.getString(SQLQueryConstants.NAME));
                 applicationRuntime.setTag(resultSet.getString(SQLQueryConstants.RUNTIME_TAG));
                 applicationRuntime.setDescription(resultSet.getString(SQLQueryConstants.DESCRIPTION));
