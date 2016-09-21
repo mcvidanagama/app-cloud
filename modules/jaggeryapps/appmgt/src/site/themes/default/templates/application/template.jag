@@ -1154,14 +1154,17 @@ jagg.template("application", function (inputs, outputs, jagg) {
                     <input type="radio" name="fileUploadRadioOptions" id="inlineRadio1" value="upload-from-file"
                            checked="checked" class="custom-radio"> Upload from file system
                 </label>
+                <br/>
                 <label class="radio-inline">
                     <input type="radio" name="fileUploadRadioOptions" id="inlineRadio2" value="upload-from-url"
                            class="custom-radio"> Upload from URL
                 </label>
+                <br/>
 		        <label class="radio-inline">
                     <input type="radio" name="fileUploadRadioOptions" id="inlineRadioSample" value="deploy-sample"
                            class="custom-radio"> Deploy sample <%=cloudSpecificApplicationRepresentation.toLowerCase()%>
                 </label>
+                <br/>
                 <%  if(isAppTypeBuildable == 'false'){ %>
                     <label class="radio-inline">
                         <input type="radio" name="fileUploadRadioOptions" id="inlineRadio3" value="github-repo-url"
