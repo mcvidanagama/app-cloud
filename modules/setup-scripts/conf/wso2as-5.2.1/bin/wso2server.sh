@@ -299,6 +299,7 @@ do
     -Dkubernetes.certs.client.key.file=/mnt/certs/admin-key.pem \
     -Dkubernetes.certs.client.file=/mnt/certs/admin.pem \
     -Dkubernetes.auth.tryServiceAccount=false \
+    -Dkubernetes.tls.versions=TLSv1.2,TLSv1.1,TLSv1 \
     org.wso2.carbon.bootstrap.Bootstrap $*
     status=$?
 done
