@@ -85,5 +85,9 @@ elif [ $ACTION = "getTenantMaxDatabaseCount" ]; then
 elif [ $ACTION = "updateConSpec" ]; then
     echo "----------Update container specification----------" >> $LOGFILE
     curl -b cookies -v -X POST -k $SERVICE_URL/appmgt/site/blocks/admin/admin.jag -d "action=updateConSpec&tenantDomain=$2&applicationName=$3&applicationRevision=$4&memory=$5&cpu=$6" >> $LOGFILE 2>&1
+elif [ $ACTION = "redeployAllApplications" ]; then
+    echo "----------Redploy all applications----------" >> $LOGFILE
+    curl -b cookies -v -X POST -k $SERVICE_URL/appmgt/site/blocks/admin/admin.jag -d "action=redeployAllApplications" >> $LOGFILE 2>&1
     echo -e "\n" >> $LOGFILE
 fi
+   

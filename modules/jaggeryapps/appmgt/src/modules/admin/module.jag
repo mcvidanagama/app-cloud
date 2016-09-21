@@ -18,7 +18,9 @@
  */
 
 jagg.module("admin", {
-    deleteTenant:function () {
+    redeployAllApplications:function () {
+        return jagg.require(jagg.getModulesDir() + "admin/admin.jag").redeployAllApplications.apply(this, arguments);
+    },deleteTenant:function () {
         return jagg.require(jagg.getModulesDir() + "admin/admin.jag").deleteTenant.apply(this, arguments);
     },
     stopIdleApplicationsByRunningTimePeriod:function () {

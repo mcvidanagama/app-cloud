@@ -245,6 +245,12 @@ public class SQLQueryConstants {
 
     public static final String GET_APPLICATION_ICON = "SELECT id FROM AC_APP_ICON WHERE application_id=?";
 
+    public static final String GET_RUNNING_APPLICATIONS_OF_ALL_TENANTS =
+            "SELECT AC_VERSION.name as VERSION_NAME, AC_VERSION.hash_id as VERSION_HASH_ID, AC_VERSION.tenant_id, " +
+                    "AC_APPLICATION.name AS APPLICATION_NAME, AC_APP_TYPE.name AS APP_TYPE_NAME FROM AC_VERSION INNER " +
+                    "JOIN AC_APPLICATION ON AC_VERSION.application_id=AC_APPLICATION.id INNER JOIN AC_APP_TYPE " +
+                    "ON AC_APPLICATION.app_type_id = AC_APP_TYPE.id WHERE AC_VERSION.status='running';";
+
     /* Update Queries */
 
     public static final String UPDATE_APPLICATION_ICON = "INSERT INTO AC_APP_ICON (icon, application_id) VALUES (?, ?) ON" +

@@ -36,6 +36,7 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class provide the interface for accessing the dao layer.
@@ -981,6 +982,19 @@ public class ApplicationManager {
         } catch (AppCloudException e) {
             String msg = "Error while getting application version by running time period for " + numberOfHours +
                     " numberOfHours for tenant id : " + tenantId;
+            log.error(msg, e);
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeConnection(dbConnection);
+        }
+    }
+
+    public static Map<Integer, List<Application>> getRunningApplicationsOfAllTenants() throws AppCloudException {
+        Connection dbConnection = DBUtil.getDBConnection();
+        try {
+            return ApplicationDAO.getInstance().getRunningApplicationsOfAllTenants(dbConnection);
+        } catch (AppCloudException e) {
+            String msg = "Error while getting running applications of all tenants.";
             log.error(msg, e);
             throw new AppCloudException(msg, e);
         } finally {

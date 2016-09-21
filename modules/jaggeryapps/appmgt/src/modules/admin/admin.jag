@@ -31,6 +31,39 @@ var databaseModule = jagg.module("databases");
 var realmService = carbon.server.osgiService('org.wso2.carbon.user.core.service.RealmService');
 var tenantManager = realmService.getTenantManager();
 
+var redeployAllApplications = function () {
+    var allTenantRunningApplicationMap = ApplicationManager.getRunningApplicationsOfAllTenants();
+    log.info('Number of tenants having running applications in cloud:' + allTenantRunningApplicationMap.size());
+
+    if (allTenantRunningApplicationMap && allTenantRunningApplicationMap.entrySet()) {
+        var iterator = allTenantRunningApplicationMap.entrySet().iterator();
+        while (iterator.hasNext()) {
+            var entry = iterator.next();
+            var tenantId = entry.getKey();
+            log.info('Start deploying applications of tenantId:' + tenantId);
+            try {
+                context.startTenantFlow();
+                context.getThreadLocalCarbonContext().setTenantDomain(managerModule.getTenantDomainById(tenantId), true);
+                var applicationList = entry.getValue();
+                for (var i = 0; i < applicationList.size(); i++) {
+                    var app = applicationList.get(i);
+                    log.info('Start deploying application with name:' + app.getApplicationName() +
+                            ', version:' + app.getDefaultVersion() + ', hashId:' + app.getHashId() + ', apptype:' + app.getApplicationType());
+                    applicationModule.redeployVersion(app.getApplicationName(), app.getDefaultVersion(),
+                            app.getHashId(), app.getApplicationType());
+                    log.info('Deployment successfully completed for application with name:' + app.getApplicationName() +
+                            ', version:' + app.getDefaultVersion() + ', hashId:' + app.getHashId() + ', apptype:' + app.getApplicationType());
+                }
+            } catch (e) {
+                log.error('error occurred when redeploying applications of tenant:' + tenantId);
+                log.error(e);
+            } finally {
+                context.endTenantFlow();
+            }
+        }
+    }
+};
+
 var deleteTenant = function (tenantDomain) {
     deleteAllApplicationsOfTenant(tenantDomain);
     deleteAllDatabasesOfTenant(tenantDomain);
