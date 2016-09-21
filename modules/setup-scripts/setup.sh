@@ -131,7 +131,7 @@ function as_setup(){
     cp $LIB_LOCATION/kubernetes-client-1.3.104.wso2v1.jar $1/repository/components/dropins/
     cp $LIB_LOCATION/dnsjava-2.1.7.wso2v1.jar $1/repository/components/dropins/
     cp $LIB_LOCATION/json-20160212.jar $1/repository/components/dropins/
-    cp $LIB_LOCATION/fabric8-utils-2.2.100.jar $1/repository/components/dropins/
+    cp $LIB_LOCATION/fabric8-utils-2.2.144.jar $1/repository/components/dropins/
     cp $CONF_LOCATION/$AS_VERSION/repository/conf/datasources/master-datasources.xml $1/repository/conf/datasources/
     cp $CONF_LOCATION/$AS_VERSION/repository/conf/datasources/appcloud-datasources.xml $1/repository/conf/datasources/
     cp $APP_CLOUD_SRC_HOME/modules/components/org.wso2.appcloud.core/target/org.wso2.appcloud.core-3.0.0-SNAPSHOT.jar $1/repository/components/dropins/
