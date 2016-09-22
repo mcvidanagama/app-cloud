@@ -159,17 +159,17 @@ var messageTimer;
                         modal: (params.modalStatus ? params.modalStatus : false),
                         text: params.content ? params.content : 'Do you want to continue?',
                         buttons: [
-                            {addClass: 'btn btn-primary', text: (params.okText ? params.okText : 'OK'), onClick: function($noty) {
+                            {addClass: 'btn btn-primary', text: (params.yesText ? params.yesText : 'Yes'), onClick: function($noty) {
                                 $noty.close();
-                                if (isFunction(params.okCallback)) {
-                                    params.okCallback();
+                                if (isFunction(params.yesCallback)) {
+                                    params.yesCallback();
                                 }
                             }
                             },
-                            {addClass: 'btn btn-default', text: 'Cancel', onClick: function($noty) {
+                            {addClass: 'btn btn-default', text: 'No', onClick: function($noty) {
                                 $noty.close();
-                                if (isFunction(params.cancelCallback)) {
-                                    params.cancelCallback();
+                                if (isFunction(params.noCallback)) {
+                                    params.noCallback();
                                 }
 
                             }

@@ -835,7 +835,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                     title: 'Error!!!',
                     content: cloudSpecificApplicationRepresentation + ' with name: ' + providedName + ' already exists. ' +
                         'Do you want to go to the existing ' + cloudSpecificApplicationRepresentation + '?',
-                    okCallback: function() {
+                    yesCallback: function() {
                         window.location.replace("home.jag?applicationKey=" + applicationHash);
                     }
                 });
@@ -1101,7 +1101,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
       <form id="application-details" method="post" action='<%=jagg.getAbsoluteUrl("/site/blocks/application/application.jag")%>' enctype="multipart/form-data">
             <div class="form-group">
                 <label for="application-name"><%=cloudSpecificApplicationRepresentation%> Name: *</label>
-                <input id="applicationName" name="applicationName" type="text" class="form-control" placeholder="Enter <%=cloudSpecificApplicationRepresentation.toLowerCase()%> name" />
+                <input id="applicationName" name="applicationName" type="text" class="form-control" placeholder="Enter <%=cloudSpecificApplicationRepresentation.toLowerCase()%> name" maxlength="100" />
             </div>
 
         <% if(newVersion){ %>
