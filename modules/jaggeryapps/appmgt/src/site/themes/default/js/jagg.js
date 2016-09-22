@@ -159,7 +159,7 @@ var messageTimer;
                         modal: (params.modalStatus ? params.modalStatus : false),
                         text: params.content ? params.content : 'Do you want to continue?',
                         buttons: [
-                            {addClass: 'btn btn-primary', text: (params.okText ? params.okText : 'Ok'), onClick: function($noty) {
+                            {addClass: 'btn btn-primary', text: (params.okText ? params.okText : 'OK'), onClick: function($noty) {
                                 $noty.close();
                                 if (isFunction(params.okCallback)) {
                                     params.okCallback();
