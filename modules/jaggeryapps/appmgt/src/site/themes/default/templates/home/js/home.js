@@ -587,7 +587,7 @@ function deleteApplicationPopUp(){
     var versionCount = getVersionCount();
     if(versionCount == 1){
         jagg.popMessage({type:'confirm', modalStatus: true, title:'Delete ' + cloudSpecificApplicationRepresentation + ' Version',content:'You are about to delete the only available version of your ' + cloudSpecificApplicationRepresentation.toLowerCase() + ', are you sure you want to delete this "' + selectedRevision + '" version ?',
-            okCallback:function(){
+            yesCallback:function(){
                 deleteApplication();
             }
         });
@@ -599,10 +599,10 @@ function deleteApplicationPopUp(){
             timeout: 8000
         });
     } else {
-        jagg.popMessage({type:'confirm', modalStatus: true, title:'Delete ' + cloudSpecificApplicationRepresentation + ' Version',content:'Are you sure you want to delete this version:' + selectedRevision + ' ?',
-            okCallback:function(){
+        jagg.popMessage({type:'confirm', modalStatus: true, title:'Delete ' + cloudSpecificApplicationRepresentation + ' Version',content:'Are you sure you want to delete this version: ' + selectedRevision + ' ?',
+            yesCallback:function(){
                 deleteApplication();
-            }, cancelCallback:function(){}
+            }, noCallback:function(){}
         });
     }
 }

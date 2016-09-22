@@ -844,7 +844,7 @@ a.btn-action {
     color:#fff;
     bottom: 0;
     padding: 9px 5px 2px;
-    width: 98%;
+    width: 92%;
     min-height: 3em;
     font-size: 17px;
     background-color: #383d44;
@@ -858,7 +858,7 @@ a.btn-action {
 }
 .app-extra{
     right: 0;
-    width: 2%;
+    width: 8%;
     padding: 14px 12px 2px;
     background-color: #434548;
 }

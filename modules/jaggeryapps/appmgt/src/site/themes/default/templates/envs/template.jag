@@ -277,11 +277,11 @@ $(document).ready(function() {
                 type: 'confirm',
                 modalStatus: true,
                 title: 'Delete Environment Variables',
-                content: 'Are you sure you want to delete this Env ' + key + ' ?',
-                okCallback: function() {
+                content: 'Are you sure you want to delete this environment variable: ' + key + ' ?',
+                yesCallback: function() {
                     deleteRuntimeAttribute(key, value, tr);
                 },
-                cancelCallback: function() {}
+                noCallback: function() {}
             });
         });
 
