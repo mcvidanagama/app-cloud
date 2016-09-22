@@ -284,6 +284,21 @@ jagg.template("application", function (inputs, outputs, jagg) {
                         type: 'POST',
                         data: formData,
                         success: function(data) {
+                            if (JSON.parse(data)["errorCode"] == 401) {
+                                jagg.popMessage({
+                                    type: 'confirm',
+                                    modalStatus: true,
+                                    title: 'Session Timed Out',
+                                    content: 'Your session has expired due to an extended period of inactivity. ' +
+                                        'You will need to re-authenticate to create an ' + cloudSpecificApplicationRepresentation.toLowerCase(),
+                                    okCallback: function() {
+                                        window.location.reload()
+                                    },
+                                    cancelCallback: function() {
+                                        window.location.reload()
+                                    }
+                                });
+                            }
                         },
                         cache: false,
                         contentType: false,

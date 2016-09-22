@@ -1155,9 +1155,11 @@ var getSelectedRevisionFromSession = function(applicationKey) {
 };
 
 var deleteSelectedVersionFromSession = function(applicationKey){
-    var selectedVersions = session.get("SELECTED_REVISIONS");
-    if(selectedVersions && selectedVersions[applicationKey]){
-        delete selectedVersions[applicationKey];
+    if (session != null) {
+        var selectedVersions = session.get("SELECTED_REVISIONS");
+        if(selectedVersions && selectedVersions[applicationKey]){
+            delete selectedVersions[applicationKey];
+        }
     }
 };
 

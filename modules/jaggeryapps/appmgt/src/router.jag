@@ -28,7 +28,7 @@ var log = new Log("router");
 var action = request.getParameter("action");
 var audit = org.wso2.carbon.CarbonConstants.AUDIT_LOG;
 
-if (uriMatcher.match(PAGE_URL)) {
+if (uriMatcher.match(PAGE_URL) && session != null) {
     var args = uriMatcher.elements();
     try {
         context.startTenantFlow();
