@@ -828,7 +828,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
             applicationName:providedName
         },function (result) {
             var appHashId = result.trim();
-            if (appHashId) {
+            if (appHashId != "null") {
                 jagg.popMessage({
                     type: 'confirm',
                     modalStatus: true,
