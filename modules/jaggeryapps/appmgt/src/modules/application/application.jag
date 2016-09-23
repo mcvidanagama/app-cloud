@@ -96,9 +96,11 @@ var addApplication = function (applicationName, versionName, applicationDescript
             versionHashId, dockerClient, artifactUrl, hostName, appCreationMethod, runtimeProperties, conSpecMemory);
     var buildDockerImageStatus = buildDockerImage(applicationName, versionName, runtimeId, absFileUploadedPath, applicationRuntime, tagName, versionHashId, dockerClient);
     if (buildDockerImageStatus) {
-        pushDockerImage(applicationName, versionName, applicationRuntime, tagName, versionHashId, dockerClient);
-        triggerKubernetesDeployment(runtimeProperties, applicationRuntime, tagName, applicationName, versionName, appTypeName, runtimeId, replicas, versionHashId, conSpecMemory, conSpecCpu);
-        putSelectedRevisionToSession(applicationHashId, versionName);
+        var pushDockerImageStatus = pushDockerImage(applicationName, versionName, applicationRuntime, tagName, versionHashId, dockerClient);
+        if (pushDockerImageStatus) {
+            triggerKubernetesDeployment(runtimeProperties, applicationRuntime, tagName, applicationName, versionName, appTypeName, runtimeId, replicas, versionHashId, conSpecMemory, conSpecCpu);
+            putSelectedRevisionToSession(applicationHashId, versionName);
+        }
     }
 
     if (isNewVersion == 'true') {
@@ -127,14 +129,28 @@ var pushDockerImage = function (applicationName, versionName, applicationRuntime
     //Adding docker image push pending event
     var msg = "Docker image push successfully triggered";
     addEvent(DOCKER_REGISTRY_PUSH, EVENT_PENDING, msg, versionHashId);
+    if (log.isDebugEnabled()) {
+        log.debug("Start pushing docker image for version:" + versionHashId);
+    }
     try {
         dockerClient.pushDockerImage(modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL),applicationRuntime.getImageName(), tagName);
     } catch (e) {
-        var msg = "Error uploading docker image to remote registry";
-        addEvent(DOCKER_REGISTRY_PUSH, EVENT_FAILED, msg, versionHashId);
-        if (log.isDebugEnabled()) {
-            log.debug("Start pushing docker image for version:" + versionHashId);
+        for (var i = 0 ; i < 3 ; i++){
+            try{
+                log.info("Retrying docker push retry counter value : " + i);
+                dockerClient.pushDockerImage(modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL),applicationRuntime.getImageName(), tagName);
+                //Adding docker push success event
+                var msg = "Docker image push successfully completed";
+                addEvent(DOCKER_REGISTRY_PUSH, EVENT_SUCCEEDED, msg, versionHashId);
+                return true;
+            } catch (e){
+                log.error("Error occurred while pushing image, Hence retrying...");
+            }
         }
+
+        var msg = "Error pushing docker image to remote registry";
+        addEvent(DOCKER_REGISTRY_PUSH, EVENT_FAILED, msg, versionHashId);
+
         try {
             ApplicationManager.updateVersionStatus(versionHashId, APPLICATION_ERROR);
         } catch(e1){
@@ -154,7 +170,8 @@ var pushDockerImage = function (applicationName, versionName, applicationRuntime
     //Adding docker push success event
     var msg = "Docker image push successfully completed";
     addEvent(DOCKER_REGISTRY_PUSH, EVENT_SUCCEEDED, msg, versionHashId);
-}
+    return true;
+};
 
 var buildDockerImage = function (applicationName, versionName, runtimeId, absFileUploadedPath, applicationRuntime, tagName, versionHashId, dockerClient){
 
