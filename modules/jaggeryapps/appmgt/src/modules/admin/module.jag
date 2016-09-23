@@ -18,9 +18,13 @@
  */
 
 jagg.module("admin", {
-    redeployAllApplications:function () {
-        return jagg.require(jagg.getModulesDir() + "admin/admin.jag").redeployAllApplications.apply(this, arguments);
-    },deleteTenant:function () {
+    redeployApplicationVersion:function () {
+        return jagg.require(jagg.getModulesDir() + "admin/admin.jag").redeployApplicationVersion.apply(this, arguments);
+    },
+    getApplicationVersionsOfTenants:function () {
+        return jagg.require(jagg.getModulesDir() + "admin/admin.jag").getApplicationVersionsOfTenants.apply(this, arguments);
+    },
+    deleteTenant:function () {
         return jagg.require(jagg.getModulesDir() + "admin/admin.jag").deleteTenant.apply(this, arguments);
     },
     stopIdleApplicationsByRunningTimePeriod:function () {
