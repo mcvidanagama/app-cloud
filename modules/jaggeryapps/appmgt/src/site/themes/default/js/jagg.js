@@ -28,7 +28,16 @@ var messageTimer;
                                success:callback,
                                error: function (jqXHR, textStatus, errorThrown ) {
                                    if (jqXHR.status == 401) {
-                                       window.location.href = "/appmgt/site/pages/error-pages/401.html"
+                                       jagg.message({
+                                           content: 'Your session has expired due to an extended period of inactivity.',
+                                           type: 'information',
+                                           id: 'view_log',
+                                           timeout: '6000'
+                                       });
+                                       setTimeout(refresh, 7000);
+                                       function refresh() {
+                                           window.location.reload()
+                                       }
                                    } else {
                                        return jqXHR;
                                    }
