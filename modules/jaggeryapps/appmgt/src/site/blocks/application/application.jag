@@ -26,10 +26,6 @@ var gitHubAppModule = jagg.module("application/git");
 var modManager = jagg.module("manager");
 var log = new Log();
 (function(){
-    if (!jagg.getUser()) {
-        print(UNAUTHORIZED_ERROR_RESPONSE);
-        return;
-    }
     if(action == "uploadExistingArchive"){
         var uploadedArtifact = request.getFile("fileupload");
         var applicationName = request.getParameter("applicationName");
