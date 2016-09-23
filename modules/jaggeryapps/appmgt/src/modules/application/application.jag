@@ -822,6 +822,17 @@ var getApplicationNameByHashId = function(applicationHashId){
     }
 }
 
+var getApplicationHashIdOfMatchingAppName = function(applicationName) {
+    try {
+        return ApplicationManager.getApplicationHashIdOfMatchingAppName(applicationName);
+    } catch(e){
+        var msg = "Error while getting application hash id of matching app name: " + applicationName;
+        log.error(msg);
+        log.error(e);
+        throw e;
+    }
+};
+
 /**
  * Method for getting the application e.g. :- Application {
  *                                              id=1,

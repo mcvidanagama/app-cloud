@@ -824,7 +824,7 @@ public class ApplicationDAO {
     }
 
     /**
-     * Method for getting application hash id by name.
+     * Method for getting application hash id of matching app name.
      *
      * @param dbConnection    database connection
      * @param applicationName application name
@@ -832,7 +832,7 @@ public class ApplicationDAO {
      * @return application hash id
      * @throws AppCloudException
      */
-    public String getApplicationHashIdByName(Connection dbConnection, String applicationName, int tenantId)
+    public String getApplicationHashIdOfMatchingAppName(Connection dbConnection, String applicationName, int tenantId)
             throws AppCloudException {
 
         PreparedStatement preparedStatement = null;
@@ -840,7 +840,7 @@ public class ApplicationDAO {
         String applicationHashId = null;
 
         try {
-            preparedStatement = dbConnection.prepareStatement(SQLQueryConstants.GET_APPLICATION_HASH_ID_BY_NAME);
+            preparedStatement = dbConnection.prepareStatement(SQLQueryConstants.GET_APPLICATION_HASH_ID_OF_MATCHING_APP_NAME);
             preparedStatement.setString(1, applicationName);
             preparedStatement.setInt(2, tenantId);
 
@@ -851,7 +851,7 @@ public class ApplicationDAO {
             }
 
         } catch (SQLException e) {
-            String msg = "Error while retrieving application hash id using application name : " + applicationName +
+            String msg = "Error while retrieving application hash id of matching application name : " + applicationName +
                     " in tenant : " + tenantId;
             throw new AppCloudException(msg, e);
         } finally {
