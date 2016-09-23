@@ -304,19 +304,19 @@ public class ApplicationManager {
     }
 
     /**
-     * Method for getting application hash id by name.
+     * Method for getting application hash id of matching application name.
      *
      * @param applicationName name of application object
      * @return application hash id
      * @throws AppCloudException
      */
-    public static String getApplicationHashIdByName(String applicationName) throws AppCloudException {
+    public static String getApplicationHashIdOfMatchingAppName(String applicationName) throws AppCloudException {
         Connection dbConnection = DBUtil.getDBConnection();
         int tenantId = CarbonContext.getThreadLocalCarbonContext().getTenantId();
         try {
-            return ApplicationDAO.getInstance().getApplicationHashIdByName(dbConnection, applicationName, tenantId);
+            return ApplicationDAO.getInstance().getApplicationHashIdOfMatchingAppName(dbConnection, applicationName, tenantId);
         } catch (AppCloudException e) {
-            String msg = "Error while getting application hash id by name for application with name: "
+            String msg = "Error while getting application hash id of matching app name : "
                     + applicationName + " for tenant id : " + tenantId;
             log.error(msg, e);
             throw new AppCloudException(msg, e);

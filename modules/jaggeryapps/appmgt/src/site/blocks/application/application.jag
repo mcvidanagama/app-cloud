@@ -563,6 +563,12 @@ var log = new Log();
         var applicationHashId = mod.getApplicationHashIdByName(applicationName);
         print(applicationHashId);
 
+    } else if (action == "getApplicationHashIdOfMatchingAppName") {
+        var applicationName = request.getParameter("applicationName");
+        var mod = jagg.module("application");
+        var applicationHashId = mod.getApplicationHashIdOfMatchingAppName(applicationName);
+        print(applicationHashId);
+
     } else if (action == "deleteVersion"){
         var versionKey = request.getParameter("versionKey");
         var applicationName = request.getParameter("applicationName");

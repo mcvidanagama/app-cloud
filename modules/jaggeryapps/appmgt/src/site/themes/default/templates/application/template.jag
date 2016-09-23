@@ -821,14 +821,14 @@ jagg.template("application", function (inputs, outputs, jagg) {
 
         }
     }
-    function checkApplicationExistence(newName){
-        for (var i = 0; i < applicationList.length; i++){
-            var existingAppName = applicationList[i].applicationName.toLowerCase();
-            var nameMatch = existingAppName.localeCompare(newName.toLowerCase());
-            if (nameMatch === 0) {
-                var applicationHash = applicationList[i].hashId;
-                var providedName = $("#applicationName").val();
-                $("#applicationName").val('');
+
+    function checkApplicationExistence(providedName) {
+        jagg.post("../blocks/application/application.jag", {
+            action:"getApplicationHashIdOfMatchingAppName",
+            applicationName:providedName
+        },function (result) {
+            var appHashId = result.trim();
+            if (appHashId) {
                 jagg.popMessage({
                     type: 'confirm',
                     modalStatus: true,
@@ -836,11 +836,13 @@ jagg.template("application", function (inputs, outputs, jagg) {
                     content: cloudSpecificApplicationRepresentation + ' with name: ' + providedName + ' already exists. ' +
                         'Do you want to go to the existing ' + cloudSpecificApplicationRepresentation + '?',
                     yesCallback: function() {
-                        window.location.replace("home.jag?applicationKey=" + applicationHash);
+                        window.location.replace("home.jag?applicationKey=" + appHashId);
                     }
                 });
             }
-        }
+        },function (jqXHR, textStatus, errorThrown) {
+
+        });
     }
 
     function checkApplicationVersionExistence(version){
