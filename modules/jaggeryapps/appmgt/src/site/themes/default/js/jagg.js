@@ -26,7 +26,13 @@ var messageTimer;
                                async:true,
                                cache:false,
                                success:callback,
-                               error:error
+                               error: function (jqXHR, textStatus, errorThrown ) {
+                                   if (jqXHR.status == 401) {
+                                       window.location.href = "/appmgt/site/pages/error-pages/401.html"
+                                   } else {
+                                       return jqXHR;
+                                   }
+                               }
         });
     };
 
