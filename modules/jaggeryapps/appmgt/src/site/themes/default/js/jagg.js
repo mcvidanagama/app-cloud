@@ -31,7 +31,7 @@ var messageTimer;
                                        jagg.infoMessage({
                                            type: 'confirm',
                                            modalStatus: true,
-                                           content: 'Your session has expired due to an extended period of inactivity. The page will be reloaded shortly.',
+                                           content: 'Your session has timed out due to inactivity and will be reloaded shortly.',
                                            okCallback: function() {
                                                window.location.reload();
                                            }
