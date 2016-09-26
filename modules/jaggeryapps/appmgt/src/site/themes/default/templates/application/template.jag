@@ -817,16 +817,16 @@ jagg.template("application", function (inputs, outputs, jagg) {
             $('input[name=fileUploadRadioOptions]').prop("title", "");
 
         } else {
-            var element = " name";
+            var missingRequiredElements = " name";
             if (!appNameVal && !appRevisionVal) {
-                element = " name and revision";
+                missingRequiredElements = " name and revision";
             } else if (!appRevisionVal) {
-                element = " revision";
+                missingRequiredElements = " revision";
             }
 
             $('input[name=fileUploadRadioOptions]').prop("disabled", true);
             $('.radio-inline').css("color", "#aaa");
-            $('input[name=fileUploadRadioOptions]').prop("title", "This option is disabled. Please enter " + cloudSpecificApplicationRepresentation.toLowerCase() + element + " first");
+            $('input[name=fileUploadRadioOptions]').prop("title", "This option is disabled. Please enter " + cloudSpecificApplicationRepresentation.toLowerCase() + missingRequiredElements + " first");
 
         }
     }
