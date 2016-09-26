@@ -53,6 +53,7 @@ var getApplicationVersionsOfTenants = function (state, fromTenantId, toTenantId)
                             obj.versionHashId = app.getHashId();
                             obj.appType = app.getApplicationType();
                             obj.version = app.getDefaultVersion();
+                            obj.tenantDomain = tenantDomain;
                             appList.push(obj);
                         } else {
                             log.warn("One of the applications of tenant:" + tenantId + " has a null app.");
