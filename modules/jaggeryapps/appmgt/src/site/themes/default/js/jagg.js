@@ -28,20 +28,49 @@ var messageTimer;
                                success:callback,
                                error: function (jqXHR, textStatus, errorThrown ) {
                                    if (jqXHR.status == 401) {
-                                       jagg.message({
-                                           content: 'Your session has expired due to an extended period of inactivity.',
-                                           type: 'information',
-                                           id: 'view_log',
-                                           timeout: '6000'
+                                       jagg.infoMessage({
+                                           type: 'confirm',
+                                           modalStatus: true,
+                                           content: 'Your session has expired due to an extended period of inactivity. The page will be reloaded shortly.',
+                                           okCallback: function() {
+                                               window.location.reload();
+                                           }
                                        });
-                                       setTimeout(refresh, 7000);
-                                       function refresh() {
-                                           window.location.reload()
-                                       }
                                    } else {
                                        return jqXHR;
                                    }
                                }
+        });
+    };
+
+    jagg.infoMessage = function(params) {
+        return noty({
+            theme: 'wso2',
+            layout: 'topCenter',
+            type: 'confirm',
+            closeWith: ['button', 'click'],
+            modal: (params.modalStatus ? params.modalStatus : false),
+            text: params.content ? params.content : 'Do you want to continue?',
+            buttons: [{
+                addClass: 'btn btn-primary',
+                text: (params.okText ? params.okText : 'OK'),
+                onClick: function($noty) {
+                    $noty.close();
+                    if (isFunction(params.okCallback)) {
+                        params.okCallback();
+                    }
+                }
+            }],
+            animation: {
+                open: {
+                    height: 'toggle'
+                }, // jQuery animate function property object
+                close: {
+                    height: 'toggle'
+                }, // jQuery animate function property object
+                easing: 'swing', // easing
+                speed: 500 // opening & closing animation speed
+            }
         });
     };
 
