@@ -814,7 +814,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
         if (appNameVal && appRevisionVal) {
             $('input[name=fileUploadRadioOptions]').prop("disabled", false);
             $('.radio-inline').css("color", "");
-            $('input[name=fileUploadRadioOptions]').tooltip('disable');
+            $('input[name=fileUploadRadioOptions]').prop("title", "");
 
         } else {
             var element = " name";
