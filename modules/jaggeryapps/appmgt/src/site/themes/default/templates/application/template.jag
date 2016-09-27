@@ -283,8 +283,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                         url: url,
                         type: 'POST',
                         data: formData,
-                        success: function(data) {
-                        },
+                        success: function(data) {},
                         cache: false,
                         contentType: false,
                         processData: false
@@ -772,6 +771,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
             });
         });
 
+        $('.radio-inline').hover(enableRadioButtons);
     });
 
     function activateCreateApplication() {
@@ -809,15 +809,24 @@ jagg.template("application", function (inputs, outputs, jagg) {
     }
 
     function enableRadioButtons(){
-    if ($('#applicationName').val() && $('#applicationRevision').val()) {
-        $('input[name=fileUploadRadioOptions]').prop("disabled",false);
-        $('.radio-inline').css("color", "");
-        $('input[name=fileUploadRadioOptions]').removeProp("title");
+        var appNameVal = $('#applicationName').val();
+        var appRevisionVal = $('#applicationRevision').val();
+        if (appNameVal && appRevisionVal) {
+            $('input[name=fileUploadRadioOptions]').prop("disabled", false);
+            $('.radio-inline').css("color", "");
+            $('input[name=fileUploadRadioOptions]').prop("title", "");
 
-    } else {
-        $('input[name=fileUploadRadioOptions]').prop("disabled",true);
-        $('.radio-inline').css("color", "#aaa");
-        $('input[name=fileUploadRadioOptions]').prop("title","This option is disabled, Please enter a " + cloudSpecificApplicationRepresentation + " name first");
+        } else {
+            var missingRequiredElements = " name";
+            if (!appNameVal && !appRevisionVal) {
+                missingRequiredElements = " name and revision";
+            } else if (!appRevisionVal) {
+                missingRequiredElements = " revision";
+            }
+
+            $('input[name=fileUploadRadioOptions]').prop("disabled", true);
+            $('.radio-inline').css("color", "#aaa");
+            $('input[name=fileUploadRadioOptions]').prop("title", "This option is disabled. Please enter " + cloudSpecificApplicationRepresentation.toLowerCase() + missingRequiredElements + " first");
 
         }
     }

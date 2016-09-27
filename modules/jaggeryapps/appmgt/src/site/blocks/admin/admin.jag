@@ -26,7 +26,7 @@ var managerModule = jagg.module("manager");
 var log = new Log('site/blocks/admin/admin.jag');
 (function(){
 
-    if (!jagg.getUser() && !(managerModule.getTenantDomain() == 'carbon.super')) {
+    if (!(managerModule.getTenantDomain() == 'carbon.super')) {
         print(UNAUTHORIZED_ERROR_RESPONSE);
         return;
     }

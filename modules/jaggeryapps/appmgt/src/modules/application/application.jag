@@ -1156,7 +1156,7 @@ var getSelectedRevisionFromSession = function(applicationKey) {
 
 var deleteSelectedVersionFromSession = function(applicationKey){
     var selectedVersions = session.get("SELECTED_REVISIONS");
-    if(selectedVersions && selectedVersions[applicationKey]){
+    if (selectedVersions && selectedVersions[applicationKey]) {
         delete selectedVersions[applicationKey];
     }
 };

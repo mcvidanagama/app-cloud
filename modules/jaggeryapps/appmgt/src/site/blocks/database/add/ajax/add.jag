@@ -30,10 +30,6 @@ var databaseModule = jagg.module("databases");
 	action = request.getParameter("action"),
 	mod = jagg.module("databases"),
 	site = require("/site/conf/site.json");
-    if (!jagg.getUser()) {
-        print(UNAUTHORIZED_ERROR_RESPONSE);
-        return;
-    }
 	if (action == "createDatabaseAndAttachUser") {
 		var databaseName = request.getParameter("databaseName");
 		var customPassword = request.getParameter("customPassword");
