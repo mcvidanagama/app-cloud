@@ -54,7 +54,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
       <link rel="stylesheet" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/font-awesome-4.2.0/font-awesome.min.css'))%>">
       <link rel="stylesheet" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/web-fonts/Roboto.css'))%>">
       <link rel="stylesheet" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/styles.css'))%>">
-      <link rel="stylesheet" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/select2-4.0.0/select2.min.css'))%>">
+      <link rel="stylesheet" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/select2-4.0.3/select2.min.css'))%>">
 
 <%
     var conSpecs = new Array();
@@ -1456,7 +1456,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
 
       <script src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('js/custom/custom.js'))%>"></script>
       <script src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('templates/application/js/application.js'))%>"></script>
-      <script src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('js/select2-4.0.0/select2.min.js'))%>"></script>
+      <script src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('js/select2-4.0.3/select2.min.js'))%>"></script>
       <script src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('js/common.js'))%>"></script>
 
     <%
