@@ -28,13 +28,16 @@
 var encode = Packages.org.owasp.encoder.Encode;
 
 
-
 var encodeForHtmlContent = function (element) {
     return encode.forHtmlContent(element);
 };
 
 var encodeForHtmlAttribute = function (attributeValue) {
     return encode.forHtmlAttribute(attributeValue);
+};
+
+var encodeForJavaScript = function (attributeValue) {
+    return encode.forJavaScript(attributeValue);
 };
 
 var encodeForJavaScriptAttribute = function (attributeValue) {
