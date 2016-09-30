@@ -8,7 +8,9 @@ echo "----------Login to admin service----------" >> $LOGFILE
 curl -c cookies -v -X POST -k $SERVICE_URL/appmgt/site/blocks/user/login/ajax/login.jag -d "action=login&userName=$ADMIN_USERNAME&password=$ADMIN_PASSWORD" >> $LOGFILE 2>&1
 echo -e "\n" >> $LOGFILE
 
-for appx in $(echo "$data" | jq '.[][] | .appName + "," + .version + "," + .tenantDomain + "," + .versionHashId + "," + .appType')
+(echo $data | jq '.[][] | .appName + "," + .version + "," + .tenantDomain + "," + .versionHashId + "," + .appType') > tmp_out
+
+cat tmp_out | while read appx
 do
 	app=$(echo $appx | sed 's/"//g')
         name=$(echo $app | cut -d "," -f 1)
@@ -22,5 +24,3 @@ do
 	echo -e "\n" >> $LOGFILE
         echo "done"
 done
-
-

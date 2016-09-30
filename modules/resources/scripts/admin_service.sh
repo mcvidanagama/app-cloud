@@ -96,7 +96,7 @@ elif [ $ACTION = "redeployApplicationVersion" ]; then
     curl -b cookies -v -X POST -k $SERVICE_URL/appmgt/site/blocks/admin/admin.jag -d "action=redeployApplicationVersion&tenantDomain=$2&applicationName=$3&applicationVersionHashId=$4&applicationVersion=$5&applicationType=$6" >> $LOGFILE 2>&1
 elif [ $ACTION = "getApplicationVersionsOfTenants" ]; then
     echo "----------getApplicationVersionsOfTenants----------" >> $LOGFILE
-    curl -b cookies -v -X POST -k $SERVICE_URL/appmgt/site/blocks/admin/admin.jag -d "action=getApplicationVersionsOfTenants" >> $LOGFILE 2>&1
+    curl -b cookies -O -X POST -k $SERVICE_URL/appmgt/site/blocks/admin/admin.jag -d "action=getApplicationVersionsOfTenants" >> $LOGFILE 2>&1
     echo -e "\n" >> $LOGFILE
 fi
    
