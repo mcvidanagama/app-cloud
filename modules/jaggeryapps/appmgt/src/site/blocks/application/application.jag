@@ -19,7 +19,6 @@
 
 include("/jagg/jagg.jag");
 include('/jagg/constants.jag');
-include('/jagg/encode.jag');
 var validator = require('/site/themes/default/js/custom/validator.js');
 var action = request.getParameter("action");
 var applicationModule = jagg.module("application");
@@ -55,7 +54,6 @@ var log = new Log();
     } else if (action == "createApplication") {
         var logMessage = '';
         var applicationDescription = request.getParameter("applicationDescription");
-        applicationDescription = encodeForHtmlAttribute(applicationDescription);
         var replicas = 1;
         var runtimeId = request.getParameter("runtime");
         if (validateRequiredAndNumber("runtime", runtimeId)) {return;}
