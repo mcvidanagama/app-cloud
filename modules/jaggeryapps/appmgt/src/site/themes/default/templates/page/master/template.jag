@@ -38,7 +38,7 @@ jagg.template("page/master", function(inputs, outputs, jagg) {
     <link rel="shortcut icon" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('assets/img/favicon.ico'))%>" type="image/x-icon"/>
 </head>
 
-<!--<body>-->
+<body>
 <!--To enable notification banner, uncomment following HTML code snippet-->
 <body class="top-notification-active">
     <div class="top-notification">

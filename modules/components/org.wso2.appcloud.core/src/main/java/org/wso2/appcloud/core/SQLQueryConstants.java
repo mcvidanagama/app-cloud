@@ -310,10 +310,7 @@ public class SQLQueryConstants {
     public static final String DELETE_ALL_APP_VERSION_EVENTS =
             "Delete from AC_EVENT where version_id = (SELECT id FROM AC_VERSION WHERE hash_id=? AND tenant_id=?)";
 
-	public static final String GET_TENANT_APPLICATION_COUNT = "SELECT COUNT(*) FROM AC_APPLICATION WHERE tenant_id = ? " +
-            "AND cloud_id=(select id from AC_CLOUD WHERE name=?)";
-
-    public static final String GET_TENANT_RUNNING_CONTAINER_COUNT = "SELECT COUNT(id) AS ACTIVE_CONTAINERS_COUNT FROM " +
+    public static final String RUNNING_APPLICATION_VERSION_COUNT = "SELECT COUNT(id) AS ACTIVE_CONTAINERS_COUNT FROM " +
             "AC_VERSION WHERE application_id IN (SELECT id FROM AC_APPLICATION WHERE tenant_id = ? AND " +
             "cloud_id = (select id from AC_CLOUD WHERE name=?)) AND status='running'";
 }
