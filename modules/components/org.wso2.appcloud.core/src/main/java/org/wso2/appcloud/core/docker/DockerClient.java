@@ -146,7 +146,7 @@ public class DockerClient {
 
         String dockerImage = repoUrl + "/" + imageName + ":" + tag;
         final boolean[] dockerStatusCheck = new boolean[1];
-	    dockerStatusCheck[0] = true; //this is to check docker build status, whether it was successful or failed
+	    dockerStatusCheck[0] = false; //this is to check docker build status, whether it was successful or failed
         try {
             handle = dockerClient.image().build()
                                  .withRepositoryName(dockerImage)
@@ -156,13 +156,13 @@ public class DockerClient {
                                      public void onSuccess(String message) {
                                          log.info("Build Success:" + message);
                                          buildDone.countDown();
+                                         dockerStatusCheck[0] = true;
                                      }
 
                                      @Override
                                      public void onError(String message) {
                                          log.error("Build Failure:" + message);
                                          buildDone.countDown();
-                                         dockerStatusCheck[0] = false;
                                      }
 
                                      @Override
@@ -208,7 +208,7 @@ public class DockerClient {
             throws AppCloudException {
 
         final boolean[] dockerStatusCheck = new boolean[1];
-        dockerStatusCheck[0] = true;
+        dockerStatusCheck[0] = false;
         try {
             handle = dockerClient.image().withName(imageName).push()
                                  .usingListener(new EventListener() {
@@ -216,13 +216,13 @@ public class DockerClient {
                                      public void onSuccess(String message) {
                                          log.info("Push Success:" + message);
                                          pushDone.countDown();
+                                         dockerStatusCheck[0] = true;
                                      }
 
                                      @Override
                                      public void onError(String message) {
                                          log.error("Push Failure:" + message);
                                          pushDone.countDown();
-                                         dockerStatusCheck[0] = false;
                                      }
 
                                      @Override

@@ -19,6 +19,7 @@
 
 include("/jagg/jagg.jag");
 include('/jagg/constants.jag');
+include('/jagg/encode.jag');
 var validator = require('/site/themes/default/js/custom/validator.js');
 var action = request.getParameter("action");
 var applicationModule = jagg.module("application");
@@ -26,10 +27,6 @@ var gitHubAppModule = jagg.module("application/git");
 var modManager = jagg.module("manager");
 var log = new Log();
 (function(){
-    if (!jagg.getUser()) {
-        print(UNAUTHORIZED_ERROR_RESPONSE);
-        return;
-    }
     if(action == "uploadExistingArchive"){
         var uploadedArtifact = request.getFile("fileupload");
         var applicationName = request.getParameter("applicationName");
@@ -58,6 +55,7 @@ var log = new Log();
     } else if (action == "createApplication") {
         var logMessage = '';
         var applicationDescription = request.getParameter("applicationDescription");
+        applicationDescription = encodeForHtmlAttribute(applicationDescription);
         var replicas = 1;
         var runtimeId = request.getParameter("runtime");
         if (validateRequiredAndNumber("runtime", runtimeId)) {return;}
@@ -287,7 +285,7 @@ var log = new Log();
     } else if(action == "stopApplication"){
         var applicationName = request.getParameter("applicationName");
         var applicationRevision = request.getParameter("applicationRevision");
-        var versionKey = request.getParameter("versionKey");
+        var versionKey = applicationModule.getVersionHashId(applicationName, applicationRevision);
         var podDeleteTimeOut = modManager.getPropertyValue(POD_DELETE_TIMEOUT);
         var applicationHashId = applicationModule.getApplicationHashIdByName(applicationName);
         var applicationType = applicationModule.getApplication(applicationHashId).applicationType;
@@ -576,6 +574,12 @@ var log = new Log();
         var applicationName = request.getParameter("applicationName");
         var mod = jagg.module("application");
         var applicationHashId = mod.getApplicationHashIdByName(applicationName);
+        print(applicationHashId);
+
+    } else if (action == "getApplicationHashIdOfMatchingAppName") {
+        var applicationName = request.getParameter("applicationName");
+        var mod = jagg.module("application");
+        var applicationHashId = mod.getApplicationHashIdOfMatchingAppName(applicationName);
         print(applicationHashId);
 
     } else if (action == "deleteVersion"){
