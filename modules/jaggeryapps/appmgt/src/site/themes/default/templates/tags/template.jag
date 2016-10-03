@@ -165,10 +165,10 @@ $(document).ready(function () {
             var key = $(this).parent().parent().parent().find('#key')[0].value;
             var value = $(this).parent().parent().parent().find('#value')[0].value;
             var tr = $(this).parent().parent().parent();
-            jagg.popMessage({type:'confirm', modalStatus: true, title:'Delete Tag',content:'Are you sure you want to delete tag ' + key + ' ?',
-                okCallback:function(){
+            jagg.popMessage({type:'confirm', modalStatus: true, title:'Delete Tag',content:'Are you sure you want to delete tag: ' + key + ' ?',
+                yesCallback:function(){
                    deleteTag(key, value, tr);
-                }, cancelCallback:function(){}
+                }, noCallback:function(){}
             });
         });
 

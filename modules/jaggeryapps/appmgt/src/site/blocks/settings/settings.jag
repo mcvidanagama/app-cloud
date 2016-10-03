@@ -24,10 +24,6 @@ var mod = jagg.module("application");
 
 (function () {
     var action = request.getParameter("action");
-    if (!jagg.getUser()) {
-        print(UNAUTHORIZED_ERROR_RESPONSE);
-        return;
-    }
 
     if (action == "updateDefaultVersion") {
         var applicationName = request.getParameter("applicationName");

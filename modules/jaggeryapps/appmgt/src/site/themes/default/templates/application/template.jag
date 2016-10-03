@@ -45,6 +45,8 @@ jagg.template("application", function (inputs, outputs, jagg) {
         var versionList = request.getParameter("versionArray");
         var requestNewAppTypeURL = outputs.requestNewAppTypeURL;
         var requestMoreAppseURL = outputs.requestMoreAppseURL;
+        var allDBInfo = outputs.allDBInfo;
+        var noOfDbs = outputs.noOfDbs;
     %>
 
       <link rel="stylesheet" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/bootstrap-3.2.0/bootstrap.min.css'))%>">
@@ -52,7 +54,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
       <link rel="stylesheet" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/font-awesome-4.2.0/font-awesome.min.css'))%>">
       <link rel="stylesheet" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/web-fonts/Roboto.css'))%>">
       <link rel="stylesheet" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/styles.css'))%>">
-      <link rel="stylesheet" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/select2-4.0.0/select2.min.css'))%>">
+      <link rel="stylesheet" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/select2-4.0.3/select2.min.css'))%>">
 
 <%
     var conSpecs = new Array();
@@ -62,6 +64,8 @@ jagg.template("application", function (inputs, outputs, jagg) {
 %>
 
  <script type="text/javascript">
+    var allDBInfo = jQuery.parseJSON('<%=allDBInfo%>');
+    var noOfDbs = <%=noOfDbs%>;
     var appTypeName = "<%=appType.type%>";
     const APP_TYPE_EXTENSION = "<%=appType.extension%>";
     var applicationName = "<%=applicationName%>";
@@ -120,8 +124,12 @@ jagg.template("application", function (inputs, outputs, jagg) {
 
             //Set select2 container
             var valueElem = $('#value')[0];
-            initSelect2(null, valueElem, "");
-            if (applicationCount >= maxApplications) {
+            if (noOfDbs == 0){
+                $(valueElem).replaceWith('<input type="text" class="form-control element-add-value" placeholder="Value">');
+            } else {
+                initSelect2(null, valueElem, "", allDBInfo);
+            }
+            if (runningApplicationCount >= maxApplications) {
                 $('#outerContainer').empty();
                 $('#outerContainer').html('<div class="container-fluid"><div class="row row-centered">' +
                     '<div class="col-centered col-xs-10 col-sm-7  col-md-7 col-lg-6"><div class="cloud-new-content">' +
@@ -131,8 +139,6 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 return;
             }
 
-            $("containerSpec").select2();
-            $("container").select2();
             //check if application name available
             if (applicationName != "null") {
                 $("#applicationName").val(applicationName);
@@ -294,8 +300,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                         url: url,
                         type: 'POST',
                         data: formData,
-                        success: function(data) {
-                        },
+                        success: function(data) {},
                         cache: false,
                         contentType: false,
                         processData: false
@@ -537,6 +542,9 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 },
                 artifactUrl: {
                     validateArtifactURL: true
+                },
+                envKey: {
+                    validateEnvironmentVariable: true
                 }
             },
             onsubmit: false,    // Since we are handling on submit validation on click event of the "Create" button,
@@ -563,7 +571,12 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 this.defaultShowErrors();
             },
             errorPlacement: function (error, element) {
-                if ($(element).parent().closest('div').hasClass("input-group")) {
+                if(element.hasClass("select2-search__field")){
+                    return;
+                } else if(element.hasClass("element-add-key")) {
+                    error.addClass("env-error");
+                    error.insertAfter($("#env-body"));
+                } else if ($(element).parent().closest('div').hasClass("input-group")) {
                     error.insertAfter($(element).closest('div'));
                 } else {
                     error.insertAfter(element);
@@ -776,6 +789,8 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 change: onChangeFileUpload
             });
         });
+
+        $('.radio-inline').hover(enableRadioButtons);
     });
 
     function activateCreateApplication() {
@@ -816,38 +831,49 @@ jagg.template("application", function (inputs, outputs, jagg) {
     }
 
     function enableRadioButtons(){
-    if ($('#applicationName').val() && $('#applicationRevision').val()) {
-        $('input[name=fileUploadRadioOptions]').prop("disabled",false);
-        $('.radio-inline').css("color", "");
-        $('input[name=fileUploadRadioOptions]').removeProp("title");
+        var appNameVal = $('#applicationName').val();
+        var appRevisionVal = $('#applicationRevision').val();
+        if (appNameVal && appRevisionVal) {
+            $('input[name=fileUploadRadioOptions]').prop("disabled", false);
+            $('.radio-inline').css("color", "");
+            $('input[name=fileUploadRadioOptions]').prop("title", "");
 
-    } else {
-        $('input[name=fileUploadRadioOptions]').prop("disabled",true);
-        $('.radio-inline').css("color", "#aaa");
-        $('input[name=fileUploadRadioOptions]').prop("title","This option is disabled, Please enter a " + cloudSpecificApplicationRepresentation + " name first");
+        } else {
+            var missingRequiredElements = " name";
+            if (!appNameVal && !appRevisionVal) {
+                missingRequiredElements = " name and revision";
+            } else if (!appRevisionVal) {
+                missingRequiredElements = " revision";
+            }
+
+            $('input[name=fileUploadRadioOptions]').prop("disabled", true);
+            $('.radio-inline').css("color", "#aaa");
+            $('input[name=fileUploadRadioOptions]').prop("title", "This option is disabled. Please enter " + cloudSpecificApplicationRepresentation.toLowerCase() + missingRequiredElements + " first");
 
         }
     }
-    function checkApplicationExistence(newName){
-        for (var i = 0; i < applicationList.length; i++){
-            var existingAppName = applicationList[i].applicationName.toLowerCase();
-            var nameMatch = existingAppName.localeCompare(newName.toLowerCase());
-            if (nameMatch === 0) {
-                var applicationHash = applicationList[i].hashId;
-                var providedName = $("#applicationName").val();
-                $("#applicationName").val('');
+
+    function checkApplicationExistence(providedName) {
+        jagg.post("../blocks/application/application.jag", {
+            action:"getApplicationHashIdOfMatchingAppName",
+            applicationName:providedName
+        },function (result) {
+            var appHashId = result.trim();
+            if (appHashId != "null") {
                 jagg.popMessage({
                     type: 'confirm',
                     modalStatus: true,
                     title: 'Error!!!',
                     content: cloudSpecificApplicationRepresentation + ' with name: ' + providedName + ' already exists. ' +
                         'Do you want to go to the existing ' + cloudSpecificApplicationRepresentation + '?',
-                    okCallback: function() {
-                        window.location.replace("home.jag?applicationKey=" + applicationHash);
+                    yesCallback: function() {
+                        window.location.replace("home.jag?applicationKey=" + appHashId);
                     }
                 });
             }
-        }
+        },function (jqXHR, textStatus, errorThrown) {
+
+        });
     }
 
     function checkApplicationVersionExistence(version){
@@ -1113,7 +1139,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
       <form id="application-details" method="post" action='<%=jagg.getAbsoluteUrl("/site/blocks/application/application.jag")%>' enctype="multipart/form-data">
             <div class="form-group">
                 <label for="application-name"><%=cloudSpecificApplicationRepresentation%> Name: *</label>
-                <input id="applicationName" name="applicationName" type="text" class="form-control" placeholder="Enter <%=cloudSpecificApplicationRepresentation.toLowerCase()%> name" />
+                <input id="applicationName" name="applicationName" type="text" class="form-control" placeholder="Enter <%=cloudSpecificApplicationRepresentation.toLowerCase()%> name" maxlength="100" />
             </div>
 
         <% if(newVersion){ %>
@@ -1166,14 +1192,17 @@ jagg.template("application", function (inputs, outputs, jagg) {
                     <input type="radio" name="fileUploadRadioOptions" id="inlineRadio1" value="upload-from-file"
                            checked="checked" class="custom-radio"> Upload from file system
                 </label>
+                <br/>
                 <label class="radio-inline">
                     <input type="radio" name="fileUploadRadioOptions" id="inlineRadio2" value="upload-from-url"
                            class="custom-radio"> Upload from URL
                 </label>
+                <br/>
 		        <label class="radio-inline">
                     <input type="radio" name="fileUploadRadioOptions" id="inlineRadioSample" value="deploy-sample"
                            class="custom-radio"> Deploy sample <%=cloudSpecificApplicationRepresentation.toLowerCase()%>
                 </label>
+                <br/>
                 <%  if(isAppTypeBuildable == 'false'){ %>
                     <label class="radio-inline">
                         <input type="radio" name="fileUploadRadioOptions" id="inlineRadio3" value="github-repo-url"
@@ -1341,6 +1370,21 @@ jagg.template("application", function (inputs, outputs, jagg) {
                             <div class="info-block">
                                 To add database-specific environment variables, type <b>database:</b> in the Value textbox.
                             </div>
+                            <div class="panel-body" id="env-pane">
+                                <div class="form-inline property-seperator" id="env-body">
+                                    <div class="form-group">
+                                        <label class="sr-only" for="key">Key</label>
+                                        <input type="text" class="form-control element-add-key" name="envKey" placeholder="Key">
+                                    </div>
+                                    <div class="form-group custom-env-class-for-demo">
+                                        <label class="sr-only" for="value">Value</label>
+                                        <select id="value" name="value" class="form-control select2 element-add-value"></select>
+                                    </div>
+                                    <div class="form-group">
+                                        <button class="btn btn-primary btn-primary-add btn-primary-add-val-env" disabled>Add</button>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="panel-body">
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="env" readonly placeholder="Upload via .json file">
@@ -1352,21 +1396,6 @@ jagg.template("application", function (inputs, outputs, jagg) {
                                             Clear
                                         </span>
                                     </span>
-                                </div>
-                            </div>
-                            <div class="panel-body" id="env-pane">
-                                <div class="form-inline property-seperator" id="env-body">
-                                    <div class="form-group">
-                                        <label class="sr-only" for="key">Key</label>
-                                        <input type="text" class="form-control element-add-key" placeholder="Key">
-                                    </div>
-                                    <div class="form-group custom-env-class-for-demo">
-                                        <label class="sr-only" for="value">Value</label>
-                                        <select id="value" name="value" class="form-control select2 element-add-value"></select>
-                                    </div>
-                                    <div class="form-group">
-                                        <button class="btn btn-primary btn-primary-add btn-primary-add-val-env" disabled>Add</button>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1472,7 +1501,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
 
       <script src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('js/custom/custom.js'))%>"></script>
       <script src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('templates/application/js/application.js'))%>"></script>
-      <script src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('js/select2-4.0.0/select2.min.js'))%>"></script>
+      <script src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('js/select2-4.0.3/select2.min.js'))%>"></script>
       <script src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('js/common.js'))%>"></script>
 
     <%
