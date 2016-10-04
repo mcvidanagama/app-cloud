@@ -17,8 +17,6 @@
 package org.wso2.appcloud.core.dao;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.wso2.appcloud.common.AppCloudException;
 import org.wso2.appcloud.core.DBUtil;
 import org.wso2.appcloud.core.SQLQueryConstants;
@@ -1635,13 +1633,13 @@ public class ApplicationDAO {
         ResultSet resultSet = null;
         int appCount = 0;
         try {
-            preparedStatement = dbConnection.prepareStatement(SQLQueryConstants.GET_TENANT_RUNNING_CONTAINER_COUNT);
+            preparedStatement = dbConnection.prepareStatement(SQLQueryConstants.RUNNING_APPLICATION_VERSION_COUNT);
             preparedStatement.setInt(1, tenantId);
             preparedStatement.setString(2, cloudType);
             resultSet = preparedStatement.executeQuery();
             dbConnection.commit();
             if (resultSet.next()) {
-                appCount = resultSet.getInt("ACTIVE_CONTAINERS_COUNT");
+                appCount = resultSet.getInt(SQLQueryConstants.ACTIVE_CONTAINERS_COUNT);
             }
         } catch (SQLException e) {
             String msg =
