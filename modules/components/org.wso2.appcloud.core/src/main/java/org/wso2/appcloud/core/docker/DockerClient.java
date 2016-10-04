@@ -261,7 +261,7 @@ public class DockerClient {
         }
 
         final boolean[] dockerStatusCheck = new boolean[1];
-        dockerStatusCheck[0] = true;
+        dockerStatusCheck[0] = false;
         try {
             handle = dockerClient.image().withName(imageRepoUrl).pull()
                                  .usingListener(new EventListener() {
@@ -269,13 +269,14 @@ public class DockerClient {
                                      public void onSuccess(String message) {
                                          log.info("Pull Success:" + message);
                                          pullDone.countDown();
+                                         dockerStatusCheck[0] = true;
+
                                      }
 
                                      @Override
                                      public void onError(String message) {
                                          log.error("Pull Failure:" + message);
                                          pullDone.countDown();
-                                         dockerStatusCheck[0] = false;
                                      }
 
                                      @Override
@@ -308,7 +309,7 @@ public class DockerClient {
             throws AppCloudException {
 
         if (log.isDebugEnabled()) {
-            log.debug("Docker image tag triggered for image : " + oldImage + " with old tag : " + oldTag + " to new " +
+            log.debug("Docker image tagging triggered for image : " + oldImage + " with old tag : " + oldTag + " to new " +
                       "tag : " + newImageName);
         }
 
