@@ -1532,13 +1532,13 @@ var getContainerServiceProxies = function (versionHashId) {
 };
 
 var getCustomDomain = function (applicationName) {
-    var tenantId = modManager.getTenantId();
+    var tenantId = modManager.getTenantId(true);
     var applicationHashId = Util.getApplicationHashId(applicationName, tenantId);
     return ApplicationManager.getCustomDomain(applicationHashId);
 };
 
 var getDefaultVersion = function (applicationName) {
-    var tenantId = modManager.getTenantId();
+    var tenantId = modManager.getTenantId(true);
     var applicationHashId = Util.getApplicationHashId(applicationName, tenantId);
     return ApplicationManager.getDefaultVersion(applicationHashId);
 };
@@ -1594,13 +1594,13 @@ var isCustomDomainExist = function (applicationName) {
 };
 
 var createServiceWithHostName = function (applicationName, versionName, hostName) {
-    var tenantId = modManager.getTenantId();
+    var tenantId = modManager.getTenantId(true);
     var applicationHashId = Util.getApplicationHashId(applicationName, tenantId);
     var appType = getApplication(applicationHashId).applicationType;
     var versionHashId = getVersionHashId(applicationName, versionName);
 
     var applicationCtx = KubernetesProvisioningUtils.getApplicationContext(
-            applicationName, versionName, appType, modManager.getTenantId(), modManager.getTenantDomain(), versionHashId);
+            applicationName, versionName, appType, modManager.getTenantId(true), modManager.getTenantDomain(true), versionHashId);
     var kubernetesRuntimeProvisioningService = new KubernetesRuntime(applicationCtx);
 
     var containerServiceProxies = getContainerServiceProxies(versionHashId);
@@ -1624,12 +1624,12 @@ var createServiceWithHostName = function (applicationName, versionName, hostName
 };
 
 var deleteService = function (applicationName, versionName) {
-    var tenantId = modManager.getTenantId();
+    var tenantId = modManager.getTenantId(true);
     var applicationHashId = Util.getApplicationHashId(applicationName, tenantId);
     var appType = getApplication(applicationHashId).applicationType;
     var versionHashId = getVersionHashId(applicationName, versionName);
     var applicationCtx = KubernetesProvisioningUtils.getApplicationContext(
-            applicationName, versionName, appType, modManager.getTenantId(), modManager.getTenantDomain(), versionHashId);
+            applicationName, versionName, appType, modManager.getTenantId(true), modManager.getTenantDomain(true), versionHashId);
     var kubernetesRuntimeProvisioningService = new KubernetesRuntime(applicationCtx);
     //delete version specific service from K8s
     var k8sKindService = Packages.org.wso2.appcloud.provisioning.runtime.KubernetesPovisioningConstants.KIND_SERVICE;
