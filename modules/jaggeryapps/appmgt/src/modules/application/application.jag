@@ -94,16 +94,19 @@ var addApplication = function (applicationName, versionName, applicationDescript
         renameDirectory(oldHashId, versionHashId, uploadedFileName);
     }
     var imageName;
+    var readyToTriggerDeployment = true;
     if (appTypeName != CUSTOM) { //for custom images uploadedFIleName=null
         var absFileUploadedPath = createDockerFile(applicationName, versionName, appTypeName, runtimeId, uploadedFileName,
                                                    versionHashId, dockerClient, artifactUrl, hostName, appCreationMethod,
                                                    runtimeProperties, conSpecMemory);
-        buildDockerImage(applicationName, versionName, runtimeId, absFileUploadedPath, applicationRuntime, tagName,
+        var buildDockerImageStatus = buildDockerImage(applicationName, versionName, runtimeId, absFileUploadedPath, applicationRuntime, tagName,
                          versionHashId, dockerClient);
         // eg: registry.docker.appcloud.wso2.com:5000/wso2as
-        imageName = modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL) + "/" + applicationRuntime.getImageName();
-        pushDockerImage(applicationName, versionName, imageName, tagName, versionHashId, dockerClient);
+        if(buildDockerImageStatus) {
+            imageName = modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL) + "/" + applicationRuntime.getImageName();
+            readyToTriggerDeployment = pushDockerImage(applicationName, versionName, imageName, tagName, versionHashId, dockerClient);
 
+        }
     } else { // for custom docker images
         var elementArray = remoteImageUrl.split(":");
         log.info("element array length : " + elementArray.length);
@@ -118,13 +121,12 @@ var addApplication = function (applicationName, versionName, applicationDescript
 
         }
     }
-
-   // pushDockerImage(applicationName, versionName, imageName, newTagName, versionHashId, dockerClient);
-    triggerKubernetesDeployment(imageName, runtimeProperties, applicationRuntime, tagName, applicationName,
+    if(readyToTriggerDeployment) {
+        triggerKubernetesDeployment(imageName, runtimeProperties, applicationRuntime, tagName, applicationName,
                                 versionName, appTypeName, runtimeId, replicas, versionHashId, conSpecMemory, conSpecCpu);
-    putSelectedRevisionToSession(applicationHashId, versionName);
+        putSelectedRevisionToSession(applicationHashId, versionName);
 
-
+    }
     if (isNewVersion == 'true') {
         var isSet = parse(setDefaultVersion);
         if (isSet) {
