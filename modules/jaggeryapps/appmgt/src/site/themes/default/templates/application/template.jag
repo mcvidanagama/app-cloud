@@ -81,6 +81,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
     var envVariableErrorMsg = "";
     var uploadURLErrorMsg = "";
     var uploadMethod = "file";
+    var custom = "<%=CUSTOM%>";
     if(appTypeName == custom){
         uploadMethod = "";
     }
