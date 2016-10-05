@@ -710,13 +710,6 @@ jagg.template("application", function (inputs, outputs, jagg) {
             var url = $("#artifactUrl").val();
             var currentExtension = url.split(/[. ]+/).pop();
 
-            if(appTypeName == 'jaggery') {
-                if (currentExtension.toLowerCase() === "zip"){
-                    document.getElementById('runtime').selectedIndex = 1;
-                } else {
-                    document.getElementById('runtime').selectedIndex = 0;
-                }
-            }
         });
 
         /**
@@ -932,31 +925,16 @@ jagg.template("application", function (inputs, outputs, jagg) {
 
     function validateArtifactURL(value){
         var pattern = "(ftp|http|https):\/\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\/|\/([\\w#!:.?+=&%@!\\-\\/]))?\." + APP_TYPE_EXTENSION;
-        var pattern_jag_zip = "(ftp|http|https):\/\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\/|\/([\\w#!:.?+=&%@!\\-\\/]))?\.zip";
         var regex = new RegExp(pattern, "g");
-        var regex_jag_zip = new RegExp(pattern_jag_zip, "g");
-        if(appTypeName == 'jaggery') { //Remove this check after removing AS 5.3.0 jaggery runtime
-            if(value && (regex.test(value) || regex_jag_zip.test(value))){
-                if ($('#applicationName').val() && $('#applicationRevision').val()) {
-                    $("#url-upload").attr("disabled", false);
-                }
-                return true;
-            } else {
-                $("#url-upload").attr("disabled", true);
-                uploadURLErrorMsg = "Invalid URL. The URL should be in the format : http:\/\/host-name\/file-location\/file-name." + APP_TYPE_EXTENSION;
-                return false;
+        if(value && regex.test(value)){
+            if ($('#applicationName').val() && $('#applicationRevision').val()) {
+                $("#url-upload").attr("disabled", false);
             }
+            return true;
         } else {
-            if(value && regex.test(value)){
-                if ($('#applicationName').val() && $('#applicationRevision').val()) {
-                    $("#url-upload").attr("disabled", false);
-                }
-                return true;
-            } else {
-                $("#url-upload").attr("disabled", true);
-                uploadURLErrorMsg = "Invalid URL. The URL should be in the format : http:\/\/host-name\/file-location\/file-name." + APP_TYPE_EXTENSION;
-                return false;
-            }
+            $("#url-upload").attr("disabled", true);
+            uploadURLErrorMsg = "Invalid URL. The URL should be in the format : http:\/\/host-name\/file-location\/file-name." + APP_TYPE_EXTENSION;
+            return false;
         }
     }
 
@@ -1010,25 +988,11 @@ jagg.template("application", function (inputs, outputs, jagg) {
     function validateArtifactType(filename) {
         var ext = getFileExtension(filename);
         var isValidExtension = false;
-        if(appTypeName == 'jaggery') { //Remove this check after removing AS 5.3.0 jaggery runtime
-            if((ext.toLowerCase() === APP_TYPE_EXTENSION) || (ext.toLowerCase() === "zip")){
-                if (ext.toLowerCase() === "zip"){
-                    document.getElementById('runtime').selectedIndex = 1;
-                } else {
-                    document.getElementById('runtime').selectedIndex = 0;
-                }
-                isValidExtension = true;
-            } else {
-                artifactErrorMsg= "Invalid artifact selected for " + cloudSpecificApplicationRepresentation + " - Select a valid artifact";
-                isValidExtension = false;
-            }
+        if (ext.toLowerCase() === APP_TYPE_EXTENSION) {
+            isValidExtension = true;
         } else {
-            if(ext.toLowerCase() === APP_TYPE_EXTENSION){
-                isValidExtension = true;
-            } else {
-                artifactErrorMsg= "Invalid artifact selected for " + cloudSpecificApplicationRepresentation + " - Select a valid artifact";
-                isValidExtension = false;
-            }
+            artifactErrorMsg= "Invalid artifact selected for " + cloudSpecificApplicationRepresentation + " - Select a valid artifact";
+            isValidExtension = false;
         }
         return (isValidExtension);
     }
@@ -1215,17 +1179,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
 
             <div class="form-group" id="file-upload-block">
                 <div>
-                    <%
-                        if(appTypeName == 'jaggery') {
-                    %>
-                        <label for="application-description" >Upload a <b>.<%=appType.extension.toUpperCase()%>/.ZIP</b> file: *</label>
-                    <%
-                    } else {
-                    %>
-                        <label for="application-description" >Upload a <b>.<%=appType.extension.toUpperCase()%></b> file: *</label>
-                    <%
-                    }
-                    %>
+                    <label for="application-description" >Upload a <b>.<%=appType.extension.toUpperCase()%></b> file: *</label>
                 </div>
                 <div class="input-group">
                     <input id="uploadedFileName" name="uploadedFileName" type="text" class="form-control" readonly>
@@ -1245,17 +1199,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
 
             <div class="form-group" id="url-upload-block">
                 <div>
-                    <%
-                        if(appTypeName == 'jaggery') {
-                    %>
-                        <label for="application-description" >Upload a <b>.<%=appType.extension.toUpperCase()%>/.ZIP</b> file: *</label>
-                    <%
-                    } else {
-                    %>
-                        <label for="application-description" >Upload a <b>.<%=appType.extension.toUpperCase()%></b> file: *</label>
-                    <%
-                    }
-                    %>
+                    <label for="application-description" >Upload a <b>.<%=appType.extension.toUpperCase()%></b> file: *</label>
                 </div>
                 <div class="input-group">
                     <input id="artifactUrl" name="artifactUrl" type="text" class="form-control" placeholder="Enter artifact URL" />
@@ -1310,17 +1254,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 <label for="runtime">Runtime: *
                     <i class="fa fa-question-circle help-tips" data-toggle="tooltip" data-placement="left" title="Select an appropriate runtime to run your <%=cloudSpecificApplicationRepresentation.toLowerCase()%>"></i>
                 </label>
-                <%
-                    if(appTypeName == 'jaggery') {
-                %>
-                    <select name="runtime" id="runtime" class="form-control" disabled></select>
-                <%
-                } else {
-                %>
-                    <select name="runtime" id="runtime" class="form-control"></select>
-                <%
-                }
-                %>
+                <select name="runtime" id="runtime" class="form-control"></select>
             </div>
 
 			<div class="form-group">
