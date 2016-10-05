@@ -106,10 +106,11 @@ function as_setup(){
     # copy axis2service to dockerfiles/wso2dataservice
     cp $APP_CLOUD_SRC_HOME/modules/extensions/org.wso2.appcloud.dss.integration/target/org.wso2.appcloud.dss.integration-3.0.0-SNAPSHOT.aar $APP_CLOUD_SRC_HOME/modules/resources/dockerfiles/wso2dataservice/base/3.5.0/
 
-    # copy esb artifacts to dockerfiles/wso2esb
+    # copy esb artifacts, patches and libs to dockerfiles/wso2esb
     cp $APP_CLOUD_SRC_HOME/modules/extensions/org.wso2.appcloud.esb.integration/ContainerAPICompositeApplication/target/ContainerAPICompositeApplication_3.0.0-SNAPSHOT.car $APP_CLOUD_SRC_HOME/modules/resources/dockerfiles/wso2esb/base/5.0.0/carbonapps/
     cp $APP_CLOUD_SRC_HOME/modules/extensions/org.wso2.appcloud.tenant.initializer/target/org.wso2.appcloud.tenant.initializer-3.0.0-SNAPSHOT.jar $APP_CLOUD_SRC_HOME/modules/resources/dockerfiles/wso2esb/base/5.0.0/dropins/
     cp $APP_CLOUD_SRC_HOME/modules/extensions/org.wso2.appcloud.httpgetprocessor.extensions/target/org.wso2.appcloud.httpgetprocessor.extensions-3.0.0-SNAPSHOT.jar $APP_CLOUD_SRC_HOME/modules/resources/dockerfiles/wso2esb/base/5.0.0/lib/
+    cp $LIB_LOCATION/jackson-dataformat-yaml-2.7.5.jar $APP_CLOUD_SRC_HOME/modules/resources/dockerfiles/wso2esb/base/5.0.0/lib/
 
     cp -R $APP_CLOUD_SRC_HOME/modules/resources/dockerfiles $1/repository/deployment/server/jaggeryapps/appmgt/
     cp -r $APP_CLOUD_SRC_HOME/modules/setup-scripts/jaggery/modules/* $1/modules/
