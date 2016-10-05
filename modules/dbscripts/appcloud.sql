@@ -87,7 +87,8 @@ INSERT INTO `AC_RUNTIME` (`id`, `name`, `image_name`, `tag`, `description`) VALU
 (8, 'OpenJDK 8 + WSO2 MSF4J 2.0.0', 'msf4j', '2.0.0', 'OS:alpine-java, Oracle JDK:8u102'),
 (9, 'WSO2 Enterprise Service Bus - 5.0.0', 'wso2esb', '5.0.0', 'OS:Debian, Oracle JDK:8u102'),
 (10, 'Apache Tomcat 8.0.36 / WSO2 Application Server 6.0.0-M3 - Deprecating on 2016/12/31', 'wso2as', '6.0.0-m3', 'OS:alpine-java, Oracle JDK:8u102'),
-(11, 'Custom Docker Image runtime', 'custom', 'customtag', 'OS:Custom, JAVA Version:custom');
+(11, 'Custom Docker Image runtime', 'custom', 'customtag', 'OS:Custom, JAVA Version:custom'),
+(12, 'WSO2 Data Services Server - 3.5.1', 'wso2dataservice', '3.5.1', 'OS:alpine-java, Oracle JDK:8u102');
 
 
 
@@ -259,7 +260,8 @@ INSERT INTO `AC_APP_TYPE_RUNTIME` (`app_type_id`, `runtime_id`) VALUES
 (6, 9),
 (1, 10),
 (4, 10),
-(7, 11);
+(7, 11),
+(5, 12);
 
 
 -- -----------------------------------------------------
@@ -464,7 +466,9 @@ INSERT INTO `AC_RUNTIME_TRANSPORT` (`transport_id`, `runtime_id`) VALUES
 (3, 10),
 (4, 10),
 (3, 11),
-(4, 11);
+(4, 11),
+(5, 12),
+(6, 12);
 
 INSERT INTO `AC_CONTAINER_SPECIFICATIONS` (`CON_SPEC_NAME`, `CPU`, `MEMORY`, `COST_PER_HOUR`) VALUES
 ('128MB RAM and 0.1x vCPU', 100, 128, 1),
@@ -501,7 +505,9 @@ INSERT INTO `AC_RUNTIME_CONTAINER_SPECIFICATIONS` (`id`, `CON_SPEC_ID`) VALUES
 (10, 3),
 (10, 4),
 (11, 3),
-(11, 4);
+(11, 4),
+(12, 3),
+(12, 4);
 
 -- -----------------------------------------------------
 -- Table `AppCloudDB`.`AC_CLOUD`
