@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 --
 --  Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 --
@@ -15,6 +16,7 @@
 --    specific language governing permissions and limitations
 --    under the License.
 --
+
 -----------------------------------------------------------
 -- Updates to the AC_RUNTIMES
 -----------------------------------------------------------
@@ -28,4 +30,21 @@ UPDATE `AC_RUNTIME` SET `name` = 'Apache Tomcat 8.0.36 / WSO2 Application Server
 -- Remove wso2as600m3 from jaggery app type
 -----------------------------------------------------------
 DELETE FROM `AC_APP_TYPE_RUNTIME` WHERE `app_type_id` = 4 AND `runtime_id` = 10;
+
+
+----------------------------------------------------------
+-- Custom docker app type related db changes
+----------------------------------------------------------
+
+INSERT INTO `AC_APP_TYPE` (`id`, `name`, `description`) VALUES (7, 'custom', 'Allows you to deploy applications using custom docker images');
+
+INSERT INTO `AC_RUNTIME` (`id`, `name`, `image_name`, `tag`, `description`) VALUES (11, 'Custom Docker Image runtime', 'custom', 'customtag', 'OS:Custom, JAVA Version:custom');
+
+INSERT INTO `AC_APP_TYPE_RUNTIME` (`app_type_id`, `runtime_id`) VALUES (7, 11);
+
+INSERT INTO `AC_RUNTIME_TRANSPORT` (`transport_id`, `runtime_id`) VALUES (3, 11),(4, 11);
+
+INSERT INTO `AC_RUNTIME_CONTAINER_SPECIFICATIONS` (`id`, `CON_SPEC_ID`) VALUES (11, 3),(11, 4);
+
+INSERT INTO `AC_CLOUD_APP_TYPE` (`cloud_id`, `app_type_id`) VALUES (1, 7);
 
