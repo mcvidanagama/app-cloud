@@ -40,7 +40,7 @@ jagg.template("apptype/select", function(inputs, outputs, jagg) {
         </a>
     </div>
     <div class="container-fluid app-type-listing">
-       <div class="row listing padding-bottom-xlg" data-count="<%=appTypes.length -1%>"> // -1 was added because we hide the custom docker image app type
+       <div class="row listing padding-bottom-xlg" data-count="<%=appTypes.length -1%>"> <!-- -1 was added because we hide the custom docker image app type -->
           <%
             if (appTypes.length > 0) {
                 for (var x = 0; x < appTypes.length; x++) {
