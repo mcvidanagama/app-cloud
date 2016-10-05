@@ -76,16 +76,16 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 
 INSERT INTO `AC_RUNTIME` (`id`, `name`, `image_name`, `tag`, `description`) VALUES
-(1, 'Apache Tomcat 8.0.28 / WSO2 Application Server 6.0.0-M1 - Deprecated (will work until 2016/09/30)', 'wso2as', '6.0.0-m1', 'OS:alpine-java, Oracle JDK:8u102'),
-(2, 'OpenJDK 8 + WSO2 MSF4J 1.0.0 - Deprecated Runtime (Will continue to work until 2016/9/30)', 'msf4j', '1.0.0', 'OS:alpine-java, Oracle JDK:8u102'),
+(1, 'Apache Tomcat 8.0.28 / WSO2 Application Server 6.0.0-M1 - Deprecating on 2016/12/31', 'wso2as', '6.0.0-m1', 'OS:alpine-java, Oracle JDK:8u102'),
+(2, 'OpenJDK 8 + WSO2 MSF4J 1.0.0 - Deprecating on 2016/12/31', 'msf4j', '1.0.0', 'OS:alpine-java, Oracle JDK:8u102'),
 (3, 'Apache 2.4.10 (PHP Version 7.0.5)', 'php', '5.6', 'OS:Debian, PHP Version:5.6.20'),
 (4, 'Carbon 4.2.0', 'carbon','4.2.0', 'OS:alpine-java, Oracle JDK:8u102'),
-(5, 'Jaggery 0.11.0 - Deprecated Runtime (Will continue to work until 2016/9/30)', 'jaggery', '0.11.0', 'OS:alpine-java, Oracle JDK:8u102'),
-(6, 'Apache Tomcat 8.0.28 / WSO2 Application Server 6.0.0-M2', 'wso2as', '6.0.0-m2', 'OS:alpine-java, Oracle JDK:8u102'),
+(5, 'Jaggery 0.11.0', 'jaggery', '0.11.0', 'OS:alpine-java, Oracle JDK:8u102'),
+(6, 'Apache Tomcat 8.0.28 / WSO2 Application Server 6.0.0-M2 - Deprecating on 2016/12/31', 'wso2as', '6.0.0-m2', 'OS:alpine-java, Oracle JDK:8u102'),
 (7, 'WSO2 Data Services Server - 3.5.0', 'wso2dataservice', '3.5.0', 'OS:alpine-java, Oracle JDK:8u102'),
 (8, 'OpenJDK 8 + WSO2 MSF4J 2.0.0', 'msf4j', '2.0.0', 'OS:alpine-java, Oracle JDK:8u102'),
 (9, 'WSO2 Enterprise Service Bus - 5.0.0', 'wso2esb', '5.0.0', 'OS:Debian, Oracle JDK:8u102'),
-(10, 'Apache Tomcat 8.0.28 / WSO2 Application Server 6.0.0-M3', 'wso2as', '6.0.0-m3', 'OS:alpine-java, Oracle JDK:8u102');
+(10, 'Apache Tomcat 8.0.36 / WSO2 Application Server 6.0.0-M3 - Deprecating on 2016/12/31', 'wso2as', '6.0.0-m3', 'OS:alpine-java, Oracle JDK:8u102');
 
 
 
