@@ -173,6 +173,31 @@ var log = new Log();
             applicationContext = null;
         }
 
+        var remoteImageUrl = request.getParameter("remoteImageUrl");
+        var remoteImageUrlSegments = remoteImageUrl.split(":");
+        if(remoteImageUrlSegments.length < 2) {
+            logMessage = "Bad request : Image url is invalid, it should be image_name:tag";
+            log.warn(logMessage);
+            response.status = 400;
+            response.content = logMessage;
+            return;
+
+        }
+
+        // this is temporary code, will be removed when custom docker images feature is fully completed
+        // this is to enforce use only the local registry images to create apps via custom docker images
+        var localRegistry = modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL);
+        if (remoteImageUrl && remoteImageUrl.indexOf(localRegistry) == -1) {
+            logMessage = "Bad request : Allowed docker images only from local registry : " + localRegistry;
+            log.warn(logMessage);
+            response.status = 400;
+            response.content = logMessage;
+            return;
+        }
+
+        //var userName = request.getParameter("userName");
+        //var password = request.getParameter("password");
+
         var setDefaultVersion = request.getParameter("setDefaultVersion");
         // checking whether an application with same name and same version, already exists or not
         var versionHashId = applicationModule.getVersionHashId(applicationName, applicationRevision);
@@ -225,7 +250,6 @@ var log = new Log();
                     return;
                 }
             }
-
             if (isAppCountLowerThanMax) {
                 if (isFileAttached == 'true') {
                     var fileSuccessfullyUploaded = applicationModule.
@@ -238,12 +262,12 @@ var log = new Log();
                         return ;
                     }
                 }
-                if (uploadedFileName) {
-                    applicationModule.addApplication(applicationName, applicationRevision, applicationDescription,
-                                                     replicas, runtimeId, appTypeName, runtimeProperties, tags,
-                                                     appIcon, uploadedFileName, isNewVersion, conSpecMemory,
-                                                     conSpecCpu, artifactUrl, appCreationMethod, oldHashId,
-                                                     applicationContext, setDefaultVersion);
+                if (uploadedFileName || (remoteImageUrl)) {
+                    applicationModule
+                            .addApplication(applicationName, applicationRevision, applicationDescription, replicas,
+                                            runtimeId, appTypeName, runtimeProperties, tags, appIcon, uploadedFileName,
+                                            isNewVersion, conSpecMemory, conSpecCpu, artifactUrl, appCreationMethod,
+                                            oldHashId, applicationContext, setDefaultVersion, remoteImageUrl);
                 } else {
                     var gitRepoUrl = request.getParameter("gitRepoUrl");
                     var gitRepoBranch = request.getParameter("gitRepoBranch");
