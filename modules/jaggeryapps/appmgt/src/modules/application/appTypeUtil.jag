@@ -117,19 +117,19 @@ ESBAppTypeUtil.prototype.getEndpoints = function (deploymentUrl, versionId) {
         }
 
         var apis = data.urls.apis;
-         if (apis != null) {
+        if (apis != null) {
             if (Array.isArray(apis)) {
                 for (var j = 0; j < apis.length; j++) {
                     var api = apis[j];
                     if (api.name != "ContainerAPI") {
-			var url = deploymentUrl + "/" + api.name + "?swagger.json";
+			 var url = deploymentUrl + "/" + api.name + "?swagger.json";
                         restEndpoints.push({"name" : api.name, "url" : url});
                     }
                 }
             } else {
                 var api = apis;
                 if (api.name != "ContainerAPI") {
-		    var url = deploymentUrl + "/" + api.name + "?swagger.json";
+		     var url = deploymentUrl + "/" + api.name + "?swagger.json";
                     restEndpoints.push({"name" : api.name, "url" : url});
                 }
             }
