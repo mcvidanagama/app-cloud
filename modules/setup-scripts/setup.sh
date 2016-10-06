@@ -243,3 +243,4 @@ sh $DAS_HOME/bin/wso2server.sh -Dsetup &
 
 echo "If you are setting up App Cloud for the first time, please make sure to run app-cloud/modules/resources/dockerfiles/dockerImages.sh script to build docker base images"
 echo "Set up is completed."
+
