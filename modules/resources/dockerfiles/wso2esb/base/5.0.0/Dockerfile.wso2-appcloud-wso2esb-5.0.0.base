@@ -36,7 +36,9 @@ RUN sed -i -e 's/dl-cdn/dl-4/' /etc/apk/repositories && \
     apk upgrade --update  && apk add openssl && apk add pwgen && \
     addgroup wso2 && adduser -g '' -s /bin/bash -D -G wso2 wso2user && \
     apk add --update libstdc++ curl ca-certificates bash && \
-    for pkg in glibc-${GLIBC_VERSION} glibc-bin-${GLIBC_VERSION} glibc-i18n-${GLIBC_VERSION}; do curl -sSL https://github.com/andyshinn/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/${pkg}.apk -o /tmp/${pkg}.apk; done && \
+    for pkg in glibc-${GLIBC_VERSION} glibc-bin-${GLIBC_VERSION} glibc-i18n-${GLIBC_VERSION}; \
+     do curl -sSL https://github.com/andyshinn/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/${pkg}.apk -o \
+     /tmp/${pkg}.apk; done && \
     apk add --allow-untrusted /tmp/*.apk && \
     rm -v /tmp/*.apk && \
     ( /usr/glibc-compat/bin/localedef --force --inputfile POSIX --charmap UTF-8 C.UTF-8 || true ) && \
@@ -77,9 +79,14 @@ COPY lib/ $CARBON_HOME_PATH/repository/components/lib/
 COPY conf/ $RESOURCES_PATH/conf
 COPY carbonapps/ $RESOURCES_PATH/carbonapps
 
-RUN sed -i '/<StratosPublicCloudSetup>/c<StratosPublicCloudSetup>false</StratosPublicCloudSetup>' $CARBON_HOME_PATH/repository/conf/multitenancy/stratos.xml
-RUN sed -i '/<Class>org.wso2.carbon.core.transports.util.Wsdl11Processor/c<Class>org.wso2.appcloud.httpgetprocessor.extensions.wsdl.Wsdl11UrlTenantInfoProcessor</Class>' $CARBON_HOME_PATH/repository/conf/carbon.xml && \
-    sed -i '/<Class>org.wso2.carbon.core.transports.util.Wsdl20Processor/c<Class>org.wso2.appcloud.httpgetprocessor.extensions.wsdl.Wsdl20UrlTenantInfoProcessor</Class>' $CARBON_HOME_PATH/repository/conf/carbon.xml
+RUN sed -i '/<StratosPublicCloudSetup>/c<StratosPublicCloudSetup>false</StratosPublicCloudSetup>' \
+     $CARBON_HOME_PATH/repository/conf/multitenancy/stratos.xml
+RUN sed -i '/<Class>org.wso2.carbon.core.transports.util.Wsdl11Processor/c \
+     <Class>org.wso2.appcloud.httpgetprocessor.extensions.wsdl.Wsdl11UrlTenantInfoProcessor</Class>' \
+     $CARBON_HOME_PATH/repository/conf/carbon.xml && \
+    sed -i '/<Class>org.wso2.carbon.core.transports.util.Wsdl20Processor/c \
+     <Class>org.wso2.appcloud.httpgetprocessor.extensions.wsdl.Wsdl20UrlTenantInfoProcessor</Class>' \
+     $CARBON_HOME_PATH/repository/conf/carbon.xml
 
 EXPOSE 8243 8280
 CMD ["bash", "-c", "source /init.sh"]
