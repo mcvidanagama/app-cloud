@@ -48,8 +48,6 @@ fi
 
 # Build source code
 mvn clean install -Dmaven.test.skip=true -f $APP_CLOUD_SRC_HOME/pom.xml
-#Build extensions
-mvn clean install -Dmaven.test.skip=true -f $APP_CLOUD_SRC_HOME/modules/extensions/pom.xml
 
 # Setting up default carbon database
 MYSQL=`which mysql`
