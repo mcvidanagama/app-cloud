@@ -45,6 +45,7 @@ WSO2AS600M2_VERSION=wso2as-6.0.0-m2
 WSO2AS600M3_VERSION=wso2as-6.0.0-m3
 WSO2DSS350_VERSION=wso2dss-3.5.0
 WSO2DSS351_VERSION=wso2dss-3.5.1
+WSO2ESB500_VERSION=wso2esb-5.0.0
 
 echo "Build extentions"
 cd $EXTENSION_DIR
@@ -85,6 +86,9 @@ function copy_to_wso2dss() {
 }
 
 function copy_to_wso2esb() {
+    cp $PACK_DIR/$WSO2ESB500_VERSION.zip $DOCKER_DIR/wso2esb/base/5.0.0/
+
+    cp -R $ARTIFACT_DIR/wso2esb/base/5.0.0/patches/ $DOCKER_DIR/wso2esb/base/5.0.0/patches/
     echo "Copied to wso2esb"
 }
 
