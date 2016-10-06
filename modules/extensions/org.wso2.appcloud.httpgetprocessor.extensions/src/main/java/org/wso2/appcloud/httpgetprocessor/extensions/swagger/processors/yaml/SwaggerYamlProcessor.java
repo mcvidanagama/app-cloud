@@ -32,7 +32,7 @@ import org.wso2.carbon.core.transports.HttpGetRequestProcessor;
  * Processes incoming http request and provide Swagger definition for the API in YAML format
  */
 public class SwaggerYamlProcessor implements HttpGetRequestProcessor {
-    private static Log log = LogFactory.getLog(SwaggerYamlProcessor.class);
+    private static final Log log = LogFactory.getLog(SwaggerYamlProcessor.class);
 
     /**
      * Process incoming CarbonHttpRequest and update CarbonHttpResponse with generated swagger definition in yaml

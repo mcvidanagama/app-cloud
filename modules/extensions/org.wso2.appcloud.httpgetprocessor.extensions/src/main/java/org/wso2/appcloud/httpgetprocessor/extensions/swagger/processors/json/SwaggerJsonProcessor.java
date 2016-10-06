@@ -32,7 +32,7 @@ import org.wso2.carbon.core.transports.HttpGetRequestProcessor;
  * Processes incoming http request and provide Swagger definition for the API in JSON format
  */
 public class SwaggerJsonProcessor implements HttpGetRequestProcessor {
-    private static Log log = LogFactory.getLog(SwaggerJsonProcessor.class);
+    private static final Log log = LogFactory.getLog(SwaggerJsonProcessor.class);
 
     /**
      * Process incoming CarbonHttpRequest and update CarbonHttpResponse with generated swagger definition in json
@@ -52,7 +52,7 @@ public class SwaggerJsonProcessor implements HttpGetRequestProcessor {
             throw new Exception("API not found by SwaggerJsonProcessor");
         } else {
             JSONObject jsonDefinition = new JSONObject(new GenericApiObjectDefinition(api).getDefinitionMap());
-            String responseString = jsonDefinition.toString(4);
+            String responseString = jsonDefinition.toString(SwaggerConstants.DEFAULT_INDENT_FACTOR);
             SwaggerUtils.updateResponse(response, responseString, SwaggerConstants.CONTENT_TYPE_JSON);
         }
     }

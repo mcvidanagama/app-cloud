@@ -35,7 +35,7 @@ import java.io.UnsupportedEncodingException;
  * Util methods used in Swagger definition generation
  */
 public class SwaggerUtils {
-    private static Log log = LogFactory.getLog(SwaggerUtils.class);
+    private static final Log log = LogFactory.getLog(SwaggerUtils.class);
 
     /**
      * Returns API instance related to the URI in provided request

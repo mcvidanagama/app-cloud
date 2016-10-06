@@ -43,31 +43,36 @@ public class GenericApiObjectDefinition {
      * @return Map of the swagger definition structure
      */
     public Map<String, Object> getDefinitionMap() {
-        Map<String, Object> apiMap = new LinkedHashMap<String, Object>();
+        Map<String, Object> apiMap = new LinkedHashMap<>();
+        Map<String, Object> pathMap;
+
+        //Create main elements in definition
         apiMap.put(SwaggerConstants.SWAGGER, SwaggerConstants.SWAGGER_VERSION);
         if (SwaggerConstants.HOST_NAME != null) {
             apiMap.put(SwaggerConstants.HOST, SwaggerConstants.HOST_NAME);
         }
         apiMap.put(SwaggerConstants.BASE_PATH, getUrlWithoutTenant(api.getContext()));
         apiMap.put(SwaggerConstants.INFO, getInfoMap());
-        if (getPathMap() != null && !getPathMap().isEmpty()) {
+        //Create paths
+        pathMap = getPathMap();
+        if (!pathMap.isEmpty()) {
             apiMap.put(SwaggerConstants.PATHS, getPathMap());
         }
-
+        //Create scehemes
         apiMap.put(SwaggerConstants.SCHEMES, getSchemes());
         return apiMap;
     }
 
     private Map<String, Object> getResponsesMap() {
-        Map<String, Object> responsesMap = new LinkedHashMap<String, Object>();
-        Map<String, Object> responseDetailsMap = new LinkedHashMap<String, Object>();
+        Map<String, Object> responsesMap = new LinkedHashMap<>();
+        Map<String, Object> responseDetailsMap = new LinkedHashMap<>();
         responseDetailsMap.put(SwaggerConstants.DESCRIPTION, SwaggerConstants.DEFAULT_RESPONSE);
         responsesMap.put(SwaggerConstants.DEFAULT_VALUE, responseDetailsMap);
         return responsesMap;
     }
 
     private Map<String, Object> getInfoMap() {
-        Map<String, Object> infoMap = new LinkedHashMap<String, Object>();
+        Map<String, Object> infoMap = new LinkedHashMap<>();
         infoMap.put(SwaggerConstants.DESCRIPTION, (SwaggerConstants.API_DESC_PREFIX + api.getAPIName()));
         infoMap.put(SwaggerConstants.TITLE, api.getName());
         infoMap.put(SwaggerConstants.VERSION, (api.getVersion() != null && !api.getVersion().equals(""))
@@ -76,21 +81,22 @@ public class GenericApiObjectDefinition {
     }
 
     private Map<String, Object> getPathMap() {
-        Map<String, Object> pathsMap = new LinkedHashMap<String, Object>();
+        Map<String, Object> pathsMap = new LinkedHashMap<>();
+        //Process each resource in the API
         for (Resource resource : api.getResources()) {
-            Map<String, Object> methodMap = new LinkedHashMap<String, Object>();
+            Map<String, Object> methodMap = new LinkedHashMap<>();
             DispatcherHelper resourceDispatcherHelper = resource.getDispatcherHelper();
 
+            //Populate properties for each method (GET, POST, PUT ect) available
             for (String method : resource.getMethods()) {
                 if (method != null) {
-                    Map<String, Object> methodInfoMap = new LinkedHashMap<String, Object>();
+                    Map<String, Object> methodInfoMap = new LinkedHashMap<>();
                     methodInfoMap.put(SwaggerConstants.RESPONSES, getResponsesMap());
                     if (resourceDispatcherHelper != null) {
                         Object[] parameters = getResourceParameters(resource);
                         if (parameters.length > 0) {
                             methodInfoMap.put(SwaggerConstants.PARAMETERS, parameters);
                         }
-
                     }
                     methodMap.put(method.toLowerCase(), methodInfoMap);
                 }
@@ -118,12 +124,13 @@ public class GenericApiObjectDefinition {
     }
 
     private Object[] getResourceParameters(Resource resource) {
-        ArrayList<Map<String, Object>> parameterList = new ArrayList<Map<String, Object>>();
+        ArrayList<Map<String, Object>> parameterList = new ArrayList<>();
         String uri = resource.getDispatcherHelper().getString();
 
         if (resource.getDispatcherHelper() instanceof URLMappingBasedDispatcher) {
             generateParameterList(parameterList, uri, false);
         } else {
+            //If it is uri-template, process both path and query parameters
             generateParameterList(parameterList, uri, true);
         }
         return parameterList.toArray();
@@ -134,6 +141,7 @@ public class GenericApiObjectDefinition {
         if (uriString == null) {
             return;
         }
+        //Process query parameters
         if (generateBothTypes) {
             String[] params = getQueryStringFromUrl(uriString).split("\\&");
             for (String parameter : params) {
@@ -145,6 +153,7 @@ public class GenericApiObjectDefinition {
                 }
             }
         }
+        //Process path parameters
         Matcher matcher = SwaggerConstants.PATH_PARAMETER_PATTERN.matcher(getPathFromUrl(uriString));
         while (matcher.find()) {
             parameterList.add(getParametersMap(matcher.group(1), SwaggerConstants.PARAMETER_IN_PATH));
@@ -152,11 +161,12 @@ public class GenericApiObjectDefinition {
     }
 
     private Map<String, Object> getParametersMap(String parameterName, String parameterType) {
-        Map<String, Object> parameterMap = new LinkedHashMap<String, Object>();
+        Map<String, Object> parameterMap = new LinkedHashMap<>();
         parameterMap.put(SwaggerConstants.PARAMETER_DESCRIPTION, parameterName);
         parameterMap.put(SwaggerConstants.PARAMETER_IN, parameterType);
         parameterMap.put(SwaggerConstants.PARAMETER_NAME, parameterName);
         parameterMap.put(SwaggerConstants.PARAMETER_REQUIRED, true);
+        //Consider parameter type as 'String' by default since no such information available in API config
         parameterMap.put(SwaggerConstants.PARAMETER_TYPE, SwaggerConstants.PARAMETER_TYPE_STRING);
         return parameterMap;
     }

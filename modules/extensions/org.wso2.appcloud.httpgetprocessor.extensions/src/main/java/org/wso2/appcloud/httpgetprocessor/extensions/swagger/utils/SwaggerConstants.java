@@ -70,6 +70,8 @@ public class SwaggerConstants {
     //http status codes
     public static final int HTTP_OK = 200;
 
+    public static final int DEFAULT_INDENT_FACTOR = 4;
+
     public static final String DEFAULT_ENCODING = "UTF-8";
 
     public static final String TENANT_REPLACEMENT_REGEX="\\/t\\/.*?\\/";
