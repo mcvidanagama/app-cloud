@@ -45,6 +45,7 @@ WSO2AS600M2_VERSION=wso2as-6.0.0-m2
 WSO2AS600M3_VERSION=wso2as-6.0.0-m3
 WSO2DSS350_VERSION=wso2dss-3.5.0
 WSO2DSS351_VERSION=wso2dss-3.5.1
+WSO2ESB500_VERSION=wso2esb-5.0.0
 
 echo "Build extentions"
 cd $EXTENSION_DIR
@@ -85,6 +86,15 @@ function copy_to_wso2dss() {
 }
 
 function copy_to_wso2esb() {
+    cp $PACK_DIR/$WSO2ESB500_VERSION.zip $DOCKER_DIR/wso2esb/base/5.0.0/
+
+    cp $APPCLOUD_HOME/modules/extensions/org.wso2.appcloud.esb.integration/ContainerAPICompositeApplication/target/ContainerAPICompositeApplication_3.0.0-SNAPSHOT.car $DOCKER_DIR/wso2esb/base/5.0.0/carbonapps/
+    cp $APPCLOUD_HOME/modules/extensions/org.wso2.appcloud.tenant.initializer/target/org.wso2.appcloud.tenant.initializer-3.0.0-SNAPSHOT.jar $DOCKER_DIR/modules/resources/dockerfiles/wso2esb/base/5.0.0/dropins/
+    cp $APPCLOUD_HOME/modules/extensions/org.wso2.appcloud.httpgetprocessor.extensions/target/org.wso2.appcloud.httpgetprocessor.extensions-3.0.0-SNAPSHOT.jar $DOCKER_DIR/modules/resources/dockerfiles/wso2esb/base/5.0.0/lib/
+
+    cp -r $ARTIFACT_DIR/wso2esb/base/5.0.0/lib/ $DOCKER_DIR/wso2esb/base/5.0.0/lib/
+    cp -r $ARTIFACT_DIR/wso2esb/base/5.0.0/patches/ $DOCKER_DIR/wso2esb/base/5.0.0/patches/
+
     echo "Copied to wso2esb"
 }
 
