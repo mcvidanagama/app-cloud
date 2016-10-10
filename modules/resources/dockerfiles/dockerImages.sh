@@ -43,5 +43,8 @@ docker build --no-cache -t wso2-appcloud/jaggery:0.11.0-base -f $CURRENT_DIR/jag
 #wso2dataservice base image
 docker build --no-cache -t wso2-appcloud/wso2dataservice:3.5.0-base -f $CURRENT_DIR/wso2dataservice/base/3.5.0/Dockerfile.wso2-appcloud-wso2dataservice-3.5.0.base $CURRENT_DIR/wso2dataservice/base/3.5.0
 
+#java base image
+docker build --no-cache -t wso2-appcloud/alpine-oracle-jdk:1.8.0-base -f $CURRENT_DIR/java/base/1.8.0/Dockerfile.wso2-appcloud-alpine-oracle-jdk-1.8.0.base $CURRENT_DIR/java/base/1.8.0
+
 #wso2esb base image
 docker build --no-cache -t wso2-appcloud/wso2esb:5.0.0-base -f $CURRENT_DIR/wso2esb/base/5.0.0/Dockerfile.wso2-appcloud-wso2esb-5.0.0.base $CURRENT_DIR/wso2esb/base/5.0.0
