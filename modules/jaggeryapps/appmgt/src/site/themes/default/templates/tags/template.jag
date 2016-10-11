@@ -36,7 +36,6 @@ jagg.template("tags", function(inputs, outputs, jagg) {
 
  <!-- right pane wrapper -->
  <div class="right-pane visible">
-
     <div class="action-bar">
         <a href="/appmgt/site/pages/home.jag?applicationKey=<%=applicationKey%>" class="btn-action" data-toggle="tooltip" data-placement="top" title="Back to <%=cloudSpecificApplicationRepresentation%>">
                 <span class="fw-stack fw-lg btn-action-ico">
@@ -60,8 +59,8 @@ jagg.template("tags", function(inputs, outputs, jagg) {
         <div class="tag-list">
         </div>
     </div>
-    </div>
 </div>
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
