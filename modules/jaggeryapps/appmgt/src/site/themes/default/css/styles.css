@@ -877,12 +877,12 @@ a.btn-action {
 
 .side-pane-trigger {
     float: left;
-    margin-left: 14px;
+    margin-left: 0px;
     margin-top: -1px;
     background-color: #006690
 }
 .side-pane-trigger i {
-    padding: 15px 15px 14px;
+    padding: 15px 15px 17px;
     cursor: pointer;
     font-size: 1.5em;
 }
@@ -901,7 +901,7 @@ a.btn-action {
     z-index: 100;
     background-color: #222222;
     left: 0em;
-    top: 53px;
+    top: 63px;
     min-height: 100%;
     overflow-y: auto;
 }
