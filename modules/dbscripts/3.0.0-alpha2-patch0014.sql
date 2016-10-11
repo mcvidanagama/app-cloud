@@ -73,3 +73,21 @@ ALTER TABLE AC_VERSION ADD exposure_level varchar(24);
 -- Setting public as exposure level in all versions
 -- --------------------------------------------------------
 UPDATE AC_VERSION SET exposure_level='public';
+
+
+-----------------------------------------------------------
+-- Add new Tomcat 8.5.5 runtime
+-----------------------------------------------------------
+INSERT INTO `AC_RUNTIME` (`id`, `name`, `image_name`, `tag`, `description`) VALUES
+(13, 'Apache Tomcat 8.5.5', 'tomcat', '8.5.5', 'OS:alpine-java, Oracle JDK:8u102');
+
+INSERT INTO `AC_APP_TYPE_RUNTIME` (`app_type_id`, `runtime_id`) VALUES
+(1, 13);
+
+INSERT INTO `AC_RUNTIME_CONTAINER_SPECIFICATIONS` (`id`, `CON_SPEC_ID`) VALUES
+(13, 3),
+(13, 4);
+
+INSERT INTO AC_RUNTIME_TRANSPORT (`transport_id`, `runtime_id`) VALUES
+(3, 13),
+(4, 13);
