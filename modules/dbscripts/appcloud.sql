@@ -148,6 +148,7 @@ CREATE TABLE IF NOT EXISTS `AppCloudDB`.`AC_VERSION` (
   `con_spec_memory` VARCHAR(10) NOT NULL,
   `timestamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `is_white_listed` TINYINT unsigned NOT NULL DEFAULT 0,
+  `exposure_level` varchar(24) NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_AC_VERSION_AC_APPLICATION1`
     FOREIGN KEY (`application_id`)

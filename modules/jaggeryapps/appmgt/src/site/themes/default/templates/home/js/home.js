@@ -32,7 +32,6 @@ $(document).ready(function() {
     if(selectedApplicationRevision.status==APPLICATION_INACTIVE){
         displayApplicationInactiveMessage();
     }
-
     loadEndpointView();
 
     $('.side-pane-trigger').click(function(){

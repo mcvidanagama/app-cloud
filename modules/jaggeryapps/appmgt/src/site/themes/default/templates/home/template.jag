@@ -432,7 +432,6 @@ jagg.template("home", function(inputs, outputs, jagg) {
                 versionKey: selectedApplicationRevision.hashId,
                 conSpecCpu: conSpecCpu,
                 conSpecMemory: conSpecMemory
-
             }, function(result) {
             });
         }
