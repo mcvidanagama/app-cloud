@@ -32,10 +32,13 @@ docker build --no-cache -t wso2-appcloud/carbon:4.2.0-base -f $CURRENT_DIR/carbo
 #php base image
 docker build --no-cache -t wso2-appcloud/php:1.0.0-base -f $CURRENT_DIR/php/base/1.0.0/Dockerfile.wso2-appcloud-php-1.0.0.base $CURRENT_DIR/php/base/1.0.0
 
-#tomcat base images
+#wso2as base images
 docker build --no-cache -t wso2-appcloud/wso2as:6.0.0-m1-base -f $CURRENT_DIR/wso2as/base/6.0.0-m1/Dockerfile.wso2-appcloud-wso2as-6.0.0-m1.base $CURRENT_DIR/wso2as/base/6.0.0-m1
 docker build --no-cache -t wso2-appcloud/wso2as:6.0.0-m2-base -f $CURRENT_DIR/wso2as/base/6.0.0-m2/Dockerfile.wso2-appcloud-wso2as-6.0.0-m2.base $CURRENT_DIR/wso2as/base/6.0.0-m2
 docker build --no-cache -t wso2-appcloud/wso2as:6.0.0-m3-base -f $CURRENT_DIR/wso2as/base/6.0.0-m3/Dockerfile.wso2-appcloud-wso2as-6.0.0-m3.base $CURRENT_DIR/wso2as/base/6.0.0-m3
+
+#tomcat base images
+docker build --no-cache -t wso2-appcloud/tomcat:8.5.5-base -f $CURRENT_DIR/tomcat/base/8.5.5/Dockerfile.wso2-appcloud-tomcat-8.5.5.base $CURRENT_DIR/tomcat/base/8.5.5
 
 #jaggery base image
 docker build --no-cache -t wso2-appcloud/jaggery:0.11.0-base -f $CURRENT_DIR/jaggery/base/0.11.0/Dockerfile.wso2-appcloud-jaggery-0.11.0.base $CURRENT_DIR/jaggery/base/0.11.0
