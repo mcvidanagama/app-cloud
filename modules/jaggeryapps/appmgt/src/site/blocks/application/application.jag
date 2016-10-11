@@ -56,6 +56,7 @@ var log = new Log();
         var applicationDescription = request.getParameter("applicationDescription");
         var replicas = 1;
         var runtimeId = request.getParameter("runtime");
+        var exposureLevel = "public";
         if (validateRequiredAndNumber("runtime", runtimeId)) {return;}
 
         var isNewVersion = request.getParameter("isNewVersion");
@@ -265,12 +266,13 @@ var log = new Log();
                         return ;
                     }
                 }
+
                 if (uploadedFileName || (remoteImageUrl)) {
                     applicationModule
                             .addApplication(applicationName, applicationRevision, applicationDescription, replicas,
                                             runtimeId, appTypeName, runtimeProperties, tags, appIcon, uploadedFileName,
                                             isNewVersion, conSpecMemory, conSpecCpu, artifactUrl, appCreationMethod,
-                                            oldHashId, applicationContext, setDefaultVersion, remoteImageUrl);
+                                            oldHashId, applicationContext, setDefaultVersion, remoteImageUrl, exposureLevel);
                 } else {
                     var gitRepoUrl = request.getParameter("gitRepoUrl");
                     var gitRepoBranch = request.getParameter("gitRepoBranch");
@@ -279,7 +281,7 @@ var log = new Log();
                     gitHubAppModule.addApplicationViaGitHub(applicationName, applicationRevision, applicationDescription,
                             replicas, runtimeId, appTypeName, runtimeProperties, tags,
                             appIcon, gitRepoUrl, gitRepoBranch, projectRoot, token,
-                            isNewVersion, conSpecMemory, conSpecCpu, appCreationMethod, applicationContext, setDefaultVersion);
+                            isNewVersion, conSpecMemory, conSpecCpu, appCreationMethod, applicationContext, setDefaultVersion, exposureLevel);
                 }
                 response.status = 200;
                 response.content = logMessage;
@@ -329,6 +331,7 @@ var log = new Log();
         var applicationType = applicationModule.getApplication(applicationHashId).applicationType;
         var podDeleteTimeOut = modManager.getPropertyValue(POD_DELETE_TIMEOUT);
         var status = applicationModule.getApplicationRevisionStatus(applicationHashId, applicationRevision);
+        var exposureLevel = applicationModule.getExposureLevel(applicationName, applicationRevision);
 
         // redeploy application from kubernetes
         if(applicationName == null){
@@ -343,12 +346,12 @@ var log = new Log();
             versionKey = mod.getVersionHashId(applicationName, applicationRevision)
         }
         if (status == APPLICATION_STOPPED || status == APPLICATION_INACTIVE) {
-            applicationModule.redeployApplication(applicationName, applicationRevision, versionKey, applicationType);
+            applicationModule.redeployApplication(applicationName, applicationRevision, versionKey, applicationType, exposureLevel);
             response.status = 200;
             response.content = "Application is successfully started.";
         } else {
             try {
-                if (applicationModule.redeployVersion(applicationName, applicationRevision, versionKey, applicationType)) {
+                if (applicationModule.redeployVersion(applicationName, applicationRevision, versionKey, applicationType, exposureLevel)) {
                     response.status = 200;
                     response.message = "Application is successfully redeployed.";
                 } else {
@@ -375,9 +378,10 @@ var log = new Log();
             var applicationHashId = applicationModule.getApplicationHashIdByName(applicationName);
             var versions = applicationModule.getVersionListOfApplication(applicationHashId);
             var applicationType = applicationModule.getApplication(applicationHashId).applicationType;
+            var exposureLevel = applicationModule.getExposureLevel(applicationName, applicationRevision);
 
             // redeploy application from kubernetes
-            applicationModule.redeployApplication(applicationName, applicationRevision, versionKey, applicationType);
+            applicationModule.redeployApplication(applicationName, applicationRevision, versionKey, applicationType, exposureLevel);
             print(stringify(versions));
         } else {
             logMessage = "Application creation request not accepted because the application count has " +
@@ -692,6 +696,24 @@ var log = new Log();
         var mod = jagg.module("application");
         var endpoints = mod.getAppTypeUtil(appType).getEndpoints(deploymentURL, versionId);
         print(endpoints);
+
+    } else if (action == "getExposureLevel") {
+
+        var applicationName = request.getParameter("applicationName");
+        var versionName = request.getParameter("versionName");
+        var mod = jagg.module("application");
+        var exposureLevel = mod.getExposureLevel(applicationName, versionName);
+        print(exposureLevel);
+
+    } else if (action == "updateVersionExposureLevel") {
+
+        var exposureLevel = request.getParameter("exposureLevel");
+        var versionName = request.getParameter("versionName");
+        var applicationName = request.getParameter("applicationName");
+        var versionHashId = applicationModule.getVersionHashId(applicationName, versionName);
+        var mod = jagg.module("application");
+        mod.updateVersionExposureLevel(exposureLevel, versionHashId, applicationName, versionName);
+
     } else {
         throw new Error("No action specified for: " + action);
     }
