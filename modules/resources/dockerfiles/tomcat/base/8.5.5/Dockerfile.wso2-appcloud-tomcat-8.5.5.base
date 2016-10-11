@@ -22,7 +22,7 @@ FROM anapsix/alpine-java:8_server-jre_unlimited
 
 ENV TOMCAT_ZIP apache-tomcat-8.5.5.zip
 ENV INSTALL_PATH /home/wso2user/
-ENV CARBON_HOME_PATH $INSTALL_PATH/apache-tomcat-8.5.5
+ENV TOMCAT_HOME_DIR $INSTALL_PATH/apache-tomcat-8.5.5
 ENV ADMIN_PASS ""
 
 # Add the startup script
@@ -38,8 +38,8 @@ USER wso2user
 RUN cp /$TOMCAT_ZIP $INSTALL_PATH/ && \
     unzip $INSTALL_PATH/$TOMCAT_ZIP -d $INSTALL_PATH/ && \
     rm $INSTALL_PATH/$TOMCAT_ZIP && \
-    rm -rf $CARBON_HOME_PATH/webapps/examples && \
-    chmod +x $CARBON_HOME_PATH/bin/catalina.sh
+    rm -rf $TOMCAT_HOME_DIR/webapps/examples && \
+    chmod +x $TOMCAT_HOME_DIR/bin/catalina.sh
 
 EXPOSE 8080 8443
 CMD ["bash", "-c", "source /init.sh"]
