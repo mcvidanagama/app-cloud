@@ -45,14 +45,14 @@ var Util = Packages.org.wso2.appcloud.core.Util;
 var addApplicationViaGitHub = function (applicationName, versionName, applicationDescription, replicas,
                                         runtimeId, appTypeName, runtimePropertiesArray, tagArray, appIcon, gitHubRepoUrl,
                                         gitHubRepoBranch, projectRoot, token, isNewVersion, conSpecMemory, conSpecCpu,
-                                        appCreationMethod, applicationContext, setDefaultVersion) {
+                                        appCreationMethod, applicationContext, setDefaultVersion, exposureLevel) {
 
     log.info("Started creating App => Name:" + applicationName + " Version:" + versionName + " Description:" + applicationDescription +
     " RuntimeId:" + runtimeId + " AppType:" + appTypeName + " Runtime Properties:" + JSON.stringify(runtimePropertiesArray) +
     " Tags:" + JSON.stringify(tagArray) + " GitHub RepoUrl:" + gitHubRepoUrl + " GitHub Repo Branch:" + gitHubRepoBranch +
     " Project Root:" + projectRoot + " Token:" + token + " New Version:" + isNewVersion + " Allocated Memory:" + conSpecMemory +
     " Allocated CPU:" + conSpecCpu + " App Creation Method:" + appCreationMethod + " Context:" + applicationContext +
-    " DefaultVersion:" + setDefaultVersion);
+    " DefaultVersion:" + setDefaultVersion + " exposureLevel:" + exposureLevel);
 
     var tenantId = modManager.getTenantId();
     var applicationHashId = Util.getApplicationHashId(applicationName, tenantId);
@@ -61,11 +61,11 @@ var addApplicationViaGitHub = function (applicationName, versionName, applicatio
 
     if(isNewVersion == 'true'){
         version = appManager.createAppVersionInDataBase(versionName, runtimeId, runtimePropertiesArray, tagArray,
-                                                        applicationHashId, versionHashId, conSpecMemory, conSpecCpu);
+                                                        applicationHashId, versionHashId, conSpecMemory, conSpecCpu, exposureLevel);
     }else{
         var application = appManager.createAppInDataBase(applicationName, versionName, applicationDescription, replicas,
                                                          runtimeId, appTypeName, runtimePropertiesArray, tagArray, appIcon,
-                                                         applicationHashId, versionHashId, conSpecMemory, conSpecCpu);
+                                                         applicationHashId, versionHashId, conSpecMemory, conSpecCpu, exposureLevel);
         version = application.getVersions().get(0);
     }
 

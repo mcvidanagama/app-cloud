@@ -18,10 +18,7 @@ package org.wso2.appcloud.provisioning.runtime.Utils;
 
 import io.fabric8.kubernetes.api.KubernetesHelper;
 import io.fabric8.kubernetes.api.model.*;
-import io.fabric8.kubernetes.api.model.extensions.Deployment;
-import io.fabric8.kubernetes.api.model.extensions.DeploymentList;
-import io.fabric8.kubernetes.api.model.extensions.Ingress;
-import io.fabric8.kubernetes.api.model.extensions.IngressList;
+import io.fabric8.kubernetes.api.model.extensions.*;
 import io.fabric8.kubernetes.client.AutoAdaptableKubernetesClient;
 import io.fabric8.kubernetes.client.Config;
 import org.apache.commons.logging.Log;
@@ -185,6 +182,7 @@ public class KubernetesProvisioningUtils {
         selector.put("version", applicationContext.getVersion());
         selector.put("versionHashId", applicationContext.getVersionHashId());
         selector.put("type", applicationContext.getType());
+        selector.put("exposure-level", applicationContext.getExposureLevel());
         return selector;
     }
 
@@ -217,7 +215,7 @@ public class KubernetesProvisioningUtils {
      * @return application context
      */
     public static ApplicationContext getApplicationContext(String appName, String version, String type, int tenantId,
-            String tenantDomain, String versionHashId) {
+            String tenantDomain, String versionHashId, String exposureLevel) {
 
         ApplicationContext applicationContext = new ApplicationContext();
         applicationContext.setId(getKubernetesValidAppName(appName));
@@ -228,6 +226,7 @@ public class KubernetesProvisioningUtils {
         tenantInfo.setTenantDomain(tenantDomain);
         applicationContext.setTenantInfo(tenantInfo);
         applicationContext.setVersionHashId(versionHashId);
+        applicationContext.setExposureLevel(exposureLevel);
         return applicationContext;
     }
 

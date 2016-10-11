@@ -20,6 +20,7 @@ import io.fabric8.kubernetes.api.KubernetesHelper;
 import io.fabric8.kubernetes.api.model.*;
 import io.fabric8.kubernetes.api.model.extensions.*;
 import io.fabric8.kubernetes.client.AutoAdaptableKubernetesClient;
+import io.fabric8.kubernetes.client.Client;
 import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.fabric8.kubernetes.client.dsl.LogWatch;
 import io.fabric8.kubernetes.client.dsl.PrettyLoggable;
@@ -1041,10 +1042,23 @@ public class KubernetesRuntimeProvisioningService implements RuntimeProvisioning
 			}
 			return podRestartCounts;
 		} else {
-			String message = "Couldnot find a pod associated with pod for application : " + applicationContext.getId() +
+			String message = "Could not find a pod associated with pod for application : " + applicationContext.getId() +
 			                 ", version : " + applicationContext.getVersion();
 			log.error(message);
 			throw new RuntimeProvisioningException(message);
 		}
 	}
+
+    @Override
+    public void changeExposureLevelInServices(String serviceName, String exposureLevel, String lbHost)
+            throws  RuntimeProvisioningException {
+        AutoAdaptableKubernetesClient kubClient = KubernetesProvisioningUtils.getFabric8KubernetesClient();
+        kubClient.services().inNamespace(this.namespace.getMetadata().getName())
+                .withName(serviceName).edit().editMetadata()
+                .addToLabels("exposure-level", exposureLevel).endMetadata().done();
+
+        kubClient.services().inNamespace(this.namespace.getMetadata().getName())
+                .withName(serviceName).edit().editMetadata()
+                .addToAnnotations("serviceloadbalancer/lb.host", lbHost).endMetadata().done();
+    }
 }
