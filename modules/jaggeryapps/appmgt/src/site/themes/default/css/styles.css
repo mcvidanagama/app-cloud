@@ -2239,8 +2239,8 @@ a.btn-action {
     padding:10px;
     color:#333;
 }
-.add-tag{
-    margin-top:20px;
+.add-tag[disabled] {
+    cursor: default;
 }
 .new-tag-container{
     padding:10px;
