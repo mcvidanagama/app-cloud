@@ -49,9 +49,9 @@ EOL
 
 sed -i '/<Service name="Catalina">/a <Connector protocol="org.apache.coyote.http11.Http11NioProtocol" port="8443" maxThreads="150" scheme="https" secure="true" SSLEnabled="true" keystoreFile="/wso2carbon.jks" keystorePass="wso2carbon" clientAuth="false" sslProtocol="TLS"/>' $TOMCAT_HOME_DIR/conf/server.xml
 
-sed -i "s/unpackWARs=\"true\"/unpackWARs=\"false\"/g" $TOMCAT_HOME_DIR/conf/server.xml
-
-sed -i "/\/Host/i  \\<Context path=\"""\" docBase=\"$APP_WAR\" debug=\"0\" reloadable=\"true\"></Context>" $TOMCAT_HOME_DIR/conf/server.xml
+# removing .war part from the APP_NAME
+APP_NAME=$(basename $APP_WAR .war)
+sed -i "/\/Host/i  \\<Context path=\"""\" docBase=\"$APP_NAME\" debug=\"0\" reloadable=\"true\"></Context>" $TOMCAT_HOME_DIR/conf/server.xml
 
 sed -i '/<Context>/a <JarScanner scanClassPath="false" />' $TOMCAT_HOME_DIR/conf/context.xml
 
