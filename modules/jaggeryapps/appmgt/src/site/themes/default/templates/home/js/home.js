@@ -34,20 +34,6 @@ $(document).ready(function() {
     }
     loadEndpointView();
 
-    $('.side-pane-trigger').click(function(){
-        var rightPane = $('.right-pane');
-        var leftPane = $('.left-pane');
-
-        if (rightPane.hasClass('visible')){
-            rightPane.animate({"left":"0%", "width":"100%"}, "slow").removeClass('visible');
-            leftPane.animate({"left":"-15%"}, "slow");
-            $(this).find('i').removeClass('fa-arrow-left').addClass('fa-reorder');
-        } else {
-            rightPane.animate({"left":"15%", "width":"85%"}, "slow").addClass('visible');
-            leftPane.animate({"left":"0%"}, "slow");
-            $(this).find('i').removeClass('fa-reorder').addClass('fa-arrow-left');
-        }
-    });
 });
 
 // wrapping functions
