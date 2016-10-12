@@ -39,6 +39,7 @@ RUN cp /$TOMCAT_ZIP $INSTALL_PATH/ && \
     unzip $INSTALL_PATH/$TOMCAT_ZIP -d $INSTALL_PATH/ && \
     rm $INSTALL_PATH/$TOMCAT_ZIP && \
     rm -rf $TOMCAT_HOME_DIR/webapps/examples && \
+    rm -rf $TOMCAT_HOME_DIR/webapps/ROOT && \
     chmod +x $TOMCAT_HOME_DIR/bin/catalina.sh
 
 EXPOSE 8080 8443
