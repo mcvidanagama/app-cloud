@@ -85,9 +85,10 @@ var addApplicationViaGitHub = function (applicationName, versionName, applicatio
     var buildDockerImageStatus = appManager.buildDockerImage(applicationName, versionName, runtimeId, absFileUploadedPath, applicationRuntime, tagName,
                                 versionHashId, dockerClient);
     if (buildDockerImageStatus) {
-        appManager.pushDockerImage(applicationName, versionName, applicationRuntime, tagName, versionHashId, dockerClient);
-        appManager.triggerKubernetesDeployment(runtimeProperties, applicationRuntime, tagName, applicationName, versionName,
-                appTypeName, runtimeId, replicas, versionHashId, conSpecMemory, conSpecCpu);
+        var imageName = modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL) + "/" + applicationRuntime.getImageName();
+        appManager.pushDockerImage(applicationName, versionName, imageName, tagName, versionHashId, dockerClient);
+        appManager.triggerKubernetesDeployment(imageName, runtimeProperties, applicationRuntime, tagName, applicationName, versionName,
+                appTypeName, runtimeId, replicas, versionHashId, conSpecMemory, conSpecCpu, exposureLevel);
     }
 
     if (isNewVersion == 'true') {
