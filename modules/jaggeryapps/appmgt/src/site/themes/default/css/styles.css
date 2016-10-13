@@ -879,10 +879,11 @@ a.btn-action {
     float: left;
     margin-left: 0px;
     margin-top: 2px;
-    background-color: #303030;
+    background-color: #222222;
+    font-size: 0.8em;
 }
 .side-pane-trigger i {
-    padding: 15px 15px 15px;
+    padding: 20px 16px 15px;
     cursor: pointer;
     font-size: 1.5em;
 }
