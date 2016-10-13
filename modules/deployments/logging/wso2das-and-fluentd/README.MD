@@ -19,5 +19,5 @@ Steps
         Update image name in wso2das-fluentd.yaml file if image name is different.
     Run command './kubectl create -f wso2das-fluentd.yaml'
     
-3.  Define an even stream in WSO2DAS(to be completed with exact stream)
+3.  Zip capp content as 'app_cloud_container_logs_capp.car' and deploy that file into wso2das.
     
