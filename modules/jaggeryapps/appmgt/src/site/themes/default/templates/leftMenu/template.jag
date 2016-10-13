@@ -67,9 +67,9 @@ jagg.template("leftMenu", function (inputs, outputs, jagg) {
                 <a id="leftMenuTagSet" href="/appmgt/site/pages/tags.jag?applicationKey=<%=applicationKey%>&versionKey=<%=versionKey%>">
                 <i class="left-menu-icon fw fw-tag"></i>Tags</a>
         </li>
-        <li class="<% if (pageName == "Runtime Logs") { %>selected<%}%>">
+        <li class="<% if (pageName == "Logs") { %>selected<%}%>">
                 <a href="/appmgt/site/pages/runtimeLogs.jag?applicationKey=<%=applicationKey%>&selectedRevision=<%=selectedRevision%>&versionKey=<%=versionKey%>">
-                <i class="left-menu-icon fw fw-hdd"></i>Runtime Logs</a>
+                <i class="left-menu-icon fw fw-hdd"></i>Logs</a>
         </li>
         <li class="<% if (pageName == "Custom URL") { %>selected<%}%>">
                 <a href="/appmgt/site/pages/customurl.jag?applicationKey=<%=applicationKey%>&selectedRevision=<%=selectedRevision%>">
