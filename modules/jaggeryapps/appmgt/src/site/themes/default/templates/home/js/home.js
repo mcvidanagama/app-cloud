@@ -607,6 +607,22 @@ function deleteApplicationPopUp(){
     }
 }
 
+function stopApplicationPopUp(){
+    jagg.popMessage({type:'confirm', modalStatus: true, title:'Stop ' + cloudSpecificApplicationRepresentation + ' Version',content:'Are your sure you want to stop ' +  selectedRevision + ' version of this ' + cloudSpecificApplicationRepresentation.toLowerCase() + ' ?',
+        yesCallback:function(){
+            stopApplication();
+        }
+    });
+}
+
+function redeployApplicationPopUp(){
+    jagg.popMessage({type:'confirm', modalStatus: true, title:'Redeploy ' + cloudSpecificApplicationRepresentation + ' Version',content:'Are your sure you want to redeploy ' +  selectedRevision + ' version of this ' + cloudSpecificApplicationRepresentation.toLowerCase() + ' ?',
+        yesCallback:function(){
+            redeployApplication();
+        }
+    });
+}
+
 function redirectAppListing() {
     window.location.replace("index.jag");
 }
