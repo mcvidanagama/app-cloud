@@ -36,6 +36,8 @@ jagg.template("settings", function (inputs, outputs, jagg) { %>
         }
     }
     var cloudSpecificApplicationRepresentation = outputs.cloudSpecificApplicationRepresentation;
+    var privateURL = outputs.privateURL;
+    var publicURL = outputs.publicURL;
 %>
 
 <!-- start of setting global javascript variable values from jaggery side -->
@@ -121,13 +123,13 @@ jagg.template("settings", function (inputs, outputs, jagg) { %>
                                 <div class="radio">
                                   <label>
                                       <input type="radio" name="security-radio" id="security-public" class="custom-radio" value="public" checked="checked"/>Public
-                                      <p class="help-block">Endpoints will be visible to all external traffic (Internet) via <b>&lt;application_name&gt;.wso2apps.com</b> url. These public endpoints can be accessed internally (traffic from WSO2 Cloud) via <b>&lt;application_name&gt;.wso2apps.local</b> url as well.</p>
+                                      <p class="help-block">Endpoints will be visible to all external traffic (Internet) via <b>&lt;application_name&gt;.<%=publicURL%></b> url. These public endpoints can be accessed internally (traffic from WSO2 Cloud) via <b>&lt;application_name&gt;.<%=privateURL%></b> url as well.</p>
                                   </label>
                                 </div>
                                 <div class="radio">
                                   <label>
                                       <input type="radio" name="security-radio" id="security-private" class="custom-radio" value="private"/>Private</span>
-                                          <p class="help-block">Endpoints will be visible only to the internal traffic (traffic from WSO2 Cloud). These private endpoints can be accessed only via <b>&lt;application_name&gt;.wso2apps.local</b> url.</p>
+                                          <p class="help-block">Endpoints will be visible only to the internal traffic (traffic from WSO2 Cloud). These private endpoints can be accessed only via <b>&lt;application_name&gt;.<%=privateURL%></b> url.</p>
                                       </label>
                                 </div>
                             </div>
