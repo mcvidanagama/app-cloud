@@ -54,10 +54,12 @@ jagg.template("leftMenu", function (inputs, outputs, jagg) {
 
 <!-- left pane wrapper -->
 <div class="left-pane ">
-    <ul>
+    <ul >
         <li class="<% if (pageName == "Overview") { %>selected<%}%>">
-                <a id="leftMenuOverview" href="/appmgt/site/pages/home.jag?applicationKey=<%=applicationKey%>">
-                <i class="left-menu-icon fw fw-laptop"></i>Overview</a>
+            <ul class="overview-inner-list">
+                <li> <div class="side-pane-trigger float-right"><i class="fw fw-left"></i></div></li>
+                <li> <a id="leftMenuOverview" href="/appmgt/site/pages/home.jag?applicationKey=<%=applicationKey%>"><i class="left-menu-icon fw fw-laptop"></i>Overview</a></li>
+            </ul>
         </li>
         <li class="<% if (pageName == "Environment Variables") { %>selected<%}%>">
                 <a id="leftMenuEnvVars" href="/appmgt/site/pages/envs.jag?versionKey=<%=versionKey%>&applicationKey=<%=applicationKey%>">

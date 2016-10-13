@@ -52,19 +52,24 @@ jagg.template("page/master", function(inputs, outputs, jagg) {
 </body>
 
 <script>
-    $('.side-pane-trigger').click(function(){
-        var rightPane = $('.right-pane');
-        var leftPane = $('.left-pane');
+    var rightPane = $('.right-pane');
+    var leftPane = $('.left-pane');
 
+    $('.side-pane-trigger').click(function(){
         if (rightPane.hasClass('visible')){
             rightPane.animate({"left":"0%", "width":"100%"}, "slow").removeClass('visible');
             leftPane.animate({"left":"-15%"}, "slow");
-            $(this).find('i').removeClass('fa-arrow-left').addClass('fa-reorder');
+            $('#reorder-icon-div').html('<div class="side-pane-trigger"><i class="fa fa-reorder"></i></div>');
         } else {
             rightPane.animate({"left":"15%", "width":"85%"}, "slow").addClass('visible');
             leftPane.animate({"left":"0%"}, "slow");
-            $(this).find('i').removeClass('fa-reorder').addClass('fa-arrow-left');
+            $('#reorder-icon-div').html('');
         }
+    });
+    $('#reorder-icon-div').click(function(){
+        rightPane.animate({"left":"15%", "width":"85%"}, "slow").addClass('visible');
+        leftPane.animate({"left":"0%"}, "slow");
+        $('#reorder-icon-div').html('');
     });
 </script>
 </html>

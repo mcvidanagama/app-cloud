@@ -83,10 +83,9 @@ jagg.template("home", function(inputs, outputs, jagg) {
     <div class="right-pane visible">
     <!-- BOF App factory menu actionbar -->
     <div class="action-bar">
-        <div class="side-pane-trigger">
-            <i class="fa fa-arrow-left"></i>
-        </div>
+        <div id="reorder-icon-div">
 
+        </div>
         <a href="<%=jagg.getAbsoluteUrl("/site/pages/index.jag")%>" class="btn-action"  title="Back to <%=cloudSpecificApplicationRepresentation%> listing">
                 <span class="fw-stack fw-lg btn-action-ico">
                     <i class="fw fw-circle-outline fw-stack-2x"></i>
