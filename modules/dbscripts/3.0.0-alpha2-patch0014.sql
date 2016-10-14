@@ -35,7 +35,7 @@ DELETE FROM `AC_APP_TYPE_RUNTIME` WHERE `app_type_id` = 4 AND `runtime_id` = 10;
 -- Custom docker app type related db changes
 -- --------------------------------------------------------
 
-INSERT INTO `AC_APP_TYPE` (`id`, `name`, `description`) VALUES (7, 'custom', 'Allows you to deploy applications using custom docker images');
+INSERT INTO `AC_APP_TYPE` (`id`, `name`, `description`) VALUES (7, 'custom', 'Allows you to deploy applications using custom Docker images');
 
 INSERT INTO `AC_RUNTIME` (`id`, `name`, `image_name`, `tag`, `description`) VALUES (11, 'Custom Docker Image runtime', 'custom', 'customtag', 'OS:Custom, JAVA Version:custom');
 

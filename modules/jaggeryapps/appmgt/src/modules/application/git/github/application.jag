@@ -108,7 +108,7 @@ var createDockerFileForGitHub =  function(applicationName, versionName, runtimeI
     var msg = "Docker file creation successfully triggered in appcloud";
     appManager.addEvent(DOCKER_FILE_CREATE, EVENT_PENDING, msg, versionHashId);
     if (log.isDebugEnabled()) {
-        log.debug("Start creating docker file for version:" + versionHashId);
+        log.debug("Start creating Docker file for version:" + versionHashId);
     }
     var absFileUploadedPath;
     try {
@@ -128,7 +128,7 @@ var createDockerFileForGitHub =  function(applicationName, versionName, runtimeI
         var appRuntimeProperties = appManager.getRuntimePropertyMap(runtimePropertiesArray);
         dockerClient.createDockerFile(dockerFilePath, runtimeId, dockerTemplateFilePath, appCreationMethod, dockerFilePropertyMap, appRuntimeProperties);
     } catch(e){
-        var msg = "Error while creating docker file";
+        var msg = "Error while creating Docker file";
         appManager.addEvent(DOCKER_FILE_CREATE, EVENT_FAILED, msg, versionHashId);
 
         try {
@@ -141,7 +141,7 @@ var createDockerFileForGitHub =  function(applicationName, versionName, runtimeI
         }
         log.error(msg);
         log.error(e);
-        log.info("Application creation failed because docker file creation failed and roll back process" +
+        log.info("Application creation failed because Docker file creation failed and roll back process" +
                  " is started for application : "+applicationName+" with revision : "+versionName);
         appManager.deleteApplicationUploadedPath(versionHashId);
         appManager.deleteVersionFromDatabase(versionHashId);
