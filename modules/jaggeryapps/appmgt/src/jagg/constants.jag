@@ -49,11 +49,11 @@ var FILE_UPLOAD_TIMEOUT = "File.Upload.Timeout";
 
 //events related constants
 var DATABASE_ADD = "Adding application to database";
-var DOCKER_FILE_CREATE = "Creating docker file";
-var DOCKER_IMAGE_BUILD = "Building docker image";
-var DOCKER_REGISTRY_PUSH = "Updating docker registry";
-var DOCKER_IMAGE_PULL = "Pulling docker  image from remote repo";
-var DOCKER_IMAGE_TAG = "Tagging docker image in registry";
+var DOCKER_FILE_CREATE = "Creating Docker file";
+var DOCKER_IMAGE_BUILD = "Building Docker image";
+var DOCKER_REGISTRY_PUSH = "Updating Docker registry";
+var DOCKER_IMAGE_PULL = "Pulling Docker image from remote repo";
+var DOCKER_IMAGE_TAG = "Tagging Docker image in registry";
 var KUBE_DEPLOY = "Initializing deployment";
 var KUBE_DEPLOY = "Initializing deployment";
 var STOP_CONTAINERS = "Stopping Containers";

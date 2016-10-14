@@ -168,14 +168,14 @@ var pushDockerImage = function (applicationName, versionName, imageName, tagName
     var msg = "Docker image push successfully triggered";
     addEvent(DOCKER_REGISTRY_PUSH, EVENT_PENDING, msg, versionHashId);
     if (log.isDebugEnabled()) {
-        log.debug("Start pushing docker image for version:" + versionHashId);
+        log.debug("Start pushing Docker image for version:" + versionHashId);
     }
     try {
         dockerClient.pushDockerImage(imageName, tagName);
     } catch (e) {
         for (var i = 0 ; i < 3 ; i++){
             try{
-                log.info("Retrying docker push retry counter value : " + i);
+                log.info("Retrying Docker push retry counter value : " + i);
                 dockerClient.pushDockerImage(modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL),applicationRuntime.getImageName(), tagName);
                 //Adding docker push success event
                 var msg = "Docker image push successfully completed";
@@ -186,7 +186,7 @@ var pushDockerImage = function (applicationName, versionName, imageName, tagName
             }
         }
 
-        var msg = "Error pushing docker image to remote registry";
+        var msg = "Error pushing Docker image to remote registry";
         addEvent(DOCKER_REGISTRY_PUSH, EVENT_FAILED, msg, versionHashId);
 
         try {
@@ -200,7 +200,7 @@ var pushDockerImage = function (applicationName, versionName, imageName, tagName
 
         log.error(msg);
         log.error(e);
-        log.info("Application creation failed because docker image push failed and roll back process" +
+        log.info("Application creation failed because Docker image push failed and roll back process" +
                  " is started for application : " + applicationName + " with revision : "+versionName);
         deleteVersion(versionHashId, true, false);
         throw e;
@@ -213,25 +213,25 @@ var pushDockerImage = function (applicationName, versionName, imageName, tagName
 
 
 var pullDockerImage = function (remoteRepoUrl, imageTag, dockerClient, versionHashId) {
-    var msg = "Pulling docker image from remote repo";
+    var msg = "Pulling Docker image from remote repo";
     addEvent(DOCKER_IMAGE_PULL, EVENT_PENDING, msg, versionHashId);
     try {
         dockerClient.pullDockerImage(remoteRepoUrl, imageTag);
         var msg = "Docker image pulled successfully from remote repo";
         addEvent(DOCKER_IMAGE_PULL, EVENT_SUCCEEDED, msg, versionHashId);
     } catch (e) {
-        var msg = "Error while pulling docker image from remote repo";
+        var msg = "Error while pulling Docker image from remote repo";
         addEvent(DOCKER_IMAGE_PULL, EVENT_FAILED, msg, versionHashId);
         try {
             ApplicationManager.updateVersionStatus(versionHashId, APPLICATION_ERROR);
         } catch (e1) {
-            log.error("Error while pulling docker image : " + remoteRepoUrl + " with tag :" + imageTag);
+            log.error("Error while pulling Docker image : " + remoteRepoUrl + " with tag :" + imageTag);
             log.error(e1);
             // not throwing the error, because it will hide the actual exception
         }
-        log.error("Pulling docker image : " + remoteRepoUrl + " with tag : " + imageTag + " failed");
+        log.error("Pulling Docker image : " + remoteRepoUrl + " with tag : " + imageTag + " failed");
         log.error(e);
-        log.info("Application creation failed because docker image pull failed and roll back process" +
+        log.info("Application creation failed because Docker image pull failed and roll back process" +
                  " is started for application version hash id : " +versionHashId);
         deleteVersion(versionHashId, true, false);
         throw e;
@@ -240,14 +240,14 @@ var pullDockerImage = function (remoteRepoUrl, imageTag, dockerClient, versionHa
 };
 
 var tagDockerImage = function (oldImageName, oldImageTag, newImageName, newTag, dockerClient, versionHashId) {
-    var msg = "Tagging docker image in registry";
+    var msg = "Tagging Docker image in registry";
     addEvent(DOCKER_IMAGE_TAG, EVENT_PENDING, msg, versionHashId);
     try {
         dockerClient.tagDockerImage(oldImageName, oldImageTag, newImageName, newTag);
         var msg = "Docker image tagged successfully";
         addEvent(DOCKER_IMAGE_TAG, EVENT_SUCCEEDED, msg, versionHashId);
     } catch (e) {
-        var msg = "Tagging docker image failed";
+        var msg = "Tagging Docker image failed";
         addEvent(DOCKER_IMAGE_TAG, EVENT_FAILED, msg, versionHashId);
         try {
             ApplicationManager.updateVersionStatus(versionHashId, APPLICATION_ERROR);
@@ -256,9 +256,9 @@ var tagDockerImage = function (oldImageName, oldImageTag, newImageName, newTag, 
             log.error(e1);
             // not throwing the error, because it will hide the actual exception
         }
-        log.error("Tagging docker image : " + oldImageName + " with tag : " + oldImageName + " to new tag : " + newTag + " failed");
+        log.error("Tagging Docker image : " + oldImageName + " with tag : " + oldImageName + " to new tag : " + newTag + " failed");
         log.error(e);
-        log.info("Application creation failed because docker image tag failed and roll back process" +
+        log.info("Application creation failed because Docker image tag failed and roll back process" +
                  " is started.");
         deleteVersion(versionHashId, true, false);
         throw e;
@@ -272,7 +272,7 @@ var buildDockerImage = function (applicationName, versionName, runtimeId, absFil
     var msg = "Docker image build successfully triggered";
     addEvent(DOCKER_IMAGE_BUILD, EVENT_PENDING, msg, versionHashId);
     if (log.isDebugEnabled()) {
-        log.debug("Start building docker image for version:" + versionHashId);
+        log.debug("Start building Docker image for version:" + versionHashId);
     }
     var applicationRuntime = ApplicationManager.getRuntimeById(runtimeId);
     var tenantDockerRegistryUrl = modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL) + "/" + dockerRegTenantSpace;
@@ -288,7 +288,7 @@ var buildDockerImage = function (applicationName, versionName, runtimeId, absFil
         // Retrying to fix thread interrupted error temporarily. Has to find a proper fix from fabric8
         for (var i = 0 ; i < 3 ; i++){
             try{
-                log.info("Retrying docker build retry counter value : " + i);
+                log.info("Retrying Docker build retry counter value : " + i);
                 var dockerRegTenantSpace = modManager.getTenantDomain().replace(".","-");
                 dockerClient.buildDockerImage(modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL), applicationRuntime.getImageName(), tagName, absFileUploadedPath);
                 //Adding docker build success event
@@ -300,7 +300,7 @@ var buildDockerImage = function (applicationName, versionName, runtimeId, absFil
             }
         }
 
-        var msg = "Error while building docker file";
+        var msg = "Error while building Docker file";
         addEvent(DOCKER_IMAGE_BUILD, EVENT_FAILED, msg, versionHashId);
 
         try {
@@ -422,7 +422,7 @@ var createDockerFile = function (applicationName, versionName, appTypeName, runt
     var msg = "Docker file creation successfully triggered";
     addEvent(DOCKER_FILE_CREATE, EVENT_PENDING, msg, versionHashId);
     if (log.isDebugEnabled()) {
-        log.debug("Start creating docker file for version:" + versionHashId);
+        log.debug("Start creating Docker file for version:" + versionHashId);
     }
     var absFileUploadedPath;
 
@@ -456,7 +456,7 @@ var createDockerFile = function (applicationName, versionName, appTypeName, runt
         var appRuntimeProperties = getRuntimeProperties(runtimeProperties);
         dockerClient.createDockerFile(dockerFilePath, runtimeId, dockerTemplateFilePath, appCreationMethod, dockerFilePropertyMap, appRuntimeProperties);
     } catch(e){
-        var msg = "Error while creating docker file";
+        var msg = "Error while creating Docker file";
         addEvent(DOCKER_FILE_CREATE, EVENT_FAILED, msg, versionHashId);
         try {
             ApplicationManager.updateVersionStatus(versionHashId, APPLICATION_ERROR);
@@ -468,7 +468,7 @@ var createDockerFile = function (applicationName, versionName, appTypeName, runt
         }
         log.error(msg);
         log.error(e);
-        log.info("Application creation failed because docker file creation failed and roll back process" +
+        log.info("Application creation failed because Docker file creation failed and roll back process" +
                  " is started for application : "+applicationName+" with revision : "+versionName);
         deleteVersion(versionHashId, true, false);
         throw e;
