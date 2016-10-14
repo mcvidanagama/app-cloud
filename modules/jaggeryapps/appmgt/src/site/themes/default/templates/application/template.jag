@@ -679,7 +679,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
         }
 
         function validateRuntimeSelection(value){
-            return (value > 0 ) ? true : false;
+            return (value > 0 || value == 'requestNewRuntime') ? true : false;
         }
 
         function validateContent(value, element) {
