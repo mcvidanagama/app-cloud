@@ -70,7 +70,7 @@ var log=new Log();
             var authorizationHeader = request.getHeader("Authorization");
             mod = jagg.module("user");
             if (authorizationHeader != null) {
-                print(mod.jwtisUserAuthenticated(authorizationHeader.replace(/\"/g, "")));
+                print(mod.jwtIsUserAuthenticated(authorizationHeader.replace(/\"/g, "")));
             } else {
                 response.status = 400;
                 response.content = "Authorization header not valid";

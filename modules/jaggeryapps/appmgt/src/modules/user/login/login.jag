@@ -130,8 +130,10 @@ function logout(){
 
 }
 
-function jwtisUserAuthenticated(authorizationHeader) {
-    log.debug("Initializing jwt login module");
+function jwtIsUserAuthenticated(authorizationHeader) {
+    if (log.isDebugEnabled()) {
+        log.debug("Initializing jwt login module");
+    }
     var startTime_module = new Date().getTime();
 
     var tenantManager = multitenancy.getTenantManager();
@@ -166,7 +168,9 @@ function jwtisUserAuthenticated(authorizationHeader) {
                     finalResult.error = "true";
                     finalResult.message = msg;
                     finalResult.username = null;
-                    log.debug(msg);
+                    if (log.isDebugEnabled()) {
+                        log.debug(msg);
+                    }
                     return stringify(finalResult);
                 }
 
@@ -179,7 +183,9 @@ function jwtisUserAuthenticated(authorizationHeader) {
                     finalResult.error = "true";
                     finalResult.message = msg;
                     finalResult.username = userNameWithTenantDomain;
-                    log.debug(msg);
+                    if (log.isDebugEnabled()) {
+                        log.debug(msg);
+                    }
                     return stringify(finalResult);
                 }
 
@@ -187,7 +193,9 @@ function jwtisUserAuthenticated(authorizationHeader) {
                 context.getThreadLocalCarbonContext().setUsername(userName);
                 context.getThreadLocalCarbonContext().setTenantDomain(tenantDomain, true);
                 var endTime_tenantFlow = new Date().getTime();
-                log.debug("Tenant flow started in :" + (endTime_tenantFlow - startTime_tenantFlow) + " milliseconds");
+                if (log.isDebugEnabled()) {
+                    log.debug("Tenant flow started in :" + (endTime_tenantFlow - startTime_tenantFlow) + " milliseconds");
+                }
 
                 var realmService = carbon.server.osgiService('org.wso2.carbon.user.core.service.RealmService');
                 var tenantManager = realmService.getTenantManager();
@@ -203,8 +211,10 @@ function jwtisUserAuthenticated(authorizationHeader) {
                 if (userStoreManager!=null && userStoreManager.isExistingUser(userName)) {
                     //Check authentication of user
                     var endTime_authenticate = new Date().getTime();
-                    log.debug("Successfully authenticated user:" + userName + " in tenant:" + tenantDomain + " in:" +
-                            (endTime_authenticate - startTime_authenticate) + " milliseconds");
+                    if (log.isDebugEnabled()) {
+                        log.debug("Successfully authenticated user:" + userName + " in tenant:" + tenantDomain + " in:" +
+                                (endTime_authenticate - startTime_authenticate) + " milliseconds");
+                    }
                     var startTime_authorize = new Date().getTime();
 
                     jagg.setSelectedCloud(request.getRequestURL());
@@ -217,13 +227,17 @@ function jwtisUserAuthenticated(authorizationHeader) {
                         finalResult.message = "User successfully logged in";
                         finalResult.username = userName;
                         var endTime_authorize = new Date().getTime();
-                        log.debug("Successfully authorized user:" + userName + " in tenant:" + tenantDomain + " in:" +
-                                (endTime_authorize - startTime_authorize) + " milliseconds");
+                        if (log.isDebugEnabled()) {
+                            log.debug("Successfully authorized user:" + userName + " in tenant:" + tenantDomain + " in:" +
+                                    (endTime_authorize - startTime_authorize) + " milliseconds");
+                        }
                     } else {
                         finalResult.error = "true";
                         finalResult.message = "Authorization Failed.";
                         finalResult.username = userName;
-                        log.debug("Authorization failed for user:" + userName + " in tenant:" + tenantDomain);
+                        if (log.isDebugEnabled()) {
+                            log.debug("Authorization failed for user:" + userName + " in tenant:" + tenantDomain);
+                        }
                         session.invalidate();
                     }
                 }
@@ -233,11 +247,15 @@ function jwtisUserAuthenticated(authorizationHeader) {
             finalResult.error = "true";
             finalResult.message = msg;
             finalResult.username = null;
-            log.debug(msg);
+            if (log.isDebugEnabled()) {
+                log.debug(msg);
+            }
             return stringify(finalResult);
         }
         var endTime_module = new Date().getTime();
-        log.debug("Finishing jwt login module in:" + (endTime_module - startTime_module) + " milliseconds");
+        if (log.isDebugEnabled()) {
+            log.debug("Finishing jwt login module in:" + (endTime_module - startTime_module) + " milliseconds");
+        }
         return stringify(finalResult);
     } catch (e) {
         log.error("Error authenticating the user for authorization header: " + authorizationHeader);
