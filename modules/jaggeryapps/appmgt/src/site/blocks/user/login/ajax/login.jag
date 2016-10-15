@@ -66,6 +66,15 @@ var log=new Log();
                 response.status = 401;
                 response.content = "Error while login user : "+userName;
             }
+        } else if (action === "jwtLogin") {
+            var authorizationHeader = request.getHeader("Authorization");
+            mod = jagg.module("user");
+            if (authorizationHeader != null) {
+                print(mod.jwtisUserAuthenticated(authorizationHeader.replace(/\"/g, "")));
+            } else {
+                response.status = 400;
+                response.content = "Authorization header not valid";
+            }
         } else {
             response.status = 400;
             response.content = "Action is not specified.";
