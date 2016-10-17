@@ -89,6 +89,8 @@ public class KubernetesProvisioningUtils {
     public static PodList getPods (ApplicationContext applicationContext){
 
         Map<String, String> selector = getLableMap(applicationContext);
+        //TODO have separate get set selectors for K8s kinds.
+        selector.remove("exposure-level");
         AutoAdaptableKubernetesClient kubernetesClient = getFabric8KubernetesClient();
         PodList podList = kubernetesClient.inNamespace(getNameSpace(applicationContext).getMetadata()
                 .getName()).pods().withLabels(selector).list();
