@@ -50,7 +50,7 @@ jagg.block("home", {
         var selectedVersion = application.versions[selectedRevision];
         var conSpecCpu = selectedVersion.conSpecCpu;
         var conSpecMemory = selectedVersion.conSpecMemory;
-        var dashboardUrl = managerModule.getPropertyValue(DASHBOARD_BASE_URL);
+        var dataAnalyticsServerUrl = managerModule.getPropertyValue(DATA_ANALYTICS_SERVER_URL);
 
         var pageTitle = managerModule.getCloudTypeProperties().pageTitle;
         var maxAppCount = applicationModule.getMaxInstanceCount();
@@ -61,6 +61,7 @@ jagg.block("home", {
         var requestNewAppTypeURL = managerModule.getPropertyValue(managerModule.getCloudTypeProperties().properties.supportUrl) +
                 '&subject=' + requestNewAppTypeSubjectMessage;
 
+        var dashboardProperties = managerModule.getDashboardTypeProperties();
         return {
             "application" : application,
             "selectedRevision" : selectedRevision,
@@ -68,11 +69,12 @@ jagg.block("home", {
             "conSpecMemory" : conSpecMemory,
             "restartCounts" : restartCounts,
             "pageTitle" : pageTitle,
-            "dashboardUrl" : dashboardUrl,
             "applicationCount" : applicationCount,
             "maxAppCount" : maxAppCount,
             "cloudSpecificApplicationRepresentation" : cloudSpecificApplicationRepresentation,
-            "requestNewAppTypeURL" : requestNewAppTypeURL
+            "requestNewAppTypeURL" : requestNewAppTypeURL,
+            "dashboardProperties" : dashboardProperties,
+            "dataAnalyticsServerUrl" : dataAnalyticsServerUrl
         };
     }
 
