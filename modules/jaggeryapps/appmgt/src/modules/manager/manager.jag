@@ -185,4 +185,12 @@ var getCloudTypeProperties = function () {
     var cloudTypeProperty = jagg.getCloudTypePropertyConfFilePath();
     return cloudTypeProperty[jagg.getSelectedCloud()];
 };
+
+var getDashboardTypeProperties = function() {
+    var fileNameUtils = Packages.org.apache.commons.io.FilenameUtils;
+    var cloudTypePropertyConfPath = fileNameUtils.normalize(DASHBOARD_TYPES_PROPERTIES_CONFIG);
+    var stringfiedObject = stringify(cloudTypePropertyConfPath);
+    var cloudTypesProperties = parse(stringfiedObject);
+    return require(cloudTypesProperties);
+}
 %>

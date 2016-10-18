@@ -1152,7 +1152,7 @@ a.btn-action {
 }
 .block-issues,.block-monitoring {
     background-color: #0aa699;
-    min-height: 24em;
+    min-height: 10em;
 }
 .block-replica {
     background-color: #464646;
