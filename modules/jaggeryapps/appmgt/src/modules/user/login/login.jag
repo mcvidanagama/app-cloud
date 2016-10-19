@@ -190,7 +190,7 @@ function jwtIsUserAuthenticated(authorizationHeader) {
                 }
 
                 context.getThreadLocalCarbonContext().setTenantId(tenantManager.getTenantId(tenantDomain));
-                context.getThreadLocalCarbonContext().setUsername(userName);
+                context.getThreadLocalCarbonContext().setUsername(userNameWithTenantDomain);
                 context.getThreadLocalCarbonContext().setTenantDomain(tenantDomain, true);
                 var endTime_tenantFlow = new Date().getTime();
                 if (log.isDebugEnabled()) {
@@ -222,7 +222,7 @@ function jwtIsUserAuthenticated(authorizationHeader) {
                     var permission = modManager.getPropertyValue(jagg.getSelectedCloud() + LOGIN_PERMISSION);
                     var isUserAuthorized = modManager.checkAuthorizationForUser(userNameWithTenantDomain, permission);
                     if (isUserAuthorized) {
-                        jagg.setUser(userName);
+                        jagg.setUser(userNameWithTenantDomain);
                         finalResult.error = "false";
                         finalResult.message = "User successfully logged in";
                         finalResult.username = userName;
