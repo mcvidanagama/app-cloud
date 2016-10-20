@@ -505,7 +505,6 @@ INSERT INTO `AC_RUNTIME_CONTAINER_SPECIFICATIONS` (`id`, `CON_SPEC_ID`) VALUES
 (8, 4),
 (5, 4),
 (6, 4),
-(9, 3),
 (9, 4),
 (10, 3),
 (10, 4),
@@ -564,7 +563,7 @@ INSERT INTO `AC_CLOUD_APP_TYPE` (`cloud_id`, `app_type_id`) VALUES
 (1, 3),
 (1, 4),
 (1, 5),
-(2, 6),
+(1, 6),
 (1, 7);
 
 SET SQL_MODE=@OLD_SQL_MODE;
