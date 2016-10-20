@@ -21,3 +21,13 @@
 -- ---------------------------------------------------------
 UPDATE `AC_RUNTIME` SET `name` = 'OracleJDK 8 + WSO2 MSF4J 1.0.0 - Deprecating on 2016/12/31' WHERE `id`= 2;
 UPDATE `AC_RUNTIME` SET `name` = 'OracleJDK 8 + WSO2 MSF4J 2.0.0' WHERE `id`= 8;
+
+-- ---------------------------------------------------------
+-- Updates to the AC_RUNTIME_CONTAINER_SPECIFICATIONS
+-- ---------------------------------------------------------
+DELETE FROM `AC_RUNTIME_CONTAINER_SPECIFICATIONS` where `id`=9 AND `CON_SPEC_ID`=3;
+
+-- ---------------------------------------------------------
+-- Updates to the AC_CLOUD_APP_TYPE
+-- ---------------------------------------------------------
+UPDATE `AC_CLOUD_APP_TYPE` SET`cloud_id`=1 WHERE `app_type_id`=6;
