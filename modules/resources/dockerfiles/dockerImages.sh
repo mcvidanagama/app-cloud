@@ -43,7 +43,7 @@ docker build --no-cache -t wso2-appcloud/wso2as:6.0.0-m3-base -f $CURRENT_DIR/ws
 
 #tomcat base images
 docker build --no-cache -t wso2-appcloud/tomcat:8.5.5-base -f $CURRENT_DIR/tomcat/base/8.5.5/Dockerfile.wso2-appcloud-tomcat-8.5.5.base $CURRENT_DIR/tomcat/base/8.5.5
-docker build --no-cache -t wso2-appcloud/ubuntu-tomcat:8.5.5-base -f $CURRENT_DIR/tomcat/base/8.5.5/Dockerfile.wso2-appcloud-ubuntu-tomcat-8.5.5.base $CURRENT_DIR/tomcat/base/8.5.5
+docker build --no-cache -t wso2-appcloud/tomcat:8.5.5-ubuntu-base -f $CURRENT_DIR/tomcat/base/8.5.5/Dockerfile.wso2-appcloud-tomcat-8.5.5-ubuntu.base $CURRENT_DIR/tomcat/base/8.5.5-ubuntu
 
 #jaggery base image
 docker build --no-cache -t wso2-appcloud/jaggery:0.11.0-base -f $CURRENT_DIR/jaggery/base/0.11.0/Dockerfile.wso2-appcloud-jaggery-0.11.0.base $CURRENT_DIR/jaggery/base/0.11.0

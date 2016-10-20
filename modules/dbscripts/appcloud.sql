@@ -90,7 +90,7 @@ INSERT INTO `AC_RUNTIME` (`id`, `name`, `image_name`, `tag`, `description`) VALU
 (11, 'Custom Docker Image runtime', 'custom', 'customtag', 'OS:Custom, JAVA Version:custom'),
 (12, 'WSO2 Data Services Server - 3.5.1', 'wso2dataservice', '3.5.1', 'OS:alpine-java, Oracle JDK:8u102'),
 (13, 'Apache Tomcat 8.5.5', 'tomcat', '8.5.5', 'OS:alpine-java, Oracle JDK:8u102'),
-(14, 'Apache Tomcat 8.5.5 (Ubuntu 16.04)', 'ubuntu-tomcat', '8.5.5', 'OS:Ubuntu 16.04, Oracle JDK:8u101');
+(14, 'Apache Tomcat 8.5.5 (Ubuntu 16.04)', 'tomcat', '8.5.5-ubuntu', 'OS:Ubuntu 16.04, Oracle JDK:8u101');
 
 
 

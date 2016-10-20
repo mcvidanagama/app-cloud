@@ -37,7 +37,7 @@ UPDATE `AC_CLOUD_APP_TYPE` SET`cloud_id`=1 WHERE `app_type_id`=6;
 -- Add new Ubuntu based Tomcat 8.5.5 runtime
 -----------------------------------------------------------
 INSERT INTO `AC_RUNTIME` (`id`, `name`, `image_name`, `tag`, `description`) VALUES
-(14, 'Apache Tomcat 8.5.5 (Ubuntu 16.04)', 'ubuntu-tomcat', '8.5.5', 'OS:Ubuntu 16.04, Oracle JDK:8u101');
+(14, 'Apache Tomcat 8.5.5 (Ubuntu 16.04)', 'tomcat', '8.5.5-ubuntu', 'OS:Ubuntu 16.04, Oracle JDK:8u101');
 
 INSERT INTO `AC_APP_TYPE_RUNTIME` (`app_type_id`, `runtime_id`) VALUES
 (1, 14);
