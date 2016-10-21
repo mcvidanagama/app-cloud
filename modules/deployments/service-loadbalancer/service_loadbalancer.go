@@ -374,7 +374,7 @@ func (cfg *loadBalancerConfig) reload() error {
 	if err != nil {
 		return fmt.Errorf("error restarting %v: %v", msg, err)
 	}
-	glog.Infof(msg)
+	//glog.Infof(msg)
 	return nil
 }
 
@@ -460,7 +460,7 @@ func (lbc *loadBalancerController) getServices() (httpSvc []service, httpsTermSv
 			sName := s.Name
 			if servicePort.Protocol == api.ProtocolUDP ||
 				(lbc.targetService != "" && lbc.targetService != sName) {
-				glog.Infof("Ignoring %v: %+v", sName, servicePort)
+				//glog.Infof("Ignoring %v: %+v", sName, servicePort)
 				continue
 			}
 
@@ -558,7 +558,7 @@ func (lbc *loadBalancerController) getServices() (httpSvc []service, httpsTermSv
 					httpSvc = append(httpSvc, newSvc)
 				}
 			}
-			glog.Infof("Found service: %+v", newSvc)
+			//glog.Infof("Found service: %+v", newSvc)
 		}
 	}
 
@@ -597,7 +597,7 @@ func (lbc *loadBalancerController) sync(dryRun bool) error {
 func (lbc *loadBalancerController) worker() {
 	for {
 		key, _ := lbc.queue.Get()
-		glog.Infof("Sync triggered by service %v", key)
+		//glog.Infof("Sync triggered by service %v", key)
 		if err := lbc.sync(false); err != nil {
 			glog.Warningf("Requeuing %v because of error: %v", key, err)
 			lbc.queue.Add(key)
@@ -789,7 +789,7 @@ func main() {
 		dryRun(lbc)
 	} else {
 		lbc.cfg.reload()
-		wait.Until(lbc.worker, time.Second, wait.NeverStop)
+		wait.Until(lbc.worker, 10 * time.Second, wait.NeverStop)
 	}
 
 }
