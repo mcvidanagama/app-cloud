@@ -268,6 +268,7 @@ public class KubernetesRuntimeProvisioningService implements RuntimeProvisioning
         //Add tenantDomain to label map for the service
         Map<String, String> labelMap = KubernetesProvisioningUtils.getLableMap(applicationContext);
         labelMap.put("tenantDomain", applicationContext.getTenantInfo().getTenantDomain());
+        labelMap.put("exposure-level", applicationContext.getExposureLevel());
 
         //Deployment Unique service name is built using deployment name and the service name.
         String serviceName = serviceProxy.getServiceName();
