@@ -92,9 +92,7 @@ function copy_to_wso2esb() {
 
     cp $APPCLOUD_HOME/modules/extensions/org.wso2.appcloud.esb.integration/ContainerAPICompositeApplication/target/ContainerAPICompositeApplication_3.0.0-SNAPSHOT.car $DOCKER_DIR/wso2esb/base/5.0.0/carbonapps/
     cp $APPCLOUD_HOME/modules/extensions/org.wso2.appcloud.tenant.initializer/target/org.wso2.appcloud.tenant.initializer-3.0.0-SNAPSHOT.jar $DOCKER_DIR/wso2esb/base/5.0.0/dropins/
-    cp $APPCLOUD_HOME/modules/extensions/org.wso2.appcloud.httpgetprocessor.extensions/target/org.wso2.appcloud.httpgetprocessor.extensions-3.0.0-SNAPSHOT.jar $DOCKER_DIR/wso2esb/base/5.0.0/lib/
-
-    
+    cp $APPCLOUD_HOME/modules/extensions/org.wso2.appcloud.httpgetprocessor.extensions/target/org.wso2.appcloud.httpgetprocessor.extensions-3.0.0-SNAPSHOT.jar $DOCKER_DIR/wso2esb/base/5.0.0/lib/ 
 
     echo "Copied to wso2esb"
 }
