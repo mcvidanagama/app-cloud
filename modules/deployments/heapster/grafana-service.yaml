@@ -3,6 +3,7 @@ kind: Service
 metadata:
   annotations:
    serviceloadbalancer/lb.host: "wso2.grafana.com"
+   serviceloadbalancer/lb.sslTerm: "true"
   labels:
     kubernetes.io/cluster-service: 'true'
     kubernetes.io/name: monitoring-grafana
@@ -12,8 +13,10 @@ spec:
   # In a production setup, we recommend accessing Grafana through an external Loadbalancer
   # or through a public IP.
   # type: LoadBalancer
+  type: NodePort
   ports:
-  - port: 80
+  - port: 443
     targetPort: 3000
+    nodePort: 30000
   selector:
-    name: influxGrafana
+    name: grafana
