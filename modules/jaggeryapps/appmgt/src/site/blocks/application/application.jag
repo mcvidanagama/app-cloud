@@ -713,6 +713,17 @@ var log = new Log();
         var versionHashId = applicationModule.getVersionHashId(applicationName, versionName);
         var mod = jagg.module("application");
         mod.updateVersionExposureLevel(exposureLevel, versionHashId, applicationName, versionName);
+    } else if (action == "getCustomDomainDetailsForTenant") {
+        var tenantDomain = request.getParameter("tenantDomain");
+        try {
+            var customDomainDetailList = applicationModule.getCustomDomainDetailsForTenant(tenantDomain);
+            print(customDomainDetailList);
+        } catch (e) {
+            var msg = "Error while getting custom domain details for tenant: " + tenantDomain;
+            log.error(msg);
+            response.status = 500;
+            response.content = msg;
+        }
 
     } else {
         throw new Error("No action specified for: " + action);
