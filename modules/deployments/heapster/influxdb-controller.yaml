@@ -25,4 +25,4 @@ spec:
       volumes:
       - name: influxdb-storage
         hostPath:
-          path: /data
+          path: /mnt/influxdb/data

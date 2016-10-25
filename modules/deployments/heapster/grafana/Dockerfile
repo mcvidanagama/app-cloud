@@ -24,7 +24,8 @@ WORKDIR /
 ADD run.sh /run.sh
 RUN chmod +x /run.sh
 
-RUN mkdir -p /mnt/grafana/
-ADD grafana.crt /mnt/grafana/
-ADD grafana.key /mnt/grafana/
+RUN mkdir -p /mnt/grafana/certs
+ADD grafana.crt /mnt/grafana/certs/grafana.crt
+ADD grafana.key /mnt/grafana/certs/grafana.key
+
 
