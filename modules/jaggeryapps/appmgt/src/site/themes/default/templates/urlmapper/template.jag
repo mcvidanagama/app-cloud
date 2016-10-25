@@ -79,13 +79,9 @@ jagg.template("urlmapper", function (inputs, outputs, jagg) { %>
          </div>
 
          <div class="form-group">
-             <button type="button" class="cu-btn cu-btn-sm cu-btn-blue" id="updateCustomUrl" onclick="configureCustomUrl()">
-             <span class="fw-stack fw-lg btn-action-ico">
-                 <i class="fw fw-circle-outline fw-stack-2x"></i>
-                 <i class="fw fw-add fw-stack-1x"></i>
-             </span>
-                 Configure
-             </button>
+             <label>To set the custom URL for your application please click
+                <a onclick="configureCustomUrl()"> here</a>
+                , you will be redirected to the custom URL settings page shortly.</label>
          </div>
      </div>
  </form>
