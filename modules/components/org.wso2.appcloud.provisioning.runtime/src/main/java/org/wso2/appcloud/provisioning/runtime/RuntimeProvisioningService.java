@@ -202,4 +202,15 @@ public interface RuntimeProvisioningService {
     void deleteK8sKindByName(String k8sKind, String name) throws RuntimeProvisioningException;
 
     void changeExposureLevelInServices(String serviceName, String exposureLevel, String lbHost) throws  RuntimeProvisioningException;
+
+    /**
+     * Method to add a label to the default domain service
+     *
+     * @param serviceName default domain service name
+     * @param labelKey key of the label to be added
+     * @param labelValue value of the label to be added
+     * @throws RuntimeProvisioningException
+     */
+    void updateDefaultVersionServicewithLabel(String serviceName, String labelKey, String labelValue)
+            throws RuntimeProvisioningException;
 }

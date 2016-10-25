@@ -20,7 +20,6 @@ import io.fabric8.kubernetes.api.KubernetesHelper;
 import io.fabric8.kubernetes.api.model.*;
 import io.fabric8.kubernetes.api.model.extensions.*;
 import io.fabric8.kubernetes.client.AutoAdaptableKubernetesClient;
-import io.fabric8.kubernetes.client.Client;
 import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.fabric8.kubernetes.client.dsl.LogWatch;
 import io.fabric8.kubernetes.client.dsl.PrettyLoggable;
@@ -1061,5 +1060,22 @@ public class KubernetesRuntimeProvisioningService implements RuntimeProvisioning
         kubClient.services().inNamespace(this.namespace.getMetadata().getName())
                 .withName(serviceName).edit().editMetadata()
                 .addToAnnotations("serviceloadbalancer/lb.host", lbHost).endMetadata().done();
+    }
+
+    @Override
+    public void updateDefaultVersionServicewithLabel(String serviceName, String labelKey, String labelValue)
+            throws RuntimeProvisioningException {
+        String namespace = this.namespace.getMetadata().getName();
+
+        try {
+            AutoAdaptableKubernetesClient kubClient = KubernetesProvisioningUtils.getFabric8KubernetesClient();
+            kubClient.services().inNamespace(namespace).withName(serviceName).edit().editMetadata()
+                    .addToLabels(labelKey, labelValue).endMetadata().done();
+        } catch (KubernetesClientException e) {
+            String message = "Error while adding label to kubernetes kind service with service name: " + serviceName
+                    + " in namespace: " + namespace;
+            log.error(message, e);
+            throw new RuntimeProvisioningException(message, e);
+        }
     }
 }

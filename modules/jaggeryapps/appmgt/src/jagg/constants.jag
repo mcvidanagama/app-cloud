@@ -46,6 +46,7 @@ var GOOGLE_ANALYTICS_ENABLED = "Google.Analytics.Enabled";
 var GOOGLE_TRACKING_ID = "Google.Tracking.Id";
 var ZOPIM_CHAT_ID = "Zopim.Chat.Id";
 var FILE_UPLOAD_TIMEOUT = "File.Upload.Timeout";
+var CUSTOM_URL_SETTINGS_PAGE_URL = "CustomUrlSettingsPage.Url";
 
 //events related constants
 var DATABASE_ADD = "Adding application to database";
@@ -95,4 +96,8 @@ var CHANGE_PASSWORD_URL = "ChangePassword.Url";
 
 //Regex patterns
 var ENV_KEY_REGEX = "^[A-Za-z0-9_]+$";
+
+//Service Prefixes
+var HTTP_SERVICE_PREFIX = "htp-";
+var HTTPS_SERVICE_PREFIX = "hts-";
 %>
