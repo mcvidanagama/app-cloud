@@ -1883,16 +1883,16 @@ var isVersionExist = function(applicationName, versionName) {
     return ApplicationManager.isVersionExist(applicationName, versionName);
 }
 
-var getCustomDomainDetailsForTenant = function(tenantDomain) {
+var getCustomDomainDetailsForTenant = function() {
     var applicationLaunchBaseURL = modManager.getPropertyValue("ApplicationLaunchBaseURL.Public");
-    var tenantId = modManager.getTenantIdForGivenTenantDomain(tenantDomain);
-    var applicationDetailsList = ApplicationManager.getCustomDomainDetailsForTenant(tenantId);
+    var applicationDetailsList = ApplicationManager.getCustomDomainDetailsForTenant();
+    var urlPrefix = modManager.getTenantDomain(true) + "-";
     var customDomainDetails = [];
     for (var i = 0; i < applicationDetailsList.length; i++) {
         var applicationDetail = applicationDetailsList[i];
         var customDomainDetail = {};
         customDomainDetail.appName = applicationDetail.applicationName;
-        customDomainDetail.defaultDomainURL = tenantDomain.replace(/\./g, '-') + "-" +
+        customDomainDetail.defaultDomainURL = urlPrefix.replace(/\./g, '-')  +
                 applicationDetail.applicationName.toLowerCase() + "." + applicationLaunchBaseURL;
         customDomainDetail.customDomainURL = applicationDetail.customDomain;
         customDomainDetails.push(customDomainDetail);

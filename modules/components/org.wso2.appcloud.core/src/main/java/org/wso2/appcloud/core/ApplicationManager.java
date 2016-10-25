@@ -1432,12 +1432,12 @@ public class ApplicationManager {
     /**
      * Method to get custom domain details for tenant
      *
-     * @param tenantId tenant id
      * @return list of custom domain details for all applications of tenant
      * @throws AppCloudException
      */
-    public static Application[] getCustomDomainDetailsForTenant(int tenantId) throws AppCloudException {
+    public static Application[] getCustomDomainDetailsForTenant() throws AppCloudException {
         Connection dbConnection = DBUtil.getDBConnection();
+        int tenantId = CarbonContext.getThreadLocalCarbonContext().getTenantId();
         try {
             List<Application> applicationDetailsList = ApplicationDAO.getInstance().
                     getCustomDomainDetailsForTenant(dbConnection, tenantId);
