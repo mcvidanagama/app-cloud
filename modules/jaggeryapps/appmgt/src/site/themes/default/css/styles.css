@@ -883,7 +883,7 @@ a.btn-action {
     font-size: 0.8em;
 }
 .side-pane-trigger i {
-    padding: 20px 16px 15px;
+    padding: 19px 19px 15px;
     cursor: pointer;
     font-size: 1.5em;
     opacity: 0.7;
@@ -906,6 +906,8 @@ a.btn-action {
     top: -18px;
     min-height: 100%;
     overflow-y: auto;
+    position: fixed;
+    margin-top: 3.5em;
 }
 .notification-pane {
     position: fixed;
@@ -1010,7 +1012,7 @@ a.btn-action {
 .left-pane a{
     color: #fff;
     display: block;
-    padding: 16px 22px 16px;
+    padding: 18px 22px 16px;
 }
 
 .left-pane a:hover{

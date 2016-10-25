@@ -41,15 +41,9 @@ jagg.template("urlmapper", function (inputs, outputs, jagg) { %>
 <!-- BOF App factory menu actionbar -->
 <input type="hidden" maxlength="19" id="defaultDomain" name="defaultDomain" value=""/>
 <div class="action-bar">
-    <div id="reorder-icon-div">
-
+    <div class="side-pane-trigger">
+        <i class="fw fw-left"></i>
     </div>
-	<a href="/appmgt/site/pages/home.jag?applicationKey=<%=applicationKey%>" class="btn-action" data-toggle="tooltip" data-placement="top" title="Back to <%=cloudSpecificApplicationRepresentation%>">
-         <span class="fw-stack fw-lg btn-action-ico">
-             <i class="fw fw-circle-outline fw-stack-2x"></i>
-             <i class="fw fw-left-arrow fw-stack-1x"></i>
-         </span> <span class="hidden-xs">Back to <%=cloudSpecificApplicationRepresentation%></span>
-    </a>
 </div><!-- EOF App factory menu actionbar-->
 
 <div class="container-fluid app-content-section">
