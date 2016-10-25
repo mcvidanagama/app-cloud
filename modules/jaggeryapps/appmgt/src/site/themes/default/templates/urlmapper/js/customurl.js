@@ -30,7 +30,7 @@ $(document).ready(function () {
         uiElementStateChange(true, true, true);
         showEditButton();
     }else {
-        $('#updateCustomUrl').prop('disabled', true);
+        $('#updateCustomUrlButton').prop('disabled', true);
         showUpdateButton();
     }
 
@@ -78,7 +78,7 @@ function setExistingCustomUrl() {
         uiElementStateChange(true, true, true);
         showEditButton();
     } else {
-        $('#updateCustomUrl').prop('disabled', true);
+        $('#updateCustomUrlButton').prop('disabled', true);
         showUpdateButton();
     }
 }
@@ -109,24 +109,24 @@ function verifyCustomUrlSuccess() {
     jagg.message({content: "The custom domain was successfully added to the " + cloudSpecificApplicationRepresentation.toLowerCase() + ".", type: 'success', id: 'view_log'});
     uiElementStateChange(true, true, true);
     showUpdateButton();
-    $('#updateCustomUrl').prop('disabled', false);
+    $('#updateCustomUrlButton').prop('disabled', false);
 }
 
 function uiElementStateChange(prodVersion, prodCustom, verifyUrl, updateBtn) {
     $("#productionVersion").prop('disabled', prodVersion);
     $("#productionCustom").prop('disabled', prodCustom);
     $("#verifyUrl").prop('disabled', verifyUrl);
-    $("#updateCustomUrl").prop('disabled', updateBtn);
+    $("#updateCustomUrlButton").prop('disabled', updateBtn);
 }
 
 function showUpdateButton() {
-    $('#editCustomUrl').hide();
-    $('#updateCustomUrl').show();
+    $('#editCustomUrlButton').hide();
+    $('#updateCustomUrlButton').show();
 }
 
 function showEditButton() {
-    $('#editCustomUrl').show();
-    $('#updateCustomUrl').hide();
+    $('#editCustomUrlButton').show();
+    $('#updateCustomUrlButton').hide();
 }
 
 function updateCustomUrl() {

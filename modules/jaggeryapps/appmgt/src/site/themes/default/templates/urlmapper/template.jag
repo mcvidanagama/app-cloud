@@ -85,14 +85,14 @@ jagg.template("urlmapper", function (inputs, outputs, jagg) { %>
          </div>
 
          <div class="form-group">
-             <button class="cu-btn cu-btn-sm cu-btn-blue" id="updateCustomUrl" onclick="updateCustomUrl()">
+             <button type="button" class="cu-btn cu-btn-sm cu-btn-blue" id="updateCustomUrlButton" onclick="updateCustomUrl()">
              <span class="fw-stack fw-lg btn-action-ico">
                  <i class="fw fw-circle-outline fw-stack-2x"></i>
                  <i class="fw fw-add fw-stack-1x"></i>
              </span>
                  Update
              </button>
-             <button class="cu-btn cu-btn-sm cu-btn-blue" id="editCustomUrl" onclick="editCustomUrl()">
+             <button type="button" class="cu-btn cu-btn-sm cu-btn-blue" id="editCustomUrlButton" onclick="editCustomUrl()">
              <span class="fw-stack fw-lg btn-action-ico">
                  <i class="fw fw-circle-outline fw-stack-2x"></i>
                  <i class="fw fw-add fw-stack-1x"></i>
