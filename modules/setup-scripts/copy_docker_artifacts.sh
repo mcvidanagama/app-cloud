@@ -46,6 +46,7 @@ WSO2AS600M3_VERSION=wso2as-6.0.0-m3
 WSO2DSS350_VERSION=wso2dss-3.5.0
 WSO2DSS351_VERSION=wso2dss-3.5.1
 WSO2ESB500_VERSION=wso2esb-5.0.0
+TOMCAT855_VERSION=apache-tomcat-8.5.5
 
 echo "Build extentions"
 cd $EXTENSION_DIR
@@ -97,10 +98,17 @@ function copy_to_wso2esb() {
     echo "Copied to wso2esb"
 }
 
+function copy_to_tomcat() {
+    cp $PACK_DIR/$TOMCAT855_VERSION.zip $DOCKER_DIR/tomcat/base/8.5.5/
+
+    echo "Copied to tomcat"
+}
+
 copy_to_jaggery;
 copy_to_wso2as;
 copy_to_wso2dss;
 copy_to_wso2esb;
+copy_to_tomcat;
 
 echo "Done"
 echo "Now go to the $DOCKER_DIR and run the docker_images.sh"

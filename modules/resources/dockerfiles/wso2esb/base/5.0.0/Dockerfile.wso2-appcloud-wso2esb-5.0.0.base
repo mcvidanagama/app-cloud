@@ -37,6 +37,7 @@ COPY dropins/ $CARBON_HOME_PATH/repository/components/dropins/
 COPY lib/ $CARBON_HOME_PATH/repository/components/lib/
 COPY conf/ $RESOURCES_PATH/conf
 COPY carbonapps/ $RESOURCES_PATH/carbonapps
+COPY removed-bundles.txt /
 
 RUN sed -i '/<StratosPublicCloudSetup>/c<StratosPublicCloudSetup>false</StratosPublicCloudSetup>' $CARBON_HOME_PATH/repository/conf/multitenancy/stratos.xml
 RUN sed -i '/<Class>org.wso2.carbon.core.transports.util.Wsdl11Processor/c<Class>org.wso2.appcloud.httpgetprocessor.extensions.wsdl.Wsdl11UrlTenantInfoProcessor</Class>' $CARBON_HOME_PATH/repository/conf/carbon.xml && \

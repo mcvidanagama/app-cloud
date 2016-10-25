@@ -18,6 +18,8 @@ spec:
         k8s-app: heapster
         version: v6
     spec:
+      nodeSelector:
+        role: loadbalancer
       containers:
       - name: heapster
         image: kubernetes/heapster:canary

@@ -57,7 +57,7 @@ INSERT INTO `AC_APP_TYPE` (`id`, `name`, `description`) VALUES
 (4, 'jaggery', 'Allows you to write all parts of web applications, services and APIs in a completely JavaScript way.'),
 (5, 'wso2dataservice', 'Allows you to deploy a data service that is supported in WSO2 Data Services Server.'),
 (6, 'wso2esb', 'Allows you to deploy a esb configuration that is supported in WSO2 Enterprise Service Bus'),
-(7, 'custom', 'Allows you to deploy applications using custom docker images');
+(7, 'custom', 'Allows you to deploy applications using custom Docker images');
 
 -- -----------------------------------------------------
 -- Table `AppCloudDB`.`AC_RUNTIME`
@@ -78,17 +78,19 @@ ENGINE = InnoDB;
 
 INSERT INTO `AC_RUNTIME` (`id`, `name`, `image_name`, `tag`, `description`) VALUES
 (1, 'Apache Tomcat 8.0.28 / WSO2 Application Server 6.0.0-M1 - Deprecating on 2016/12/31', 'wso2as', '6.0.0-m1', 'OS:alpine-java, Oracle JDK:8u102'),
-(2, 'OpenJDK 8 + WSO2 MSF4J 1.0.0 - Deprecating on 2016/12/31', 'msf4j', '1.0.0', 'OS:alpine-java, Oracle JDK:8u102'),
+(2, 'OracleJDK 8 + WSO2 MSF4J 1.0.0 - Deprecating on 2016/12/31', 'msf4j', '1.0.0', 'OS:alpine-java, Oracle JDK:8u102'),
 (3, 'Apache 2.4.10 (PHP Version 7.0.5)', 'php', '5.6', 'OS:Debian, PHP Version:5.6.20'),
 (4, 'Carbon 4.2.0', 'carbon','4.2.0', 'OS:alpine-java, Oracle JDK:8u102'),
 (5, 'Jaggery 0.11.0', 'jaggery', '0.11.0', 'OS:alpine-java, Oracle JDK:8u102'),
 (6, 'Apache Tomcat 8.0.28 / WSO2 Application Server 6.0.0-M2 - Deprecating on 2016/12/31', 'wso2as', '6.0.0-m2', 'OS:alpine-java, Oracle JDK:8u102'),
 (7, 'WSO2 Data Services Server - 3.5.0', 'wso2dataservice', '3.5.0', 'OS:alpine-java, Oracle JDK:8u102'),
-(8, 'OpenJDK 8 + WSO2 MSF4J 2.0.0', 'msf4j', '2.0.0', 'OS:alpine-java, Oracle JDK:8u102'),
+(8, 'OracleJDK 8 + WSO2 MSF4J 2.0.0', 'msf4j', '2.0.0', 'OS:alpine-java, Oracle JDK:8u102'),
 (9, 'WSO2 Enterprise Service Bus - 5.0.0', 'wso2esb', '5.0.0', 'OS:Debian, Oracle JDK:8u102'),
 (10, 'Apache Tomcat 8.0.36 / WSO2 Application Server 6.0.0-M3 - Deprecating on 2016/12/31', 'wso2as', '6.0.0-m3', 'OS:alpine-java, Oracle JDK:8u102'),
 (11, 'Custom Docker Image runtime', 'custom', 'customtag', 'OS:Custom, JAVA Version:custom'),
-(12, 'WSO2 Data Services Server - 3.5.1', 'wso2dataservice', '3.5.1', 'OS:alpine-java, Oracle JDK:8u102');
+(12, 'WSO2 Data Services Server - 3.5.1', 'wso2dataservice', '3.5.1', 'OS:alpine-java, Oracle JDK:8u102'),
+(13, 'Apache Tomcat 8.5.5', 'tomcat', '8.5.5', 'OS:alpine-java, Oracle JDK:8u102'),
+(14, 'Apache Tomcat 8.5.5 (Ubuntu 16.04)', 'tomcat', '8.5.5-ubuntu', 'OS:Ubuntu 16.04, Oracle JDK:8u101');
 
 
 
@@ -148,6 +150,7 @@ CREATE TABLE IF NOT EXISTS `AppCloudDB`.`AC_VERSION` (
   `con_spec_memory` VARCHAR(10) NOT NULL,
   `timestamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `is_white_listed` TINYINT unsigned NOT NULL DEFAULT 0,
+  `exposure_level` varchar(24) NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_AC_VERSION_AC_APPLICATION1`
     FOREIGN KEY (`application_id`)
@@ -261,7 +264,9 @@ INSERT INTO `AC_APP_TYPE_RUNTIME` (`app_type_id`, `runtime_id`) VALUES
 (1, 10),
 (4, 10),
 (7, 11),
-(5, 12);
+(5, 12),
+(1, 13),
+(1, 14);
 
 
 -- -----------------------------------------------------
@@ -468,7 +473,11 @@ INSERT INTO `AC_RUNTIME_TRANSPORT` (`transport_id`, `runtime_id`) VALUES
 (3, 11),
 (4, 11),
 (5, 12),
-(6, 12);
+(6, 12),
+(3, 13),
+(4, 13),
+(3, 14),
+(4, 14);
 
 INSERT INTO `AC_CONTAINER_SPECIFICATIONS` (`CON_SPEC_NAME`, `CPU`, `MEMORY`, `COST_PER_HOUR`) VALUES
 ('128MB RAM and 0.1x vCPU', 100, 128, 1),
@@ -500,14 +509,17 @@ INSERT INTO `AC_RUNTIME_CONTAINER_SPECIFICATIONS` (`id`, `CON_SPEC_ID`) VALUES
 (8, 4),
 (5, 4),
 (6, 4),
-(9, 3),
 (9, 4),
 (10, 3),
 (10, 4),
 (11, 3),
 (11, 4),
 (12, 3),
-(12, 4);
+(12, 4),
+(13, 3),
+(13, 4),
+(14, 3),
+(14, 4);
 
 -- -----------------------------------------------------
 -- Table `AppCloudDB`.`AC_CLOUD`
@@ -557,7 +569,7 @@ INSERT INTO `AC_CLOUD_APP_TYPE` (`cloud_id`, `app_type_id`) VALUES
 (1, 3),
 (1, 4),
 (1, 5),
-(2, 6),
+(1, 6),
 (1, 7);
 
 SET SQL_MODE=@OLD_SQL_MODE;

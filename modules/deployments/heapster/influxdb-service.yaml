@@ -20,4 +20,4 @@ spec:
     targetPort: 8086
     nodePort: 32086
   selector:
-    name: influxGrafana
+    name: influxdb
