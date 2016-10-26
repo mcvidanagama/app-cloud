@@ -2,7 +2,7 @@
     "dashboards": [
         {
             "isAvailable" : "false",
-            "title" : "Opearational Dashboard",
+            "title" : "Operational Dashboard",
             "runtimes" : ["all"],
             "dashboardContext" : "/portal/dashboards/test1",
             "dashboardTypeUtil" : "new OperationalDashboardTypeUtil()"
