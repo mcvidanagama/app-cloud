@@ -16,14 +16,14 @@
 --    under the License.
 --
 
------------------------------------------------------------
-Alter AC_CONTAINER table to increase version field
+-- -------------------------------------------------
+-- Alter AC_CONTAINER table to increase version field
 -----------------------------------------------------------
 ALTER TABLE AC_CONTAINER MODIFY version VARCHAR(100);
 
-----------------------------------------------------------
- Update and Insert to the AC_RUNTIMES
-----------------------------------------------------------
+-- --------------------------------------------------------
+-- Update and Insert to the AC_RUNTIMES
+-- --------------------------------------------------------
 UPDATE `AC_RUNTIME` SET `name` = 'Apache Tomcat 8.5.5 (Alpine 3.4/Oracle JDK 1.8.0_112)', `tag` = '8.5.5-alpine3.4-oracle-jdk1.8.0', `description` = 'OS:Alpine 3.4, Oracle JDK 1.8.0_112' WHERE `id`= 13;
 INSERT INTO AC_RUNTIME (name, image_name , tag, description ) VALUES ('Apache Tomcat 8.5.5 (Ubuntu 16.04/Oracle JDK 1.8.0_112)', 'tomcat', '8.5.5-ubuntu16.04-oracle-jdk1.8.0', 'OS:Ubuntu 16.04, Oracle JDK 1.8.0_112');
 INSERT INTO AC_RUNTIME (name, image_name , tag, description ) VALUES ('Apache Tomcat 8.5.5 (Alpine 3.4/Open JDK 1.8.0_92)', 'tomcat', '8.5.5-alpine3.4-open-jdk1.8.0', 'OS:Alpine 3.4, Open JDK 1.8.0_92');
@@ -35,26 +35,26 @@ UPDATE `AC_RUNTIME` SET `name` = 'Apache Tomcat 8.0.28 / WSO2 Application Server
 UPDATE `AC_RUNTIME` SET `name` = 'Apache Tomcat 8.0.36 / WSO2 Application Server 6.0.0-M3 - Deprecated' WHERE `id`= 10;
 
 
--------------------------------------------------------------
-Updates to the AC_APP_TYPE_RUNTIME
--------------------------------------------------------------
+-- -----------------------------------------------------------
+-- Updates to the AC_APP_TYPE_RUNTIME
+-- -----------------------------------------------------------
 INSERT INTO AC_APP_TYPE_RUNTIME VALUES (1, 14);
 INSERT INTO AC_APP_TYPE_RUNTIME VALUES (1, 15);
 INSERT INTO AC_APP_TYPE_RUNTIME VALUES (1, 16);
 
 
--------------------------------------------------------------
-Updates to the AC_RUNTIME_CONTAINER_SPECIFICATIONS
--------------------------------------------------------------
+-- -----------------------------------------------------------
+-- Updates to the AC_RUNTIME_CONTAINER_SPECIFICATIONS
+-- -----------------------------------------------------------
 INSERT INTO AC_RUNTIME_CONTAINER_SPECIFICATIONS VALUES (15, 3);
 INSERT INTO AC_RUNTIME_CONTAINER_SPECIFICATIONS VALUES (15, 4);
 INSERT INTO AC_RUNTIME_CONTAINER_SPECIFICATIONS VALUES (16, 3);
 INSERT INTO AC_RUNTIME_CONTAINER_SPECIFICATIONS VALUES (16, 4);
 
 
--------------------------------------------------------------
-Updates to the AC_RUNTIME_TRANSPORT
--------------------------------------------------------------
+-- -----------------------------------------------------------
+-- Updates to the AC_RUNTIME_TRANSPORT
+-- -----------------------------------------------------------
 INSERT INTO AC_RUNTIME_TRANSPORT VALUES (3,15);
 INSERT INTO AC_RUNTIME_TRANSPORT VALUES (3,16);
 INSERT INTO AC_RUNTIME_TRANSPORT VALUES (4,15);
