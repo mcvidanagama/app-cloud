@@ -16,7 +16,7 @@
 #
 # ------------------------------------------------------------------------
 
-FROM wso2-appcloud/alpine3.4-oracle-jdk1.8.0_112
+FROM wso2-cloud/java:alpine3.4-oracle-jdk1.8.0_112
 
 ENV WSO2CARBON_ZIP wso2esb-5.0.0.zip
 ENV INSTALL_PATH /home/wso2user/
