@@ -56,7 +56,7 @@ INSERT INTO `AC_APP_TYPE` (`id`, `name`, `description`) VALUES
 (3, 'php', 'Allows you to create dynamic web pages and complete server applications using PHP web applications.'),
 (4, 'jaggery', 'Allows you to write all parts of web applications, services and APIs in a completely JavaScript way.'),
 (5, 'wso2dataservice', 'Allows you to deploy a data service that is supported in WSO2 Data Services Server.'),
-(6, 'wso2esb', 'Allows you to deploy a esb configuration that is supported in WSO2 Enterprise Service Bus'),
+(6, 'wso2esb', 'Allows you to deploy an ESB configuration that is supported by WSO2 Enterprise Service Bus'),
 (7, 'custom', 'Allows you to deploy applications using custom Docker images');
 
 -- -----------------------------------------------------
