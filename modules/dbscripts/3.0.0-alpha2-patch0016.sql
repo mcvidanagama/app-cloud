@@ -59,3 +59,8 @@ INSERT INTO AC_RUNTIME_TRANSPORT VALUES (3,15);
 INSERT INTO AC_RUNTIME_TRANSPORT VALUES (3,16);
 INSERT INTO AC_RUNTIME_TRANSPORT VALUES (4,15);
 INSERT INTO AC_RUNTIME_TRANSPORT VALUES (4,16);
+
+-------------------------------------------------------------
+Updates to the AC_APP_TYPE
+-------------------------------------------------------------
+UPDATE `AC_APP_TYPE` SET `description` = 'Allows you to deploy an ESB configuration that is supported by WSO2 Enterprise Service Bus' WHERE `id` = 6;
