@@ -18,13 +18,26 @@
 #
 # ------------------------------------------------------------------------
 
-FROM wso2-appcloud/tomcat:8.5.5-ubuntu-base
+FROM wso2-cloud/java:alpine3.4-open-jdk1.8.0_92-internal
 
-ENV APP_WAR ARTIFACT_NAME
-ENV WEB_APP_HOME $TOMCAT_HOME_DIR/webapps/
-ENV TOTAL_MEMORY VAL_TOTAL_MEMORY
-ENV TAIL_LOG ENABLE_TAIL_LOG
+ENV TOMCAT_ZIP apache-tomcat-8.5.5.zip
+ENV INSTALL_PATH /home/wso2user/
+ENV TOMCAT_HOME_DIR $INSTALL_PATH/apache-tomcat-8.5.5
+ENV ADMIN_PASS ""
 
-COPY "$APP_WAR" "$WEB_APP_HOME/"
+# Add the startup script
+ADD init.sh /init.sh
+ADD $TOMCAT_ZIP /$TOMCAT_ZIP
+ADD wso2carbon.jks /wso2carbon.jks
 
+USER wso2user
+
+RUN cp /$TOMCAT_ZIP $INSTALL_PATH/ && \
+    unzip $INSTALL_PATH/$TOMCAT_ZIP -d $INSTALL_PATH/ && \
+    rm $INSTALL_PATH/$TOMCAT_ZIP && \
+    rm -rf $TOMCAT_HOME_DIR/webapps/examples && \
+    rm -rf $TOMCAT_HOME_DIR/webapps/ROOT && \
+    chmod +x $TOMCAT_HOME_DIR/bin/catalina.sh
+
+EXPOSE 8080 8443
 CMD ["bash", "-c", "source /init.sh"]

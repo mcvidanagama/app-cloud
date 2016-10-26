@@ -18,7 +18,7 @@
 #
 # ------------------------------------------------------------------------
 
-FROM wso2-appcloud/ubuntu-oracle-jdk:1.8.0-base
+FROM wso2-cloud/java:alpine3.4-oracle-jdk1.8.0_112
 
 ENV TOMCAT_ZIP apache-tomcat-8.5.5.zip
 ENV INSTALL_PATH /home/wso2user/
@@ -29,10 +29,6 @@ ENV ADMIN_PASS ""
 ADD init.sh /init.sh
 ADD $TOMCAT_ZIP /$TOMCAT_ZIP
 ADD wso2carbon.jks /wso2carbon.jks
-
-RUN apt-get install -y pwgen && \
-    addgroup wso2 && \
-    adduser --system --shell /bin/bash --gecos 'WSO2User' --ingroup wso2 --disabled-login wso2user
 
 USER wso2user
 

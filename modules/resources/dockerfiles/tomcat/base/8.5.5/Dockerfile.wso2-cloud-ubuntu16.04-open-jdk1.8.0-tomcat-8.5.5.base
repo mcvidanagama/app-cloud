@@ -18,7 +18,7 @@
 #
 # ------------------------------------------------------------------------
 
-FROM anapsix/alpine-java:8_server-jre_unlimited
+FROM wso2-cloud/java:ubuntu16.04-open-jdk1.8.0_91
 
 ENV TOMCAT_ZIP apache-tomcat-8.5.5.zip
 ENV INSTALL_PATH /home/wso2user/
@@ -30,8 +30,11 @@ ADD init.sh /init.sh
 ADD $TOMCAT_ZIP /$TOMCAT_ZIP
 ADD wso2carbon.jks /wso2carbon.jks
 
-RUN apk update && apk add pwgen wget && \
-    addgroup wso2 && adduser -g '' -s /bin/bash -D -G wso2 wso2user
+RUN apt-get update && apt-get install -y pwgen && \
+    addgroup wso2 && \
+    adduser --system --shell /bin/bash --gecos 'WSO2User' --ingroup wso2 --disabled-login wso2user && \
+    apt-get clean && \
+    rm -rf /var/cache/*
 
 USER wso2user
 
