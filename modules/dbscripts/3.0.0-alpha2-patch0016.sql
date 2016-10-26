@@ -46,6 +46,8 @@ INSERT INTO AC_APP_TYPE_RUNTIME VALUES (1, 16);
 -- -----------------------------------------------------------
 -- Updates to the AC_RUNTIME_CONTAINER_SPECIFICATIONS
 -- -----------------------------------------------------------
+INSERT INTO AC_RUNTIME_CONTAINER_SPECIFICATIONS VALUES (14, 3);
+INSERT INTO AC_RUNTIME_CONTAINER_SPECIFICATIONS VALUES (14, 4);
 INSERT INTO AC_RUNTIME_CONTAINER_SPECIFICATIONS VALUES (15, 3);
 INSERT INTO AC_RUNTIME_CONTAINER_SPECIFICATIONS VALUES (15, 4);
 INSERT INTO AC_RUNTIME_CONTAINER_SPECIFICATIONS VALUES (16, 3);
@@ -55,12 +57,14 @@ INSERT INTO AC_RUNTIME_CONTAINER_SPECIFICATIONS VALUES (16, 4);
 -- -----------------------------------------------------------
 -- Updates to the AC_RUNTIME_TRANSPORT
 -- -----------------------------------------------------------
+INSERT INTO AC_RUNTIME_TRANSPORT VALUES (3,14);
+INSERT INTO AC_RUNTIME_TRANSPORT VALUES (4,14);
 INSERT INTO AC_RUNTIME_TRANSPORT VALUES (3,15);
 INSERT INTO AC_RUNTIME_TRANSPORT VALUES (3,16);
 INSERT INTO AC_RUNTIME_TRANSPORT VALUES (4,15);
 INSERT INTO AC_RUNTIME_TRANSPORT VALUES (4,16);
 
--------------------------------------------------------------
-Updates to the AC_APP_TYPE
--------------------------------------------------------------
+-- -----------------------------------------------------------
+-- Updates to the AC_APP_TYPE
+-- -----------------------------------------------------------
 UPDATE `AC_APP_TYPE` SET `description` = 'Allows you to deploy an ESB configuration that is supported by WSO2 Enterprise Service Bus' WHERE `id` = 6;
