@@ -18,7 +18,7 @@
 #
 # ------------------------------------------------------------------------
 
-FROM wso2-appcloud/tomcat:8.5.5-ubuntu-base
+FROM wso2-cloud/tomcat:8.5.5-ubuntu16.04-oracle-jdk1.8.0
 
 ENV APP_WAR ARTIFACT_NAME
 ENV URL ARTIFACT_URL

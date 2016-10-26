@@ -18,13 +18,14 @@
 #
 # ------------------------------------------------------------------------
 
-FROM wso2-appcloud/tomcat:8.5.5-base
+FROM wso2-cloud/tomcat:8.5.5-alpine3.4-oracle-jdk1.8.0
 
 ENV APP_WAR ARTIFACT_NAME
+ENV URL ARTIFACT_URL
 ENV WEB_APP_HOME $TOMCAT_HOME_DIR/webapps/
 ENV TOTAL_MEMORY VAL_TOTAL_MEMORY
 ENV TAIL_LOG ENABLE_TAIL_LOG
 
-COPY "$APP_WAR" "$WEB_APP_HOME/"
+RUN wget "$URL" -O "$WEB_APP_HOME$APP_WAR"
 
 CMD ["bash", "-c", "source /init.sh"]
