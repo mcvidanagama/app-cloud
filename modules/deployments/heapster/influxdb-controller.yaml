@@ -19,6 +19,13 @@ spec:
       containers:
       - name: influxdb
         image: kubernetes/heapster_influxdb:v0.5
+        resources:
+          limits:
+            cpu: 200m
+            memory: 200Mi
+          requests:
+            cpu: 200m
+            memory: 200Mi
         volumeMounts:
         - mountPath: /data
           name: influxdb-storage

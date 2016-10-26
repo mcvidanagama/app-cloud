@@ -20,6 +20,13 @@ spec:
       - name: grafana
         image: registry.local.wso2.com:5000/wso2_appcloud_heapster_grafana:v2.6.0-2-wso2v1
         imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 200m
+            memory: 200Mi
+          requests:
+            cpu: 200m
+            memory: 200Mi
         env:
           - name: INFLUXDB_SERVICE_URL
             value: http://monitoring-influxdb:80
