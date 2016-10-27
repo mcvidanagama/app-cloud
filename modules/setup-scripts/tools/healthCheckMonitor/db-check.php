@@ -15,11 +15,11 @@
 * limitations under the License.
 */
 
-// Database health check
-$servername = "mysql.storage.cloud.wso2.com";
-$username = "wso2_9NNMKfTT";
-$password = "kpds1729";
-$dbname = "health_check_monitor_kasundsilva";
+//Database health check
+$servername = getenv('servername');
+$username = getenv('username');
+$password = getenv('password');
+$dbname = getenv('dbname');
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
