@@ -72,7 +72,7 @@ ESBAnalyticsDashboardTypeUtil.prototype = Object.create(DashboardTypeUtil);
 
 // actual implementation goes here
 OperationalDashboardTypeUtil.prototype.getQueryString = function () {
-    return "?id=" + applicationName + "_" + selectedRevision + "_" + selectedApplicationRevision.hashId;
+    return "/t/" + tenantDomain + "/dashboards/operational-dashboard/?shared=true&id=" + applicationName + "_" + selectedRevision + "_" + selectedApplicationRevision.hashId;
 };
 
 HttpMonitoringDashboardTypeUtil.prototype.getQueryString = function () {
