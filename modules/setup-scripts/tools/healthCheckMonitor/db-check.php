@@ -21,6 +21,8 @@ $username = getenv('username');
 $password = getenv('password');
 $dbname = getenv('dbname');
 
+$time_start = microtime();
+
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
 // Check connection
@@ -32,6 +34,10 @@ if ($conn->connect_error) {
 $sql = "SELECT * FROM company";
 $result = $conn->query($sql);
 
+$time_end = microtime();
+
+$timeInterval = $time_end - $time_start;
+
 // set the json header content-type
 header('Content-Type: application/json');
 
@@ -41,7 +47,8 @@ if ($result->num_rows > 0) {
         $array = array(
 	        "id" => $row["id"],
 	        "name" => $row["name"],
-	        "address" => $row["address"] . $row["city"]
+	        "address" => $row["address"] . $row["city"],
+	        "time" => $timeInterval . 'ms'
 		);
 		// convert the above array to json string using json_encode()
 		$json = json_encode($array);

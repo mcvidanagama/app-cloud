@@ -15,11 +15,17 @@
 * limitations under the License.
 */
 
+$time_start = microtime();
+
 // DNS health check
 $ipWso2 = gethostbyname('wso2.com');
 $ipIsportal = gethostbyname('isportal.wso2.com');
 $ipSupport = gethostbyname('support.wso2.com');
 $ipSupporttools = gethostbyname('supporttools.wso2.com');
+
+$time_end = microtime();
+
+$timeInterval = $time_end - $time_start;
 
 if ($ipWso2 == 'wso2.com') {
 	http_response_code(500);
@@ -42,7 +48,8 @@ $array = array(
         "ip-wso2" => $ipWso2,
         "ip-isportal" => $ipIsportal,
         "ip-support" => $ipSupport,
-        "ip-supporttools" => $ipSupporttools
+        "ip-supporttools" => $ipSupporttools,
+        "time" => $timeInterval . 'ms'
 );
 
 $json = json_encode($array);
