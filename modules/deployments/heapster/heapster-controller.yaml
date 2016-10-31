@@ -24,7 +24,14 @@ spec:
       - name: heapster
         image: kubernetes/heapster:canary
         imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 200m
+            memory: 200Mi
+          requests:
+            cpu: 200m
+            memory: 200Mi
         command:
         - /heapster
         - --source=kubernetes:https://kubernetes.default
-        - --sink=influxdb:http://monitoring-influxdb:8086
+        - --sink=influxdb:http://monitoring-influxdb:80

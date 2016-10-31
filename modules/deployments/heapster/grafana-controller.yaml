@@ -18,10 +18,18 @@ spec:
         role: loadbalancer
       containers:
       - name: grafana
-        image: gcr.io/google_containers/heapster_grafana:v2.6.0-2
+        image: registry.local.wso2.com:5000/wso2_appcloud_heapster_grafana:v2.6.0-2-wso2v1
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 200m
+            memory: 200Mi
+          requests:
+            cpu: 200m
+            memory: 200Mi
         env:
           - name: INFLUXDB_SERVICE_URL
-            value: http://monitoring-influxdb:8086
+            value: http://monitoring-influxdb:80
             # The following env variables are required to make Grafana accessible via
             # the kubernetes api-server proxy. On production clusters, we recommend
             # removing these env variables, setup auth for grafana, and expose the grafana
@@ -45,18 +53,13 @@ spec:
           - name: GF_SERVER_PROTOCOL
             value: https
           - name: GF_SERVER_CERT_FILE
-            value: /mnt/grafana/grafana.crt
+            value: /mnt/grafana/certs/grafana.crt
           - name: GF_SERVER_CERT_KEY
-            value: /mnt/grafana/grafana.key
+            value: /mnt/grafana/certs/grafana.key
         volumeMounts:
         - mountPath: /var/lib/grafana
           name: grafana-storage
-        - mountPath: /mnt/grafana
-          name: grafana-certs-storage
       volumes:
       - name: grafana-storage
         hostPath:
-          path: /var/lib/grafana
-      - name: grafana-certs-storage
-        hostPath:
-          path: /mnt/grafana
+          path: /mnt/grafana/data

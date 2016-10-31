@@ -51,6 +51,7 @@ jagg.block("home", {
         var conSpecCpu = selectedVersion.conSpecCpu;
         var conSpecMemory = selectedVersion.conSpecMemory;
         var dataAnalyticsServerUrl = managerModule.getPropertyValue(DATA_ANALYTICS_SERVER_URL);
+        var tenantDomain = managerModule.getTenantDomain();
 
         var pageTitle = managerModule.getCloudTypeProperties().pageTitle;
         var maxAppCount = applicationModule.getMaxInstanceCount();
@@ -74,7 +75,8 @@ jagg.block("home", {
             "cloudSpecificApplicationRepresentation" : cloudSpecificApplicationRepresentation,
             "requestNewAppTypeURL" : requestNewAppTypeURL,
             "dashboardProperties" : dashboardProperties,
-            "dataAnalyticsServerUrl" : dataAnalyticsServerUrl
+            "dataAnalyticsServerUrl" : dataAnalyticsServerUrl,
+            "tenantDomain" : tenantDomain
         };
     }
 
