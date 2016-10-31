@@ -22,10 +22,6 @@
 # This script build initial base docker images to be used in app cloud setup.
 CURRENT_DIR=`pwd`
 
-docker build --no-cache -t docker.wso2.com/wso2-cloud/wso2dss:3.5.0-alpine3.4-oracle-jdk1.8.0 -f $CURRENT_DIR/wso2dataservice/base/3.5.0/Dockerfile.wso2-appcloud-wso2dataservice-3.5.0.base $CURRENT_DIR/wso2dataservice/base/3.5.0
-docker build --no-cache -t docker.wso2.com/wso2-cloud/wso2dss:3.5.1-alpine3.4-oracle-jdk1.8.0 -f $CURRENT_DIR/wso2dataservice/base/3.5.1/Dockerfile.wso2-appcloud-wso2dataservice-3.5.1.base $CURRENT_DIR/wso2dataservice/base/3.5.1
-exit
-
 #java base image
 docker build --no-cache -t docker.wso2.com/wso2-cloud/java:alpine3.4-open-jdk1.8.0_92-internal -f $CURRENT_DIR/java/base/1.8.0/Dockerfile.wso2-cloud-alpine3.4-open-jdk1.8.0_92-internal $CURRENT_DIR/java/base/1.8.0
 docker build --no-cache -t docker.wso2.com/wso2-cloud/java:alpine3.4-oracle-jdk1.8.0_112 -f $CURRENT_DIR/java/base/1.8.0/Dockerfile.wso2-cloud-alpine3.4-oracle-jdk1.8.0_112 $CURRENT_DIR/java/base/1.8.0
