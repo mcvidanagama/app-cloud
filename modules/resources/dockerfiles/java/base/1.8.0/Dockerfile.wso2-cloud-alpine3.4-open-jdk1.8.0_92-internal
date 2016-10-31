@@ -27,6 +27,6 @@ ENV JAVA_VERSION 8u92
 ENV JAVA_ALPINE_VERSION 8.92.14-r1
 
 RUN set -x && \
-    apk update && apk add --no-cache pwgen wget openjdk8="$JAVA_ALPINE_VERSION" && \
+    apk update && apk add --no-cache pwgen bash wget openjdk8="$JAVA_ALPINE_VERSION" && \
     addgroup wso2 && adduser -g '' -s /bin/bash -D -G wso2 wso2user
 
