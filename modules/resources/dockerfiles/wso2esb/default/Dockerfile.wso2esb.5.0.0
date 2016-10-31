@@ -16,7 +16,7 @@
 #
 # ------------------------------------------------------------------------
 
-FROM wso2-appcloud/wso2esb:5.0.0-base
+FROM docker.wso2.com/wso2-cloud/wso2esb:5.0.0-alpine3.4-oracle-jdk1.8.0
 
 ENV CARBON_HOME_PATH /home/wso2user/wso2esb-5.0.0
 ENV CAPP_FILE ARTIFACT_NAME

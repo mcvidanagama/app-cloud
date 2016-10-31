@@ -18,7 +18,7 @@
 #
 # ------------------------------------------------------------------------
 
-FROM wso2-cloud/java:ubuntu16.04-open-jdk1.8.0_91
+FROM docker.wso2.com/wso2-cloud/java:ubuntu16.04-open-jdk1.8.0_91
 
 ENV TOMCAT_ZIP apache-tomcat-8.5.5.zip
 ENV INSTALL_PATH /home/wso2user/
