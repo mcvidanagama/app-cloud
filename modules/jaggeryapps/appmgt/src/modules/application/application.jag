@@ -407,6 +407,7 @@ var createAppVersionInDataBase = function( versionName,   runtimeId, runtimeProp
         }
         ApplicationManager.addApplicationVersion(version, applicationHashId);
     } catch (e){
+        var msg = "Error while adding application version : "+ versionName + " to the database";
         log.error(msg);
         log.error(e);
         log.info("Application version creation failed because initial application metadata persistence failed and roll back process" +
