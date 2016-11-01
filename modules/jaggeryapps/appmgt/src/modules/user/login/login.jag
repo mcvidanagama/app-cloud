@@ -131,11 +131,6 @@ function logout(){
 }
 
 function jwtIsUserAuthenticated(authorizationHeader) {
-    if (log.isDebugEnabled()) {
-        log.debug("Initializing jwt login module");
-    }
-    var startTime_module = new Date().getTime();
-
     var tenantManager = multitenancy.getTenantManager();
     var KeyStoreManager = Packages.org.wso2.carbon.core.util.KeyStoreManager;
     var RSAPublicKey = Packages.java.security.interfaces.RSAPublicKey;
@@ -143,122 +138,97 @@ function jwtIsUserAuthenticated(authorizationHeader) {
     var SignedJWT = Packages.com.nimbusds.jwt.SignedJWT;
     var MultitenantUtils = Packages.org.wso2.carbon.utils.multitenancy.MultitenantUtils;
     var context = multitenancy.getPrivilegedCarbonContext();
-    var finalResult = {};
+    var finalResult = {
+        error : "true",
+        message : "",
+        username : null
+    };
+    var msg = null;
 
     try {
-        //Get authorization header and check if it is equal to "Bearer"
+        context.startTenantFlow();
+        //Get authorization header and check if authtorization type is equal to "Bearer"
         var authType = getAuthType(authorizationHeader);
         if (authType != null && (authType.toUpperCase() == AUTHORIZATION_HEADER_TYPE.toUpperCase())) {
             //Get the filesystem keystore default primary certificate
             var keyStoreManager = KeyStoreManager.getInstance(SUPER_TENANT_ID);
             keyStoreManager.getDefaultPrimaryCertificate();
-
+            //Decode authorization header
             var headerData = decodeAuthorizationHeader(authorizationHeader);
+            //Proceed if a valid JWT token is provided in the authorization header
             var rsaPublicKey = new RSAPublicKey(keyStoreManager.getDefaultPublicKey());
             var verifier = new RSASSAVerifier(rsaPublicKey);
             var jwsObject = SignedJWT.parse(headerData);
             if (jwsObject.verify(verifier)) {
-                var startTime_tenantFlow = new Date().getTime();
-                context.startTenantFlow();
-
-                var tenantDomain = SUPER_TENANT_DOMAIN_NAME;
-                var userNameWithTenantDomain = jwsObject.getJWTClaimsSet().getStringClaim(SIGNED_JWT_AUTH_USERNAME);
-                if (!userNameWithTenantDomain) {
-                    var msg = "Failing authorization since claim " + SIGNED_JWT_AUTH_USERNAME + " is not present";
-                    finalResult.error = "true";
-                    finalResult.message = msg;
-                    finalResult.username = null;
-                    if (log.isDebugEnabled()) {
-                        log.debug(msg);
-                    }
-                    return stringify(finalResult);
-                }
-
-                var userName = null;
-                if (userNameWithTenantDomain.indexOf("@") != -1) {
-                    tenantDomain = MultitenantUtils.getTenantDomain(userNameWithTenantDomain);
-                    userName = MultitenantUtils.getTenantAwareUsername(userNameWithTenantDomain);
-                } else {
-                    var msg = "Failing authorization since tenant domain is not present in claim " + SIGNED_JWT_AUTH_USERNAME;
-                    finalResult.error = "true";
-                    finalResult.message = msg;
-                    finalResult.username = userNameWithTenantDomain;
-                    if (log.isDebugEnabled()) {
-                        log.debug(msg);
-                    }
-                    return stringify(finalResult);
-                }
-
-                context.getThreadLocalCarbonContext().setTenantId(tenantManager.getTenantId(tenantDomain));
-                context.getThreadLocalCarbonContext().setUsername(userNameWithTenantDomain);
-                context.getThreadLocalCarbonContext().setTenantDomain(tenantDomain, true);
-                var endTime_tenantFlow = new Date().getTime();
-                if (log.isDebugEnabled()) {
-                    log.debug("Tenant flow started in :" + (endTime_tenantFlow - startTime_tenantFlow) + " milliseconds");
-                }
-
-                var realmService = carbon.server.osgiService('org.wso2.carbon.user.core.service.RealmService');
-                var tenantManager = realmService.getTenantManager();
-                var tenantId = tenantManager.getTenantId(tenantDomain);
-                if (tenantId == -1) {
-                    log.error("tenantDomain is not valid. username : " + userName + ", tenantDomain : " + tenantDomain);
-                    return false;
-                }
-
-                var realm = realmService.getTenantUserRealm(tenantId);
-                var userStoreManager = realm.getUserStoreManager();
-                var startTime_authenticate = new Date().getTime();
-                if (userStoreManager!=null && userStoreManager.isExistingUser(userName)) {
-                    //Check authentication of user
-                    var endTime_authenticate = new Date().getTime();
-                    if (log.isDebugEnabled()) {
-                        log.debug("Successfully authenticated user:" + userName + " in tenant:" + tenantDomain + " in:" +
-                                (endTime_authenticate - startTime_authenticate) + " milliseconds");
-                    }
-                    var startTime_authorize = new Date().getTime();
-
-                    jagg.setSelectedCloud(request.getRequestURL());
-                    //Check authorization of user
-                    var permission = modManager.getPropertyValue(jagg.getSelectedCloud() + LOGIN_PERMISSION);
-                    var isUserAuthorized = modManager.checkAuthorizationForUser(userNameWithTenantDomain, permission);
-                    if (isUserAuthorized) {
-                        jagg.setUser(userNameWithTenantDomain);
-                        finalResult.error = "false";
-                        finalResult.message = "User successfully logged in";
-                        finalResult.username = userName;
-                        var endTime_authorize = new Date().getTime();
-                        if (log.isDebugEnabled()) {
-                            log.debug("Successfully authorized user:" + userName + " in tenant:" + tenantDomain + " in:" +
-                                    (endTime_authorize - startTime_authorize) + " milliseconds");
+                //Get the full username from the set of claims in the JWT token
+                var usernameWithTenantDomain = jwsObject.getJWTClaimsSet().getStringClaim(SIGNED_JWT_AUTH_USERNAME);
+                if (usernameWithTenantDomain) {
+                    var tenantDomain = null;
+                    var username = null;
+                    //Extract username and tenant domain from the full user name
+                    if (usernameWithTenantDomain.indexOf("@") != -1) {
+                        tenantDomain = MultitenantUtils.getTenantDomain(usernameWithTenantDomain);
+                        username = MultitenantUtils.getTenantAwareUsername(usernameWithTenantDomain);
+                        //Set details related to carbon context
+                        context.getThreadLocalCarbonContext().setTenantId(tenantManager.getTenantId(tenantDomain));
+                        context.getThreadLocalCarbonContext().setUsername(usernameWithTenantDomain);
+                        context.getThreadLocalCarbonContext().setTenantDomain(tenantDomain, true);
+                        //Check if extracted tenant domain is valid
+                        var realmService = carbon.server.osgiService('org.wso2.carbon.user.core.service.RealmService');
+                        var tenantManager = realmService.getTenantManager();
+                        var tenantId = tenantManager.getTenantId(tenantDomain);
+                        if (tenantId == -1) {
+                            msg = "tenantDomain is not valid. username: " + username + ", tenantDomain: "
+                                    + tenantDomain;
+                            finalResult.username = username;
+                        } else {
+                            //Check if the user is a valid user within the tenant domain
+                            var realm = realmService.getTenantUserRealm(tenantId);
+                            var userStoreManager = realm.getUserStoreManager();
+                            if (userStoreManager != null && userStoreManager.isExistingUser(username)) {
+                                jagg.setSelectedCloud(request.getRequestURL());
+                                //Check authorization of user
+                                var permission =
+                                        modManager.getPropertyValue(jagg.getSelectedCloud() + LOGIN_PERMISSION);
+                                var isUserAuthorized =
+                                        modManager.checkAuthorizationForUser(usernameWithTenantDomain, permission);
+                                if (isUserAuthorized) {
+                                    jagg.setUser(usernameWithTenantDomain);
+                                    msg = "User successfully logged in";
+                                    finalResult.error = "false";
+                                    finalResult.username = username;
+                                } else {
+                                    msg = "Authorization failed for user:" + username + " in tenant:" + tenantDomain;
+                                    finalResult.username = username;
+                                    session.invalidate();
+                                }
+                            } else {
+                                msg = "Invalid user: " + username + " in tenant domain:" + tenantDomain;
+                                finalResult.username = username;
+                            }
                         }
                     } else {
-                        finalResult.error = "true";
-                        finalResult.message = "Authorization Failed.";
-                        finalResult.username = userName;
-                        if (log.isDebugEnabled()) {
-                            log.debug("Authorization failed for user:" + userName + " in tenant:" + tenantDomain);
-                        }
-                        session.invalidate();
+                        msg = "Failing authorization since tenant domain is not present in claim "
+                                + SIGNED_JWT_AUTH_USERNAME;
+                        finalResult.username = usernameWithTenantDomain;
                     }
+                } else {
+                    msg = "Failing authorization since claim " + SIGNED_JWT_AUTH_USERNAME + " is not present";
                 }
+            } else {
+                msg = "Invalid JWT token. Please provide valid token in authorization header.";
             }
         } else {
-            var msg = "Failing authorization since Authorization header with authentication type Bearer is not present.";
-            finalResult.error = "true";
-            finalResult.message = msg;
-            finalResult.username = null;
-            if (log.isDebugEnabled()) {
-                log.debug(msg);
-            }
-            return stringify(finalResult);
+            msg = "Failing authorization since Authorization header with authentication type Bearer is not present.";
         }
-        var endTime_module = new Date().getTime();
+        finalResult.message = msg;
         if (log.isDebugEnabled()) {
-            log.debug("Finishing jwt login module in:" + (endTime_module - startTime_module) + " milliseconds");
+            log.debug(msg);
         }
         return stringify(finalResult);
     } catch (e) {
-        log.error("Error authenticating the user for authorization header: " + authorizationHeader);
+        msg = "Error authenticating the user for authorization header: " + authorizationHeader;
+        log.error(msg);
         log.error(e);
     } finally {
         context.endTenantFlow();
