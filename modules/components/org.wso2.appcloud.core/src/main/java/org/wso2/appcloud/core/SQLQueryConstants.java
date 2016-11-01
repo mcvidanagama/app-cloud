@@ -231,6 +231,9 @@ public class SQLQueryConstants {
             "AC_VERSION WHERE AC_VERSION.tenant_id=? and name COLLATE utf8_bin =? and application_id=(SELECT id FROM " +
             "AC_APPLICATION WHERE name=? AND AC_APPLICATION.tenant_id=?)";
 
+    public static final String GET_CUSTOM_DOMAIN_DETAILS_FOR_TENANT = "SELECT name, custom_domain " +
+            "FROM AC_APPLICATION WHERE tenant_id =?";
+
     /* Update Queries */
     public static final String GET_ALL_APPLICATIONS_LIST_WITH_TAG =
             "SELECT app.name as application_name, app.hash_id as hash_id, type.name as app_type_name, " +
