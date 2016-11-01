@@ -155,43 +155,48 @@ function jwtIsUserAuthenticated(authorizationHeader) {
             keyStoreManager.getDefaultPrimaryCertificate();
             //Decode authorization header
             var headerData = decodeAuthorizationHeader(authorizationHeader);
-            //Proceed if a valid JWT token is provided in the authorization header
+
             var rsaPublicKey = new RSAPublicKey(keyStoreManager.getDefaultPublicKey());
             var verifier = new RSASSAVerifier(rsaPublicKey);
             var jwsObject = SignedJWT.parse(headerData);
+            //Proceed if the server from which the login request originated can be trusted and if a valid JWT token is
+            //provided in the set of claims in the authorization header
             if (jwsObject.verify(verifier)) {
                 //Get the full username from the set of claims in the JWT token
                 var usernameWithTenantDomain = jwsObject.getJWTClaimsSet().getStringClaim(SIGNED_JWT_AUTH_USERNAME);
                 if (usernameWithTenantDomain) {
                     var tenantDomain = null;
                     var username = null;
-                    //Extract username and tenant domain from the full user name
                     if (usernameWithTenantDomain.indexOf("@") != -1) {
+                        //Extract username and tenant domain from the full user name
                         tenantDomain = MultitenantUtils.getTenantDomain(usernameWithTenantDomain);
                         username = MultitenantUtils.getTenantAwareUsername(usernameWithTenantDomain);
-                        //Set details related to carbon context
+                        //To get the tenant user realm set the carbon context details
                         context.getThreadLocalCarbonContext().setTenantId(tenantManager.getTenantId(tenantDomain));
                         context.getThreadLocalCarbonContext().setUsername(usernameWithTenantDomain);
                         context.getThreadLocalCarbonContext().setTenantDomain(tenantDomain, true);
-                        //Check if extracted tenant domain is valid
+
                         var realmService = carbon.server.osgiService('org.wso2.carbon.user.core.service.RealmService');
                         var tenantManager = realmService.getTenantManager();
+                        //Get tenant id from the extracted tenant domain
                         var tenantId = tenantManager.getTenantId(tenantDomain);
                         if (tenantId == -1) {
                             msg = "tenantDomain is not valid. username: " + username + ", tenantDomain: "
                                     + tenantDomain;
                             finalResult.username = username;
-                        } else {
-                            //Check if the user is a valid user within the tenant domain
+                        } else { //Proceed if the extracted tenant domain is valid
                             var realm = realmService.getTenantUserRealm(tenantId);
                             var userStoreManager = realm.getUserStoreManager();
+                            //Proceed if the user is a valid user within the tenant domain
+                            //Ex:- Suppose the username claim in the set of claims in the JWT token is foo@foodomain
+                            //then foo is the username and foodomain is the tenant domain.
+                            //If foo exists in foodomain the user will authenticated and if foo doesn't exist in
+                            //foodomain the user will not be authenticated
                             if (userStoreManager != null && userStoreManager.isExistingUser(username)) {
-                                jagg.setSelectedCloud(request.getRequestURL());
-                                //Check authorization of user
-                                var permission =
-                                        modManager.getPropertyValue(jagg.getSelectedCloud() + LOGIN_PERMISSION);
+                                var permission = modManager.getPropertyValue(DEFAULT_LOGIN_PERMISSION);
                                 var isUserAuthorized =
                                         modManager.checkAuthorizationForUser(usernameWithTenantDomain, permission);
+                                //Proceed if the authenticated user has login permission
                                 if (isUserAuthorized) {
                                     jagg.setUser(usernameWithTenantDomain);
                                     msg = "User successfully logged in";
