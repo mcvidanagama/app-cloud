@@ -97,6 +97,12 @@ var CHANGE_PASSWORD_URL = "ChangePassword.Url";
 //Regex patterns
 var ENV_KEY_REGEX = "^[A-Za-z0-9_]+$";
 
+//JWT Authentication constants
+var AUTHORIZATION_HEADER_TYPE = "Bearer";
+var SIGNED_JWT_AUTH_USERNAME = "Username";
+var SUPER_TENANT_ID = -1234;
+var DEFAULT_LOGIN_PERMISSION = "default.Login.Permission";
+
 //Service Prefixes
 var HTTP_SERVICE_PREFIX = "htp-";
 var HTTPS_SERVICE_PREFIX = "hts-";

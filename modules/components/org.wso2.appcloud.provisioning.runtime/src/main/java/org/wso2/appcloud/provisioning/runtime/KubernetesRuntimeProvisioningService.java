@@ -28,7 +28,6 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.appcloud.provisioning.runtime.Utils.KubernetesProvisioningUtils;
 import org.wso2.appcloud.provisioning.runtime.beans.*;
 import org.wso2.appcloud.provisioning.runtime.beans.Container;
-import org.wso2.appcloud.provisioning.runtime.beans.ResourceQuotaLimit;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

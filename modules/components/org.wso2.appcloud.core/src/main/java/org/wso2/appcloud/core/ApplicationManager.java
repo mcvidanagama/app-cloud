@@ -1428,4 +1428,26 @@ public class ApplicationManager {
             DBUtil.closeConnection(dbConnection);
         }
     }
+
+    /**
+     * Method to get custom domain details for tenant
+     *
+     * @return list of custom domain details for all applications of tenant
+     * @throws AppCloudException
+     */
+    public static Application[] getCustomDomainDetailsForTenant() throws AppCloudException {
+        Connection dbConnection = DBUtil.getDBConnection();
+        int tenantId = CarbonContext.getThreadLocalCarbonContext().getTenantId();
+        try {
+            List<Application> applicationDetailsList = ApplicationDAO.getInstance().
+                    getCustomDomainDetailsForTenant(dbConnection, tenantId);
+            return applicationDetailsList.toArray(new Application[applicationDetailsList.size()]);
+        } catch (AppCloudException e) {
+            String msg = "Error while getting custom domain details for tenant with tenant id: " + tenantId + ".";
+            log.error(msg, e);
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeConnection(dbConnection);
+        }
+    }
 }

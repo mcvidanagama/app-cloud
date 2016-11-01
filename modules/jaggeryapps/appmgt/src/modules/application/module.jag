@@ -284,6 +284,9 @@ jagg.module("application", {
 
     updateVersionExposureLevel:function () {
         return jagg.require(jagg.getModulesDir() + "application/application.jag").updateVersionExposureLevel.apply(this, arguments);
+    },
+    getCustomDomainDetailsForTenant:function () {
+        return jagg.require(jagg.getModulesDir() + "application/application.jag").getCustomDomainDetailsForTenant.apply(this, arguments);
     }
 });
 %>

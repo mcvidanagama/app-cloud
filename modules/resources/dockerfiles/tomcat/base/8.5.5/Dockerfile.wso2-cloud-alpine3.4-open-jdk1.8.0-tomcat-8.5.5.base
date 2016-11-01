@@ -18,7 +18,7 @@
 #
 # ------------------------------------------------------------------------
 
-FROM wso2-cloud/java:alpine3.4-open-jdk1.8.0_92-internal
+FROM docker.wso2.com/wso2-cloud/java:alpine3.4-open-jdk1.8.0_92-internal
 
 ENV TOMCAT_ZIP apache-tomcat-8.5.5.zip
 ENV INSTALL_PATH /home/wso2user/

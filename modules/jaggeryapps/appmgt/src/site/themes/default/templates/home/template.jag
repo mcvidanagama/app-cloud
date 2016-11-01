@@ -80,7 +80,7 @@ jagg.template("home", function(inputs, outputs, jagg) {
     var custom = "<%=CUSTOM%>";
     var dashboardProperties = <%=dashboardProperties%>;
     var dataAnalyticsServerUrl = "<%=dataAnalyticsServerUrl%>";
-    var tenantDomain = <%=tenantDomain%>;
+    var tenantDomain = "<%=tenantDomain%>";
 </script>
 
     <div class="right-pane visible">
