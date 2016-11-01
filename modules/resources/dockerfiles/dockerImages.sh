@@ -35,7 +35,7 @@ docker build --no-cache -t docker.wso2.com/wso2-cloud/tomcat:8.5.5-ubuntu16.04-o
 docker build --no-cache -t docker.wso2.com/wso2-cloud/tomcat:8.5.5-ubuntu16.04-oracle-jdk1.8.0 -f $CURRENT_DIR/tomcat/base/8.5.5/Dockerfile.wso2-cloud-ubuntu16.04-oracle-jdk1.8.0-tomcat-8.5.5.base $CURRENT_DIR/tomcat/base/8.5.5
 
 #msf4j base image
-#docker build --no-cache -t wso2-appcloud/msf4j:1.0.0-base -f $CURRENT_DIR/msf4j/base/1.0.0/Dockerfile.wso2-appcloud-msf4j-1.0.0.base $CURRENT_DIR/msf4j/base/1.0.0/
+docker build --no-cache -t wso2-appcloud/msf4j:1.0.0-base -f $CURRENT_DIR/msf4j/base/1.0.0/Dockerfile.wso2-appcloud-msf4j-1.0.0.base $CURRENT_DIR/msf4j/base/1.0.0/
 docker build --no-cache -t docker.wso2.com/wso2-cloud/msf4j:2.0.0-alpine3.4-oracle-jdk1.8.0 -f $CURRENT_DIR/msf4j/base/2.0.0/Dockerfile.wso2-appcloud-msf4j-2.0.0.base $CURRENT_DIR/msf4j/base/2.0.0/
 
 #carbon 4.2.0 base image
@@ -45,9 +45,9 @@ docker build --no-cache -t docker.wso2.com/wso2-cloud/msf4j:2.0.0-alpine3.4-orac
 docker build --no-cache -t docker.wso2.com/wso2-cloud/php:7.0.4-debian8-apache2.4.10 -f $CURRENT_DIR/php/base/1.0.0/Dockerfile.wso2-appcloud-php-1.0.0.base $CURRENT_DIR/php/base/1.0.0
 
 #wso2as base images
-#docker build --no-cache -t wso2-appcloud/wso2as:6.0.0-m1-base -f $CURRENT_DIR/wso2as/base/6.0.0-m1/Dockerfile.wso2-appcloud-wso2as-6.0.0-m1.base $CURRENT_DIR/wso2as/base/6.0.0-m1
-#docker build --no-cache -t wso2-appcloud/wso2as:6.0.0-m2-base -f $CURRENT_DIR/wso2as/base/6.0.0-m2/Dockerfile.wso2-appcloud-wso2as-6.0.0-m2.base $CURRENT_DIR/wso2as/base/6.0.0-m2
-#docker build --no-cache -t wso2-appcloud/wso2as:6.0.0-m3-base -f $CURRENT_DIR/wso2as/base/6.0.0-m3/Dockerfile.wso2-appcloud-wso2as-6.0.0-m3.base $CURRENT_DIR/wso2as/base/6.0.0-m3
+docker build --no-cache -t wso2-appcloud/wso2as:6.0.0-m1-base -f $CURRENT_DIR/wso2as/base/6.0.0-m1/Dockerfile.wso2-appcloud-wso2as-6.0.0-m1.base $CURRENT_DIR/wso2as/base/6.0.0-m1
+docker build --no-cache -t wso2-appcloud/wso2as:6.0.0-m2-base -f $CURRENT_DIR/wso2as/base/6.0.0-m2/Dockerfile.wso2-appcloud-wso2as-6.0.0-m2.base $CURRENT_DIR/wso2as/base/6.0.0-m2
+docker build --no-cache -t wso2-appcloud/wso2as:6.0.0-m3-base -f $CURRENT_DIR/wso2as/base/6.0.0-m3/Dockerfile.wso2-appcloud-wso2as-6.0.0-m3.base $CURRENT_DIR/wso2as/base/6.0.0-m3
 
 #jaggery base image
 docker build --no-cache -t docker.wso2.com/wso2-cloud/jaggery:0.11.0-alpine3.4-oracle-jdk1.8.0 -f $CURRENT_DIR/jaggery/base/0.11.0/Dockerfile.wso2-appcloud-jaggery-0.11.0.base $CURRENT_DIR/jaggery/base/0.11.0
