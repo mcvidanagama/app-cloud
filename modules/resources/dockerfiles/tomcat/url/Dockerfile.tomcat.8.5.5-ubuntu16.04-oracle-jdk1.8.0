@@ -18,7 +18,7 @@
 #
 # ------------------------------------------------------------------------
 
-FROM wso2-cloud/tomcat:8.5.5-ubuntu16.04-oracle-jdk1.8.0
+FROM docker.wso2.com/wso2-cloud/tomcat:8.5.5-ubuntu16.04-oracle-jdk1.8.0
 
 ENV APP_WAR ARTIFACT_NAME
 ENV URL ARTIFACT_URL
