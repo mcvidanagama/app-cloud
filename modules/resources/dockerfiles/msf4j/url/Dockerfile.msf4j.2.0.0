@@ -18,7 +18,7 @@
 #
 # ------------------------------------------------------------------------
 
-FROM wso2-appcloud/msf4j:2.0.0-base
+FROM docker.wso2.com/wso2-cloud/msf4j:2.0.0-alpine3.4-oracle-jdk1.8.0
 
 ENV MSF4J_JAR ARTIFACT_NAME
 ENV URL ARTIFACT_URL

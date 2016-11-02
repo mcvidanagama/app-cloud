@@ -1,7 +1,7 @@
 {
     "dashboards": [
         {
-            "isAvailable" : "false",
+            "isAvailable" : "true",
             "title" : "Operational Dashboard",
             "runtimes" : ["all"],
             "dashboardContext" : "/portal",

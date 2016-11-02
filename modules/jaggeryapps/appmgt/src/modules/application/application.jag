@@ -1882,4 +1882,27 @@ var isTagExist = function(versionKey, tagKey) {
 var isVersionExist = function(applicationName, versionName) {
     return ApplicationManager.isVersionExist(applicationName, versionName);
 }
+
+/**
+ * Method to get custom domain details (application name, default domain URL and custom domain URL) for all applications
+ * of logged in user
+ *
+ * @returns {Array}
+ */
+var getCustomDomainDetailsForTenant = function() {
+    var applicationLaunchBaseURL = modManager.getPropertyValue("ApplicationLaunchBaseURL.Public");
+    var applicationDetailsList = ApplicationManager.getCustomDomainDetailsForTenant();
+    var urlPrefix = modManager.getTenantDomain(true) + "-";
+    var customDomainDetails = [];
+    for (var i = 0; i < applicationDetailsList.length; i++) {
+        var applicationDetail = applicationDetailsList[i];
+        var customDomainDetail = {};
+        customDomainDetail.appName = applicationDetail.applicationName;
+        customDomainDetail.defaultDomainURL = urlPrefix.replace(/\./g, '-')  +
+                applicationDetail.applicationName.toLowerCase() + "." + applicationLaunchBaseURL;
+        customDomainDetail.customDomainURL = applicationDetail.customDomain;
+        customDomainDetails.push(customDomainDetail);
+    }
+    return customDomainDetails;
+}
 %>

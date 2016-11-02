@@ -2413,4 +2413,38 @@ public class ApplicationDAO {
             DBUtil.closePreparedStatement(preparedStatement);
         }
     }
+
+    /**
+     * Method to get custom domain details for tenant
+     *
+     * @param dbConnection database connection
+     * @param tenantId tenant id
+     * @return list of custom domain details for all applications of tenant
+     * @throws AppCloudException
+     */
+    public List<Application> getCustomDomainDetailsForTenant(Connection dbConnection, int tenantId)
+            throws AppCloudException {
+        List<Application> applicationDetailsList = new ArrayList<>();
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            preparedStatement = dbConnection.prepareStatement(SQLQueryConstants.GET_CUSTOM_DOMAIN_DETAILS_FOR_TENANT);
+            preparedStatement.setInt(1, tenantId);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Application application = new Application();
+                application.setApplicationName(resultSet.getString(SQLQueryConstants.NAME));
+                application.setCustomDomain(resultSet.getString(SQLQueryConstants.CUSTOM_DOMAIN));
+                applicationDetailsList.add(application);
+            }
+            return applicationDetailsList;
+        } catch (SQLException e) {
+            String msg = "Error while getting custom domain details for tenant with tenant Id: " + tenantId + ".";
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeResultSet(resultSet);
+            DBUtil.closePreparedStatement(preparedStatement);
+        }
+    }
 }
