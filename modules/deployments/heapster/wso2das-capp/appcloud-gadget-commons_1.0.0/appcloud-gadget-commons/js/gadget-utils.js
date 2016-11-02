@@ -207,7 +207,7 @@ function GadgetUtil() {
         return '<div class="status-message">'+
                 '<div class="message message-danger">'+
                     '<h4><i class="icon fw fw-info"></i>Error</h4>'+
-                    '<p>An error occured while attempting to display this gadget. Error message is: ' + msg.status + ' - ' + msg.statusText + '</p>'+
+                    '<p>An error occured while attempting to display this gadget. Please wait and try again.</p>'+
                 '</div>'+
             '</div>';
     };
