@@ -65,7 +65,7 @@ public class FileUpdaterServiceComponent {
                 log.error("Error occurred while removing MessageFlowStatisticsPublisher.xml", e);
             }
         } else {
-            log.error("CARBON_HOME_PATH environment variable is not set. Therefore, not updating files");
+            log.warn("CARBON_HOME_PATH environment variable is not set. Therefore, not updating files");
         }
     }
 
