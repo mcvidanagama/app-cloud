@@ -78,7 +78,10 @@ jagg.template("settings", function (inputs, outputs, jagg) { %>
                             </div>
                             <div class="from-group-margin">
                                 <% if(application.customURL != null) { %>
-                                    <label for="custom-url">Custom URL : <%=application.customURL%></label>
+                                    <label for="custom-url">Custom URL : <%=application.customURL%>
+                                        <p class="help-block"><b>Tip</b>: The <b>Default Version</b> option means that you make this version the default in a group of different versions of the application. A default version can be invoked through the above custom URL.</p>
+                                        <p class="help-block">For example, if you mark version 2.0 as the default version when the application has 1.0 and 3.0 versions as well, requests made to the custom URL get automatically routed to version 2.0.</p>
+                                    </label>
                                 <% } else if (application.defaultURL != null) { %>
                                     <label for="custom-url"><span class="default-url">Default URL : <%=application.defaultURL%></span>
                                         <p class="help-block"><b>Tip</b>: The <b>Default Version</b> option means that you make this version the default in a group of different versions of the application. A default version can be invoked without specifying the version number in the URL.</p>
@@ -106,7 +109,7 @@ jagg.template("settings", function (inputs, outputs, jagg) { %>
 
                         <div role="tabpanel" class="tab-pane" id="exposure-level">
                             <div class="from-group-margin">
-
+                                <p class="help-block">By default, the applications you create in WSO2 App Cloud are public and accessible via the Internet. In order to secure and limit access to your applications, services, and endpoints, you can mark your application privacy as private through following settings.</p>
                             </div>
                             <div class="from-group-margin">
                             <div class="form-group">
@@ -116,7 +119,7 @@ jagg.template("settings", function (inputs, outputs, jagg) { %>
                                     <%=versionString%>
                                  </select>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group-margin">
                                 <div class="radio">
                                   <label>
                                       <input type="radio" name="security-radio" id="security-public" class="custom-radio" value="public" checked="checked"/><span class="default-url">Public</span>
