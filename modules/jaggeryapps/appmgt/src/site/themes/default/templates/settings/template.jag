@@ -62,11 +62,11 @@ jagg.template("settings", function (inputs, outputs, jagg) { %>
     </div>
     <div class="row">
             <div id="push"></div>
-            <div class="col-md-5 forms cloud-tab">
+            <div class="col-md-6 forms cloud-tab">
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs" role="tablist">
                         <li role="presentation" class="active"><a href="#default-version" aria-controls="default-version" role="tab" data-toggle="tab">Default Version</a></li>
-                        <li role="presentation"><a href="#exposure-level" aria-controls="exposure-level" role="tab" data-toggle="tab">Exposure Level</a></li>
+                        <li role="presentation"><a href="#exposure-level" aria-controls="exposure-level" role="tab" data-toggle="tab">Application Privacy</a></li>
                     </ul>
 
                     <!-- Tab panes -->
@@ -80,7 +80,10 @@ jagg.template("settings", function (inputs, outputs, jagg) { %>
                                 <% if(application.customURL != null) { %>
                                     <label for="custom-url">Custom URL : <%=application.customURL%></label>
                                 <% } else if (application.defaultURL != null) { %>
-                                    <label for="custom-url">Default URL : <%=application.defaultURL%></label>
+                                    <label for="custom-url"><span class="default-url">Default URL : <%=application.defaultURL%></span>
+                                        <p class="help-block"><b>Tip</b>: The <b>Default Version</b> option means that you make this version the default in a group of different versions of the application. A default version can be invoked without specifying the version number in the URL.</p>
+                                        <p class="help-block">For example, if you mark version 2.0 as the default version when the application has 1.0 and 3.0 versions as well, requests made to the default URL get automatically routed to version 2.0. The default version gets two URLs- one with the version and the other without. You can invoke a default version using both URLs.</p>
+                                    </label>
                                 <% } %>
                             </div>
                             <div class="form-group">
@@ -116,14 +119,14 @@ jagg.template("settings", function (inputs, outputs, jagg) { %>
                             <div class="form-group">
                                 <div class="radio">
                                   <label>
-                                      <input type="radio" name="security-radio" id="security-public" class="custom-radio" value="public" checked="checked"/>Public
-                                      <p class="help-block">Endpoints will be visible to all external traffic (Internet) via <b>&lt;application_name&gt;.<%=publicURL%></b> url. These public endpoints can be accessed internally (traffic from WSO2 Cloud) via <b>&lt;application_name&gt;.<%=privateURL%></b> url as well.</p>
+                                      <input type="radio" name="security-radio" id="security-public" class="custom-radio" value="public" checked="checked"/><span class="default-url">Public</span>
+                                      <p class="help-block">Endpoints are visible to the Internet via the URL <b>&lt;application_name&gt;.<%=publicURL%></b>. You can also access the public endpoints internally from WSO2 Cloud via the URL <b>&lt;application_name&gt;.<%=privateURL%></b>.</p>
                                   </label>
                                 </div>
                                 <div class="radio">
                                   <label>
-                                      <input type="radio" name="security-radio" id="security-private" class="custom-radio" value="private"/>Private</span>
-                                          <p class="help-block">Endpoints will be visible only to the internal traffic (traffic from WSO2 Cloud). These private endpoints can be accessed only via <b>&lt;application_name&gt;.<%=privateURL%></b> url.</p>
+                                      <input type="radio" name="security-radio" id="security-private" class="custom-radio" value="private"/><span class="default-url">Private</span>
+                                          <p class="help-block">Endpoints are only visible internally from WSO2 Cloud via the URL <b>&lt;application_name&gt;.<%=privateURL%></b>.</p>
                                       </label>
                                 </div>
                             </div>
