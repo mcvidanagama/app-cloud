@@ -1593,7 +1593,6 @@ var getKubernetesRuntime = function(applicationName, applicationHashId, tenantId
     var exposureLevel = getExposureLevel(applicationName, versionName);
     var applicationCtx = KubernetesProvisioningUtils.getApplicationContext(
             applicationName, versionName, appType, tenantId, tenantDomain, versionHashId, exposureLevel);
-
     return new KubernetesRuntime(applicationCtx);
 }
 
@@ -1626,7 +1625,6 @@ var redeployMappedDomain = function (applicationName, versionName) {
     var applicationHashId = Util.getApplicationHashId(applicationName, tenantId);
     deleteService(applicationName, versionName);
     setDefaultDomain(applicationName, versionName, applicationHashId);
-
     if (isCustomDomainExist(applicationName)) {
         setCustomDomain(applicationName);
     }
@@ -1641,7 +1639,6 @@ var changeMappedDomain = function (applicationName, versionName) {
     if (isCustomDomainExist(applicationName)) {
         setCustomDomain(applicationName);
     }
-
     return applicationHashId;
 };
 

@@ -58,6 +58,8 @@ const (
 	tenantDomain		 = "tenantDomain"
 	appType			 = "type"
 	exposureLevel		 = "exposure-level"
+	customDomain             = "customDomain"
+	appName			 = "app"
 )
 
 var (
@@ -146,6 +148,8 @@ var (
 
 
 	lbType = flags.String("load-balancer-type", "public", `define the lb is public/private`)
+
+	appTenantDomain = flags.String("tenantDomain", "", `Relevant tenant domain of the service`)
 )
 
 // service encapsulates a single backend entry in the load balancer config.
@@ -206,6 +210,10 @@ type service struct {
 
 	//Exposure Level
 	ExposureLevel		  string
+
+	//If label "customdomain" has a value set the value of this variable to
+	//identify that a new custom domain has been added
+	CustomDomain string
 }
 
 type serviceByName []service
@@ -233,6 +241,8 @@ type loadBalancerConfig struct {
 	sslCaCert      string `json:"sslCaCert" description:"PEM to verify client's certificate."`
 	lbDefAlgorithm string `description:"custom default load balancer algorithm".`
 	lbType 	       string `json:"lbType" description:"Type of the load balancer public/private"`
+	CertificatesDir string `json:"certificatesDir" description:"directory path of where all PEM files for custom domains will be added"`
+	ServerUrl 	string `json:"serverUrl" description:"The server URL to access governance"`
  }
 
 type staticPageHandler struct {
@@ -283,6 +293,16 @@ func (s serviceLabels) getAppType() (string, bool) {
 
 func (s serviceLabels) getExposureLevel() (string, bool) {
 	val, ok := s[exposureLevel]
+	return val, ok
+}
+
+func (s serviceLabels) getCustomDomain() (string, bool) {
+	val, ok := s[customDomain]
+	return val, ok
+}
+
+func (s serviceLabels) getAppName() (string, bool) {
+	val, ok := s[appName]
 	return val, ok
 }
 
@@ -349,13 +369,13 @@ func (cfg *loadBalancerConfig) write(services map[string][]service, dryRun bool)
 	conf["lbType"] = cfg.lbType
 
 	var sslConfig string
-	if cfg.sslCert != "" {
-		sslConfig = "crt " + cfg.sslCert
+	if cfg.CertificatesDir != "" {
+		sslConfig = "crt " + cfg.CertificatesDir
 	}
 	if cfg.sslCaCert != "" {
 		sslConfig += " ca-file " + cfg.sslCaCert
 	}
-	conf["sslCert"] = sslConfig
+	conf["sslConfig"] = sslConfig
 
 	// default load balancer algorithm is roundrobin
 	conf["defLbAlgorithm"] = lbDefAlgorithm
@@ -533,11 +553,30 @@ func (lbc *loadBalancerController) getServices() (httpSvc []service, httpsTermSv
 			//Set the tenant domain in the service
 			if val, ok := serviceLabels(s.ObjectMeta.Labels).getTenantDomain(); ok {
 				newSvc.TenantDomain = val
+				*appTenantDomain = val;
 			}
 
 			//Set the exposure level in the service
 			if val, ok := serviceLabels(s.ObjectMeta.Labels).getExposureLevel(); ok {
 				newSvc.ExposureLevel = val
+			}
+
+			//Set the custom domain if the custom domain has been set
+			if val, ok := serviceLabels(s.ObjectMeta.Labels).getCustomDomain(); ok {
+				newSvc.CustomDomain = val
+				if appName, ok := serviceLabels(s.ObjectMeta.Labels).getAppName(); ok {
+					//If the SSL Pem file doesn't exists in the certificates directory query
+					//Governance REST api, obtain certs and add to certs directory
+					resourceFilePath := lbc.cfg.CertificatesDir + *appTenantDomain + hypenSeparator +
+						appName + pemFileExtension
+					if _, err := os.Stat(resourceFilePath);
+						os.IsNotExist(err) {
+						resourcePath := lbc.cfg.ServerUrl + registryPath + cloudType +
+							*appTenantDomain + securityCertificates + appName +
+							forwardSlashSeparator
+						addSecurityCertificate(resourcePath, appName, lbc.cfg.CertificatesDir)
+					}
+				}
 			}
 
 			if port, ok := lbc.tcpServices[sName]; ok && port == servicePort.Port {

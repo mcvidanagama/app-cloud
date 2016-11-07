@@ -1065,7 +1065,6 @@ public class KubernetesRuntimeProvisioningService implements RuntimeProvisioning
     public void updateDefaultVersionServicewithLabel(String serviceName, String labelKey, String labelValue)
             throws RuntimeProvisioningException {
         String namespace = this.namespace.getMetadata().getName();
-
         try {
             AutoAdaptableKubernetesClient kubClient = KubernetesProvisioningUtils.getFabric8KubernetesClient();
             kubClient.services().inNamespace(namespace).withName(serviceName).edit().editMetadata()
