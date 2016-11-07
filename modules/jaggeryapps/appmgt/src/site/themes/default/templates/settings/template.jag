@@ -109,7 +109,7 @@ jagg.template("settings", function (inputs, outputs, jagg) { %>
 
                         <div role="tabpanel" class="tab-pane" id="exposure-level">
                             <div class="from-group-margin">
-                                <p class="help-block">By default, the applications you create in WSO2 App Cloud are public and accessible via the Internet. In order to secure and limit access to your applications, services, and endpoints, you can mark your application privacy as private through following settings.</p>
+                                <p class="help-block">​​​By default, the applications you create in WSO2 App Cloud are public and accessible via the Internet. In order to secure and limit access to your applications, change your application's privacy using the following setting.</p>
                             </div>
                             <div class="from-group-margin">
                             <div class="form-group">
