@@ -2970,3 +2970,7 @@ ul.overview-inner-list li {
 .float-right {
     float: right;!important;
 }
+
+.default-url {
+    font-weight:400;
+}
