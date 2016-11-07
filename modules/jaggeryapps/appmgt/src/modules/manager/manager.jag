@@ -193,4 +193,10 @@ var getDashboardTypeProperties = function() {
     var dashboardTypesProperties = parse(stringfiedObject);
     return require(dashboardTypesProperties);
 }
+
+function hasCustomURLSettingsAccess() {
+    var username = jagg.getUser();
+    var permission = getPropertyValue(CUSTOM_URL_PERMISSION);
+    return checkAuthorizationForUser(username, permission);
+}
 %>

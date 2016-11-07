@@ -26,6 +26,7 @@ $(document).ready(function () {
         $('#productionCustom').val(stripedUrl(customURL));
         $("#customDomainForm").css('display', "block");
         $("#productionCustom").prop('disabled', "disabled");
+        $("#configureButtonText").html("Update custom url");
     } else{
         $("#customDomainForm").css('display', "none");
     }
@@ -43,7 +44,7 @@ function configureCustomUrl() {
         customURLParamater = "&customUrl=" + stripedUrl(customURL);
     }
     window.location = customUrlSettingsPageUrl + "&appName=" + applicationName + "&defaultDomain=" + pointedUrl +
-        customURLParamater;
+        customURLParamater + "&backUrl=" + window.location.href;
 }
 
 

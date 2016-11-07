@@ -36,6 +36,8 @@ jagg.template("header/default", function(inputs, outputs, jagg) {
     var changePasswordURL = outputs.changePasswordURL;
     var profileURL = outputs.profileURL;
     var zopimChatId = outputs.zopimChatId;
+    var managerModule = jagg.module("manager");
+    var hasCustomURLSettingsAccess = managerModule.hasCustomURLSettingsAccess();
     if(isGoogleAnalyticsEnabled) {
 %>
            
@@ -94,7 +96,7 @@ $zopim(function () {
         $zopim.livechat.setEmail('<%=loggedInUserName%>');
 });
 </script>
-    
+
 <!-- BOF cloud menu -->
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container-fluid">
@@ -182,6 +184,10 @@ $zopim(function () {
                             <i class="fa fa-3x  fa-database"></i>
                             <div class="cloud-name">Databases</div>
                         </a>
+                       <a id="customUrlBlock" style="display: none;" class="cloud-block-invert" href="https://local.cloudmgt.wso2.com:9444/cloudmgt/site/pages/custom_url.jag?backUrl=https://apps.local.wso2.com:9543/appmgt/site/pages/index.jag">
+                            <i class="fa fa-3x  fa-wrench"></i>
+                            <div class="cloud-name">CustomUrl</div>
+                       </a>
                    </div>
                 </div>
             </div>
@@ -215,6 +221,14 @@ $zopim(function () {
 <script src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('js/custom/custom.js'))%>"></script>
 <script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('js/custom/validator.js'))%>"></script>
 
+<script>
+    var hasCustomURLSettingsAccess = "<%=hasCustomURLSettingsAccess%>";
+    $(document).ready(function() {
+        if (hasCustomURLSettingsAccess == "true") {
+            $("#customUrlBlock").css("display", "block");
+        }
+    });
+</script>
 
     <%
 }); %>

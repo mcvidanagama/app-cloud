@@ -80,6 +80,7 @@ var FILE_EXTENTION_ZIP = "zip";
 
 var PERMISSION_EXECUTE = "ui.execute";
 var LOGIN_PERMISSION = ".Login.Permission";
+var CUSTOM_URL_PERMISSION = "Custom.Url.Permission";
 var DOC_URL = "_doc_url";
 
 var CLOUD_TYPES_PROPERTIES_CONFIG = "/jagg/cloud-types-properties.json";

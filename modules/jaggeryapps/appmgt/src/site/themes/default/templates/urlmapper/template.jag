@@ -59,9 +59,6 @@ jagg.template("urlmapper", function (inputs, outputs, jagg) { %>
  <div class="row form-section">
  <form name="customUrlForm" id="customUrlForm" method="post" action="">
      <div class="col-md-5 forms">
-         <div class="from-group-margin">
-            <label><strong>IMPORTANT:</strong> Before giving the domain name here, go to your domain registrar's DNS panel and add a CNAME record pointing to default domain.</label>
-         </div>
          <div class="form-group" for="productionVersion" disabled="disabled">
              <label for="production-Version">Default Domain: </label>
              <input id="defaultVersion" type="text" class="form-control mygroup" name="defaultVersion" disabled style="cursor:text"/>
@@ -73,9 +70,15 @@ jagg.template("urlmapper", function (inputs, outputs, jagg) { %>
          </div>
 
          <div class="form-group">
-             <label>To set the custom URL for your application please click
-                <a onclick="configureCustomUrl()"> here</a>
-                , you will be redirected to the custom URL settings page shortly.</label>
+            <button type="button" class="cu-btn cu-btn-sm cu-btn-blue" onclick="configureCustomUrl()">
+              <span class="fw-stack fw-lg btn-action-ico">
+                  <i class="fw fw-circle-outline fw-stack-2x"></i>
+                  <i class="fw fw-add fw-stack-1x"></i>
+              </span>
+              <span id="configureButtonText">
+                  Configure custom url
+              </span>
+            </button>
          </div>
      </div>
  </form>
