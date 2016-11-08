@@ -62,7 +62,7 @@ jagg.template("settings", function (inputs, outputs, jagg) { %>
     </div>
     <div class="row">
             <div id="push"></div>
-            <div class="col-md-6 forms cloud-tab">
+            <div class="col-md-7 forms cloud-tab">
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs" role="tablist">
                         <li role="presentation" class="active"><a href="#default-version" aria-controls="default-version" role="tab" data-toggle="tab">Default Version</a></li>
@@ -123,13 +123,13 @@ jagg.template("settings", function (inputs, outputs, jagg) { %>
                                 <div class="radio">
                                   <label>
                                       <input type="radio" name="security-radio" id="security-public" class="custom-radio" value="public" checked="checked"/><span class="default-url">Public</span>
-                                      <p class="help-block">Endpoints are visible to the Internet via the URL <b>&lt;application_name&gt;.<%=publicURL%></b>. You can also access the public endpoints internally from WSO2 Cloud via the URL <b>&lt;application_name&gt;.<%=privateURL%></b>.</p>
+                                      <p class="help-block">Endpoints are visible to the Internet via the URL <b>&lt;organization&gt;-&lt;application&gt;.<%=publicURL%></b>. You can also access the public endpoints internally from WSO2 Cloud via the URL <b>&lt;organization&gt;-&lt;application&gt;.<%=privateURL%></b>.</p>
                                   </label>
                                 </div>
                                 <div class="radio">
                                   <label>
                                       <input type="radio" name="security-radio" id="security-private" class="custom-radio" value="private"/><span class="default-url">Private</span>
-                                          <p class="help-block">Endpoints are only visible internally from WSO2 Cloud via the URL <b>&lt;application_name&gt;.<%=privateURL%></b>.</p>
+                                          <p class="help-block">Endpoints are only visible internally from WSO2 Cloud via the URL <b>&lt;organization&gt;-&lt;application&gt;.<%=privateURL%></b>.</p>
                                       </label>
                                 </div>
                             </div>
