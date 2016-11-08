@@ -91,7 +91,7 @@ function copy_to_wso2esb() {
     cp -r $ARTIFACT_DIR/wso2esb/base/5.0.0/patches/ $DOCKER_DIR/wso2esb/base/5.0.0/
     cp $PACK_DIR/$WSO2ESB500_VERSION.zip $DOCKER_DIR/wso2esb/base/5.0.0/
 
-    cp $APPCLOUD_HOME/modules/extensions/org.wso2.appcloud.esb.integration/org.wso2.appcloud.esb.defaultapp/ContainerAPICompositeApplication/target/ContainerAPICompositeApplication_3.0.0-SNAPSHOT.car $DOCKER_DIR/wso2esb/base/5.0.0/carbonapps/
+    cp $APPCLOUD_HOME/modules/extensions/org.wso2.appcloud.esb.integration/org.wso2.appcloud.esb.endpointsapp/ContainerAPICompositeApplication/target/ContainerAPICompositeApplication_3.0.0-SNAPSHOT.car $DOCKER_DIR/wso2esb/base/5.0.0/carbonapps/
     cp $APPCLOUD_HOME/modules/extensions/org.wso2.appcloud.tenant.initializer/target/org.wso2.appcloud.tenant.initializer-3.0.0-SNAPSHOT.jar $DOCKER_DIR/wso2esb/base/5.0.0/dropins/
     cp $APPCLOUD_HOME/modules/extensions/org.wso2.appcloud.httpgetprocessor.extensions/target/org.wso2.appcloud.httpgetprocessor.extensions-3.0.0-SNAPSHOT.jar $DOCKER_DIR/wso2esb/base/5.0.0/lib/
     cp $APPCLOUD_HOME/modules/extensions/org.wso2.appcloud.esb.integration/org.wso2.appcloud.esb.fileupdater/target/org.wso2.appcloud.esb.fileupdater-3.0.0-SNAPSHOT.jar $DOCKER_DIR/wso2esb/base/5.0.0/dropins/
