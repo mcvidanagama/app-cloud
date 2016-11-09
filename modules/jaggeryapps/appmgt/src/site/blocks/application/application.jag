@@ -192,7 +192,7 @@ var log = new Log();
         // this is to enforce use only the local registry images to create apps via custom docker images
         var localRegistry = modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL);
         var localRegistry_infra = modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL_INFRA);
-        if (remoteImageUrl && remoteImageUrl.indexOf(localRegistry) == -1 && remoteImageUrl && remoteImageUrl.indexOf(localRegistry_infra) == -1) {
+        if (remoteImageUrl && remoteImageUrl.indexOf(localRegistry) == -1 && remoteImageUrl.indexOf(localRegistry_infra) == -1) {
             logMessage = "Bad request : Allowed Docker images only from local registry : " + localRegistry;
             log.warn(logMessage);
             response.status = 400;
