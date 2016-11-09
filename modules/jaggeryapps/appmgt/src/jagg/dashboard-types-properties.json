@@ -15,10 +15,10 @@
             "dashboardTypeUtil" : "new HttpMonitoringDashboardTypeUtil()"
         },
         {
-            "isAvailable" : "false",
+            "isAvailable" : "true",
             "title" : "ESB Analytics Dashboard",
             "runtimes" : ["9"],
-            "dashboardContext" : "/portal/dashboards/esb-analytics/",
+            "dashboardContext" : "/portal",
             "dashboardTypeUtil" : "new ESBAnalyticsDashboardTypeUtil()"
         }
     ]

@@ -80,5 +80,7 @@ HttpMonitoringDashboardTypeUtil.prototype.getQueryString = function () {
 };
 
 ESBAnalyticsDashboardTypeUtil.prototype.getQueryString = function () {
-    return "?";
+    var currentTime = new Date().getTime();
+    var prevTime = currentTime - 3600000;
+    return "/t/" + tenantDomain + "/dashboards/esb-analytics/?shared=true&timeFrom=" + prevTime + "&timeTo=" + currentTime;
 };

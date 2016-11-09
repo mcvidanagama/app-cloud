@@ -28,13 +28,14 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.appcloud.esb.integration</artifactId>
+    <artifactId>org.wso2.appcloud.esb.endpointsapp</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 AppCloud Extensions - ESB Integration</name>
+    <name>WSO2 AppCloud Extensions - ESB Endpoints App</name>
 
     <modules>
-        <module>org.wso2.appcloud.esb.endpointsapp</module>
-        <module>org.wso2.appcloud.esb.fileupdater</module>
+        <module>ContainerAPI</module>
+        <module>ContainerAPIRegistry</module>
+        <module>ContainerAPICompositeApplication</module>
     </modules>
 
 </project>
