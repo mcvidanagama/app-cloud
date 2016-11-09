@@ -33,7 +33,7 @@
     <name>WSO2 AppCloud Extensions - ESB Integration</name>
 
     <modules>
-        <module>org.wso2.appcloud.esb.defaultapp</module>
+        <module>org.wso2.appcloud.esb.endpointsapp</module>
         <module>org.wso2.appcloud.esb.fileupdater</module>
     </modules>
 

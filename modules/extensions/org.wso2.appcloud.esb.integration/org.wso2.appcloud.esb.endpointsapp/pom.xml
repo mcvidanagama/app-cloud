@@ -28,9 +28,9 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.appcloud.esb.defaultapp</artifactId>
+    <artifactId>org.wso2.appcloud.esb.endpointsapp</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 AppCloud Extensions - ESB Default App</name>
+    <name>WSO2 AppCloud Extensions - ESB Endpoints App</name>
 
     <modules>
         <module>ContainerAPI</module>
