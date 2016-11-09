@@ -25,6 +25,7 @@ jagg.template("settings", function (inputs, outputs, jagg) { %>
     var defaultVersion = application.defaultVersion;
     var versions = application.versions;
     var customUrl = application.customUrl;
+    var tenantDomain = outputs.tenantDomain;
 
     var versionString = "";
     for (var version in versions) {
@@ -43,6 +44,7 @@ jagg.template("settings", function (inputs, outputs, jagg) { %>
 <!-- start of setting global javascript variable values from jaggery side -->
 <script type="text/javascript" charset="utf-8">
     var applicationName = "<%=applicationName%>";
+    vat tenantDomain = "<%=tenantDomain%>"
 </script><!-- end of setting global javascript variable -->
 
 <div class="right-pane visible">
@@ -123,13 +125,13 @@ jagg.template("settings", function (inputs, outputs, jagg) { %>
                                 <div class="radio">
                                   <label>
                                       <input type="radio" name="security-radio" id="security-public" class="custom-radio" value="public" checked="checked"/><span class="default-url">Public</span>
-                                      <p class="help-block">Endpoints are visible to the Internet via the URL <b>&lt;organization&gt;-&lt;application&gt;.<%=publicURL%></b>. You can also access the public endpoints internally from WSO2 Cloud via the URL <b>&lt;organization&gt;-&lt;application&gt;.<%=privateURL%></b>.</p>
+                                      <p class="help-block">Endpoints are visible to the Internet via the URL <b>http://<%=tenantDomain.toLowerCase()%>-<%=applicationName.toLowerCase()%>.<%=publicURL%></b>. You can also access the public endpoints internally from WSO2 Cloud via the URL <b>http://<%=tenantDomain.toLowerCase()%>-<%=applicationName.toLowerCase()%>.<%=privateURL%></b>.</p>
                                   </label>
                                 </div>
                                 <div class="radio">
                                   <label>
                                       <input type="radio" name="security-radio" id="security-private" class="custom-radio" value="private"/><span class="default-url">Private</span>
-                                          <p class="help-block">Endpoints are only visible internally from WSO2 Cloud via the URL <b>&lt;organization&gt;-&lt;application&gt;.<%=privateURL%></b>.</p>
+                                          <p class="help-block">Endpoints are only visible internally from WSO2 Cloud via the URL <b>http://<%=tenantDomain.toLowerCase()%>-<%=applicationName.toLowerCase()%>.<%=privateURL%></b>.</p>
                                       </label>
                                 </div>
                             </div>
