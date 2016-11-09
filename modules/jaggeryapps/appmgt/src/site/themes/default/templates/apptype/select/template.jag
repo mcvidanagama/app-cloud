@@ -39,7 +39,7 @@ jagg.template("apptype/select", function(inputs, outputs, jagg) {
                 </span> <span class="hidden-xs">Request new <%=cloudSpecificApplicationRepresentation%> Type</span>
         </a>
     </div>
-    <div class="container-fluid app-type-listing"the>
+    <div class="container-fluid app-type-listing">
        <div class="row listing padding-bottom-xlg" data-count="<%=appTypes.length -1%>"> <!-- -1 was added because we hide the custom docker image app type -->
           <%
             if (appTypes.length > 0) {
