@@ -26,7 +26,6 @@ var mod = jagg.module("application");
 (function () {
     var action = request.getParameter("action");
     if (action == "updateCustomUrl") {
-        var pointedUrl = request.getParameter("pointedUrl");
         var customUrl = request.getParameter("customUrl");
         var applicationName = request.getParameter("applicationName");
 
@@ -55,13 +54,6 @@ var mod = jagg.module("application");
         }
     } else {
         throw new Error("No action specified");
-    }
-
-    function domainNameNotExistResponse() {
-        response.status = 400;
-        response.content = "CNAME record does not exist for this config : \"" +
-                customUrl + " CNAME " + pointedUrl + "\". Please publish a CNAME record first.";
-
     }
 }());
 
