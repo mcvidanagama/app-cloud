@@ -83,8 +83,8 @@ var addApplication = function (applicationName, versionName, applicationDescript
     var dockerClient = new DockerClient(modManager.getPropertyValue("DockerClientURL"));
     var runtimeProperties = generateRuntimePropsList(runtimePropertiesArray);
     var hostName = constructAppLaunchURL(applicationName, versionName);
-    applicationContext = applicationContext.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
     if (applicationContext != null) {
+	applicationContext = applicationContext.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
         var versionID = ApplicationManager.getVersionId(versionHashId);
         ApplicationManager.addApplicationContext(versionID, applicationContext);
     }
