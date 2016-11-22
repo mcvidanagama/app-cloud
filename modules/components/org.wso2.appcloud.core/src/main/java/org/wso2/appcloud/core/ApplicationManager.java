@@ -1450,4 +1450,17 @@ public class ApplicationManager {
             DBUtil.closeConnection(dbConnection);
         }
     }
+
+    public static boolean isCustomDomainAvailable(String customDomain) throws AppCloudException {
+        Connection dbConnection = DBUtil.getDBConnection();
+        try {
+            return ApplicationDAO.getInstance().isCustomDomainAvailable(dbConnection, customDomain);
+        } catch (AppCloudException e) {
+            String msg = "Error while checking if the custom domain exists for domain: " + customDomain + ".";
+            log.error(msg, e);
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeConnection(dbConnection);
+        }
+    }
 }

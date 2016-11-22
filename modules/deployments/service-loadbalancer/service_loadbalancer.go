@@ -150,6 +150,8 @@ var (
 	lbType = flags.String("load-balancer-type", "public", `define the lb is public/private`)
 
 	appTenantDomain = flags.String("tenantDomain", "", `Relevant tenant domain of the service`)
+
+	serverUrl = flags.String("server-url", "", `define the governance server URL`)
 )
 
 // service encapsulates a single backend entry in the load balancer config.
@@ -242,7 +244,7 @@ type loadBalancerConfig struct {
 	lbDefAlgorithm string `description:"custom default load balancer algorithm".`
 	lbType 	       string `json:"lbType" description:"Type of the load balancer public/private"`
 	CertificatesDir string `json:"certificatesDir" description:"directory path of where all PEM files for custom domains will be added"`
-	ServerUrl 	string `json:"serverUrl" description:"The server URL to access governance"`
+	serverUrl 	string `description:"The server URL to access governance"`
  }
 
 type staticPageHandler struct {
@@ -565,13 +567,14 @@ func (lbc *loadBalancerController) getServices() (httpSvc []service, httpsTermSv
 			if val, ok := serviceLabels(s.ObjectMeta.Labels).getCustomDomain(); ok {
 				newSvc.CustomDomain = val
 				if appName, ok := serviceLabels(s.ObjectMeta.Labels).getAppName(); ok {
+					// TODO: Handle certificate update
 					//If the SSL Pem file doesn't exists in the certificates directory query
 					//Governance REST api, obtain certs and add to certs directory
 					resourceFilePath := lbc.cfg.CertificatesDir + *appTenantDomain + hypenSeparator +
 						appName + pemFileExtension
 					if _, err := os.Stat(resourceFilePath);
 						os.IsNotExist(err) {
-						resourcePath := lbc.cfg.ServerUrl + registryPath + cloudType +
+						resourcePath := lbc.cfg.serverUrl + registryPath + cloudType +
 							*appTenantDomain + securityCertificates + appName +
 							forwardSlashSeparator
 						addSecurityCertificate(resourcePath, appName, lbc.cfg.CertificatesDir)
@@ -692,7 +695,7 @@ func newLoadBalancerController(cfg *loadBalancerConfig, kubeClient *unversioned.
 
 // parseCfg parses the given configuration file.
 // cmd line params take precedence over config directives.
-func parseCfg(configPath string, defLbAlgorithm string, sslCert string, sslCaCert string, lbType string) *loadBalancerConfig {
+func parseCfg(configPath string, defLbAlgorithm string, sslCert string, sslCaCert string, lbType string, serverUrl string) *loadBalancerConfig {
 	jsonBlob, err := ioutil.ReadFile(configPath)
 	if err != nil {
 		glog.Fatalf("Could not parse lb config: %v", err)
@@ -706,6 +709,7 @@ func parseCfg(configPath string, defLbAlgorithm string, sslCert string, sslCaCer
 	cfg.sslCaCert = sslCaCert
 	cfg.lbDefAlgorithm = defLbAlgorithm
 	cfg.lbType = lbType
+	cfg.serverUrl = serverUrl
 	glog.Infof("Creating new loadbalancer: %+v", cfg)
 	return &cfg
 }
@@ -773,7 +777,7 @@ func dryRun(lbc *loadBalancerController) {
 func main() {
 	clientConfig := kubectl_util.DefaultClientConfig(flags)
 	flags.Parse(os.Args)
-	cfg := parseCfg(*config, *lbDefAlgorithm, *sslCert, *sslCaCert, *lbType)
+	cfg := parseCfg(*config, *lbDefAlgorithm, *sslCert, *sslCaCert, *lbType, *serverUrl, )
 
 	var kubeClient *unversioned.Client
 	var err error

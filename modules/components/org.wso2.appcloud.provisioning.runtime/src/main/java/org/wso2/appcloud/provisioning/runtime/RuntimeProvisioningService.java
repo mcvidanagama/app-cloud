@@ -211,6 +211,6 @@ public interface RuntimeProvisioningService {
      * @param labelValue value of the label to be added
      * @throws RuntimeProvisioningException
      */
-    void updateDefaultVersionServicewithLabel(String serviceName, String labelKey, String labelValue)
+    void updateDefaultVersionServiceWithLabel(String serviceName, String labelKey, String labelValue)
             throws RuntimeProvisioningException;
 }

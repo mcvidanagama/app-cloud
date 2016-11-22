@@ -70,11 +70,11 @@ func getResourceContent(resourcePath string, fileName string, retryCount int) st
 	if response != nil {
 		defer response.Body.Close()
 		byteResponse, err := ioutil.ReadAll(response.Body);
-		stringResponse := string(byteResponse)
 		if err != nil {
 			glog.Info("ERROR: ")
 			glog.Errorln(err)
 		} else {
+			stringResponse := string(byteResponse)
 			return stringResponse
 		}
 	}

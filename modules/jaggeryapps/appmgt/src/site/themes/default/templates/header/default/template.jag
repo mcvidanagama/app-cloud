@@ -185,7 +185,7 @@ $zopim(function () {
                             <div class="cloud-name">Databases</div>
                         </a>
                        <a id="customUrlBlock" style="display: none;" class="cloud-block-invert" href="https://local.cloudmgt.wso2.com:9444/cloudmgt/site/pages/custom_url.jag?backUrl=https://apps.local.wso2.com:9543/appmgt/site/pages/index.jag">
-                            <i class="fa fa-3x  fa-wrench"></i>
+                            <i class="fa fa-3x  fa-link"></i>
                             <div class="cloud-name">CustomUrl</div>
                        </a>
                    </div>

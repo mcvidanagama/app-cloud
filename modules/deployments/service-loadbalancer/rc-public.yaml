@@ -53,4 +53,5 @@ spec:
         - --ssl-ca-cert=/etc/haproxy/ca.crt
         - --syslog=true
         - --load-balancer-type=public
+        - --server-url=https://172.16.2.152:9444/resource/1.0.0/artifact/_system/governance/
 
