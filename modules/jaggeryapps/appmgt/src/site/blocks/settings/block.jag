@@ -35,11 +35,13 @@ jagg.block("settings", {
         var cloudSpecificApplicationRepresentation = modManager.getCloudTypeProperties().cloudSpecificApplicationRepresentation;
         var privateURL = modManager.getPropertyValue("ApplicationLaunchBaseURL.Private");
         var publicURL = modManager.getPropertyValue("ApplicationLaunchBaseURL.Public");
+        var tenantDomain = modManager.getTenantDomain().replace(".","-");
         return {
             "application": application,
             "cloudSpecificApplicationRepresentation":cloudSpecificApplicationRepresentation,
             "privateURL":privateURL,
-            "publicURL":publicURL
+            "publicURL":publicURL,
+            "tenantDomain":tenantDomain
         };
     }
 

@@ -84,6 +84,7 @@ var addApplication = function (applicationName, versionName, applicationDescript
     var runtimeProperties = generateRuntimePropsList(runtimePropertiesArray);
     var hostName = constructAppLaunchURL(applicationName, versionName);
     if (applicationContext != null) {
+	applicationContext = applicationContext.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
         var versionID = ApplicationManager.getVersionId(versionHashId);
         ApplicationManager.addApplicationContext(versionID, applicationContext);
     }
@@ -339,6 +340,9 @@ var createAppInDataBase = function(applicationName, versionName, applicationDesc
         }
         application.setApplicationName(applicationName);
         application.setHashId(applicationHashId);
+        if (applicationDescription != null) {
+            applicationDescription = applicationDescription.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+        }
         application.setDescription(applicationDescription);
         application.setApplicationType(appTypeName);
         application.setCloudType(jagg.getSelectedCloud());
