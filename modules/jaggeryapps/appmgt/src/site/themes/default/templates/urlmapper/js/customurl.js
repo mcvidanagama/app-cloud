@@ -43,8 +43,8 @@ function configureCustomUrl() {
     if (customURL != "null") {
         customURLParamater = "&customUrl=" + stripedUrl(customURL);
     }
-    window.location = customUrlSettingsPageUrl + "&appName=" + applicationName + "&defaultDomain=" + pointedUrl +
-        customURLParamater + "&backUrl=" + window.location.href;
+    window.location = customUrlSettingsPageUrl + "?cloud-type=app-cloud&appName=" + applicationName + "&defaultDomain="
+        + pointedUrl + customURLParamater + "&backUrl=" + window.location.href;
 }
 
 
