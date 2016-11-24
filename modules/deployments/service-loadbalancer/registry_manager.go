@@ -35,19 +35,20 @@ const (
 	keyFileExtension = ".key"
 	pubFileExtension = ".pub"
 	authorizationHeader = "Authorization"
-	authorizationHeaderValue = "Basic YWRtaW46YWRtaW4="
+	authorizationHeaderType = "Basic "
 	hypenSeparator = "-"
 	getHTTPMethod = "GET"
 	forwardSlashSeparator = "/"
+	applicationLaunchBaseUrl = ".wso2apps.com"
 )
 
-func getResource(resource string, retryCount int) *http.Response {
+func getResource(resource string, retryCount int, authorizationHeaderValue string) *http.Response {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
 	client := &http.Client{Transport: tr}
 	request, _ := http.NewRequest(getHTTPMethod, resource, nil)
-	request.Header.Set(authorizationHeader, authorizationHeaderValue)
+	request.Header.Set(authorizationHeader, authorizationHeaderType + authorizationHeaderValue)
 	response, err := client.Do(request)
 	if err != nil {
 		glog.Info("ERROR: ")
@@ -55,7 +56,7 @@ func getResource(resource string, retryCount int) *http.Response {
 	} else {
 		if response.StatusCode != 200 && retryCount < maxRetryCount {
 			retryCount++
-			response = getResource(resource, retryCount)
+			response = getResource(resource, retryCount, authorizationHeaderValue)
 			if retryCount == maxRetryCount {
 				glog.Infof("INFO: Unable to get resource " + resource)
 				return nil
@@ -65,8 +66,8 @@ func getResource(resource string, retryCount int) *http.Response {
 	return response
 }
 
-func getResourceContent(resourcePath string, fileName string, retryCount int) string {
-	response := getResource(resourcePath + fileName, retryCount)
+func getResourceContent(resourcePath string, fileName string, retryCount int, authorizationHeaderValue string) string {
+	response := getResource(resourcePath + fileName, retryCount, authorizationHeaderValue)
 	if response != nil {
 		defer response.Body.Close()
 		byteResponse, err := ioutil.ReadAll(response.Body);
@@ -102,15 +103,15 @@ func createSSLPemFile(certString string, keyString string, chainString string, f
 	createFile(buffer.String(), filePath);
 }
 
-func addSecurityCertificate(resourcePath string, appName string, certificatesDir string) {
+func addSecurityCertificate(resourcePath string, appName string, certificatesDir string, authorizationHeaderValue string) {
 	certFile := *appTenantDomain + hypenSeparator + appName + pemFileExtension
 	keyFile := *appTenantDomain + hypenSeparator + appName + keyFileExtension
 	chainFile := *appTenantDomain + hypenSeparator + appName + pubFileExtension
 
 	retryCount := 0
-	certString := getResourceContent(resourcePath, certFile, retryCount)
-	keyString := getResourceContent(resourcePath, keyFile, retryCount)
-	chainString := getResourceContent(resourcePath, chainFile, retryCount)
+	certString := getResourceContent(resourcePath, certFile, retryCount, authorizationHeaderValue)
+	keyString := getResourceContent(resourcePath, keyFile, retryCount, authorizationHeaderValue)
+	chainString := getResourceContent(resourcePath, chainFile, retryCount, authorizationHeaderValue)
 
 	if certString != "" && keyString != "" && chainString != "" {
 		filePath := certificatesDir + *appTenantDomain + hypenSeparator + appName + pemFileExtension
