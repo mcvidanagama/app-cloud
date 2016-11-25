@@ -5,6 +5,6 @@
     <property name="transports">all</property>
     <property name="basicAuthEnabled">true</property>
 </from>
-<mapping customMapping="disable" type="xml"/>
-<to streamName="container_log_analyzer_stream" version="1.0.0"/>
+<mapping customMapping="disable" type="json"/>
+<to streamName="org.wso2.appcloud.container.log.stream" version="1.0.0"/>
 </eventReceiver>
