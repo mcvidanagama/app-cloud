@@ -2448,6 +2448,14 @@ public class ApplicationDAO {
         }
     }
 
+    /**
+     * Method to check if the custom domain is available
+     *
+     * @param dbConnection database connection
+     * @param customDomain  custom domain
+     * @return if the custom domain is available or not
+     * @throws AppCloudException
+     */
     public boolean isCustomDomainAvailable(Connection dbConnection, String customDomain) throws AppCloudException {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;

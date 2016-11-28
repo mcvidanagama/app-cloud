@@ -39,5 +39,6 @@ ADD README.md README.md
 RUN mkdir -p /srv/certs
 # Add cert for domain (*.wso2apps.com)
 ADD ssl.pem /srv/certs
+ADD ca.crt /etc/haproxy/ca.crt
 
 RUN touch /var/run/haproxy.pid

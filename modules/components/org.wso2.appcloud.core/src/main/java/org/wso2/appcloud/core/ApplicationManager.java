@@ -1451,6 +1451,13 @@ public class ApplicationManager {
         }
     }
 
+    /**
+     * Method to check if the custom domain is available
+     *
+     * @param customDomain custom domain
+     * @return if the custom domain is available or not
+     * @throws AppCloudException
+     */
     public static boolean isCustomDomainAvailable(String customDomain) throws AppCloudException {
         Connection dbConnection = DBUtil.getDBConnection();
         try {
