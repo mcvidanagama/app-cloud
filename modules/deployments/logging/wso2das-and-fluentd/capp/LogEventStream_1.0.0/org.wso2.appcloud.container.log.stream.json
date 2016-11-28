@@ -1,4 +1,5 @@
 {
+  "streamId": "org.wso2.appcloud.container.log.stream:1.0.0",
   "name": "org.wso2.appcloud.container.log.stream",
   "version": "1.0.0",
   "nickName": "",
