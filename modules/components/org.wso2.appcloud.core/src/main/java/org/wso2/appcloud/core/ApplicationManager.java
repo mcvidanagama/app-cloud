@@ -1450,4 +1450,26 @@ public class ApplicationManager {
             DBUtil.closeConnection(dbConnection);
         }
     }
+
+    /**
+     * Method to check if the custom domain is available
+     *
+     * @param customDomain custom domain
+     * @return if the custom domain is available or not
+     * @throws AppCloudException
+     */
+    public static boolean isCustomDomainAvailable(String customDomain) throws AppCloudException {
+        Connection dbConnection = DBUtil.getDBConnection();
+        int tenantId = CarbonContext.getThreadLocalCarbonContext().getTenantId();
+        try {
+            return ApplicationDAO.getInstance().isCustomDomainAvailable(dbConnection, customDomain, tenantId);
+        } catch (AppCloudException e) {
+            String msg = "Error while checking if the custom domain exists for domain: " + customDomain +
+                    " for tenant with tenant id: " + tenantId + ".";
+            log.error(msg, e);
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeConnection(dbConnection);
+        }
+    }
 }

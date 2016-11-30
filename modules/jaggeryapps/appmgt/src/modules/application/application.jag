@@ -1579,13 +1579,26 @@ var getRunningApplicationVersionCount = function(){
 };
 
 var addCustomDomain = function (applicationName, customDomain) {
-    var defaultVersion = getDefaultVersion(applicationName);
-    deleteService(applicationName, defaultVersion);
-    createServiceWithHostName(applicationName, defaultVersion, customDomain, true);
     var tenantId = modManager.getTenantId(true);
     var applicationHashId = Util.getApplicationHashId(applicationName, tenantId);
+    var kubernetesRuntimeProvisioningService = getKubernetesRuntime(applicationName, applicationHashId, tenantId);
+    kubernetesRuntimeProvisioningService.
+        updateKubernetesServiceWithLabel(HTTP_SERVICE_PREFIX + applicationHashId, "customDomain", customDomain);
+    kubernetesRuntimeProvisioningService.
+        updateKubernetesServiceWithLabel(HTTPS_SERVICE_PREFIX + applicationHashId, "customDomain", customDomain);
     ApplicationManager.updateCustomDomain(applicationHashId, customDomain);
 };
+
+var getKubernetesRuntime = function(applicationName, applicationHashId, tenantId) {
+    var tenantDomain = modManager.getTenantDomain(true);
+    var appType = getApplication(applicationHashId).applicationType;
+    var versionName = getDefaultVersion(applicationName);
+    var versionHashId = getVersionHashId(applicationName, versionName);
+    var exposureLevel = getExposureLevel(applicationName, versionName);
+    var applicationCtx = KubernetesProvisioningUtils.getApplicationContext(
+            applicationName, versionName, appType, tenantId, tenantDomain, versionHashId, exposureLevel);
+    return new KubernetesRuntime(applicationCtx);
+}
 
 var getContainerServiceProxies = function (versionHashId) {
     var containerServiceProxy;
@@ -1614,37 +1627,28 @@ var getDefaultVersion = function (applicationName) {
 var redeployMappedDomain = function (applicationName, versionName) {
     var tenantId = modManager.getTenantId(true);
     var applicationHashId = Util.getApplicationHashId(applicationName, tenantId);
-    var versionHashId = getVersionHashId(applicationName, versionName);
-
+    deleteService(applicationName, versionName);
+    setDefaultDomain(applicationName, versionName, applicationHashId);
     if (isCustomDomainExist(applicationName)) {
-        deleteService(applicationName, versionName);
-        setCustomDomain(applicationName, versionName, versionHashId, applicationHashId);
-    } else {
-        deleteService(applicationName, versionName);
-        setDefaultDomain(applicationName, versionName, applicationHashId);
+        setCustomDomain(applicationName);
     }
 }
 
 var changeMappedDomain = function (applicationName, versionName) {
     var tenantId = modManager.getTenantId();
     var applicationHashId = Util.getApplicationHashId(applicationName, tenantId);
-    var versionHashId = getVersionHashId(applicationName, versionName);
-
+    deleteService(applicationName, versionName);
+    setDefaultDomain(applicationName, versionName, applicationHashId);
+    ApplicationManager.updateDefaultVersion(applicationHashId, versionName);
     if (isCustomDomainExist(applicationName)) {
-        deleteService(applicationName, versionName);
-        setCustomDomain(applicationName, versionName, versionHashId, applicationHashId);
-        ApplicationManager.updateDefaultVersion(applicationHashId, versionName);
-    } else {
-        deleteService(applicationName, versionName);
-        setDefaultDomain(applicationName, versionName, applicationHashId);
-        ApplicationManager.updateDefaultVersion(applicationHashId, versionName);
+        setCustomDomain(applicationName);
     }
     return applicationHashId;
 };
 
-var setCustomDomain = function (applicationName, versionName) {
+var setCustomDomain = function (applicationName) {
     var hostName = getCustomDomain(applicationName);
-    createServiceWithHostName(applicationName, versionName, hostName, true);
+    addCustomDomain(applicationName, hostName);
 };
 
 var setDefaultDomain = function (applicationName, versionName) {
@@ -1730,11 +1734,6 @@ var constructDefaultAppLaunchURL = function (applicationName, versionName) {
         log.debug("Default Application Launch URL: " + appLaunchURL);
     }
     return appLaunchURL;
-};
-
-var verifyCustomUrl = function (pointedUrl, customUrl) {
-    var domainMappingManager = Packages.org.wso2.appcloud.core.DomainMappingManager();
-    return domainMappingManager.verifyCustomUrlByCname(pointedUrl, customUrl);
 };
 
 var isAplicationVersionExist = function (versionHashId) {
@@ -1908,5 +1907,9 @@ var getCustomDomainDetailsForTenant = function() {
         customDomainDetails.push(customDomainDetail);
     }
     return customDomainDetails;
+}
+
+var isCustomDomainAvailable = function (customDomain) {
+    return ApplicationManager.isCustomDomainAvailable(customDomain);
 }
 %>

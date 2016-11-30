@@ -27,6 +27,8 @@ jagg.template("leftMenu", function (inputs, outputs, jagg) {
     var pageName = outputs.pageName;
     var cloudTitle = outputs.cloudTitle;
     var cloudIcon = outputs.cloudIcon;
+    var managerModule = jagg.module("manager");
+    var hasCustomURLSettingsAccess = managerModule.hasCustomURLSettingsAccess();
 
     // converting application name to camel case ; to display in breadcumb
     var camelizedAppName = applicationName.split(' ').map(function(item){
@@ -72,7 +74,7 @@ jagg.template("leftMenu", function (inputs, outputs, jagg) {
                 <a href="/appmgt/site/pages/runtimeLogs.jag?applicationKey=<%=applicationKey%>&selectedRevision=<%=selectedRevision%>&versionKey=<%=versionKey%>">
                 <i class="left-menu-icon fw fw-hdd"></i>Logs</a>
         </li>
-        <li class="<% if (pageName == "Custom URL") { %>selected<%}%>">
+        <li id="customUrlPage" style="display: none" class="<% if (pageName == "Custom URL") { %>selected<%}%>">
                 <a href="/appmgt/site/pages/customurl.jag?applicationKey=<%=applicationKey%>&selectedRevision=<%=selectedRevision%>">
                 <i class="left-menu-icon fw fw-uri"></i>Custom URL</a>
         </li>
@@ -84,5 +86,13 @@ jagg.template("leftMenu", function (inputs, outputs, jagg) {
     </ul>
  </div>
 
+<script>
+    var hasCustomURLSettingsAccess = "<%=hasCustomURLSettingsAccess%>";
+    $(document).ready(function() {
+        if (hasCustomURLSettingsAccess == "true") {
+            $("#customUrlPage").css("display", "block");
+        }
+    });
+</script>
 <%
 }); %>

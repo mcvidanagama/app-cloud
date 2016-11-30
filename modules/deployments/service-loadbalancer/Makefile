@@ -7,7 +7,7 @@ PREFIX = registry.182.docker.appfactory.private.wso2.com:5000/haproxy-dev
 HAPROXY_IMAGE = haproxy-dev
 
 server: service_loadbalancer.go
-	CGO_ENABLED=0 GOOS=linux godep go build -a -installsuffix cgo -ldflags '-w' -o service_loadbalancer ./service_loadbalancer.go ./loadbalancer_log.go
+	CGO_ENABLED=0 GOOS=linux godep go build -a -installsuffix cgo -ldflags '-w' -o service_loadbalancer ./registry_manager.go ./service_loadbalancer.go ./loadbalancer_log.go
 
 container: server
 	docker build -t $(PREFIX):$(TAG) .

@@ -2447,4 +2447,36 @@ public class ApplicationDAO {
             DBUtil.closePreparedStatement(preparedStatement);
         }
     }
+
+    /**
+     * Method to check if the custom domain is available
+     *
+     * @param dbConnection database connection
+     * @param customDomain  custom domain
+     * @param tenantId tenant Id
+     * @return if the custom domain is available or not
+     * @throws AppCloudException
+     */
+    public boolean isCustomDomainAvailable(Connection dbConnection, String customDomain, int tenantId)
+            throws AppCloudException {
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            preparedStatement = dbConnection.prepareStatement(SQLQueryConstants.IS_CUSTOM_DOMAIN_AVAILABLE);
+            preparedStatement.setString(1, customDomain);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (SQLException e) {
+            String msg = "Error while checking if custom domain exists for domain: " + customDomain +
+                    " for tenant with tenant id: " + tenantId + ".";
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeResultSet(resultSet);
+            DBUtil.closePreparedStatement(preparedStatement);
+        }
+    }
 }

@@ -190,10 +190,6 @@ jagg.module("application", {
         return jagg.require(jagg.getModulesDir() + "application/application.jag").getRunningApplicationVersionCount.apply(this, arguments);
     },
 
-    verifyCustomUrl: function () {
-        return jagg.require(jagg.getModulesDir() + "application/application.jag").verifyCustomUrl.apply(this, arguments);
-    },
-
     addCustomDomain: function () {
         return jagg.require(jagg.getModulesDir() + "application/application.jag").addCustomDomain.apply(this, arguments);
     },
@@ -291,6 +287,9 @@ jagg.module("application", {
     },
     getCustomDomainDetailsForTenant:function () {
         return jagg.require(jagg.getModulesDir() + "application/application.jag").getCustomDomainDetailsForTenant.apply(this, arguments);
+    },
+    isCustomDomainAvailable:function () {
+        return jagg.require(jagg.getModulesDir() + "application/application.jag").isCustomDomainAvailable.apply(this, arguments);
     }
 });
 %>

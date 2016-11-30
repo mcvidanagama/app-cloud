@@ -719,7 +719,7 @@ var log = new Log();
             var customDomainDetailList = applicationModule.getCustomDomainDetailsForTenant();
             print(customDomainDetailList);
         } catch (e) {
-            var msg = "Error while getting custom domain details for tenant: " + tenantDomain;
+            var msg = "Error while getting custom domain details for tenant domain: " + modManager.getTenantDomain();
             log.error(msg);
             log.error(e);
             response.status = 500;

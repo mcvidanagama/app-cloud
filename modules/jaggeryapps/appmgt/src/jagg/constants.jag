@@ -47,6 +47,7 @@ var GOOGLE_ANALYTICS_ENABLED = "Google.Analytics.Enabled";
 var GOOGLE_TRACKING_ID = "Google.Tracking.Id";
 var ZOPIM_CHAT_ID = "Zopim.Chat.Id";
 var FILE_UPLOAD_TIMEOUT = "File.Upload.Timeout";
+var CUSTOM_URL_SETTINGS_PAGE_URL = "CustomUrlSettingsPage.Url";
 
 //events related constants
 var DATABASE_ADD = "Adding application to database";
@@ -80,6 +81,7 @@ var FILE_EXTENTION_ZIP = "zip";
 
 var PERMISSION_EXECUTE = "ui.execute";
 var LOGIN_PERMISSION = ".Login.Permission";
+var CUSTOM_URL_PERMISSION = "Custom.Url.Permission";
 var DOC_URL = "_doc_url";
 
 var CLOUD_TYPES_PROPERTIES_CONFIG = "/jagg/cloud-types-properties.json";
@@ -102,4 +104,8 @@ var AUTHORIZATION_HEADER_TYPE = "Bearer";
 var SIGNED_JWT_AUTH_USERNAME = "Username";
 var SUPER_TENANT_ID = -1234;
 var DEFAULT_LOGIN_PERMISSION = "default.Login.Permission";
+
+//Service Prefixes
+var HTTP_SERVICE_PREFIX = "htp-";
+var HTTPS_SERVICE_PREFIX = "hts-";
 %>
