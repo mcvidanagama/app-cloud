@@ -2453,10 +2453,12 @@ public class ApplicationDAO {
      *
      * @param dbConnection database connection
      * @param customDomain  custom domain
+     * @param tenantId tenant Id
      * @return if the custom domain is available or not
      * @throws AppCloudException
      */
-    public boolean isCustomDomainAvailable(Connection dbConnection, String customDomain) throws AppCloudException {
+    public boolean isCustomDomainAvailable(Connection dbConnection, String customDomain, int tenantId)
+            throws AppCloudException {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
@@ -2469,7 +2471,8 @@ public class ApplicationDAO {
                 return true;
             }
         } catch (SQLException e) {
-            String msg = "Error while checking if custom domain exists for domain: " + customDomain + ".";
+            String msg = "Error while checking if custom domain exists for domain: " + customDomain +
+                    " for tenant with tenant id: " + tenantId + ".";
             throw new AppCloudException(msg, e);
         } finally {
             DBUtil.closeResultSet(resultSet);

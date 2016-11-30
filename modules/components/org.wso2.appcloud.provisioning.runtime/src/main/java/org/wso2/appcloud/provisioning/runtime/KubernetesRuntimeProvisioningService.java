@@ -1062,7 +1062,7 @@ public class KubernetesRuntimeProvisioningService implements RuntimeProvisioning
     }
 
     @Override
-    public void updateDefaultVersionServiceWithLabel(String serviceName, String labelKey, String labelValue)
+    public void updateKubernetesServiceWithLabel(String serviceName, String labelKey, String labelValue)
             throws RuntimeProvisioningException {
         String namespace = this.namespace.getMetadata().getName();
         try {

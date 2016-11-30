@@ -57,7 +57,7 @@ var mod = jagg.module("application");
         try {
             print(mod.isCustomDomainAvailable(customDomain));
         } catch (e) {
-            var message = "Error while checking if the custom domain exists for domain : " + customDomain;
+            var message = "Error while checking if the custom domain " + customDomain + " exists.";
             log.error(message);
             log.error(e);
             response.status = 500;

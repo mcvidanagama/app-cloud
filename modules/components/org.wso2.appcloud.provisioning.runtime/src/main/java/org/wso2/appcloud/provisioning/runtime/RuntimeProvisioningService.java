@@ -211,6 +211,6 @@ public interface RuntimeProvisioningService {
      * @param labelValue value of the label to be added
      * @throws RuntimeProvisioningException
      */
-    void updateDefaultVersionServiceWithLabel(String serviceName, String labelKey, String labelValue)
+    void updateKubernetesServiceWithLabel(String serviceName, String labelKey, String labelValue)
             throws RuntimeProvisioningException;
 }

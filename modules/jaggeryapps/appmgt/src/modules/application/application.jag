@@ -1583,9 +1583,9 @@ var addCustomDomain = function (applicationName, customDomain) {
     var applicationHashId = Util.getApplicationHashId(applicationName, tenantId);
     var kubernetesRuntimeProvisioningService = getKubernetesRuntime(applicationName, applicationHashId, tenantId);
     kubernetesRuntimeProvisioningService.
-        updateDefaultVersionServiceWithLabel(HTTP_SERVICE_PREFIX + applicationHashId, "customDomain", customDomain);
+        updateKubernetesServiceWithLabel(HTTP_SERVICE_PREFIX + applicationHashId, "customDomain", customDomain);
     kubernetesRuntimeProvisioningService.
-        updateDefaultVersionServiceWithLabel(HTTPS_SERVICE_PREFIX + applicationHashId, "customDomain", customDomain);
+        updateKubernetesServiceWithLabel(HTTPS_SERVICE_PREFIX + applicationHashId, "customDomain", customDomain);
     ApplicationManager.updateCustomDomain(applicationHashId, customDomain);
 };
 
