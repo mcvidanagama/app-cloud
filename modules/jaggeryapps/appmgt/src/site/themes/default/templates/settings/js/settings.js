@@ -55,7 +55,7 @@ $("#update-exposure-level").click(function () {
         versionName: versionName,
         exposureLevel: $("input:radio[name='security-radio']:checked").val()
     },function exposureLevelUpdatedSuccess(result) {
-        jagg.message({content: "Exposure level is successfully updated.", type: 'success', id: 'view_log'});
+        jagg.message({content: "Application privacy settings successfully updated", type: 'success', id: 'view_log'});
 
     },function (jqXHR, textStatus, errorThrown) {
         jagg.message({content: jqXHR.responseText, type: 'error', id: 'view_log'});
