@@ -69,6 +69,10 @@ else
 	fi
 fi
 
+if [[ $JFR_FLAG && ${JFR_FLAG-_} && $JFR_FLAG == "true" ]]; then
+    export JAVA_OPTS=$JAVA_OPTS" -XX:+UnlockCommercialFeatures -XX:+FlightRecorder -XX:StartFlightRecording=delay=20s,duration=60s,name=jfr_recording,filename=/home/wso2user/jfr_recording.jfr,settings=profile"
+fi
+
 if [[ $TAIL_LOG && ${TAIL_LOG-_} && $TAIL_LOG == "true" ]]; then
     $TOMCAT_HOME_DIR/bin/catalina.sh start
     #tail process will run in foreground
