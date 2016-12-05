@@ -154,6 +154,8 @@ var (
 	serverUrl = flags.String("server-url", "", `define the governance server URL`)
 
 	authorizationHeaderValue = flags.String("authorization-header-value", "", `define the login credentials in Base64 encoding`)
+
+	encodedKey = flags.String("encoded-key", "", `the private key that was used to encrypt the data, encoded in base64 utf-8 format`)
 )
 
 // service encapsulates a single backend entry in the load balancer config.
@@ -248,6 +250,7 @@ type loadBalancerConfig struct {
 	CertificatesDir string `json:"certificatesDir" description:"directory path of where all PEM files for custom domains will be added"`
 	serverUrl 	string `description:"The server URL to access governance"`
 	authorizationHeaderValue string `description:"The login credentials for governance"`
+	encodedKey string `description:"The private key used for encryption"`
  }
 
 type staticPageHandler struct {
@@ -582,7 +585,7 @@ func (lbc *loadBalancerController) getServices() (httpSvc []service, httpsTermSv
 								*appTenantDomain + securityCertificates + appName +
 								forwardSlashSeparator
 							addSecurityCertificate(resourcePath, appName, lbc.cfg.CertificatesDir,
-								lbc.cfg.authorizationHeaderValue)
+								lbc.cfg.authorizationHeaderValue, lbc.cfg.encodedKey)
 						}
 					}
 				}
@@ -702,7 +705,7 @@ func newLoadBalancerController(cfg *loadBalancerConfig, kubeClient *unversioned.
 // parseCfg parses the given configuration file.
 // cmd line params take precedence over config directives.
 func parseCfg(configPath string, defLbAlgorithm string, sslCert string, sslCaCert string, lbType string,
-						serverUrl string, authorizationHeaderValue string) *loadBalancerConfig {
+			serverUrl string, authorizationHeaderValue string, encodedKey string) *loadBalancerConfig {
 	jsonBlob, err := ioutil.ReadFile(configPath)
 	if err != nil {
 		glog.Fatalf("Could not parse lb config: %v", err)
@@ -718,6 +721,7 @@ func parseCfg(configPath string, defLbAlgorithm string, sslCert string, sslCaCer
 	cfg.lbType = lbType
 	cfg.serverUrl = serverUrl
 	cfg.authorizationHeaderValue = authorizationHeaderValue
+	cfg.encodedKey = encodedKey
 	glog.Infof("Creating new loadbalancer: %+v", cfg)
 	return &cfg
 }
@@ -785,7 +789,8 @@ func dryRun(lbc *loadBalancerController) {
 func main() {
 	clientConfig := kubectl_util.DefaultClientConfig(flags)
 	flags.Parse(os.Args)
-	cfg := parseCfg(*config, *lbDefAlgorithm, *sslCert, *sslCaCert, *lbType, *serverUrl, *authorizationHeaderValue)
+	cfg := parseCfg(*config, *lbDefAlgorithm, *sslCert, *sslCaCert, *lbType, *serverUrl, *authorizationHeaderValue,
+		*encodedKey)
 
 	var kubeClient *unversioned.Client
 	var err error

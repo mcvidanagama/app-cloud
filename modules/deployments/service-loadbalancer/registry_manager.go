@@ -24,6 +24,9 @@ import (
 	"github.com/golang/glog"
 	"bytes"
 	"io/ioutil"
+	b64 "encoding/base64"
+	"crypto/aes"
+	"crypto/cipher"
 )
 
 const (
@@ -34,6 +37,7 @@ const (
 	pemFileExtension = ".pem"
 	keyFileExtension = ".key"
 	pubFileExtension = ".pub"
+	ivFileExtension = ".iv"
 	authorizationHeader = "Authorization"
 	authorizationHeaderType = "Basic "
 	hypenSeparator = "-"
@@ -103,18 +107,78 @@ func createSSLPemFile(certString string, keyString string, chainString string, f
 	createFile(buffer.String(), filePath);
 }
 
-func addSecurityCertificate(resourcePath string, appName string, certificatesDir string, authorizationHeaderValue string) {
-	certFile := *appTenantDomain + hypenSeparator + appName + pemFileExtension
-	keyFile := *appTenantDomain + hypenSeparator + appName + keyFileExtension
-	chainFile := *appTenantDomain + hypenSeparator + appName + pubFileExtension
+func addSecurityCertificate(resourcePath string, appName string, certificatesDir string,
+								authorizationHeaderValue string, encodedKey string) {
+	key, err := b64.StdEncoding.DecodeString(encodedKey)
+	if err != nil {
+		glog.Warningf("Error while decoding private key: %v", err)
+	} else {
+		retryCount := 0
+		certFile := *appTenantDomain + hypenSeparator + appName + pemFileExtension
+		keyFile := *appTenantDomain + hypenSeparator + appName + keyFileExtension
+		chainFile := *appTenantDomain + hypenSeparator + appName + pubFileExtension
+		ivFile := *appTenantDomain + hypenSeparator + appName + ivFileExtension
 
-	retryCount := 0
-	certString := getResourceContent(resourcePath, certFile, retryCount, authorizationHeaderValue)
-	keyString := getResourceContent(resourcePath, keyFile, retryCount, authorizationHeaderValue)
-	chainString := getResourceContent(resourcePath, chainFile, retryCount, authorizationHeaderValue)
+		ivString := getResourceContent(resourcePath, ivFile, retryCount, authorizationHeaderValue)
+		iv, err :=  b64.StdEncoding.DecodeString(ivString)
+		if err != nil {
+			glog.Warningf("Error while decoding initialization vector: %v", err)
+		} else {
+			//Create new AES Cipher
+			block, err := aes.NewCipher(key)
+			if err != nil {
+				glog.Warningf("Error while creating new AES cipher: %v", err)
+			} else {
+				//Decrypt certificate content
+				encryptedCertString := getResourceContent(resourcePath, certFile, retryCount, authorizationHeaderValue)
+				certString := decryptResourceContent(encryptedCertString, block, iv)
 
-	if certString != "" && keyString != "" && chainString != "" {
-		filePath := certificatesDir + *appTenantDomain + hypenSeparator + appName + pemFileExtension
-		createSSLPemFile(certString, keyString, chainString, filePath)
+				//Decrypt key content
+				encryptedKeyString := getResourceContent(resourcePath, keyFile, retryCount, authorizationHeaderValue)
+				keyString := decryptResourceContent(encryptedKeyString, block, iv)
+
+				//Decrypt chain content
+				encryptedChainString := getResourceContent(resourcePath, chainFile, retryCount, authorizationHeaderValue)
+				chainString := decryptResourceContent(encryptedChainString, block, iv)
+
+				if certString != "" && keyString != "" && chainString != "" {
+					filePath := certificatesDir + *appTenantDomain + hypenSeparator + appName + pemFileExtension
+					createSSLPemFile(certString, keyString, chainString, filePath)
+				}
+			}
+		}
 	}
+}
+
+func decryptResourceContent(content string, block cipher.Block, iv []byte) string {
+	if content != "" {
+		//Decode resource content
+		cipherText,err := b64.StdEncoding.DecodeString(content)
+		if err != nil {
+			glog.Warningf("Error while decoding resource content: %v", err)
+			return ""
+		} else {
+			//Create new CBC Decrypter
+			decrypter := cipher.NewCBCDecrypter(block, iv)
+
+			if len(cipherText) < aes.BlockSize {
+				panic("ciphertext too short")
+			}
+			if len(cipherText)%aes.BlockSize != 0 {
+				panic("ciphertext is not a multiple of the block size")
+			}
+
+			//Decrypt Content
+			decrypter.CryptBlocks(cipherText, cipherText)
+			return string(PKCS5UnPadding(cipherText))
+		}
+	} else {
+		return ""
+	}
+}
+
+func PKCS5UnPadding(src []byte) []byte {
+	length := len(src)
+	unpadding := int(src[length-1])
+	return src[:(length - unpadding)]
 }
