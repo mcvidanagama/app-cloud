@@ -18,31 +18,31 @@
 package main
 
 import (
-	"net/http"
-	"crypto/tls"
-	"os"
-	"github.com/golang/glog"
 	"bytes"
-	"io/ioutil"
-	b64 "encoding/base64"
 	"crypto/aes"
 	"crypto/cipher"
+	"crypto/tls"
+	b64 "encoding/base64"
+	"github.com/golang/glog"
+	"io/ioutil"
+	"net/http"
+	"os"
 )
 
 const (
-	registryPath = "customurl/"
-	cloudType = "app-cloud/"
-	securityCertificates = "/securityCertificates/"
-	maxRetryCount = 3
-	pemFileExtension = ".pem"
-	keyFileExtension = ".key"
-	pubFileExtension = ".pub"
-	ivFileExtension = ".iv"
-	authorizationHeader = "Authorization"
-	authorizationHeaderType = "Basic "
-	hypenSeparator = "-"
-	getHTTPMethod = "GET"
-	forwardSlashSeparator = "/"
+	registryPath             = "customurl/"
+	cloudType                = "app-cloud/"
+	securityCertificates     = "/securityCertificates/"
+	maxRetryCount            = 3
+	pemFileExtension         = ".pem"
+	keyFileExtension         = ".key"
+	pubFileExtension         = ".pub"
+	ivFileExtension          = ".iv"
+	authorizationHeader      = "Authorization"
+	authorizationHeaderType  = "Basic "
+	hypenSeparator           = "-"
+	getHTTPMethod            = "GET"
+	forwardSlashSeparator    = "/"
 	applicationLaunchBaseUrl = ".wso2apps.com"
 )
 
@@ -52,7 +52,7 @@ func getResource(resource string, retryCount int, authorizationHeaderValue strin
 	}
 	client := &http.Client{Transport: tr}
 	request, _ := http.NewRequest(getHTTPMethod, resource, nil)
-	request.Header.Set(authorizationHeader, authorizationHeaderType + authorizationHeaderValue)
+	request.Header.Set(authorizationHeader, authorizationHeaderType+authorizationHeaderValue)
 	response, err := client.Do(request)
 	if err != nil {
 		glog.Info("ERROR: ")
@@ -71,10 +71,10 @@ func getResource(resource string, retryCount int, authorizationHeaderValue strin
 }
 
 func getResourceContent(resourcePath string, fileName string, retryCount int, authorizationHeaderValue string) string {
-	response := getResource(resourcePath + fileName, retryCount, authorizationHeaderValue)
+	response := getResource(resourcePath+fileName, retryCount, authorizationHeaderValue)
 	if response != nil {
 		defer response.Body.Close()
-		byteResponse, err := ioutil.ReadAll(response.Body);
+		byteResponse, err := ioutil.ReadAll(response.Body)
 		if err != nil {
 			glog.Info("ERROR: ")
 			glog.Errorln(err)
@@ -104,11 +104,11 @@ func createSSLPemFile(certString string, keyString string, chainString string, f
 		buffer.WriteString(chainString)
 	}
 
-	createFile(buffer.String(), filePath);
+	createFile(buffer.String(), filePath)
 }
 
 func addSecurityCertificate(resourcePath string, appName string, certificatesDir string,
-								authorizationHeaderValue string, encodedKey string) {
+	authorizationHeaderValue string, encodedKey string) {
 	key, err := b64.StdEncoding.DecodeString(encodedKey)
 	if err != nil {
 		glog.Warningf("Error while decoding private key: %v", err)
@@ -120,7 +120,7 @@ func addSecurityCertificate(resourcePath string, appName string, certificatesDir
 		ivFile := *appTenantDomain + hypenSeparator + appName + ivFileExtension
 
 		ivString := getResourceContent(resourcePath, ivFile, retryCount, authorizationHeaderValue)
-		iv, err :=  b64.StdEncoding.DecodeString(ivString)
+		iv, err := b64.StdEncoding.DecodeString(ivString)
 		if err != nil {
 			glog.Warningf("Error while decoding initialization vector: %v", err)
 		} else {
@@ -153,7 +153,7 @@ func addSecurityCertificate(resourcePath string, appName string, certificatesDir
 func decryptResourceContent(content string, block cipher.Block, iv []byte) string {
 	if content != "" {
 		//Decode resource content
-		cipherText,err := b64.StdEncoding.DecodeString(content)
+		cipherText, err := b64.StdEncoding.DecodeString(content)
 		if err != nil {
 			glog.Warningf("Error while decoding resource content: %v", err)
 			return ""
