@@ -19,6 +19,7 @@
 function loadDashboards() {
     var dashboards = dashboardProperties.dashboards;
     var dashboard_list = '';
+
     for (var i=0; i<dashboards.length; i++) {
         var showDashboard = false;
         if (dashboards[i].runtimes[0] == "all") {
@@ -31,20 +32,18 @@ function loadDashboards() {
                 }
             }
         }
+
         var isAvailable = (dashboards[i].isAvailable == 'true');
         var url = dataAnalyticsServerUrl + dashboards[i].dashboardContext + eval(dashboards[i].dashboardTypeUtil).getQueryString();
         if (showDashboard) {
             var dashboard = '' +
-                '<div class="col-xs-1 col-md-3 col-lg-4" data-toggle="tooltip" title="' + dashboards[i].title + '">' +
+                '<div class="col-xs-12 col-md-12 col-lg-12" data-toggle="tooltip" title="' + dashboards[i].title + '">' +
                 '<a class="block-anch" href="' + url + ' " onclick="return ' + isAvailable +'" target="_blank">' +
                 '<div class="block-monitoring wrapper">';
             if (!isAvailable) {
                 dashboard += '<div class="ribbon-wrapper"><div class="ribbon">Available Soon</div></div>';
             }
-            dashboard += '<h3 class="ellipsis">' + dashboards[i].title + '</h3>' +
-                '<div class="block-icon pull-left">' +
-                '<i class="fw fw-dashboard fw-3x"></i>' +
-                '</div>' +
+            dashboard += '<h3 class="ellipsis"><i class="fw fw-dashboard fw-lg icon"></i>' + dashboards[i].title + '</h3>' +
                 '</div>' +
                 '</a>' +
                 '</div>';

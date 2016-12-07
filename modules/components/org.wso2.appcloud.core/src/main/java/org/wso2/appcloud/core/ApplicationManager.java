@@ -1024,6 +1024,28 @@ public class ApplicationManager {
     }
 
     /**
+     * Method for getting maximum replication count for whitelisted tenant per cloud
+     *
+     * @param tenantId id of tenant
+     * @param cloudType cloud type
+     * @return maximum replication count
+     * @throws AppCloudException
+     */
+    public static int getMaxReplicaCountForWhiteListedTenants(int tenantId, String cloudType) throws AppCloudException {
+        Connection dbConnection = DBUtil.getDBConnection();
+        try {
+            return ApplicationDAO.getInstance().getWhiteListedTenantMaxReplicaCount(dbConnection, tenantId, cloudType);
+        } catch (AppCloudException e) {
+            String msg = "Error while getting maximum replication count for whitelisted tenant for tenant id : " +
+                    tenantId + " and cloud : " + cloudType;
+            log.error(msg, e);
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeConnection(dbConnection);
+        }
+    }
+
+    /**
      * Method for getting all versions of application object.
      *
      * @param applicationHashId hash id of application object
@@ -1078,12 +1100,13 @@ public class ApplicationManager {
      * @param maxAppCount      maximum application count
      * @param maxDatabaseCount maximum database count
      * @param cloudType        cloud type
+     * @param replicaCount        replication count
      * @throws AppCloudException
      */
-    public static void whiteListTenant(int tenantId, int maxAppCount, int maxDatabaseCount, String cloudType) throws AppCloudException {
+    public static void whiteListTenant(int tenantId, int maxAppCount, int maxDatabaseCount, String cloudType, int replicaCount) throws AppCloudException {
         Connection dbConnection = DBUtil.getDBConnection();
         try {
-            ApplicationDAO.getInstance().whiteListTenant(dbConnection, tenantId, maxAppCount, maxDatabaseCount, cloudType);
+            ApplicationDAO.getInstance().whiteListTenant(dbConnection, tenantId, maxAppCount, maxDatabaseCount, cloudType, replicaCount);
             dbConnection.commit();
         } catch (AppCloudException e) {
             String msg = "Error whitelisting tenant for tenant id : " + tenantId;
@@ -1205,6 +1228,34 @@ public class ApplicationManager {
             DBUtil.closeConnection(dbConnection);
         }
     }
+
+    /**
+     * Method for whitelist and increase replica count for a given tenant
+     *
+     * @param tenantId tenant id
+     * @param cloudType cloud type
+     * @param replicaCount new replication count
+     * @throws AppCloudException
+     */
+    public static void whiteListMaxReplicaCount(int tenantId, String cloudType, int replicaCount) throws AppCloudException {
+        Connection dbConnection = DBUtil.getDBConnection();
+        try {
+            ApplicationDAO.getInstance().whiteListMaxReplicaCount(dbConnection, tenantId, cloudType, replicaCount);
+            dbConnection.commit();
+        } catch (AppCloudException e) {
+            String msg = "Error whitelisting maximum replication count for tenant id : " + tenantId;
+            log.error(msg, e);
+            throw new AppCloudException(msg, e);
+        } catch (SQLException e) {
+            String msg = "Error while committing transaction for whitelisting maximum replication count for " +
+                    "tenant id : " + tenantId;
+            log.error(msg, e);
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeConnection(dbConnection);
+        }
+    }
+
 
     /**
      * Get the list of tagged applications per cloud
@@ -1414,6 +1465,13 @@ public class ApplicationManager {
         }
     }
 
+    /**
+     * This method updates the exposure level of a given version
+     *
+     * @param exposureLevel exposure level to be updated for the given version
+     * @param versionKey version hash id
+     * @throws AppCloudException
+     */
     public static void updateVersionExposureLevel(String exposureLevel, String versionKey) throws  AppCloudException {
         Connection dbConnection = DBUtil.getDBConnection();
         int tenantId = CarbonContext.getThreadLocalCarbonContext().getTenantId();
@@ -1466,6 +1524,51 @@ public class ApplicationManager {
         } catch (AppCloudException e) {
             String msg = "Error while checking if the custom domain exists for domain: " + customDomain +
                     " for tenant with tenant id: " + tenantId + ".";
+            log.error(msg, e);
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeConnection(dbConnection);
+        }
+    }
+
+    /**
+     * This method will update the replication count for a given version
+     *
+     * @param replicaCount replication count to be updated
+     * @param versionKey version hash id
+     * @throws AppCloudException
+     */
+    public static void updateReplicationCountForDeployment(int replicaCount, String versionKey) throws  AppCloudException {
+        Connection dbConnection = DBUtil.getDBConnection();
+        int tenantId = CarbonContext.getThreadLocalCarbonContext().getTenantId();
+        try {
+            ApplicationDAO.getInstance().updateReplicationCountForDeployment(dbConnection, versionKey, replicaCount, tenantId);
+        } catch (AppCloudException e) {
+            String msg = "Error while updating database for scaling deployment: " + versionKey +
+                    " and tenant id: " + tenantId + ".";
+            log.error(msg, e);
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeConnection(dbConnection);
+        }
+    }
+
+
+    /**
+     * Method for get replica existing replica count for a given version
+     *
+     * @param versionKey version hash id
+     * @return current replica count
+     * @throws AppCloudException
+     */
+    public static int getReplicaCountForVersion(String versionKey) throws AppCloudException {
+        Connection dbConnection = DBUtil.getDBConnection();
+        int tenantId = CarbonContext.getThreadLocalCarbonContext().getTenantId();
+        try {
+            return ApplicationDAO.getInstance().getReplicaCountForVersion(dbConnection, versionKey, tenantId);
+        } catch (AppCloudException e) {
+            String msg = "Error while checking replica count for the application version: " + versionKey +
+                    " and tenant id: " + tenantId + ".";
             log.error(msg, e);
             throw new AppCloudException(msg, e);
         } finally {

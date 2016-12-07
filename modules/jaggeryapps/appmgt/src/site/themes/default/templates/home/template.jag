@@ -53,6 +53,7 @@ jagg.template("home", function(inputs, outputs, jagg) {
     var dashboardProperties = outputs.dashboardProperties;
     var dataAnalyticsServerUrl = outputs.dataAnalyticsServerUrl;
     var tenantDomain = outputs.tenantDomain;
+    var replicaCount = outputs.replicaCount;
 %>
 
 <script>
@@ -81,6 +82,7 @@ jagg.template("home", function(inputs, outputs, jagg) {
     var dashboardProperties = <%=dashboardProperties%>;
     var dataAnalyticsServerUrl = "<%=dataAnalyticsServerUrl%>";
     var tenantDomain = "<%=tenantDomain%>";
+    var replicaCount = <%=replicaCount%>;
 </script>
 
     <div class="right-pane visible">
@@ -126,7 +128,7 @@ jagg.template("home", function(inputs, outputs, jagg) {
           </div>
         </div>
         <div class="row padding-bottom-xlg">
-          <div class="col-xs-12 col-md-9 col-lg-9">
+          <div class="col-xs-12 col-md-12 col-lg-12">
               <div class="block-general" style="background-color: #303030;">
                       <div class="col-xs-12 col-md-12 col-lg-7">
                         <div class="row nomarginflex">
@@ -230,86 +232,88 @@ jagg.template("home", function(inputs, outputs, jagg) {
                       </div>
 
                         <div class="col-xs-12 col-md-9 col-lg-8">
-                            <div class="block-replica">
+                            <div class="block-replica clearfix" >
+                                <a href="/appmgt/site/pages/settings.jag?applicationKey=<%=applicationKey%>&selectedRevision=<%=selectedRevision%>&scale=true">
+                                    <div class="btn-create-version">
+                                      <span class="fw-stack fw-lg btn-action-ico">
+                                         <i class="fw fw-circle-outline fw-stack-2x"></i>
+                                         <i class="fw fw-settings fw-stack-1x"></i>
+                                      </span>
+                                        &nbsp;
+                                            Scale Deployment
+                                    </div>
+                                </a>
                                 <h3>Replicas</h3>
-                                <div class="block-replicas">
-                                    <figure class="node-cicle" data-percent="100">
-                                        <figcaption>01</figcaption>
-                                        <%if(parseInt(restartCounts.get('0')) > 0){%>
-                                            <a href="#" onclick="displayRestartCountMessage();"><span class="view-log">Restart Count : <%=restartCounts.get('0')%></span></a>
-                                        <%}%>
-
-                                        <%  if(selectedApplicationRevision.status==APPLICATION_RUNNING){ %>
-
-                                                <svg width="200" height="200">
-                                                   <circle class="outer" cx="95" cy="95" r="85" transform="rotate(-90, 95, 95)"></circle>
-                                                </svg>
-                                                <a href="/appmgt/site/pages/runtimeLogs.jag?applicationKey=<%=applicationKey%>&selectedRevision=<%=selectedRevision%>"><span class="view-log">View Logs</span></a>
-                                        <%  } else { %>
-                                                <svg width="200" height="200">
-                                                    <circle class="outer" style="stroke: #ACAFAD;" cx="95" cy="95" r="85" transform="rotate(-90, 95, 95)"/>
-                                                </svg>
-                                        <%  } %>
-                                    </figure>
-                                </div>
-                                <div class="block-replicas">
-                                    <figure class="node-cicle">
-                                        <figcaption>
-                                          <span class="fw-stack fw-lg ">
-                                              <i class="fw fw-circle-outline fw-stack-2x"></i>
-                                              <i class="fw fw-add fw-stack-1x" data-toggle="tooltip" title="Adding replicas to your <%=cloudSpecificApplicationRepresentation.toLowerCase()%> will not support in this release."></i>
-                                          </span>
-                                        </figcaption>
-                                    </figure>
-                                </div>
+                                <h5>
+                                    Container Specification:
+                                    <span class="container-spec-info">
+                                        <span id="memory"><%=selectedApplicationRevision.conSpecMemory%></span>MB RAM and
+                                        <span id="cpu"><%=selectedApplicationRevision.conSpecCpu/1000%></span> vCPU
+                                    </span>
+                                </h5>
+                                <% for (i = 0; i < replicaCount; i++) {  %>
+                                    <div class="block-replicas">
+                                        <figure class="node-cicle" data-percent="100">
+                                            <figcaption>
+                                                <span><%=(i + 1).toString()%></span>
+                                            </figcaption>
+                                            <% if(selectedApplicationRevision.status==APPLICATION_RUNNING){ %>
+                                                    <svg width="100" height="100">
+                                                       <circle class="outer" cx="142" cy="48" r="42" transform="rotate(-90, 95, 95)"></circle>
+                                                    </svg>
+                                                    <% if(parseInt(restartCounts.get(i)) > 0){%>
+                                                        <span href="#" onclick="displayRestartCountMessage();"><span class="restart-count">Restarts : <%=restartCounts.get(i)%></span></span>
+                                                    <%}%>
+                                                    <a href="/appmgt/site/pages/runtimeLogs.jag?applicationKey=<%=applicationKey%>&selectedRevision=<%=selectedRevision%>"><span class="view-log">View Logs</span></a>
+                                            <%  } else { %>
+                                                    <svg width="100" height="100">
+                                                        <circle class="outer" style="stroke: #ACAFAD;" cx="142" cy="48" r="42" transform="rotate(-90, 95, 95)"/>
+                                                    </svg>
+                                            <%  } %>
+                                        </figure>
+                                    </div>
+                                <% } %>
                             </div>
                         </div>
-                        <div id="dashboards">
-
+                        <div class="col-xs-12 col-md-3 col-lg-4">
+                            <div id="dashboards" class="row dashboard-right-column"></div>
+                            <div class="row dashboard-right-column">
+                                <div class="col-xs-12 col-md-12 col-lg-6">
+                                  <div class="block-team pull-left">
+                                    <a class="block-anch" id="envVars" href="/appmgt/site/pages/envs.jag?applicationKey=<%=applicationKey%>&versionKey=<%=selectedApplicationRevision.hashId%>">
+                                      <h3 class="env-title">Environment Variables</h3>
+                                      <div class="block-icon pull-left col-xs-12 col-md-3 col-lg-3">
+                                        <i class="fw fw-gadget fw-4x"></i>
+                                      </div>
+                                      <div class="block-number pull-right col-xs-12 col-md-4 col-lg-4">
+                                       <span id="runtimePropCount"><%=selectedApplicationRevision.runtimeProperties.length.toString()%></span>
+                                      </div>
+                                      <div class="list-box ellipsis col-xs-12 col-md-5 col-lg-5" id="env-list"></div>
+                                      <div class="clearfix"></div>
+                                    </a>
+                                  </div>
+                                </div>
+                                <div class="col-xs-12 col-md-12 col-lg-6">
+                                  <div class="block-database pull-left">
+                                    <a class="block-anch" id="tagSet" href="/appmgt/site/pages/tags.jag?applicationKey=<%=applicationKey%>&versionKey=<%=selectedApplicationRevision.hashId%>">
+                                      <h3 class="tags-title">Tags</h3>
+                                      <div class="block-icon pull-left col-xs-12 col-md-3 col-lg-3">
+                                        <i class="fw fw-tag fw-4x"></i>
+                                      </div>
+                                      <div class="block-number pull-right col-xs-12 col-md-4 col-lg-4">
+                                       <span id="tagCount"><%=selectedApplicationRevision.tags.length.toString()%></span>
+                                      </div>
+                                      <div class="list-box ellipsis col-xs-12 col-md-5 col-lg-5" id="tag-list"></div>
+                                      <div class="clearfix"></div>
+                                    </a>
+                                  </div>
+                              </div>
+                            </div>
                         </div>
                       <div class="clearfix"></div>
                     </div>
 
                 </div>
-          <div class="col-xs-12 col-md-3 col-lg-3">
-              <div class="block-team pull-left">
-                <a class="block-anch" id="envVars" href="/appmgt/site/pages/envs.jag?applicationKey=<%=applicationKey%>&versionKey=<%=selectedApplicationRevision.hashId%>">
-                  <h3>Environment Variables</h3>
-                  <div class="block-icon pull-left col-xs-12 col-md-3 col-lg-3">
-                    <i class="fw fw-gadget fw-5x"></i>
-                  </div>
-                  <div class="block-number pull-right col-xs-12 col-md-4 col-lg-4">
-                   <span id="runtimePropCount"><%=selectedApplicationRevision.runtimeProperties.length.toString()%></span>
-                  </div>
-                  <div class="list-box ellipsis col-xs-12 col-md-5 col-lg-5" id="env-list"></div>
-                  <div class="clearfix"></div>
-                </a>
-              </div>
-              <div class="block-database pull-left">
-                <a class="block-anch" id="tagSet" href="/appmgt/site/pages/tags.jag?applicationKey=<%=applicationKey%>&versionKey=<%=selectedApplicationRevision.hashId%>">
-                  <h3>Tags</h3>
-                  <div class="block-icon pull-left col-xs-12 col-md-3 col-lg-3">
-                    <i class="fw fw-tag fw-5x"></i>
-                  </div>
-                  <div class="block-number pull-right col-xs-12 col-md-4 col-lg-4">
-                   <span id="tagCount"><%=selectedApplicationRevision.tags.length.toString()%></span>
-                  </div>
-                  <div class="list-box ellipsis col-xs-12 col-md-5 col-lg-5" id="tag-list"></div>
-                  <div class="clearfix"></div>
-                </a>
-              </div>
-              <div class="block-con-spec pull-left">
-                  <h3>Container Specification</h3>
-                  <i class="fw fw-computer fw-5x"></i>
-                  <div class="pull-right">
-                   <h4 class="pull-right"><span id="memory"><%=selectedApplicationRevision.conSpecMemory%></span>MB RAM and <span id="cpu"><%=selectedApplicationRevision.conSpecCpu/1000%></span> vCPU</h4>
-                   <h4></h4>
-                  </div>
-                  <div class="list-box ellipsis" id="con-spec"></div>
-                  <div class="clearfix"></div>
-              </div>
-
-          </div>
         </div>
     </div><!-- /.container -->
     </div>
@@ -528,8 +532,6 @@ jagg.template("home", function(inputs, outputs, jagg) {
     }else{
       $('.version-url a span').text(urlText);
     }
-
-
 
 </script>
 <script src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('templates/home/js/home.js'))%>"></script>

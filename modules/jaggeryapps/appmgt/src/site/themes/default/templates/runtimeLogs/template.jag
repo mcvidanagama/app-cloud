@@ -60,6 +60,13 @@ jagg.template("runtimeLogs", function (inputs, outputs, jagg) {
                         <i class="fa fa-download fa-stack-1x"></i>
                     </span> <span class="hidden-xs"> Download Logs</span>
             </a>
+
+            <a class="btn-action" data-toggle="tooltip" data-placement="top" title="Reload Logs" id="log-reload">
+                    <span class="fw-stack fw-lg btn-action-ico">
+                        <i class="fw fw-circle-outline fw-stack-2x"></i>
+                        <i class="fw fw fw-refresh fa-stack-1x"></i>
+                    </span> <span class="hidden-xs"> Reload Logs</span>
+            </a>
         </div><!-- EOF App factory menu actionbar-->
 
         <div class="container-fluid app-content-section">
@@ -110,6 +117,7 @@ jagg.template("runtimeLogs", function (inputs, outputs, jagg) {
                                 <select class="form-control" id="noOfLines">
                                     <option value="100" selected="selected">100</option>
                                     <option value="500">500</option>
+                                    <option value="1000">1000</option>
                                 </select>
                             </div>
                         </div>
