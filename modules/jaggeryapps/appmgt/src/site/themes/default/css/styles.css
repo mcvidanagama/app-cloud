@@ -2996,10 +2996,6 @@ ul.overview-inner-list li {
     margin-left: 5px;
 }
 
-/*.dashboard-right-column {
-    margin-left: -30px;
-}*/
-
 #dashboards .icon {
     margin-right: 5px;
 }
@@ -3019,16 +3015,6 @@ ul.overview-inner-list li {
 .tags-title {
     height: 50px;
     margin-bottom: 0 !important;
-}
-
-.data-up a,.data-dwn a{
-    padding:6px;
-}
-.data-up a{
-    margin-right:1px;
-}
-.data-up a span,.data-dwn a span{
-    font-size:12px;
 }
 
 #remaining-instances a{

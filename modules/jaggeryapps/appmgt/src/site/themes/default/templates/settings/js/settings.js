@@ -145,7 +145,7 @@ function scaleDeployment(){
         versionName: versionName,
         replicaCount: $("#replica-count").val()
     },function (result) {
-        jagg.message({content: "Auto scale policy is successfully updated.", type: 'success', id: 'view_log'});
+        jagg.message({content: "Deployment successfully scaled.", type: 'success', id: 'view_log'});
 
     },function (jqXHR, textStatus, errorThrown ) {
         jagg.message({content: jqXHR.responseText, type: 'error', id: 'view_log'});

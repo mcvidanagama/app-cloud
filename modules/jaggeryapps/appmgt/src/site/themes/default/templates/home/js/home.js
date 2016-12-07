@@ -267,17 +267,6 @@ function changeSelectedRevision(newRevision){
         $('.block-replica').empty();
         $('.block-replica').html(generateBlockReplica());
 
-
-        /*$('.block-replica').html('<h3>Replicas</h3><div class="block-replicas"><figure class="node-cicle" ' +
-                                 'data-percent="100"><figcaption>01</figcaption><svg width="200" height="200">' +
-                                 '<circle class="outer" cx="95" cy="95" r="85" transform="rotate(-90, 95, 95)"/></svg>' +
-                                 '<a href="/appmgt/site/pages/runtimeLogs.jag?applicationKey=' + applicationKey + '&selectedRevision=' + newRevision +
-                                 '"><span class="view-log">View Logs</span></a></figure></div><div class="block-replicas">' +
-                                 '<figure class="node-cicle"><figcaption><span class="fw-stack fw-lg ">' +
-                                 '<i class="fw fw-ring fw-stack-2x"></i><i class="fw fw-add fw-stack-1x" ' +
-                                 'data-toggle="tooltip" title="Adding replicas to your ' + cloudSpecificApplicationRepresentation.toLowerCase() + ' will not support in this release."></i>' +
-                                 '</span></figcaption></figure></div>');
-        */
     } else if(selectedApplicationRevision.status == APPLICATION_STOPPED || selectedApplicationRevision.status == APPLICATION_INACTIVE){
 
         $('#launch-default-url-block').empty();
@@ -294,15 +283,6 @@ function changeSelectedRevision(newRevision){
         $('.block-replica').empty();
         $('.block-replica').html(generateInactiveBlockReplica());
 
-        /*$('.block-replica').html('<h3>Replicas</h3><div class="block-replicas"><figure class="node-cicle" data-percent="100">' +
-                                 '<figcaption>01</figcaption><svg width="200" height="200"><circle class="outer" ' +
-                                 'style="stroke: #ACAFAD;" cx="95" cy="95" r="85" transform="rotate(-90, 95, 95)"/></svg>' +
-                                 '</figure></div><div class="block-replicas"><figure class="node-cicle"><figcaption>' +
-                                 '<span class="fw-stack fw-lg "><i class="fw fw-ring fw-stack-2x"></i>' +
-                                 '<i class="fw fw-add fw-stack-1x" data-toggle="tooltip"' +
-                                 ' title="Adding replicas to your ' + cloudSpecificApplicationRepresentation.toLowerCase() + ' will not support in this release.">' +
-                                 '</i></span></figcaption></figure></div>');
-        */
     } else {
 
         $('#launch-default-url-block').empty();
