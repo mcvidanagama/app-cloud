@@ -17,6 +17,7 @@
  */
 // page initialization
 var timerId;
+var rcCount;
 $(document).ready(function() {
     // add upload app icon listener
     $("#change_app_icon").change(function(event) {
@@ -34,6 +35,7 @@ $(document).ready(function() {
     }
     loadEndpointView();
     loadDashboards();
+    rcCount = replicaCount;
 });
 
 // wrapping functions
@@ -205,6 +207,7 @@ function changeSelectedRevision(newRevision){
     $("#selectedRevision").val(newRevision);
     selectedRevision = newRevision;
     selectedApplicationRevision = application.versions[newRevision];
+    getReplicaCountForVersion(selectedRevision);
     //Changing deploymentURL
     var deploymentURL = selectedApplicationRevision.deploymentURL;
     var repoUrlHtml = generateLunchUrl(deploymentURL);
@@ -262,15 +265,7 @@ function changeSelectedRevision(newRevision){
                        'Redeploy<span id="redeploy-in-progress"><span></a></div>');
 
         $('.block-replica').empty();
-        $('.block-replica').html('<h3>Replicas</h3><div class="block-replicas"><figure class="node-cicle" ' +
-                                 'data-percent="100"><figcaption>01</figcaption><svg width="200" height="200">' +
-                                 '<circle class="outer" cx="95" cy="95" r="85" transform="rotate(-90, 95, 95)"/></svg>' +
-                                 '<a href="/appmgt/site/pages/runtimeLogs.jag?applicationKey=' + applicationKey + '&selectedRevision=' + newRevision +
-                                 '"><span class="view-log">View Logs</span></a></figure></div><div class="block-replicas">' +
-                                 '<figure class="node-cicle"><figcaption><span class="fw-stack fw-lg ">' +
-                                 '<i class="fw fw-ring fw-stack-2x"></i><i class="fw fw-add fw-stack-1x" ' +
-                                 'data-toggle="tooltip" title="Adding replicas to your ' + cloudSpecificApplicationRepresentation.toLowerCase() + ' will not support in this release."></i>' +
-                                 '</span></figcaption></figure></div>');
+        $('.block-replica').html(generateBlockReplica());
 
     } else if(selectedApplicationRevision.status == APPLICATION_STOPPED || selectedApplicationRevision.status == APPLICATION_INACTIVE){
 
@@ -286,14 +281,8 @@ function changeSelectedRevision(newRevision){
                        'class="btn cu-btn cu-btn-md cu-btn-blue" onclick="startApplication();">Start</a></div>');
 
         $('.block-replica').empty();
-        $('.block-replica').html('<h3>Replicas</h3><div class="block-replicas"><figure class="node-cicle" data-percent="100">' +
-                                 '<figcaption>01</figcaption><svg width="200" height="200"><circle class="outer" ' +
-                                 'style="stroke: #ACAFAD;" cx="95" cy="95" r="85" transform="rotate(-90, 95, 95)"/></svg>' +
-                                 '</figure></div><div class="block-replicas"><figure class="node-cicle"><figcaption>' +
-                                 '<span class="fw-stack fw-lg "><i class="fw fw-ring fw-stack-2x"></i>' +
-                                 '<i class="fw fw-add fw-stack-1x" data-toggle="tooltip"' +
-                                 ' title="Adding replicas to your ' + cloudSpecificApplicationRepresentation.toLowerCase() + ' will not support in this release.">' +
-                                 '</i></span></figcaption></figure></div>');
+        $('.block-replica').html(generateInactiveBlockReplica());
+
     } else {
 
         $('#launch-default-url-block').empty();
@@ -337,7 +326,7 @@ function generateLunchUrl(appURL, status) {
 }
 
 function putSelectedRevisionToSession(applicationKey, selectedRevision){
-    jagg.syncPost("../blocks/home/ajax/get.jag", {
+    jagg.post("../blocks/home/ajax/get.jag", {
         action: "putSelectedRevisionToSession",
         applicationKey: applicationKey,
         selectedRevision: selectedRevision
@@ -471,4 +460,103 @@ function redirectAppHome() {
 
 function getVersionCount(){
     return Object.keys(application.versions).length;
+}
+
+function generateBlockReplica() {
+    console.log("generateBlockReplica:" + rcCount);
+
+    var blockReplicaHtml = "<a href=\"/appmgt/site/pages/settings.jag?applicationKey=" + applicationKey + "&selectedRevision=" + selectedRevision + "&scale=true\">" +
+                                                                "<div class=\"btn-create-version\">" +
+                                                                  "<span class=\"fw-stack fw-lg btn-action-ico\">" +
+                                                                     "<i class=\"fw fw-circle-outline fw-stack-2x\"></i>" +
+                                                                     "<i class=\"fw fw-settings fw-stack-1x\"></i>" +
+                                                                  "</span>" +
+                                                                    "&nbsp;" +
+                                                                        "Scale Deployment" +
+                                                                "</div>" +
+                                                                "</a>" +
+                                                                "<h3>Replicas</h3>" +
+                                                                "<h5>" +
+                                                                    "Container Specification:" +
+                                                                    "<span class=\"container-spec-info\">" +
+                                                                        "<span id=\"memory\">" + selectedApplicationRevision.conSpecMemory + "</span>MB RAM and" +
+                                                                        "<span id=\"cpu\">" + selectedApplicationRevision.conSpecCpu/1000 + "</span> vCPU" +
+                                                                    "</span>" +
+                                                                "</h5>";
+
+
+    for (i = 0; i < rcCount; i++) {
+        blockReplicaHtml = blockReplicaHtml + "<div class=\"block-replicas\">" +
+                                                "<figure class=\"node-cicle\" data-percent=\"100\">" +
+                                                   "<figcaption>" +
+                                                       "<span>" + (i + 1).toString() + "</span>" +
+                                                   "</figcaption>" +
+                                                    "<svg width=\"100\" height=\"100\">" +
+                                                       "<circle class=\"outer\" cx=\"142\" cy=\"48\" r=\"42\" transform=\"rotate(-90, 95, 95)\"></circle>" +
+                                                    "</svg>" +
+                                                    "<a href=\"/appmgt/site/pages/runtimeLogs.jag?applicationKey=<%=applicationKey%>&selectedRevision=<%=selectedRevision%>\"><span class=\"view-log\">View Logs</span></a>" +
+                                                "</figure>" +
+                                              "</div>";
+    }
+    blockReplicaHtml = blockReplicaHtml + "</div>";
+
+console.log(blockReplicaHtml);
+
+return blockReplicaHtml;
+
+}
+
+function generateInactiveBlockReplica() {
+    console.log("generateBlockReplica:" + rcCount);
+
+    var blockReplicaHtml = "<a href=\"/appmgt/site/pages/settings.jag?applicationKey=" + applicationKey + "&selectedRevision=" + selectedRevision + "&scale=true\">" +
+                                                                "<div class=\"btn-create-version\">" +
+                                                                  "<span class=\"fw-stack fw-lg btn-action-ico\">" +
+                                                                     "<i class=\"fw fw-circle-outline fw-stack-2x\"></i>" +
+                                                                     "<i class=\"fw fw-settings fw-stack-1x\"></i>" +
+                                                                  "</span>" +
+                                                                    "&nbsp;" +
+                                                                        "Scale Deployment" +
+                                                                "</div>" +
+                                                                "</a>" +
+                                                                "<h3>Replicas</h3>" +
+                                                                "<h5>" +
+                                                                    "Container Specification:" +
+                                                                    "<span class=\"container-spec-info\">" +
+                                                                        "<span id=\"memory\">" + selectedApplicationRevision.conSpecMemory + "</span>MB RAM and" +
+                                                                        "<span id=\"cpu\">" + selectedApplicationRevision.conSpecCpu/1000 + "</span> vCPU" +
+                                                                    "</span>" +
+                                                                "</h5>";
+
+
+    for (i = 0; i < rcCount; i++) {
+        blockReplicaHtml = blockReplicaHtml + "<div class=\"block-replicas\">" +
+                                                "<figure class=\"node-cicle\" data-percent=\"100\">" +
+                                                   "<figcaption>" +
+                                                       "<span>" + (i + 1).toString() + "</span>" +
+                                                   "</figcaption>" +
+                                                    "<svg width=\"100\" height=\"100\">" +
+                                                       "<circle class=\"outer\" style=\"stroke: #ACAFAD;\" cx=\"142\" cy=\"48\" r=\"42\" transform=\"rotate(-90, 95, 95)\"></circle>" +
+                                                    "</svg>" +
+                                                "</figure>" +
+                                              "</div>";
+    }
+    blockReplicaHtml = blockReplicaHtml + "</div>";
+
+console.log(blockReplicaHtml);
+
+return blockReplicaHtml;
+
+}
+
+function getReplicaCountForVersion(selectedRevision) {
+    jagg.syncPost("../blocks/settings/settings.jag", {
+        action: "getReplicaCountForVersion",
+        applicationName: applicationName,
+        versionName: selectedRevision
+    },function getReplicaCountForVersion(result) {
+        rcCount = result;
+    },function (jqXHR, textStatus, errorThrown) {
+        jagg.message({content: jqXHR.responseText, type: 'error', id: 'view_log'});
+    });
 }

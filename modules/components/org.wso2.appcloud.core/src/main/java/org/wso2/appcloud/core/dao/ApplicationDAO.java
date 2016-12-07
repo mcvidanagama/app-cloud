@@ -1895,6 +1895,37 @@ public class ApplicationDAO {
     }
 
     /**
+     *
+     * @param dbConnection
+     * @param tenantId
+     * @param cloudType
+     * @return
+     */
+    public int getWhiteListedTenantMaxReplicaCount(Connection dbConnection, int tenantId, String cloudType) throws AppCloudException {
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        int maxReplicaCount;
+        try {
+            preparedStatement = dbConnection.prepareStatement(SQLQueryConstants.GET_WHITE_LISTED_TENANT_DETAILS);
+            preparedStatement.setInt(1, tenantId);
+            preparedStatement.setString(2, cloudType);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                maxReplicaCount = resultSet.getInt(SQLQueryConstants.MAX_REPLICA_COUNT);
+            } else {
+                maxReplicaCount = -1;
+            }
+        } catch (SQLException e) {
+            String msg = "Error while getting Max App Count in tenant : " + tenantId + " and cloud : " + cloudType;
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeResultSet(resultSet);
+            DBUtil.closePreparedStatement(preparedStatement);
+        }
+        return maxReplicaCount;
+    }
+
+    /**
      * Method for whitelisting application version.
      *
      * @param dbConnection  database connection
@@ -1930,7 +1961,7 @@ public class ApplicationDAO {
      * @param cloudType        cloud type
      * @throws AppCloudException
      */
-    public void whiteListTenant(Connection dbConnection, int tenantId, int maxAppCount, int maxDatabaseCount, String cloudType)
+    public void whiteListTenant(Connection dbConnection, int tenantId, int maxAppCount, int maxDatabaseCount, String cloudType, int replicaCount)
             throws AppCloudException {
         PreparedStatement preparedStatement = null;
         try {
@@ -1939,8 +1970,10 @@ public class ApplicationDAO {
             preparedStatement.setInt(2, maxAppCount);
             preparedStatement.setInt(3, maxDatabaseCount);
             preparedStatement.setString(4, cloudType);
-            preparedStatement.setInt(5, maxAppCount);
-            preparedStatement.setInt(6, maxDatabaseCount);
+            preparedStatement.setInt(5, replicaCount);
+            preparedStatement.setInt(6, maxAppCount);
+            preparedStatement.setInt(7, maxDatabaseCount);
+            preparedStatement.setInt(8, replicaCount);
             preparedStatement.execute();
         } catch (SQLException e) {
             String msg = "Error while white listing tenant in tenant : " + tenantId + " and cloud : " + cloudType;
@@ -2065,6 +2098,34 @@ public class ApplicationDAO {
             preparedStatement.execute();
         } catch (SQLException e) {
             String msg = "Error while white listing maximum application count for tenant : " + tenantId + " and cloud : " + cloudType;
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closePreparedStatement(preparedStatement);
+        }
+    }
+
+    /**
+     * Method for whitelist and increase tenant replica count for a given tenant
+     *
+     * @param dbConnection database connection
+     * @param tenantId tenant id
+     * @param cloudType cloud type
+     * @param replicaCount new replication count
+     * @throws AppCloudException
+     */
+    public void whiteListMaxReplicaCount(Connection dbConnection, int tenantId, String cloudType, int replicaCount)
+            throws AppCloudException {
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = dbConnection.prepareStatement(SQLQueryConstants.
+                    ADD_WHITE_LISTED_MAX_REPLICA_COUNT_FOR_TENANT);
+            preparedStatement.setInt(1, tenantId);
+            preparedStatement.setString(2, cloudType);
+            preparedStatement.setInt(3, replicaCount);
+            preparedStatement.setInt(4, replicaCount);
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            String msg = "Error while white listing maximum replication count for tenant : " + tenantId + " and cloud : " + cloudType;
             throw new AppCloudException(msg, e);
         } finally {
             DBUtil.closePreparedStatement(preparedStatement);
@@ -2478,5 +2539,68 @@ public class ApplicationDAO {
             DBUtil.closeResultSet(resultSet);
             DBUtil.closePreparedStatement(preparedStatement);
         }
+    }
+
+
+    /**
+     * This method will update the replication count for a given version
+     *
+     * @param dbConnection database connection
+     * @param versionHashId version hash id
+     * @param replicaCount number of replications to be updated
+     * @param tenantId tenant id
+     * @throws AppCloudException
+     */
+    public void updateReplicationCountForDeployment(Connection dbConnection, String versionHashId, int replicaCount,
+                                                    int tenantId) throws AppCloudException {
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = dbConnection.prepareStatement(SQLQueryConstants.UPDATE_VERSION_REPLICATION_COUNT);
+            preparedStatement.setInt(1, replicaCount);
+            preparedStatement.setString(2, versionHashId);
+            preparedStatement.setInt(3, tenantId);
+            preparedStatement.executeUpdate();
+            dbConnection.commit();
+        } catch (SQLException e) {
+            String msg = "Error while updating database for scaling deployment : " + versionHashId + " in tenant : " + tenantId;
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closePreparedStatement(preparedStatement);
+        }
+    }
+
+    /**
+     * This method wil get the replica count for a given version
+     *
+     * @param dbConnection database connection
+     * @param versionHashId version hash id
+     * @param tenantId tenant id
+     * @return replica count
+     * @throws AppCloudException
+     */
+    public int getReplicaCountForVersion(Connection dbConnection, String versionHashId, int tenantId)
+            throws AppCloudException {
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        int replicaCount = 0;
+        try {
+            preparedStatement = dbConnection.prepareStatement(SQLQueryConstants.GET_VERSION_REPLICATION_COUNT);
+            preparedStatement.setString(1, versionHashId);
+            preparedStatement.setInt(2, tenantId);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                System.out.println("ReplicaCount DAO: " + resultSet.getInt(SQLQueryConstants.REPLICA_COUNT));
+                replicaCount = resultSet.getInt(SQLQueryConstants.REPLICA_COUNT);
+            }
+            dbConnection.commit();
+        } catch (SQLException e) {
+            String msg = "Error while checking replica count for the application version: " + versionHashId +
+                    " and tenant id: " + tenantId + ".";
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeResultSet(resultSet);
+            DBUtil.closePreparedStatement(preparedStatement);
+        }
+        return replicaCount;
     }
 }

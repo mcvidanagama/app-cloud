@@ -63,6 +63,8 @@ jagg.block("home", {
                 '&subject=' + requestNewAppTypeSubjectMessage;
 
         var dashboardProperties = managerModule.getDashboardTypeProperties();
+        var replicaCount = applicationModule.getReplicaCountForVersion(application.applicationName, selectedRevision);
+
         return {
             "application" : application,
             "selectedRevision" : selectedRevision,
@@ -76,7 +78,8 @@ jagg.block("home", {
             "requestNewAppTypeURL" : requestNewAppTypeURL,
             "dashboardProperties" : dashboardProperties,
             "dataAnalyticsServerUrl" : dataAnalyticsServerUrl,
-            "tenantDomain" : tenantDomain
+            "tenantDomain" : tenantDomain,
+            "replicaCount" : replicaCount
         };
     }
 

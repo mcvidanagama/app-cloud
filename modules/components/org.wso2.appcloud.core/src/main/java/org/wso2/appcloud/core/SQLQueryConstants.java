@@ -50,6 +50,7 @@ public class SQLQueryConstants {
     public static final String CUSTOM_DOMAIN = "custom_domain";
     public static final String TENANT_ID = "tenant_id";
     public static final String MAX_APP_COUNT = "max_app_count";
+    public static final String MAX_REPLICA_COUNT = "max_replica_count";
     public static final String CON_SPEC_CPU = "con_spec_cpu";
     public static final String CON_SPEC_MEMORY = "con_spec_memory";
     public static final String IS_WHITE_LISTED = "is_white_listed";
@@ -62,6 +63,7 @@ public class SQLQueryConstants {
     public static final String MATCHING_TAG_COUNT = "matching_tag_count";
     public static final String MATCHING_VERSION_COUNT = "matching_version_count";
     public static final String EXPOSURE_LEVEL = "exposure_level";
+    public static final String REPLICA_COUNT = "replicas";
 
 
     /*==============================
@@ -101,9 +103,9 @@ public class SQLQueryConstants {
                     "values (?, ?, ?, ?, ?, ?)";
 
     public static final String ADD_WHITE_LISTED_TENANT =
-            "INSERT INTO AC_WHITE_LISTED_TENANTS (tenant_id, max_app_count, max_database_count, cloud_id) " +
-                    "values (?, ?, ?, (SELECT id from AC_CLOUD WHERE name=?)) " +
-                    "ON DUPLICATE KEY UPDATE max_app_count=?, max_database_count=?";
+            "INSERT INTO AC_WHITE_LISTED_TENANTS (tenant_id, max_app_count, max_database_count, cloud_id, max_replica_count) " +
+                    "values (?, ?, ?, (SELECT id from AC_CLOUD WHERE name=?), ?) " +
+                    "ON DUPLICATE KEY UPDATE max_app_count=?, max_database_count=?, max_replica_count=?";
 
     public static final String ADD_WHITE_LISTED_MAX_DATABASE_COUNT_FOR_TENANT =
             "INSERT INTO AC_WHITE_LISTED_TENANTS (tenant_id, max_database_count, cloud_id) " +
@@ -112,6 +114,10 @@ public class SQLQueryConstants {
     public static final String ADD_WHITE_LISTED_MAX_APP_COUNT_FOR_TENANT =
             "INSERT INTO AC_WHITE_LISTED_TENANTS (tenant_id, max_app_count, cloud_id) " +
                     "values (?, ?, (SELECT id from AC_CLOUD WHERE name=?)) ON DUPLICATE KEY UPDATE max_app_count=?";
+
+    public static final String ADD_WHITE_LISTED_MAX_REPLICA_COUNT_FOR_TENANT =
+            "INSERT INTO AC_WHITE_LISTED_TENANTS (tenant_id, cloud_id, max_replica_count) " +
+                    "values (?, (SELECT id from AC_CLOUD WHERE name=?), ?) ON DUPLICATE KEY UPDATE max_replica_count=?";
 
     public static final String ADD_APPLICATION_CONTEXT_FOR_APPLICATION =
             "INSERT INTO AC_APPLICAION_CONTEXTS (tenant_id, version_id, context) values (?,?,?)";
@@ -323,4 +329,9 @@ public class SQLQueryConstants {
     public static final String GET_VERSION_EXPOSURE_LEVEL = "SELECT exposure_level FROM AC_VERSION WHERE hash_id=? AND tenant_id=?";
 
     public static final String UPDATE_VERSION_EXPOSURE_LEVEL = "UPDATE AC_VERSION SET exposure_level=? WHERE hash_id=? AND tenant_id=?";
+
+    public static final String UPDATE_VERSION_REPLICATION_COUNT = "UPDATE AC_DEPLOYMENT SET replicas=? WHERE name=? AND tenant_id=?";
+
+    public static final String GET_VERSION_REPLICATION_COUNT = "SELECT replicas FROM AC_DEPLOYMENT WHERE name=? AND tenant_id=?";
+
 }

@@ -1022,6 +1022,9 @@ public class KubernetesRuntimeProvisioningService implements RuntimeProvisioning
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
 	@Override
 	public Map<String, String> getPodRestartCounts() throws RuntimeProvisioningException {
 		Map<String, String> podRestartCounts = new HashMap<>();
@@ -1048,6 +1051,9 @@ public class KubernetesRuntimeProvisioningService implements RuntimeProvisioning
 		}
 	}
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void changeExposureLevelInServices(String serviceName, String exposureLevel, String lbHost)
             throws  RuntimeProvisioningException {
@@ -1061,6 +1067,9 @@ public class KubernetesRuntimeProvisioningService implements RuntimeProvisioning
                 .addToAnnotations("serviceloadbalancer/lb.host", lbHost).endMetadata().done();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updateKubernetesServiceWithLabel(String serviceName, String labelKey, String labelValue)
             throws RuntimeProvisioningException {
@@ -1075,5 +1084,48 @@ public class KubernetesRuntimeProvisioningService implements RuntimeProvisioning
             log.error(message, e);
             throw new RuntimeProvisioningException(message, e);
         }
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void createDeploymentAutoScalePolicy(String name) throws RuntimeProvisioningException {
+        AutoAdaptableKubernetesClient kubernetesClient = KubernetesProvisioningUtils.getFabric8KubernetesClient();
+        String namespace = this.namespace.getMetadata().getName();
+
+        HorizontalPodAutoscaler horizontalPodAutoscaler = new HorizontalPodAutoscalerBuilder()
+                .withNewMetadata().withNamespace(namespace).withName(name).endMetadata()
+                .withNewSpec().withMinReplicas(1).withMaxReplicas(5).withNewCpuUtilization(50)
+                .withNewScaleRef().withName(name).withKind(KubernetesPovisioningConstants.KIND_DEPLOYMENT)
+                .endScaleRef().endSpec()
+                .build();
+
+        kubernetesClient.extensions().horizontalPodAutoscalers().inNamespace(namespace).create(horizontalPodAutoscaler);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void scaleDeployment(String name, int replicaCount) throws RuntimeProvisioningException {
+        AutoAdaptableKubernetesClient kubernetesClient = KubernetesProvisioningUtils.getFabric8KubernetesClient();
+        String namespace = this.namespace.getMetadata().getName();
+
+        kubernetesClient.extensions().deployments().inNamespace(namespace).withName(name).scale(replicaCount);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getReplicasForDeployment(String name) throws RuntimeProvisioningException {
+        AutoAdaptableKubernetesClient kubernetesClient = KubernetesProvisioningUtils.getFabric8KubernetesClient();
+        String namespace = this.namespace.getMetadata().getName();
+        int count = kubernetesClient.extensions().deployments().inNamespace(namespace).withName(name).get().getSpec()
+                .getReplicas();
+        log.info("Replica count for deployment:" + name + ":" + count);
+        return count;
     }
 }

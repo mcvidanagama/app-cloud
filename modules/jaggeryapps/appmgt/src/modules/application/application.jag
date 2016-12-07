@@ -1776,6 +1776,25 @@ var getMaxInstanceCount = function () {
     }
 };
 
+var getMaxReplicaCount = function() {
+    try {
+        var tenantId = modManager.getTenantId();
+        var maxReplicaCount = ApplicationManager.getMaxReplicaCountForWhiteListedTenants(tenantId, jagg.getSelectedCloud());
+        var subscriptionPlanBaseURL = modManager.getPropertyValue("SubscriptionPlanBaseURL");
+        var subscriptionPlanURL = subscriptionPlanBaseURL + "/plans/" + jagg.getSelectedCloud() + "/FREE";
+
+        if (maxReplicaCount == -1) {
+            var maxReplicaJson = get(subscriptionPlanURL, {}, "json");
+            maxReplicaCount = parseInt(maxReplicaJson.data.maxReplicas);
+        }
+        return maxReplicaCount;
+    } catch (e) {
+        log.error("Error while getting the maximum replica count for tenant: " + tenantId);
+        log.error(e);
+        throw e;
+    }
+};
+
 var getApplicationRevisionStatus = function(applicationKey, selectedRevision) {
     var selectedRevisionStatus = null;
 
@@ -1792,7 +1811,6 @@ var getApplicationRevisionStatus = function(applicationKey, selectedRevision) {
         log.error(e);
         throw e;
     }
-
     return selectedRevisionStatus;
 };
 
@@ -1810,7 +1828,6 @@ var getVersionsOfApplication = function(applicationKey) {
     } catch (e) {
         throw e;
     }
-
     return applicationVersions;
 };
 
@@ -1911,5 +1928,36 @@ var getCustomDomainDetailsForTenant = function() {
 
 var isCustomDomainAvailable = function (customDomain) {
     return ApplicationManager.isCustomDomainAvailable(customDomain);
+}
+
+var scaleDeployment = function (applicationName, versionName, replicaCount) {
+    try {
+        var tenantId = modManager.getTenantId(true);
+        var applicationHashId = Util.getApplicationHashId(applicationName, tenantId);
+        var appType = getApplication(applicationHashId).applicationType;
+        var versionHashId = getVersionHashId(applicationName, versionName);
+        var applicationCtx = KubernetesProvisioningUtils.getApplicationContext(
+                    applicationName, versionName, appType, tenantId, modManager.getTenantDomain(true),
+                    versionHashId, null);
+        var kubernetesRuntimeProvisioningService = new KubernetesRuntime(applicationCtx);
+
+        kubernetesRuntimeProvisioningService.scaleDeployment(versionHashId, replicaCount);
+        ApplicationManager.updateReplicationCountForDeployment(replicaCount, versionHashId);
+    } catch (e) {
+        log.error("Error while scaling application: " + applicationName + " version: " + versionName);
+        log.error(e);
+        throw e;
+    }
+}
+
+var getReplicaCountForVersion = function (applicationName, versionName) {
+    try {
+        var versionHashId = getVersionHashId(applicationName, versionName);
+        return ApplicationManager.getReplicaCountForVersion(versionHashId);
+    } catch (e) {
+         log.error("Error while getting replicaCount for application: " + applicationName + " version: " + versionName);
+         log.error(e);
+         throw e;
+    }
 }
 %>
