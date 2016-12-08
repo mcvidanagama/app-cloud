@@ -259,9 +259,9 @@ function changeSelectedRevision(newRevision){
         $('#version-app-launch-block').empty();
         $('#version-app-launch-block').html(
                        '<div class="btn-group ctrl-edit-button btn-edit-code"><a type="button" ' +
-                       'class="btn cu-btn cu-btn-md cu-btn-red" onclick="stopApplication();">Stop' +
+                       'class="btn cu-btn cu-btn-md cu-btn-red" onclick="stopApplicationPopUp();">Stop' +
                        '<span id="stop-in-progress"><span></a></div><div class="btn-group ctrl-edit-button btn-edit-code">' +
-                       '<a type="button" class="btn cu-btn cu-btn-md cu-btn-gray" onclick="redeployApplication();">' +
+                       '<a type="button" class="btn cu-btn cu-btn-md cu-btn-gray" onclick="redeployApplicationPopUp();">' +
                        'Redeploy<span id="redeploy-in-progress"><span></a></div>');
 
         $('.block-replica').empty();
@@ -494,7 +494,7 @@ function generateBlockReplica() {
                                                     "<svg width=\"100\" height=\"100\">" +
                                                        "<circle class=\"outer\" cx=\"142\" cy=\"48\" r=\"42\" transform=\"rotate(-90, 95, 95)\"></circle>" +
                                                     "</svg>" +
-                                                    "<a href=\"/appmgt/site/pages/runtimeLogs.jag?applicationKey=<%=applicationKey%>&selectedRevision=<%=selectedRevision%>\"><span class=\"view-log\">View Logs</span></a>" +
+                                                    "<a href=\"/appmgt/site/pages/runtimeLogs.jag?applicationKey=" + applicationKey + "&selectedRevision=" + selectedRevision + "\"><span class=\"view-log\">View Logs</span></a>" +
                                                 "</figure>" +
                                               "</div>";
     }

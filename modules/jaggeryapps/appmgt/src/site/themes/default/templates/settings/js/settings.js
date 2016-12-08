@@ -24,7 +24,7 @@ $(document).ready(function () {
     getReplicaCountForVersion();
 });
 
-$("#update-default-version").click(function () {
+function updateDefaultVersion () {
     var versionName = $("#default-version option:selected").val();
 
     jagg.post("../blocks/settings/settings.jag", {
@@ -44,7 +44,7 @@ $("#update-default-version").click(function () {
         jagg.message({content: jqXHR.responseText, type: 'error', id: 'view_log'});
 
     });
-});
+}
 
 
 $("#update-exposure-level").click(function () {
@@ -73,36 +73,6 @@ $("#scale-deployment").click(function () {
     scaleDeploymentPopUp();
 });
 
-$(document).on('click', '.number-spinner a', function () {
-	var btn = $(this),
-		oldValue = btn.closest('.number-spinner').find('input').val().trim(),
-		input = btn.closest('.number-spinner').find('input'),
-		newVal = 1;
-
-	if (btn.attr('data-dir') == 'up') {
-	    console.log(oldValue);
-
-    if (oldValue == 8 ) {
-        btn.prop("disabled", true);
-    } else {
-        btn.prop("disabled", false);
-        if (parseInt(oldValue) < parseInt(input.attr('max'))){
-            newVal = parseInt(oldValue) + 1;
-        }
-    }
-
-	} else {
-		if (oldValue > 1) {
-			newVal = parseInt(oldValue) - 1;
-		} else {
-			newVal = 1;
-
-		}
-	}
-	btn.closest('.number-spinner').find('input').val(newVal);
-	setRemainingInstanceCount(maxReplicaCount, newVal);
-});
-
 $("#scale-deployment-list").change(function () {
     getReplicaCountForVersion();
 });
@@ -124,13 +94,13 @@ function getReplicaCountForVersion() {
 
 function setRemainingInstanceCount(replicaLimit, replicaCount){
     var remainingInstances = replicaLimit - replicaCount;
-    $('#remaining-instances').html("<span>" + remainingInstances + " remaining instances <a href=\"" + requestIncreaseReplicaLimitURL + "\">(Increase replica limit)</a></span>");
+    $('#remaining-instances').html("<span>" + remainingInstances + " remaining instances <a href=\"" + requestIncreaseReplicaLimitURL + "\"target=\"_blank\">(Increase replica limit)</a></span>");
 }
 
 function scaleDeploymentPopUp(){
     jagg.popMessage({type:'confirm', modalStatus: true, title:'Scale Deployment ' + cloudSpecificApplicationRepresentation + ' Version',content:'Are your sure you want to scale ' +
         $("#scale-deployment-list option:selected").val() + ' version of this ' + cloudSpecificApplicationRepresentation.toLowerCase() +
-        ' to ' + $("#replica-count").val() + ' ?',
+        ' to ' + $("#replica-count").val() + ' instances ?',
         yesCallback:function(){
            scaleDeployment();
         }
@@ -199,4 +169,18 @@ $(function(){
       }
     });
 
+});
+
+function updateDefaultVersionPopUp(){
+    jagg.popMessage({type:'confirm', modalStatus: true, title:'Default version of ' + cloudSpecificApplicationRepresentation + "",
+        content:'Are your sure you want to change the default version of this ' + cloudSpecificApplicationRepresentation.toLowerCase() +
+        ' to ' + $("#default-version option:selected").val() + ' ?',
+        yesCallback:function(){
+           updateDefaultVersion();
+        }
+    });
+}
+
+$("#update-default-version").click(function () {
+    updateDefaultVersionPopUp();
 });

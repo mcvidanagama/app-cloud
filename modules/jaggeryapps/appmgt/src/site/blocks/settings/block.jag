@@ -37,7 +37,7 @@ jagg.block("settings", {
         var publicURL = modManager.getPropertyValue("ApplicationLaunchBaseURL.Public");
         var tenantDomain = modManager.getTenantDomain().replace(".","-");
         var maxReplicaCount = applicationModule.getMaxReplicaCount();
-        var requestIncreaseReplicaLimitSubjectMessage = 'Requesting increase replica limit';
+        var requestIncreaseReplicaLimitSubjectMessage = 'Request to increase replica limit';
         var requestIncreaseReplicaLimitURL = modManager.getPropertyValue(modManager.getCloudTypeProperties().properties.supportUrl) +
                 '&subject=' + requestIncreaseReplicaLimitSubjectMessage;
         var cloudSpecificApplicationRepresentation = modManager.getCloudTypeProperties().cloudSpecificApplicationRepresentation;
