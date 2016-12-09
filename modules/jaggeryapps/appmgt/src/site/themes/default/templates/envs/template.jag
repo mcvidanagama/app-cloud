@@ -170,7 +170,10 @@ $(document).ready(function() {
             if(noOfDbs == 0){
                 $(this).parent().parent().find('.fw-delete').removeClass('fw-delete').addClass('fw-cancel');
                 $(this).parent().parent().parent().find('.element-key-holder')[0].readOnly = false;
-                $(this).parent().parent().parent().find('.element-value-holder')[0].readOnly = false;
+                var valueElem = $(this).parent().parent().parent().find('.element-value-holder')[0];
+                $(valueElem).children('option').remove();
+                $(valueElem).prop('disabled', false);
+                var select2 = initSelect2(data, valueElem, "", "");
                 $(this).hide();
                 $(this).parent().find('#saveIcon').show();
                 prevKey = $(this).parent().parent().parent().find('.element-key-holder')[0].value;
