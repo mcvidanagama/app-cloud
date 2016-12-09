@@ -29,6 +29,7 @@ public class Plan {
 	private String planName;
 	private int maxApplications;
 	private int maxDatabases;
+	private int maxReplicas;
 
 	public Plan() {
 
@@ -70,4 +71,12 @@ public class Plan {
 	public void setMaxDatabases(int maxDatabases) {
 		this.maxDatabases = maxDatabases;
 	}
+
+    public int getMaxReplicas() {
+        return maxReplicas;
+    }
+
+    public void setMaxReplicas(int maxReplicas) {
+        this.maxReplicas = maxReplicas;
+    }
 }

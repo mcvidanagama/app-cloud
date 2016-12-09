@@ -43,7 +43,8 @@ var getRuntimeLogs = function (applicationKey, selectedRevision, applicationType
                                                                                modManager.getTenantDomain(),
                                                                                versionHashId, exposureLevel);
         var kubService = new KubernetesRuntime(applicationCtx);
-        if (isStream){
+        //if (isStream){
+        if (false) {
             return kubService.streamRuntimeLogs();
         } else {
             return kubService.getRuntimeLogs(null);
@@ -72,17 +73,16 @@ var getFormattedRuntimeLogs = function (applicationKey, selectedRevision, applic
         session.put(sessionKey, result);
     }
     var logMap = {};
-    if (result instanceof DeploymentLogStream){
+    if (result instanceof DeploymentLogs){
         var map = result.getDeploymentLogs();
         if(map && map.entrySet()) {
             var iterator = map.entrySet().iterator();
             while (iterator.hasNext()) {
                 var entry = iterator.next();
-                var logContent = result.getLogContent(entry.getKey());
-                logMap[entry.getKey()] = logContent;
+                logMap[entry.getKey()] = entry.getValue().toString();
             }
         }
-        if(isFirstRequest === 'true'){
+        /*if(isFirstRequest === 'true'){
             setTimeout(
                 function(){
                     try {
@@ -91,7 +91,7 @@ var getFormattedRuntimeLogs = function (applicationKey, selectedRevision, applic
                         log.warn("Stream already closed.");
                     }
                 }, 900000);
-        }
+        }*/
         return logMap;
     } else {
         throw "Error while calling mod.getRuntimeLogs. Results are not instances of DeploymentLogs";

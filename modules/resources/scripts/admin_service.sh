@@ -36,8 +36,8 @@ if [ $ACTION = "help" ]; then
     echo "***For list all version of the application***"
     echo "./admin_service.sh getApplicationVersions <tenant> <app>"
     echo -e "\n"
-    echo "***For white list tenant, set max app count and max database count***"
-    echo "./admin_service.sh whiteListTenant <tenant> <max-app-count> <max-database-count> <cloud-type>"
+    echo "***For white list tenant, set max app count, max database count and max replica count***"
+    echo "./admin_service.sh whiteListTenant <tenant> <max-app-count> <max-database-count> <replica-count> <cloud-type>"
     echo -e "\n"
     echo "***For white list tenant and set max app count***"
     echo "./admin_service.sh whiteListMaximumApplicationCount <tenant> <max-app-count> <cloud-type>"
@@ -45,11 +45,17 @@ if [ $ACTION = "help" ]; then
     echo "***For white list tenant and set max database count***"
     echo "./admin_service.sh whiteListMaximumDatabaseCount <tenant> <max-database-count> <cloud-type>"
     echo -e "\n"
+    echo "***For white list tenant and set max replica count***"
+    echo "./admin_service.sh whiteListMaximumReplicaCount <tenant> <max-replica-count> <cloud-type>"
+    echo -e "\n"
     echo "***For view tenant max application count***"
     echo "./admin_service.sh getTenantMaxAppCount <tenant> <cloud-type>"
     echo -e "\n"
     echo "***For view tenant max database count***"
     echo "./admin_service.sh getTenantMaxDatabaseCount <tenant> <cloud-type>"
+    echo -e "\n"
+    echo "***For view tenant max replica count***"
+    echo "./admin_service.sh getTenantMaxReplicaCount <tenant> <cloud-type>"
     echo -e "\n"
     echo "***For update application version container specification***"
     echo "./admin_service.sh updateConSpec <tenant> <app> <version> <cpu> <memory>"
@@ -66,11 +72,15 @@ elif [ $ACTION = "whiteListAppVersion" ]; then
     echo -e "\n" >> $LOGFILE
 elif [ $ACTION = "whiteListTenant" ]; then
     echo "----------White list tenant----------" >> $LOGFILE
-    curl -b cookies  -v -X POST -k $SERVICE_URL/appmgt/site/blocks/admin/admin.jag -d "action=whiteListTenant&tenantDomain=$2&maxAppCount=$3&maxDatabaseCount=$4&cloudType=$5" >> $LOGFILE 2>&1
+    curl -b cookies  -v -X POST -k $SERVICE_URL/appmgt/site/blocks/admin/admin.jag -d "action=whiteListTenant&tenantDomain=$2&maxAppCount=$3&maxDatabaseCount=$4&replicaCount=$5&cloudType=$6" >> $LOGFILE 2>&1
     echo -e "\n" >> $LOGFILE
 elif [ $ACTION = "whiteListMaximumApplicationCount" ]; then
     echo "----------White list maximum application count----------" >> $LOGFILE
     curl -b cookies  -v -X POST -k $SERVICE_URL/appmgt/site/blocks/admin/admin.jag -d "action=whiteListMaximumApplicationCount&tenantDomain=$2&maxAppCount=$3&cloudType=$4" >> $LOGFILE 2>&1
+    echo -e "\n" >> $LOGFILE
+elif [ $ACTION = "whiteListMaximumReplicaCount" ]; then
+    echo "----------White list maximum application count----------" >> $LOGFILE
+    curl -b cookies  -v -X POST -k $SERVICE_URL/appmgt/site/blocks/admin/admin.jag -d "action=whiteListMaximumReplicaCount&tenantDomain=$2&replicaCount=$3&cloudType=$4" >> $LOGFILE 2>&1
     echo -e "\n" >> $LOGFILE
 elif [ $ACTION = "whiteListMaximumDatabaseCount" ]; then
     echo "----------White list maximum database count----------" >> $LOGFILE
@@ -87,6 +97,10 @@ elif [ $ACTION = "getTenantMaxAppCount" ]; then
 elif [ $ACTION = "getTenantMaxDatabaseCount" ]; then
     echo "----------Tenant max database count----------" >> $LOGFILE
     curl -b cookies  -v -X GET -k "$SERVICE_URL/appmgt/site/blocks/admin/admin.jag?action=getTenantMaxDatabaseCount&tenantDomain=$2&cloudType=$3" | tee -a $LOGFILE 2>&1 | less
+    echo -e "\n" >> $LOGFILE
+elif [ $ACTION = "getTenantMaxReplicaCount" ]; then
+    echo "----------Tenant max database count----------" >> $LOGFILE
+    curl -b cookies  -v -X GET -k "$SERVICE_URL/appmgt/site/blocks/admin/admin.jag?action=getTenantMaxReplicaCount&tenantDomain=$2&cloudType=$3" | tee -a $LOGFILE 2>&1 | less
     echo -e "\n" >> $LOGFILE
 elif [ $ACTION = "updateConSpec" ]; then
     echo "----------Update container specification----------" >> $LOGFILE
