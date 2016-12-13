@@ -2732,7 +2732,7 @@ svg .outer {
 .outer {
     fill: transparent;
     stroke: #333;
-    stroke-width: 8;
+    stroke-width: 10;
     stroke-dasharray: 534;
     transition: stroke-dashoffset 1s;
     -webkit-animation-play-state: running;
