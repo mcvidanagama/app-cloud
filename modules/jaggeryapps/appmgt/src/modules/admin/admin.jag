@@ -261,9 +261,9 @@ var whiteListApplicationVersion = function (applicationName, applicationRevision
     }
 };
 
-var whiteListTenant = function (tenantDomain, maxAppCount, maxDatabaseCount, cloudType) {
+var whiteListTenant = function (tenantDomain, maxAppCount, maxDatabaseCount, cloudType, replicaCount) {
     var tenantId = modManager.getTenantIdForGivenTenantDomain(tenantDomain);
-    ApplicationManager.whiteListTenant(tenantId, maxAppCount, maxDatabaseCount, cloudType);
+    ApplicationManager.whiteListTenant(tenantId, maxAppCount, maxDatabaseCount, cloudType, replicaCount);
 };
 
 var getVersionHashId = function(applicationName, versionName, tenantDomain){
@@ -316,6 +316,19 @@ var getTenantAppMaxCount = function (tenantDomain, cloudType) {
     return appCountObj;
 };
 
+var getTenantReplicaCount = function (tenantDomain, cloudType) {
+    var tenantId = modManager.getTenantIdForGivenTenantDomain(tenantDomain);
+    var appCountObj = {};
+    try {
+        appCountObj.maxReplicaCount = ApplicationManager.getMaxReplicaCountForWhiteListedTenants(tenantId, cloudType);
+    } catch (e) {
+        log.error("Error while getting maximum replication count for tenant : " + tenantDomain);
+        log.error(e);
+        throw e;
+    }
+    return appCountObj;
+};
+
 var updateContainerSpecification = function (tenantDomain, applicationName, applicationRevision, memory, cpu) {
     try {
         context.startTenantFlow();
@@ -340,6 +353,11 @@ var whiteListMaxDatabaseCount = function (tenantDomain, maxDatabaseCount, cloudT
 var whiteListMaxApplicationCount = function (tenantDomain, maxAppCount, cloudType) {
     var tenantId = modManager.getTenantIdForGivenTenantDomain(tenantDomain);
     ApplicationManager.whiteListMaxAppCount(tenantId, maxAppCount, cloudType);
+};
+
+var whiteListMaxReplicaCount = function (tenantDomain, cloudType, replicaCount) {
+    var tenantId = modManager.getTenantIdForGivenTenantDomain(tenantDomain);
+    ApplicationManager.whiteListMaxReplicaCount(tenantId, cloudType, replicaCount);
 };
 
 var getTenantMaxDatabaseCount = function (tenantDomain, cloudType) {

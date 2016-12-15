@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # ------------------------------------------------------------------------
 #
 # Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
@@ -17,16 +19,15 @@
 #   under the License.
 #
 # ------------------------------------------------------------------------
+source custom_domain_details.cfg
+KUBERNETES_PATH=""    #Production / Staging
 
-FROM docker.wso2.com/wso2-cloud/tomcat:8.5.5-alpine3.4-oracle-jdk1.8.0
+add_custom_domain_label_for_http_svc_command="kubectl label svc htp-$APPHASHID customDomain="$CUSTOMDOMAIN" --namespace=$TENANTDOMAIN"
+echo $add_custom_domain_label_for_http_svc_command
+add_custom_domain_label_for_http_svc_output="$(eval $KUBERNETES_PATH$add_custom_domain_label_for_http_svc_command)"
+echo $add_custom_domain_label_for_http_svc_output
 
-ENV APP_WAR ARTIFACT_NAME
-ENV URL ARTIFACT_URL
-ENV WEB_APP_HOME $TOMCAT_HOME_DIR/webapps/
-ENV TOTAL_MEMORY VAL_TOTAL_MEMORY
-ENV TAIL_LOG ENABLE_TAIL_LOG
-ENV JFR_FLAG ENABLE_JFR
-
-RUN wget "$URL" -O "$WEB_APP_HOME$APP_WAR"
-
-CMD ["bash", "-c", "source /init.sh"]
+add_custom_domain_label_for_https_svc_command="kubectl label svc hts-$APPHASHID customDomain="$CUSTOMDOMAIN" --namespace=$TENANTDOMAIN"
+echo $add_custom_domain_label_for_https_svc_command
+add_custom_domain_label_for_https_svc_output="$(eval $KUBERNETES_PATH$add_custom_domain_label_for_https_svc_command)"
+echo $add_custom_domain_label_for_https_svc_output

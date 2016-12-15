@@ -92,7 +92,8 @@ INSERT INTO `AC_RUNTIME` (`id`, `name`, `image_name`, `tag`, `description`) VALU
 (13, 'Apache Tomcat 8.5.5 (Alpine 3.4/Oracle JDK 1.8.0_112)', 'tomcat', '8.5.5-alpine3.4-oracle-jdk1.8.0', 'OS:Alpine 3.4, Oracle JDK 1.8.0_112'),
 (14, 'Apache Tomcat 8.5.5 (Ubuntu 16.04/Oracle JDK 1.8.0_112)', 'tomcat', '8.5.5-ubuntu16.04-oracle-jdk1.8.0', 'OS:Ubuntu 16.04, Oracle JDK 1.8.0_112'),
 (15, 'Apache Tomcat 8.5.5 (Alpine 3.4/Open JDK 1.8.0_92)', 'tomcat', '8.5.5-alpine3.4-open-jdk1.8.0', 'OS:Alpine 3.4, Open JDK 1.8.0_92'),
-(16, 'Apache Tomcat 8.5.5 (Ubuntu 16.04/Open JDK 1.8.0_91)', 'tomcat', '8.5.5-ubuntu16.04-open-jdk1.8.0', 'OS:Ubuntu 16.04, Open JDK 1.8.0_91');
+(16, 'Apache Tomcat 8.5.5 (Ubuntu 16.04/Open JDK 1.8.0_91)', 'tomcat', '8.5.5-ubuntu16.04-open-jdk1.8.0', 'OS:Ubuntu 16.04, Open JDK 1.8.0_91'),
+(17, 'OracleJDK 8 + WSO2 MSF4J 2.1.0', 'msf4j', '2.0.0', 'OS:alpine-java, Oracle JDK:8u102');
 
 
 -- -----------------------------------------------------
@@ -269,7 +270,8 @@ INSERT INTO `AC_APP_TYPE_RUNTIME` (`app_type_id`, `runtime_id`) VALUES
 (1, 13),
 (1, 14),
 (1, 15),
-(1, 16);
+(1, 16),
+(2, 17);
 
 
 -- -----------------------------------------------------
@@ -394,6 +396,7 @@ CREATE TABLE IF NOT EXISTS AC_SUBSCRIPTION_PLANS (
     MAX_APPLICATIONS	INT NOT NULL,
     MAX_DATABASES INT NOT NULL,
     CLOUD_ID INT NOT NULL,
+    MAX_REPLICA_COUNT INT(11) NOT NULL,
     PRIMARY KEY (PLAN_ID),
     CONSTRAINT fk_SubscriptionPlans_CloudType1 FOREIGN KEY (CLOUD_ID) REFERENCES AppCloudDB.AC_CLOUD (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
     CONSTRAINT uk_SubscriptionPlans_PlanName_CloudId UNIQUE(PLAN_NAME, CLOUD_ID))
@@ -421,6 +424,7 @@ CREATE TABLE IF NOT EXISTS `AppCloudDB`.`AC_WHITE_LISTED_TENANTS` (
   `max_app_count` INT(11) DEFAULT -1,
   `max_database_count` INT(11) DEFAULT -1,
   `cloud_id` INT NOT NULL,
+  `max_replica_count` INT(11) NOT NULL DEFAULT 4,
   PRIMARY KEY (`id`, `tenant_id`),
   CONSTRAINT fk_WhiteListedTenants_CloudType1 FOREIGN KEY (cloud_id) REFERENCES AppCloudDB.AC_CLOUD (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT uk_WhiteListedTenants UNIQUE (tenant_id, cloud_id))
@@ -484,7 +488,9 @@ INSERT INTO `AC_RUNTIME_TRANSPORT` (`transport_id`, `runtime_id`) VALUES
 (3, 15),
 (3, 16),
 (4, 15),
-(4, 16);
+(4, 16),
+(3, 17),
+(4, 17);
 
 INSERT INTO `AC_CONTAINER_SPECIFICATIONS` (`CON_SPEC_NAME`, `CPU`, `MEMORY`, `COST_PER_HOUR`) VALUES
 ('128MB RAM and 0.1x vCPU', 100, 128, 1),
@@ -492,11 +498,11 @@ INSERT INTO `AC_CONTAINER_SPECIFICATIONS` (`CON_SPEC_NAME`, `CPU`, `MEMORY`, `CO
 ('512MB RAM and 0.3x vCPU', 300, 512, 3),
 ('1024MB RAM and 0.5x vCPU', 500, 1024, 4);
 
-INSERT INTO `AC_SUBSCRIPTION_PLANS` (`PLAN_ID`, `PLAN_NAME`, `MAX_APPLICATIONS`, `MAX_DATABASES`, `CLOUD_ID`) VALUES
-(1, 'FREE', 3, 3, 1),
-(2, 'PAID', 10, 6, 1),
-(3, 'FREE', 3, 3, 2),
-(4, 'PAID', 10, 6, 2);
+INSERT INTO `AC_SUBSCRIPTION_PLANS` (`PLAN_ID`, `PLAN_NAME`, `MAX_APPLICATIONS`, `MAX_DATABASES`, `CLOUD_ID`, `MAX_REPLICA_COUNT`) VALUES
+(1, 'FREE', 3, 3, 1, 2),
+(2, 'PAID', 10, 6, 1, 4),
+(3, 'FREE', 3, 3, 2, 2),
+(4, 'PAID', 10, 6, 2, 4);
 
 INSERT INTO `AC_RUNTIME_CONTAINER_SPECIFICATIONS` (`id`, `CON_SPEC_ID`) VALUES
 (1, 3),
@@ -530,7 +536,10 @@ INSERT INTO `AC_RUNTIME_CONTAINER_SPECIFICATIONS` (`id`, `CON_SPEC_ID`) VALUES
 (15, 3),
 (15, 4),
 (16, 3),
-(16, 4);
+(16, 4),
+(17, 2),
+(17, 3),
+(17, 4);
 
 -- -----------------------------------------------------
 -- Table `AppCloudDB`.`AC_CLOUD`
