@@ -2589,7 +2589,6 @@ public class ApplicationDAO {
             preparedStatement.setInt(2, tenantId);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                System.out.println("ReplicaCount DAO: " + resultSet.getInt(SQLQueryConstants.REPLICA_COUNT));
                 replicaCount = resultSet.getInt(SQLQueryConstants.REPLICA_COUNT);
             }
             dbConnection.commit();
