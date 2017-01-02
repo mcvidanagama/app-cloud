@@ -15,6 +15,7 @@
 */
 package org.wso2.appcloud.provisioning.runtime;
 
+import org.json.JSONArray;
 import org.wso2.appcloud.provisioning.runtime.beans.*;
 
 import java.util.List;
@@ -191,6 +192,14 @@ public interface RuntimeProvisioningService {
      * @throws RuntimeProvisioningException
      */
     Map<String, String> getPodRestartCounts() throws RuntimeProvisioningException;
+
+    /**
+     * Get replica info for each pod of the application
+     *
+     * @return
+     * @throws RuntimeProvisioningException
+     */
+    JSONArray getReplicaInfo() throws RuntimeProvisioningException;
 
     /**
      * Delete kubernetes kind by name from the deployment

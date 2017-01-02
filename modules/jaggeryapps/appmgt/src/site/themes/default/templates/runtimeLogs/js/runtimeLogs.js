@@ -20,7 +20,6 @@
 
 var selectedRevisionLogMap = {};
 var selectedRevisionReplicaList = [];
-var selectedReplica;
 var editor;
 var isLogsAvailable = false;
 var timerId;
@@ -35,20 +34,13 @@ $(document).ready(function () {
         theme:'icecoder'
     });
     initData(selectedRevision, true);
-    /*timerId = setInterval(function(){ initData(selectedRevision, false); }, 3000);
-    $('#noOfLines').on('change', function() {
-      setLogArea(fullLogVal, true);
-    });*/
 });
 
 function regenerateReplicasList(selectedRevisionReplicaList) {
     $('#replicas').empty();
+
     for (var i = 0; i < selectedRevisionReplicaList.length; i++) {
         var $option = $('<option value="' + selectedRevisionReplicaList[i] + '">' + selectedRevisionReplicaList[i] + '</option>');
-        if (i == 0) {
-            selectedReplica = selectedRevisionReplicaList[i];
-            $option.attr('selected', 'selected');
-        }
         $('#replicas').append($option);
     }
 
@@ -58,8 +50,15 @@ function regenerateReplicasList(selectedRevisionReplicaList) {
         var bt = $(b).text();
         return (at > bt)?1:((at < bt)?-1:0);            // Tell the sort function how to order
     });
+
     options.appendTo("#replicas");
-    $("#replicas").prop("selectedIndex", 0);
+
+    if(selectedReplica != "null") {
+        $("#replicas").val(selectedReplica);
+    } else {
+        $("#replicas").prop('selectedIndex', 0).change();
+    }
+
 }
 
 function setLogArea(logVal, isFirstRequest){
@@ -107,10 +106,8 @@ function initData(selectedRevision, isFirstRequest){
         if(!jQuery.isEmptyObject(selectedRevisionLogMap)){
             $("#log-download").removeClass("btn-action btn disabled").addClass("btn-action");
             selectedRevisionReplicaList = Object.keys(selectedRevisionLogMap);
-            if(isFirstRequest){
-                regenerateReplicasList(selectedRevisionReplicaList);
-            }
-            setLogArea(selectedRevisionLogMap[selectedRevisionReplicaList[0]], isFirstRequest);
+            regenerateReplicasList(selectedRevisionReplicaList);
+            setLogArea(selectedRevisionLogMap[selectedReplica], isFirstRequest);
         } else {
             //Check for application revision status and display correct message
             jagg.post("../blocks/runtimeLogs/ajax/runtimeLogs.jag", {

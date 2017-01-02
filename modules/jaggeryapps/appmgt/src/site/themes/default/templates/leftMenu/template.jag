@@ -71,15 +71,15 @@ jagg.template("leftMenu", function (inputs, outputs, jagg) {
                 <i class="left-menu-icon fw fw-tag"></i>Tags</a>
         </li>
         <li class="<% if (pageName == "Logs") { %>selected<%}%>">
-                <a href="/appmgt/site/pages/runtimeLogs.jag?applicationKey=<%=applicationKey%>&selectedRevision=<%=selectedRevision%>&versionKey=<%=versionKey%>">
+                <a href="/appmgt/site/pages/runtimeLogs.jag?applicationKey=<%=applicationKey%>&versionKey=<%=versionKey%>">
                 <i class="left-menu-icon fw fw-hdd"></i>Logs</a>
         </li>
         <li id="customUrlPage" style="display: none" class="<% if (pageName == "Custom URL") { %>selected<%}%>">
-                <a href="/appmgt/site/pages/customurl.jag?applicationKey=<%=applicationKey%>&selectedRevision=<%=selectedRevision%>">
+                <a href="/appmgt/site/pages/customurl.jag?applicationKey=<%=applicationKey%>">
                 <i class="left-menu-icon fw fw-uri"></i>Custom URL</a>
         </li>
         <li class="<% if (pageName == "Settings") { %>selected<%}%>">
-                <a href="/appmgt/site/pages/settings.jag?applicationKey=<%=applicationKey%>&selectedRevision=<%=selectedRevision%>">
+                <a href="/appmgt/site/pages/settings.jag?applicationKey=<%=applicationKey%>">
                 <i class="left-menu-icon fw fw-settings"></i>Settings</a>
         </li>
 

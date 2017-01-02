@@ -30,6 +30,7 @@ jagg.template("runtimeLogs", function (inputs, outputs, jagg) {
     // currently selected revision
     // ex: "1.0.0"
     var selectedRevision = outputs.selectedRevision;
+    var selectedReplica = request.getParameter("selectedReplica");
     var cloudSpecificApplicationRepresentation = outputs.cloudSpecificApplicationRepresentation;
 
 %>
@@ -44,6 +45,7 @@ jagg.template("runtimeLogs", function (inputs, outputs, jagg) {
     var APPLICATION_RUNNING = "<%=APPLICATION_RUNNING%>";
     var APPLICATION_INACTIVE = "<%=APPLICATION_INACTIVE%>";
     var cloudSpecificApplicationRepresentation = "<%=cloudSpecificApplicationRepresentation%>";
+    var selectedReplica = "<%=selectedReplica%>";
 </script>
 
    <!-- right pane wrapper -->
