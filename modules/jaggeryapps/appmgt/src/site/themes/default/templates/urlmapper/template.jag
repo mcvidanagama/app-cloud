@@ -76,7 +76,7 @@ jagg.template("urlmapper", function (inputs, outputs, jagg) { %>
                   <i class="fw fw-add fw-stack-1x"></i>
               </span>
               <span id="configureButtonText">
-                  Configure custom url
+                  Configure
               </span>
             </button>
          </div>
