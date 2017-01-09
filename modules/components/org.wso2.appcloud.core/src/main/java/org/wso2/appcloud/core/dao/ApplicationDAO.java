@@ -20,16 +20,7 @@ import org.apache.commons.io.IOUtils;
 import org.wso2.appcloud.common.AppCloudException;
 import org.wso2.appcloud.core.DBUtil;
 import org.wso2.appcloud.core.SQLQueryConstants;
-import org.wso2.appcloud.core.dto.Application;
-import org.wso2.appcloud.core.dto.ApplicationRuntime;
-import org.wso2.appcloud.core.dto.ApplicationType;
-import org.wso2.appcloud.core.dto.Container;
-import org.wso2.appcloud.core.dto.ContainerServiceProxy;
-import org.wso2.appcloud.core.dto.Deployment;
-import org.wso2.appcloud.core.dto.RuntimeProperty;
-import org.wso2.appcloud.core.dto.Tag;
-import org.wso2.appcloud.core.dto.Transport;
-import org.wso2.appcloud.core.dto.Version;
+import org.wso2.appcloud.core.dto.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -1952,6 +1943,40 @@ public class ApplicationDAO {
     }
 
     /**
+     * Get tier information of a tenant
+     * @param dbConnection database connection
+     * @param tenantId tenant's id
+     * @return usageTier
+     * @throws AppCloudException
+     */
+    public UsageTier getTenantTierInfo(Connection dbConnection, int tenantId) throws AppCloudException {
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        UsageTier usageTier = new UsageTier();
+        try {
+            preparedStatement = dbConnection.prepareStatement(SQLQueryConstants.GET_TENANT_TIER_INFO);
+            preparedStatement.setInt(1, tenantId);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                usageTier.setPlanName(resultSet.getString("PLAN_NAME"));
+                usageTier.setMaxApplicationCount(resultSet.getInt("MAX_APPLICATIONS"));
+                usageTier.setMaxReplicaCount(resultSet.getInt("MAX_REPLICA_COUNT"));
+                usageTier.setMaxDatabaseCount(resultSet.getInt("MAX_DATABASES"));
+                usageTier.setCpuLimit(resultSet.getInt("CUMULATIVE_CPU"));
+                usageTier.setRamLimit(resultSet.getInt("CUMULATIVE_RAM"));
+            }
+        } catch (SQLException e) {
+            String msg = "Error while getting tire info for tenant : " + tenantId ;
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeResultSet(resultSet);
+            DBUtil.closePreparedStatement(preparedStatement);
+        }
+        System.out.println("Plan Name" + usageTier.getPlanName());
+        return usageTier;
+    }
+
+    /**
      * Method for whitelisting tenant per cloud
      *
      * @param dbConnection     database connection
@@ -2404,6 +2429,42 @@ public class ApplicationDAO {
                 application.setHashId(resultSet.getString("VERSION_HASH_ID"));
                 application.setApplicationName(resultSet.getString("APPLICATION_NAME"));
                 application.setApplicationType(resultSet.getString("APP_TYPE_NAME"));
+                tenantApplications.get(tenantId).add(application);
+            }
+            return tenantApplications;
+        } catch (SQLException e) {
+            String msg = "Error while getting all running applications of all tenants.";
+            throw new AppCloudException(msg, e);
+        }
+    }
+
+    /**
+     * This method returns tenant's running application list
+     * @param dbConnection
+     * @param tenantId
+     * @return
+     * @throws AppCloudException
+     */
+    public Map<Integer, List<Application>> getRunningApplicationsOfTenant(Connection dbConnection, int tenantId) throws AppCloudException {
+        Map<Integer, List<Application>> tenantApplications = new HashMap<>();
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            preparedStatement = dbConnection.prepareStatement(SQLQueryConstants.GET_RUNNING_APPLICATIONS_OF_A_TENANT);
+            preparedStatement.setInt(1, tenantId);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                if (tenantApplications.get(tenantId) == null) {
+                    tenantApplications.put(tenantId, new ArrayList<Application>());
+                }
+                Application application = new Application();
+                application.setDefaultVersion(resultSet.getString("VERSION_NAME"));
+                application.setHashId(resultSet.getString("VERSION_HASH_ID"));
+                application.setApplicationName(resultSet.getString("APPLICATION_NAME"));
+                application.setApplicationType(resultSet.getString("APP_TYPE_NAME"));
+                application.setCpu(resultSet.getInt("CONTAINER_CPU"));
+                application.setRam(resultSet.getInt("CONTAINER_MEM"));
                 tenantApplications.get(tenantId).add(application);
             }
             return tenantApplications;
