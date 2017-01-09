@@ -115,11 +115,11 @@ var addApplication = function (applicationName, versionName, applicationDescript
         if (elementArray.length == 3 ) { // registry : port : tag
             imageName = elementArray[0] + ":" + elementArray[1];
             tagName = elementArray[2];
-            log.info("image name : " + imageName + "tag name : " + tagName)
+            log.info("image name : " + imageName + " tag name : " + tagName);
         } else { // registry : tag
             imageName = elementArray[0];
             tagName = elementArray[1];
-            log.info("image name : " + imageName + "tag name : " + tagName)
+            log.info("image name : " + imageName + " tag name : " + tagName);
 
 /*
     var absFileUploadedPath =  createDockerFile(applicationName, versionName, appTypeName, runtimeId, uploadedFileName,
