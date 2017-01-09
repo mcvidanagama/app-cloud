@@ -40,12 +40,10 @@ jagg.template("apptype/select", function(inputs, outputs, jagg) {
         </a>
     </div>
     <div class="container-fluid app-type-listing">
-       <div class="row listing padding-bottom-xlg" data-count="<%=appTypes.length -1%>"> <!-- -1 was added because we hide the custom docker image app type -->
+       <div class="row listing padding-bottom-xlg" data-count="<%=appTypes.length%>">
           <%
             if (appTypes.length > 0) {
                 for (var x = 0; x < appTypes.length; x++) {
-                    if(appTypes[x].name != "custom") { // This if condition is temporary. Until we fully complete the custom docker feature and allow all users.
-                        // At the moment only wso2 internal users will be allowed to use this feature using rest API , not using UI
           %>
                 <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2 ">
                     <div class="cloud-app-type <%=appTypes[x].cssProperties.color%> cloud-app-type-max" id="<%=x + 1%>"
@@ -58,7 +56,7 @@ jagg.template("apptype/select", function(inputs, outputs, jagg) {
                     </div>
                 </div>
         <%
-                    }
+
                 }
             }
         %>
@@ -79,7 +77,7 @@ jagg.template("apptype/select", function(inputs, outputs, jagg) {
                      <!--a href="#" class="cu-btn cu-btn-md cu-btn-gray"><i class="fa fa-video-camera"></i> Video Guide</a-->
                   </div>
                </div>
-                <div class="col-sm-4 col-md-4 col-lg-5 description-action">
+                <div id="buttonsDiv" class="col-sm-4 col-md-4 col-lg-5 description-action">
                    <a href="" id="continueButton" class="cu-btn cu-btn-md cu-btn-blue">
                    <span class="fw-stack fw-lg">
                        <i class="fw fw-circle-outline fw-stack-2x"></i>
@@ -115,9 +113,17 @@ jagg.template("apptype/select", function(inputs, outputs, jagg) {
                     dataCount = parseInt($('.listing').attr('data-count'));
 
         var appCreationPage = '<%=jagg.getAbsoluteUrl("/site/pages/application.jag")%>?appTypeName=' + appType;
+        var customDockerImagesPage = '<%=jagg.getAbsoluteUrl("/site/pages/custom-docker-images.jag")%>';
+        var createApplicationButtonHtml = ' <a href="" id="continueButton" class="cu-btn cu-btn-md cu-btn-blue"><span class="fw-stack fw-lg">' +
+                            '<i class="fw fw-circle-outline fw-stack-2x"></i><i class="fw fw-right-arrow fw-stack-1x"></i></span>Create Application</a>'
+                            + '<a href="'+ customDockerImagesPage + '" id="verifyImagesButton" class="cu-btn cu-btn-md cu-btn-gr-dark"><span class="fw-stack fw-lg">' +
+                       '<i class="fw fw-circle-outline fw-stack-2x"></i><i class="fw fw-right-arrow fw-stack-1x"></i></span>Verify Images</a>';
         //content replace with custom html attributes call data
         $('.app-type-info-template').find('.data-appname').html(appName);
         $('.app-type-info-template').find('.app-description').html(appDescription);
+        if(appType == "custom") {
+        $('.app-type-info-template').find('#buttonsDiv').html(createApplicationButtonHtml);
+        }
         $('.app-type-info-template').find('#continueButton').attr("href", appCreationPage);
         $('.app-type-info-template').find('#docUrl').attr("href", docUrl);
         var appendHtml =$('.app-type-info-template').html();
