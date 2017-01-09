@@ -250,6 +250,7 @@ public class PlanDaoImpl implements PlanDao{
 		plan.setPlanName(rs.getString(SQLQueryConstants.PLAN_NAME));
 		plan.setMaxApplications(rs.getInt(SQLQueryConstants.MAX_APPLICATIONS));
 		plan.setMaxDatabases(rs.getInt(SQLQueryConstants.MAX_DATABASES));
+		plan.setMaxReplicas(rs.getInt(SQLQueryConstants.MAX_REPLICA_COUNT));
 		return plan;
 	}
 }

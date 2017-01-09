@@ -23,12 +23,14 @@ import io.fabric8.kubernetes.client.AutoAdaptableKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.fabric8.kubernetes.client.dsl.LogWatch;
 import io.fabric8.kubernetes.client.dsl.PrettyLoggable;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.wso2.appcloud.provisioning.runtime.Utils.KubernetesProvisioningUtils;
 import org.wso2.appcloud.provisioning.runtime.beans.*;
 import org.wso2.appcloud.provisioning.runtime.beans.Container;
-import org.wso2.appcloud.provisioning.runtime.beans.ResourceQuotaLimit;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -267,6 +269,7 @@ public class KubernetesRuntimeProvisioningService implements RuntimeProvisioning
         //Add tenantDomain to label map for the service
         Map<String, String> labelMap = KubernetesProvisioningUtils.getLableMap(applicationContext);
         labelMap.put("tenantDomain", applicationContext.getTenantInfo().getTenantDomain());
+        labelMap.put("exposure-level", applicationContext.getExposureLevel());
 
         //Deployment Unique service name is built using deployment name and the service name.
         String serviceName = serviceProxy.getServiceName();
@@ -396,7 +399,7 @@ public class KubernetesRuntimeProvisioningService implements RuntimeProvisioning
                             logs = (String) prettyLoggablePrev.getLog(true);
                         }
                         logs += (String) prettyLoggable.getLog(true);
-                        logOutPut.put("Replica-" + podCounter + "-" + container.getName(), logs);
+                        logOutPut.put("Replica_" + podCounter + "_" + pod.getMetadata().getName(), logs);
                         deploymentLogs.setDeploymentLogs(logOutPut);
                     }
                     podCounter++;
@@ -1022,6 +1025,9 @@ public class KubernetesRuntimeProvisioningService implements RuntimeProvisioning
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
 	@Override
 	public Map<String, String> getPodRestartCounts() throws RuntimeProvisioningException {
 		Map<String, String> podRestartCounts = new HashMap<>();
@@ -1041,10 +1047,121 @@ public class KubernetesRuntimeProvisioningService implements RuntimeProvisioning
 			}
 			return podRestartCounts;
 		} else {
-			String message = "Couldnot find a pod associated with pod for application : " + applicationContext.getId() +
+			String message = "Could not find a pod associated with pod for application : " + applicationContext.getId() +
 			                 ", version : " + applicationContext.getVersion();
 			log.error(message);
 			throw new RuntimeProvisioningException(message);
 		}
 	}
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JSONArray getReplicaInfo() throws RuntimeProvisioningException {
+        PodList podList = KubernetesProvisioningUtils.getPods(applicationContext);
+        if (podList != null) {
+            JSONArray jsonArray = new JSONArray();
+            for (Pod pod : podList.getItems()) {
+                if(pod.getStatus().getContainerStatuses().size() > 0) {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("podName", pod.getMetadata().getName());
+                    jsonObject.put("restartCount", pod.getStatus().getContainerStatuses().get(0).getRestartCount());
+                    jsonArray.put(jsonObject);
+                } else {
+                    //In case query is done before the pod get fully created,
+                    //Restart count wont be available so returning 0
+                    //Pod name return as empty
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("podName", "");
+                    jsonObject.put("restartCount", String.valueOf(0));
+                    jsonArray.put(jsonObject);
+                }
+            }
+            return jsonArray;
+        } else {
+            String message = "Could not find a pod associated with pod for application : " + applicationContext.getId() +
+                    ", version : " + applicationContext.getVersion();
+            log.error(message);
+            throw new RuntimeProvisioningException(message);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void changeExposureLevelInServices(String serviceName, String exposureLevel, String lbHost)
+            throws  RuntimeProvisioningException {
+        AutoAdaptableKubernetesClient kubClient = KubernetesProvisioningUtils.getFabric8KubernetesClient();
+        kubClient.services().inNamespace(this.namespace.getMetadata().getName())
+                .withName(serviceName).edit().editMetadata()
+                .addToLabels("exposure-level", exposureLevel).endMetadata().done();
+
+        kubClient.services().inNamespace(this.namespace.getMetadata().getName())
+                .withName(serviceName).edit().editMetadata()
+                .addToAnnotations("serviceloadbalancer/lb.host", lbHost).endMetadata().done();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void updateKubernetesServiceWithLabel(String serviceName, String labelKey, String labelValue)
+            throws RuntimeProvisioningException {
+        String namespace = this.namespace.getMetadata().getName();
+        try {
+            AutoAdaptableKubernetesClient kubClient = KubernetesProvisioningUtils.getFabric8KubernetesClient();
+            kubClient.services().inNamespace(namespace).withName(serviceName).edit().editMetadata()
+                    .addToLabels(labelKey, labelValue).endMetadata().done();
+        } catch (KubernetesClientException e) {
+            String message = "Error while adding label to kubernetes kind service with service name: " + serviceName
+                    + " in namespace: " + namespace;
+            log.error(message, e);
+            throw new RuntimeProvisioningException(message, e);
+        }
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void createDeploymentAutoScalePolicy(String name) throws RuntimeProvisioningException {
+        AutoAdaptableKubernetesClient kubernetesClient = KubernetesProvisioningUtils.getFabric8KubernetesClient();
+        String namespace = this.namespace.getMetadata().getName();
+
+        HorizontalPodAutoscaler horizontalPodAutoscaler = new HorizontalPodAutoscalerBuilder()
+                .withNewMetadata().withNamespace(namespace).withName(name).endMetadata()
+                .withNewSpec().withMinReplicas(1).withMaxReplicas(5).withNewCpuUtilization(50)
+                .withNewScaleRef().withName(name).withKind(KubernetesPovisioningConstants.KIND_DEPLOYMENT)
+                .endScaleRef().endSpec()
+                .build();
+
+        kubernetesClient.extensions().horizontalPodAutoscalers().inNamespace(namespace).create(horizontalPodAutoscaler);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void scaleDeployment(String name, int replicaCount) throws RuntimeProvisioningException {
+        AutoAdaptableKubernetesClient kubernetesClient = KubernetesProvisioningUtils.getFabric8KubernetesClient();
+        String namespace = this.namespace.getMetadata().getName();
+
+        kubernetesClient.extensions().deployments().inNamespace(namespace).withName(name).scale(replicaCount);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getReplicasForDeployment(String name) throws RuntimeProvisioningException {
+        AutoAdaptableKubernetesClient kubernetesClient = KubernetesProvisioningUtils.getFabric8KubernetesClient();
+        String namespace = this.namespace.getMetadata().getName();
+        int count = kubernetesClient.extensions().deployments().inNamespace(namespace).withName(name).get().getSpec()
+                .getReplicas();
+        log.info("Replica count for deployment:" + name + ":" + count);
+        return count;
+    }
 }

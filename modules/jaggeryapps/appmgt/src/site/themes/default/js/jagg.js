@@ -20,14 +20,14 @@ var messageTimer;
 (function () {
     jagg.post = function(url, data, callback, error) {
         return jQuery.ajax({
-                               type:"POST",
-                               url:url,
-                               data:data,
-                               async:true,
-                               cache:false,
-                               success:callback,
-                               error: function (jqXHR, textStatus, errorThrown ) {
-                                   if (jqXHR.status == 401) {
+                       type:"POST",
+                       url:url,
+                       data:data,
+                       async:true,
+                       cache:false,
+                       success:callback,
+                       statusCode: {
+                           401: function isSessionExpired() {
                                        jagg.infoMessage({
                                            type: 'confirm',
                                            modalStatus: true,
@@ -36,10 +36,9 @@ var messageTimer;
                                                window.location.reload();
                                            }
                                        });
-                                   } else {
-                                       return jqXHR;
                                    }
-                               }
+                                },
+                       error:error
         });
     };
 

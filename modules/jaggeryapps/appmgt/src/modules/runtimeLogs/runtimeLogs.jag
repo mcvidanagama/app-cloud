@@ -27,20 +27,24 @@ var KubernetesRuntime = Packages.org.wso2.appcloud.provisioning.runtime.Kubernet
 var KubernetesProvisioningUtils = Packages.org.wso2.appcloud.provisioning.runtime.Utils.KubernetesProvisioningUtils;
 var DeploymentLogs = Packages.org.wso2.appcloud.provisioning.runtime.beans.DeploymentLogs;
 var DeploymentLogStream = Packages.org.wso2.appcloud.provisioning.runtime.beans.DeploymentLogStream;
+var applicationModule = jagg.module("application");
 
 var getRuntimeLogs = function (applicationKey, selectedRevision, applicationType, isStream) {
 
     var deploymentLog;
     var applicationName = ApplicationManager.getApplicationNameByHashId(applicationKey);
     var versionHashId = Util.getVersionHashId(applicationName, selectedRevision, modManager.getTenantId());
+    var exposureLevel = applicationModule.getExposureLevel(applicationName, selectedRevision);
 
     try {
         var applicationCtx = KubernetesProvisioningUtils.getApplicationContext(applicationName, selectedRevision,
                                                                                applicationType,
                                                                                modManager.getTenantId(),
-                                                                               modManager.getTenantDomain(), versionHashId);
+                                                                               modManager.getTenantDomain(),
+                                                                               versionHashId, exposureLevel);
         var kubService = new KubernetesRuntime(applicationCtx);
-        if (isStream){
+        //if (isStream){
+        if (false) {
             return kubService.streamRuntimeLogs();
         } else {
             return kubService.getRuntimeLogs(null);
@@ -69,17 +73,16 @@ var getFormattedRuntimeLogs = function (applicationKey, selectedRevision, applic
         session.put(sessionKey, result);
     }
     var logMap = {};
-    if (result instanceof DeploymentLogStream){
+    if (result instanceof DeploymentLogs){
         var map = result.getDeploymentLogs();
         if(map && map.entrySet()) {
             var iterator = map.entrySet().iterator();
             while (iterator.hasNext()) {
                 var entry = iterator.next();
-                var logContent = result.getLogContent(entry.getKey());
-                logMap[entry.getKey()] = logContent;
+                logMap[entry.getKey()] = entry.getValue().toString();
             }
         }
-        if(isFirstRequest === 'true'){
+        /*if(isFirstRequest === 'true'){
             setTimeout(
                 function(){
                     try {
@@ -88,7 +91,7 @@ var getFormattedRuntimeLogs = function (applicationKey, selectedRevision, applic
                         log.warn("Stream already closed.");
                     }
                 }, 900000);
-        }
+        }*/
         return logMap;
     } else {
         throw "Error while calling mod.getRuntimeLogs. Results are not instances of DeploymentLogs";

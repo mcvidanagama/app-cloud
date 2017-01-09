@@ -33,9 +33,24 @@ jagg.block("settings", {
 
         var modManager = jagg.module("manager");
         var cloudSpecificApplicationRepresentation = modManager.getCloudTypeProperties().cloudSpecificApplicationRepresentation;
+        var privateURL = modManager.getPropertyValue("ApplicationLaunchBaseURL.Private");
+        var publicURL = modManager.getPropertyValue("ApplicationLaunchBaseURL.Public");
+        var tenantDomain = modManager.getTenantDomain().replace(".","-");
+        var maxReplicaCount = applicationModule.getMaxReplicaCount();
+        var requestIncreaseReplicaLimitSubjectMessage = 'Request to increase replica limit';
+        var requestIncreaseReplicaLimitURL = modManager.getPropertyValue(modManager.getCloudTypeProperties().properties.supportUrl) +
+                '&subject=' + requestIncreaseReplicaLimitSubjectMessage;
+        var cloudSpecificApplicationRepresentation = modManager.getCloudTypeProperties().cloudSpecificApplicationRepresentation;
+
         return {
             "application": application,
-            "cloudSpecificApplicationRepresentation":cloudSpecificApplicationRepresentation
+            "cloudSpecificApplicationRepresentation":cloudSpecificApplicationRepresentation,
+            "privateURL":privateURL,
+            "publicURL":publicURL,
+            "tenantDomain":tenantDomain,
+            "maxReplicaCount":maxReplicaCount,
+            "requestIncreaseReplicaLimitURL": requestIncreaseReplicaLimitURL,
+            "cloudSpecificApplicationRepresentation": cloudSpecificApplicationRepresentation
         };
     }
 

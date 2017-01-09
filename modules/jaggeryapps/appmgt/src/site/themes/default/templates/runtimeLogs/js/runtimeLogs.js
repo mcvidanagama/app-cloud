@@ -20,7 +20,6 @@
 
 var selectedRevisionLogMap = {};
 var selectedRevisionReplicaList = [];
-var selectedReplica;
 var editor;
 var isLogsAvailable = false;
 var timerId;
@@ -35,22 +34,31 @@ $(document).ready(function () {
         theme:'icecoder'
     });
     initData(selectedRevision, true);
-    timerId = setInterval(function(){ initData(selectedRevision, false); }, 3000);
-    $('#noOfLines').on('change', function() {
-      setLogArea(fullLogVal, true);
-    });
 });
 
-function regerateReplicasList(selectedRevisionReplicaList) {
+function regenerateReplicasList(selectedRevisionReplicaList) {
     $('#replicas').empty();
+
     for (var i = 0; i < selectedRevisionReplicaList.length; i++) {
         var $option = $('<option value="' + selectedRevisionReplicaList[i] + '">' + selectedRevisionReplicaList[i] + '</option>');
-        if (i == 0) {
-            selectedReplica = selectedRevisionReplicaList[i];
-            $option.attr('selected', 'selected');
-        }
         $('#replicas').append($option);
     }
+
+    var options = $("#replicas option");                    // Collect options
+    options.detach().sort(function(a,b) {               // Detach from select, then Sort
+        var at = $(a).text();
+        var bt = $(b).text();
+        return (at > bt)?1:((at < bt)?-1:0);            // Tell the sort function how to order
+    });
+
+    options.appendTo("#replicas");
+
+    if(selectedReplica != "null") {
+        $("#replicas").val(selectedReplica);
+    } else {
+        $("#replicas").prop('selectedIndex', 0).change();
+    }
+
 }
 
 function setLogArea(logVal, isFirstRequest){
@@ -98,10 +106,8 @@ function initData(selectedRevision, isFirstRequest){
         if(!jQuery.isEmptyObject(selectedRevisionLogMap)){
             $("#log-download").removeClass("btn-action btn disabled").addClass("btn-action");
             selectedRevisionReplicaList = Object.keys(selectedRevisionLogMap);
-            if(isFirstRequest){
-                regerateReplicasList(selectedRevisionReplicaList);
-            }
-            setLogArea(selectedRevisionLogMap[selectedRevisionReplicaList[0]], isFirstRequest);
+            regenerateReplicasList(selectedRevisionReplicaList);
+            setLogArea(selectedRevisionLogMap[selectedReplica], isFirstRequest);
         } else {
             //Check for application revision status and display correct message
             jagg.post("../blocks/runtimeLogs/ajax/runtimeLogs.jag", {
@@ -112,7 +118,7 @@ function initData(selectedRevision, isFirstRequest){
                 result = result.trim();
                 var revisionStatus = result;
                 if (revisionStatus == APPLICATION_STOPPED) {
-                    clearInterval(timerId);
+                    //clearInterval(timerId);
                     jagg.message({
                         content: "The " + cloudSpecificApplicationRepresentation.toLowerCase() + " is currently stopped. Please restart the " + cloudSpecificApplicationRepresentation.toLowerCase()+ " to see its logs.",
                         type: 'information',
@@ -121,7 +127,7 @@ function initData(selectedRevision, isFirstRequest){
                     });
                     setLogArea("Logs are unavailable as the " + cloudSpecificApplicationRepresentation.toLowerCase() + " is stopped.", true);
                 } else if (revisionStatus == APPLICATION_INACTIVE) {
-                    clearInterval(timerId);
+                    //clearInterval(timerId);
                     jagg.message({
                         content: "The " + cloudSpecificApplicationRepresentation.toLowerCase() + " is stopped due to inactivity. Please restart it to see its logs.",
                         type: 'information',
@@ -130,7 +136,7 @@ function initData(selectedRevision, isFirstRequest){
                     });
                     setLogArea("Logs are unavailable as the " + cloudSpecificApplicationRepresentation.toLowerCase() + " is stopped..", true);
                 } else {
-                    clearInterval(timerId);
+                    //clearInterval(timerId);
                     jagg.message({
                         content: "Deployment is in progress. Please wait.",
                         type: 'information',
@@ -157,9 +163,9 @@ function initelements(){
     var urlText = $('.version-url a span').text();
 
     //Maximum character limit is 90. further than that the text would not show and the title would!
-    if(urlText.length > 90){
+    if (urlText.length > 90){
         $('.version-url a').prop('title',urlText).find('span').text(urlText);
-    }else{
+    } else {
         $('.version-url a span').text(urlText);
     }
 
@@ -174,7 +180,12 @@ function initelements(){
 
     $('#replicas').on('change', function (e) {
         selectedReplica = this.value;
-        setLogArea(selectedRevisionLogMap[selectedReplica],true);
+        setLogArea(selectedRevisionLogMap[selectedReplica], true);
+    });
+
+    $('#noOfLines').on('change', function (e) {
+        selectedReplica =  $('#replicas').val();
+        setLogArea(selectedRevisionLogMap[selectedReplica], true);
     });
 
     $('#log-download').off('click').on('click', downloadLogs);
@@ -213,7 +224,10 @@ function downloadLogs(e) {
                     + "</table>";
             $("#progress_table").html(table);
             selectedRevisionReplicaList = Object.keys(selectedRevisionLogMap);
-            saveTextAsFile(selectedRevisionLogMap[selectedRevisionReplicaList[0]]);
+            for (i = 0; i < selectedRevisionReplicaList.length; i++) {
+                saveTextAsFile(selectedRevisionLogMap[selectedRevisionReplicaList[i]]);
+            }
+            //saveTextAsFile(selectedRevisionLogMap[selectedRevisionReplicaList[0]]);
         } else {
             $("#log_download_progress_modal").hide();
             jagg.message({content: "No logs found in the server.", type: 'information', id:'view_log'});
@@ -246,3 +260,7 @@ function saveTextAsFile(textToWrite) {
     $("#log_download_progress_modal").hide();
     downloadLink.click();
 }
+
+$("#log-reload").click(function () {
+    initData(selectedRevision, true);
+});

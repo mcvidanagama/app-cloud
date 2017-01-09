@@ -288,6 +288,8 @@ jagg.template("application", function (inputs, outputs, jagg) {
                     }
                     if (appTypeName === custom) {
                         var tagArray = new Array();
+                        // base image will be added as a tag, then user can later see the base image in app home UI.
+                        // otherwise there is no any other way to determine from which image this app has been created.
                         var tagObj = { "key":"Base Image", "value":$("#remoteImageUrl").val() };
                         tagArray.push(tagObj);
                         formData.append('tags',JSON.stringify(tagArray));
@@ -679,7 +681,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
         }
 
         function validateRuntimeSelection(value){
-            return (value > 0 ) ? true : false;
+            return (value > 0 || value == 'requestNewRuntime') ? true : false;
         }
 
         function validateContent(value, element) {

@@ -17,6 +17,7 @@
  */
 // page initialization
 var timerId;
+var rcCount;
 $(document).ready(function() {
     // add upload app icon listener
     $("#change_app_icon").change(function(event) {
@@ -32,9 +33,80 @@ $(document).ready(function() {
     if(selectedApplicationRevision.status==APPLICATION_INACTIVE){
         displayApplicationInactiveMessage();
     }
-
     loadEndpointView();
+    loadDashboards();
+    loadReplicas();
+    rcCount = replicaCount;
 });
+
+function loadReplicas() {
+    $("#replica-data").html('');
+    var replicaInfo = null;
+    var replicaCount = 0;
+
+    // get running replica info from k8s cluster
+    jagg.post("../blocks/application/application.jag", {
+        action: "getReplicaInfo",
+        appType: application.applicationType,
+        applicationName: applicationName,
+        versionName: selectedRevision
+    }, function(result) {
+        replicaInfo = JSON.parse(result);
+
+        // get replica count per version
+        jagg.post("../blocks/settings/settings.jag", {
+            action: "getReplicaCountForVersion",
+            applicationName: applicationName,
+            versionName: selectedRevision
+        },function (result) {
+            replicaCount = JSON.parse(result);
+
+            var diff = replicaCount - replicaInfo.length;
+            var replicas_html = "";
+
+            for (var i = 0; i < replicaInfo.length; i++) {
+                replicas_html += '<div class="block-replicas">' +
+                    '<figure class="node-cicle" data-percent="100">' +
+                    '<figcaption>' +
+                    '<span>' + (i + 1) + '</span>' +
+                    '</figcaption>';
+
+                replicas_html += '<svg width="100" height="100">' +
+                    '<circle class="outer" cx="142" cy="48" r="42" transform="rotate(-90, 95, 95)"></circle>' +
+                    '</svg>';
+                if (parseInt(replicaInfo[i].restartCount) > 0) {
+                    replicas_html += '<span href="#" onclick="displayRestartCountMessage();"><span class="restart-count">Restarts : ' + replicaInfo[i].restartCount + '</span></span>';
+                }
+                replicas_html += '<a href="/appmgt/site/pages/runtimeLogs.jag?applicationKey=' + applicationKey + '&selectedRevision=' + selectedRevision + '&selectedReplica=Replica_' + (i+1) + '_' + replicaInfo[i].podName + '" title="View Logs"><i class="fw fw-hdd"></i></a>' +
+                    ' <a target="_blank" href="' + dataAnalyticsServerUrl + '/portal/t/' + tenantDomain + '/dashboards/operational-dashboard/?shared=true&id=' + applicationName + '_' + selectedRevision + '_' + replicaInfo[i].podName + '" title="View Operational Dashboard"><i class="fw fw-dashboard"></i></a>';
+
+                replicas_html += '</figure>' +
+                    '</div>';
+            }
+
+            if (diff > 0) {
+                for (var i = 0; i < diff; i++) {
+                    replicas_html += '<div class="block-replicas">' +
+                        '<figure class="node-cicle" data-percent="100">' +
+                        '<figcaption>' +
+                        '<span>' + (i + 1) + '</span>' +
+                        '</figcaption>';
+                    replicas_html += '<svg width="100" height="100">' +
+                        '<circle class="outer" style="stroke: #ACAFAD;" cx="142" cy="48" r="42" transform="rotate(-90, 95, 95)"/>' +
+                        '</svg>';
+                    replicas_html += '</figure>' +
+                        '</div>';
+                }
+            }
+
+            $("#replica-data").html(replicas_html);
+        },function (jqXHR, textStatus, errorThrown) {
+
+        });
+    }, function(jqXHR, data, errorThrown) {
+
+    });
+}
 
 // wrapping functions
 function initPageView() {
@@ -51,12 +123,6 @@ function initPageView() {
     $('body').on('click', '#launch-version-url-a', displayMessage);
     $('body').on('click', '#launch-default-url-a', displayMessage);
 
-    $('#btn-dashboard').click(function() {
-        var appUrl = $('#btn-dashboard').attr("url");
-        var newWindow = window.open('','_blank');
-        newWindow.location = appUrl;
-    });
-
     listTags();
     listEnvs();
 }
@@ -72,159 +138,6 @@ function generateDefaultLaunchUrl() {
     }
 
     return defaultAppLaunchURL;
-}
-
-function loadEndpointView() {
-    clearInterval(timerId);
-    if (selectedApplicationRevision.status == APPLICATION_RUNNING && application.applicationType != custom) { // endpoints will not be loaded and displayed for custom docker image applications
-        // This is not implemented for mss 1.0.0 runtimes.
-        if (application.applicationType == "mss" && selectedApplicationRevision.runtimeId == 2) {
-            // if mss 1.0.0 do not show endpoints section
-        } else {
-            if (application.applicationType == "wso2dataservice") {
-                displayEndpointNotloadingMessage();
-            }
-            showLoadingEndpointView();
-            var deploymentURL = generateDefaultLaunchUrl();
-            loadEndpoints(deploymentURL, applicationType, selectedApplicationRevision.versionId);
-            timerId = setInterval(function () {
-                loadEndpoints(deploymentURL, applicationType, selectedApplicationRevision.versionId);
-            }, 3000);
-        }
-    } else {
-        $("#app-type-data").html('');
-    }
-}
-
-function displayEndpointNotloadingMessage() {
-    jagg.message({
-        modalStatus: true,
-        type: 'warning',
-        timeout: 15000,
-        content: "The endpoints of your application might not be available if you created it before <b>2016/8/25</b>." +
-            " Please recreate the application or create a new version of it to see the endpoints."
-    });
-}
-
-function showLoadingEndpointView() {
-    $("#app-type-data").html('<div class="block-endpoints "><h5>' +
-        '<span><i class="fw fw-loader2 fw-spin fw-2x"></i></span>' +
-        ' &nbsp; Endpoints of ' + selectedApplicationRevision.runtimeName + ' runtime is loading ...</h5></div>');
-}
-
-function loadEndpoints(deploymentURL, applicationType, versionId) {
-    jagg.post("../blocks/application/application.jag", {
-     action: "loadEndpoints",
-     appType: applicationType,
-     deploymentURL: deploymentURL,
-     versionId: versionId
-     }, function(result) {
-        var endpoints = JSON.parse(result);
-        if (endpoints == null) {
-            showLoadingEndpointView();
-        } else {
-            // Generate SOAP Services Section
-            var soap_html = "";
-            if (endpoints.data.soapEndpoints != null) {
-                soap_html += '<h4><i class="fw fw-soap fw-2x"></i> &nbsp; SOAP Services</h4>' +
-                    '<table class="table table-responsive">' +
-                    '<thead class="thead">' +
-                    '<tr>' +
-                    '<th width="30%">Name</th>' +
-                    '<th>WSDL</th>' +
-                    '</tr>' +
-                    '</thead>' +
-                    '<tbody>';
-                for (var i = 0; i < endpoints.data.soapEndpoints.length; i++) {
-                    var proxy = endpoints.data.soapEndpoints[i];
-
-                    soap_html += '<tr>' +
-                        '<td>' + proxy.name + '</td>' +
-                        '<td><a href="' + proxy.wsdl + '" target="_blank">' + proxy.wsdl + '</a></td>' +
-                        '</tr>';
-                }
-                soap_html += '</tbody>' +
-                    '</table>';
-            }
-
-            // Generate REST APIs Section
-            var rest_html = "";
-            if (endpoints.data.restEndpoints != null) {
-                rest_html += '<h4><i class="fw fw-rest-api fw-2x"></i> &nbsp; REST APIs</h4>' +
-                    '<table class="table table-responsive">' +
-                    '<thead class="thead">' +
-                    '<tr>' +
-                    '<th width="30%">Name</th>' +
-                    '<th>URL</th>' +
-                    '</tr>' +
-                    '</thead>' +
-                    '<tbody>';
-
-                for (var j = 0; j < endpoints.data.restEndpoints.length; j++) {
-                    var api = endpoints.data.restEndpoints[j];
-                    rest_html += '<tr>' +
-                        '<td>' + api.name + '</td>' +
-                        '<td><a href="' + api.url + '" target="_blank">' + api.url + '</a></td>' +
-                        '</tr>';
-                }
-                rest_html += '</tbody></table>';
-
-            }
-
-            // Generate Web URLs Section
-            var web_html = "";
-            if (endpoints.data.webEndpoints != null) {
-                web_html += '<h4><i class="fw fw-endpoint fw-2x"></i> &nbsp; Web URLs</h4>' +
-                    '<table class="table table-responsive">' +
-                    '<thead class="thead">' +
-                    '<tr>' +
-                    '<th width="30%">Context</th>' +
-                    '<th>URL</th>' +
-                    '</tr>' +
-                    '</thead>' +
-                    '<tbody>';
-
-                for (var k = 0; k < endpoints.data.webEndpoints.length; k++) {
-                    var web = endpoints.data.webEndpoints[k];
-                    web_html += '<tr>' +
-                        '<td>' + web.context + '</td>' +
-                        '<td><a href="' + web.url + '" target="_blank">' + web.url + '</a></td>' +
-                        '</tr>';
-                }
-                web_html += '</tbody></table>';
-
-            }
-
-            // Generate Swagger URL Section
-            var swagger_html = "";
-            if (endpoints.data.swaggerEndpoints != null) {
-                swagger_html += '<h4><i class="fw fw-swagger fw-2x"></i> &nbsp; Swagger</h4>' +
-                    '<table class="table table-responsive">' +
-                    '<thead class="thead">' +
-                    '<tr>' +
-                    '<th width="30%">Context</th>' +
-                    '<th>URL</th>' +
-                    '</tr>' +
-                    '</thead>' +
-                    '<tbody>';
-
-                for (var j = 0; j < endpoints.data.swaggerEndpoints.length; j++) {
-                    var swagger = endpoints.data.swaggerEndpoints[j];
-                    swagger_html += '<tr>' +
-                        '<td>' + swagger.context + '</td>' +
-                        '<td><a href="' + swagger.url + '" target="_blank">' + swagger.url + '</a></td>' +
-                        '</tr>';
-                }
-                swagger_html += '</tbody></table>';
-
-            }
-            $("#app-type-data").html('<div class="block-endpoints"><h3>Endpoints</h3>' + rest_html + soap_html + web_html + swagger_html + '</div>');
-            clearInterval(timerId);
-        }
-
-     }, function(jqXHR, data, errorThrown) {
-
-     });
 }
 
 function launchApp() {
@@ -364,6 +277,7 @@ function changeSelectedRevision(newRevision){
     $("#selectedRevision").val(newRevision);
     selectedRevision = newRevision;
     selectedApplicationRevision = application.versions[newRevision];
+
     //Changing deploymentURL
     var deploymentURL = selectedApplicationRevision.deploymentURL;
     var repoUrlHtml = generateLunchUrl(deploymentURL);
@@ -373,9 +287,6 @@ function changeSelectedRevision(newRevision){
     // Changing default launch URL
     var defaultAppLaunchURL = generateDefaultLaunchUrl();
     loadEndpointView();
-
-    var dashboardUrl = dashboardBaseUrl + applicationName + "-" + newRevision;
-    $('#btn-dashboard').attr({url:dashboardUrl});
 
     //changing app description
     $("#app-description").text(application.description?application.description:'');
@@ -417,22 +328,11 @@ function changeSelectedRevision(newRevision){
 
         $('#version-app-launch-block').empty();
         $('#version-app-launch-block').html(
-                       '<div class="btn-group ctrl-edit-button btn-edit-code"><a type="button" ' +
-                       'class="btn cu-btn cu-btn-md cu-btn-red" onclick="stopApplication();">Stop' +
-                       '<span id="stop-in-progress"><span></a></div><div class="btn-group ctrl-edit-button btn-edit-code">' +
-                       '<a type="button" class="btn cu-btn cu-btn-md cu-btn-gray" onclick="redeployApplication();">' +
-                       'Redeploy<span id="redeploy-in-progress"><span></a></div>');
-
-        $('.block-replica').empty();
-        $('.block-replica').html('<h3>Replicas</h3><div class="block-replicas"><figure class="node-cicle" ' +
-                                 'data-percent="100"><figcaption>01</figcaption><svg width="200" height="200">' +
-                                 '<circle class="outer" cx="95" cy="95" r="85" transform="rotate(-90, 95, 95)"/></svg>' +
-                                 '<a href="/appmgt/site/pages/runtimeLogs.jag?applicationKey=' + applicationKey + '&selectedRevision=' + newRevision +
-                                 '"><span class="view-log">View Logs</span></a></figure></div><div class="block-replicas">' +
-                                 '<figure class="node-cicle"><figcaption><span class="fw-stack fw-lg ">' +
-                                 '<i class="fw fw-ring fw-stack-2x"></i><i class="fw fw-add fw-stack-1x" ' +
-                                 'data-toggle="tooltip" title="Adding replicas to your ' + cloudSpecificApplicationRepresentation.toLowerCase() + ' will not support in this release."></i>' +
-                                 '</span></figcaption></figure></div>');
+                '<div class="btn-group ctrl-edit-button btn-edit-code"><a type="button" ' +
+                'class="btn cu-btn cu-btn-md cu-btn-red" onclick="stopApplicationPopUp();">Stop' +
+                '<span id="stop-in-progress"><span></a></div><div class="btn-group ctrl-edit-button btn-edit-code">' +
+                '<a type="button" class="btn cu-btn cu-btn-md cu-btn-gray" onclick="redeployApplicationPopUp();">' +
+                'Redeploy<span id="redeploy-in-progress"><span></a></div>');
 
     } else if(selectedApplicationRevision.status == APPLICATION_STOPPED || selectedApplicationRevision.status == APPLICATION_INACTIVE){
 
@@ -444,18 +344,8 @@ function changeSelectedRevision(newRevision){
 
         $('#version-app-launch-block').empty();
         $('#version-app-launch-block').html(
-                       '<div class="btn-group ctrl-edit-button btn-edit-code"><a type="button" ' +
-                       'class="btn cu-btn cu-btn-md cu-btn-blue" onclick="startApplication();">Start</a></div>');
-
-        $('.block-replica').empty();
-        $('.block-replica').html('<h3>Replicas</h3><div class="block-replicas"><figure class="node-cicle" data-percent="100">' +
-                                 '<figcaption>01</figcaption><svg width="200" height="200"><circle class="outer" ' +
-                                 'style="stroke: #ACAFAD;" cx="95" cy="95" r="85" transform="rotate(-90, 95, 95)"/></svg>' +
-                                 '</figure></div><div class="block-replicas"><figure class="node-cicle"><figcaption>' +
-                                 '<span class="fw-stack fw-lg "><i class="fw fw-ring fw-stack-2x"></i>' +
-                                 '<i class="fw fw-add fw-stack-1x" data-toggle="tooltip"' +
-                                 ' title="Adding replicas to your ' + cloudSpecificApplicationRepresentation.toLowerCase() + ' will not support in this release.">' +
-                                 '</i></span></figcaption></figure></div>');
+                '<div class="btn-group ctrl-edit-button btn-edit-code"><a type="button" ' +
+                'class="btn cu-btn cu-btn-md cu-btn-blue" onclick="startApplication();">Start</a></div>');
     } else {
 
         $('#launch-default-url-block').empty();
@@ -466,14 +356,16 @@ function changeSelectedRevision(newRevision){
 
         $('#version-app-launch-block').empty();
         $('#version-app-launch-block').html('<div class="btn-group ctrl-edit-button btn-edit-code">' +
-                                            '<a type="button" class="btn cu-btn cu-btn-md cu-btn-red" ' +
-                                            'href="#yourlink">Error has occurred.</a></div>');
-
+            '<a type="button" class="btn cu-btn cu-btn-md cu-btn-red" ' +
+            'href="#yourlink">Error has occurred.</a></div>');
     }
+
+    loadReplicas();
+
     // Set upload revision btn
     var uploadRevisionUrl = appCreationPageBaseUrl+"?appTypeName="+application.applicationType +
-                            "&applicationName="+applicationName + "&encodedLabels="+encodedLabels + "&encodedEnvs="
-                                    + encodedEnvs + "&newVersion=true" + "&versionArray=" + encodeURI(versionArray);
+        "&applicationName="+applicationName + "&encodedLabels="+encodedLabels + "&encodedEnvs="
+        + encodedEnvs + "&newVersion=true" + "&versionArray=" + encodeURI(versionArray);
     $('#upload-revision').attr("href", uploadRevisionUrl);
 
     changeRuntimeProps(selectedApplicationRevision);
@@ -499,7 +391,7 @@ function generateLunchUrl(appURL, status) {
 }
 
 function putSelectedRevisionToSession(applicationKey, selectedRevision){
-    jagg.syncPost("../blocks/home/ajax/get.jag", {
+    jagg.post("../blocks/home/ajax/get.jag", {
         action: "putSelectedRevisionToSession",
         applicationKey: applicationKey,
         selectedRevision: selectedRevision
@@ -605,6 +497,22 @@ function deleteApplicationPopUp(){
             }, noCallback:function(){}
         });
     }
+}
+
+function stopApplicationPopUp(){
+    jagg.popMessage({type:'confirm', modalStatus: true, title:'Stop ' + cloudSpecificApplicationRepresentation + ' Version',content:'Are your sure you want to stop ' +  selectedRevision + ' version of this ' + cloudSpecificApplicationRepresentation.toLowerCase() + ' ?',
+        yesCallback:function(){
+            stopApplication();
+        }
+    });
+}
+
+function redeployApplicationPopUp(){
+    jagg.popMessage({type:'confirm', modalStatus: true, title:'Redeploy ' + cloudSpecificApplicationRepresentation + ' Version',content:'Are your sure you want to redeploy ' +  selectedRevision + ' version of this ' + cloudSpecificApplicationRepresentation.toLowerCase() + ' ?',
+        yesCallback:function(){
+            redeployApplication();
+        }
+    });
 }
 
 function redirectAppListing() {

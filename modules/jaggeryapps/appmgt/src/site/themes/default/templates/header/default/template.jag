@@ -36,6 +36,9 @@ jagg.template("header/default", function(inputs, outputs, jagg) {
     var changePasswordURL = outputs.changePasswordURL;
     var profileURL = outputs.profileURL;
     var zopimChatId = outputs.zopimChatId;
+    var managerModule = jagg.module("manager");
+    var hasCustomURLSettingsAccess = managerModule.hasCustomURLSettingsAccess();
+    var customUrlSettingsPageUrl = managerModule.getPropertyValue(CUSTOM_URL_SETTINGS_PAGE_URL);
     if(isGoogleAnalyticsEnabled) {
 %>
            
@@ -69,7 +72,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     }
 %>
 
-//----------------------- Zopim Chat -------------------------------
+<!-- ----------------------- Zopim Chat ----------------------------- -->
 <script>
 window.$zopim || (function (d, s) {
     var z = $zopim = function (c) {
@@ -94,7 +97,7 @@ $zopim(function () {
         $zopim.livechat.setEmail('<%=loggedInUserName%>');
 });
 </script>
-    
+
 <!-- BOF cloud menu -->
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container-fluid">
@@ -182,6 +185,10 @@ $zopim(function () {
                             <i class="fa fa-3x  fa-database"></i>
                             <div class="cloud-name">Databases</div>
                         </a>
+                       <a id="customUrlBlock" style="display: none;" class="cloud-block-invert" href="<%=customUrlSettingsPageUrl%>?backUrl=<%=appCloudURL%>">
+                            <i class="fa fa-3x  fa-link"></i>
+                            <div class="cloud-name">CustomUrl</div>
+                       </a>
                    </div>
                 </div>
             </div>
@@ -215,6 +222,14 @@ $zopim(function () {
 <script src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('js/custom/custom.js'))%>"></script>
 <script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('js/custom/validator.js'))%>"></script>
 
+<script>
+    var hasCustomURLSettingsAccess = "<%=hasCustomURLSettingsAccess%>";
+    $(document).ready(function() {
+        if (hasCustomURLSettingsAccess == "true") {
+            $("#customUrlBlock").css("display", "block");
+        }
+    });
+</script>
 
     <%
 }); %>

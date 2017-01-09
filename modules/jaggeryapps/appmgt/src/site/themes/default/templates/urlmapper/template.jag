@@ -26,6 +26,7 @@ jagg.template("urlmapper", function (inputs, outputs, jagg) { %>
     var customURL = application.customURL;
     var defaultHostName = outputs.defaultHostName;
     var cloudSpecificApplicationRepresentation = outputs.cloudSpecificApplicationRepresentation;
+    var customUrlSettingsPageUrl = outputs.customUrlSettingsPageUrl;
 %>
 
 <!-- start of setting global javascript variable values from jaggery side -->
@@ -35,18 +36,16 @@ jagg.template("urlmapper", function (inputs, outputs, jagg) { %>
     var customURL = "<%=customURL%>";
     var defaultHostName = "<%=defaultHostName%>";
     var cloudSpecificApplicationRepresentation = "<%=cloudSpecificApplicationRepresentation%>";
+    var customUrlSettingsPageUrl = "<%=customUrlSettingsPageUrl%>";
 </script><!-- end of setting global javascript variable -->
 
 <div class="right-pane visible">
 <!-- BOF App factory menu actionbar -->
 <input type="hidden" maxlength="19" id="defaultDomain" name="defaultDomain" value=""/>
 <div class="action-bar">
-	<a href="/appmgt/site/pages/home.jag?applicationKey=<%=applicationKey%>" class="btn-action" data-toggle="tooltip" data-placement="top" title="Back to <%=cloudSpecificApplicationRepresentation%>">
-         <span class="fw-stack fw-lg btn-action-ico">
-             <i class="fw fw-circle-outline fw-stack-2x"></i>
-             <i class="fw fw-left-arrow fw-stack-1x"></i>
-         </span> <span class="hidden-xs">Back to <%=cloudSpecificApplicationRepresentation%></span>
-    </a>
+    <div class="side-pane-trigger">
+        <i class="fw fw-left"></i>
+    </div>
 </div><!-- EOF App factory menu actionbar-->
 
 <div class="container-fluid app-content-section">
@@ -60,42 +59,26 @@ jagg.template("urlmapper", function (inputs, outputs, jagg) { %>
  <div class="row form-section">
  <form name="customUrlForm" id="customUrlForm" method="post" action="">
      <div class="col-md-5 forms">
-         <div class="from-group-margin">
-            <label><strong>IMPORTANT:</strong> Before giving the domain name here, go to your domain registrar's DNS panel and add a CNAME record pointing to default domain.</label>
-         </div>
-         <div class="form-group" for="productionVersion">
+         <div class="form-group" for="productionVersion" disabled="disabled">
              <label for="production-Version">Default Domain: </label>
              <input id="defaultVersion" type="text" class="form-control mygroup" name="defaultVersion" disabled style="cursor:text"/>
          </div>
-         <div class="form-group" for="productionCustom">
+         <div id="customDomainForm" class="form-group" for="productionCustom">
             <label for="productionCustom">Custom Domain: </label>
-
-             <div class="input-group" >
                  <input type="text" class="form-control mygroup" id="productionCustom" name="productionCustom"
                  placeholder="Enter your custom URL" value="" />
-                     <span class="input-group-btn">
-                         <button class="btn btn-info btn-primary" type="button" id="verifyUrl" name="verifyUrl"
-                         onclick="onVerify()">Verify URL</button>
-                     </span>
-             </div>
-
          </div>
 
          <div class="form-group">
-             <button class="cu-btn cu-btn-sm cu-btn-blue" id="updateCustomUrl" onclick="updateCustomUrl()">
-             <span class="fw-stack fw-lg btn-action-ico">
-                 <i class="fw fw-circle-outline fw-stack-2x"></i>
-                 <i class="fw fw-add fw-stack-1x"></i>
-             </span>
-                 Update
-             </button>
-             <button class="cu-btn cu-btn-sm cu-btn-blue" id="editCustomUrl" onclick="editCustomUrl()">
-             <span class="fw-stack fw-lg btn-action-ico">
-                 <i class="fw fw-circle-outline fw-stack-2x"></i>
-                 <i class="fw fw-add fw-stack-1x"></i>
-             </span>
-                 Edit
-             </button>
+            <button type="button" class="cu-btn cu-btn-sm cu-btn-blue" onclick="configureCustomUrl()">
+              <span class="fw-stack fw-lg btn-action-ico">
+                  <i class="fw fw-circle-outline fw-stack-2x"></i>
+                  <i class="fw fw-add fw-stack-1x"></i>
+              </span>
+              <span id="configureButtonText">
+                  Configure
+              </span>
+            </button>
          </div>
      </div>
  </form>
