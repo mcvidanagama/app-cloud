@@ -20,15 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.appcloud.common.AppCloudException;
 import org.wso2.appcloud.core.dao.ApplicationDAO;
-import org.wso2.appcloud.core.dto.Application;
-import org.wso2.appcloud.core.dto.ApplicationRuntime;
-import org.wso2.appcloud.core.dto.ApplicationType;
-import org.wso2.appcloud.core.dto.ContainerServiceProxy;
-import org.wso2.appcloud.core.dto.Deployment;
-import org.wso2.appcloud.core.dto.RuntimeProperty;
-import org.wso2.appcloud.core.dto.Tag;
-import org.wso2.appcloud.core.dto.Transport;
-import org.wso2.appcloud.core.dto.Version;
+import org.wso2.appcloud.core.dto.*;
 import org.wso2.carbon.context.CarbonContext;
 
 import java.io.IOException;
@@ -1003,6 +995,25 @@ public class ApplicationManager {
     }
 
     /**
+     * Get all application with running state.
+     * @param tenantId
+     * @return
+     * @throws AppCloudException
+     */
+    public static Map<Integer, List<Application>> getRunningApplicationsOfTenant(int tenantId) throws AppCloudException {
+        Connection dbConnection = DBUtil.getDBConnection();
+        try {
+            return ApplicationDAO.getInstance().getRunningApplicationsOfTenant(dbConnection, tenantId);
+        } catch (AppCloudException e) {
+            String msg = "Error while getting running applications of a tenant.";
+            log.error(msg, e);
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeConnection(dbConnection);
+        }
+    }
+
+    /**
      * Method for getting maximum application count for whitelisted tenant per cloud
      * @param tenantId id of tenant
      * @param cloudType cloud type
@@ -1115,6 +1126,26 @@ public class ApplicationManager {
         } catch (SQLException e) {
             String msg = "Error while committing transaction for whitelisting tenant for tenant id : " + tenantId +
                     " and cloud : " + cloudType;
+            log.error(msg, e);
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeConnection(dbConnection);
+        }
+    }
+
+    /**
+     * Get tenant's tier info
+     * @param tenantId
+     * @return
+     * @throws AppCloudException
+     */
+    public static UsageTier getTenantTierInfo(int tenantId) throws AppCloudException {
+        Connection dbConnection = DBUtil.getDBConnection();
+        try {
+            return ApplicationDAO.getInstance().getTenantTierInfo(dbConnection, tenantId);
+        } catch (AppCloudException e) {
+            String msg = "Error while getting tenant tier info tenant id : " +
+                    tenantId;
             log.error(msg, e);
             throw new AppCloudException(msg, e);
         } finally {
