@@ -55,11 +55,11 @@ const (
 	lbAclMatch               = "serviceloadbalancer/lb.aclMatch"
 	lbCookieStickySessionKey = "serviceloadbalancer/lb.cookie-sticky-session"
 	defaultErrorPage         = "file:///etc/haproxy/errors/404.http"
-	tenantDomain		 = "tenantDomain"
-	appType			 = "type"
-	exposureLevel		 = "exposure-level"
+	tenantDomain             = "tenantDomain"
+	appType                  = "type"
+	exposureLevel            = "exposure-level"
 	customDomain             = "customDomain"
-	appName			 = "app"
+	appName                  = "app"
 )
 
 var (
@@ -146,7 +146,6 @@ var (
 	lbDefAlgorithm = flags.String("balance-algorithm", "roundrobin", `if set, it allows a custom
                 default balance algorithm.`)
 
-
 	lbType = flags.String("load-balancer-type", "public", `define the lb is public/private`)
 
 	appTenantDomain = flags.String("tenantDomain", "", `Relevant tenant domain of the service`)
@@ -196,12 +195,12 @@ type service struct {
 	// http://cbonte.github.io/haproxy-dconv/configuration-1.5.html#stick-table
 	// Enabled using the attribute service.spec.sessionAffinity
 	// https://github.com/kubernetes/kubernetes/blob/master/docs/user-guide/services.md#virtual-ips-and-service-proxies
-	SessionAffinity           bool
+	SessionAffinity bool
 
 	// CookieStickySession use a cookie to enable sticky sessions.
 	// The name of the cookie is SERVERID
 	// This only can be used in http services
-	CookieStickySession       bool
+	CookieStickySession bool
 
 	//Different Connection mode for different application types
 	IsDifferentConnectionMode bool
@@ -209,13 +208,13 @@ type service struct {
 	HTTPSHealthCheck          string
 
 	//Tenant domain of user
-	TenantDomain 		  string
+	TenantDomain string
 
 	//App Type
-	AppType			  string
+	AppType string
 
 	//Exposure Level
-	ExposureLevel		  string
+	ExposureLevel string
 
 	//If label "customdomain" has a value set the value of this variable to
 	//identify that a new custom domain has been added
@@ -237,21 +236,21 @@ func (s serviceByName) Less(i, j int) bool {
 // loadBalancerConfig represents loadbalancer specific configuration. Eventually
 // kubernetes will have an api for l7 loadbalancing.
 type loadBalancerConfig struct {
-	Name           string `json:"name" description:"Name of the load balancer, eg: haproxy."`
-	ReloadCmd      string `json:"reloadCmd" description:"command used to reload the load balancer."`
-	Config         string `json:"config" description:"path to loadbalancers configuration file."`
-	Template       string `json:"template" description:"template for the load balancer config."`
-	Algorithm      string `json:"algorithm" description:"loadbalancing algorithm."`
-	startSyslog    bool   `description:"indicates if the load balancer uses syslog."`
-	sslCert        string `json:"sslCert" description:"PEM for ssl."`
-	sslCaCert      string `json:"sslCaCert" description:"PEM to verify client's certificate."`
-	lbDefAlgorithm string `description:"custom default load balancer algorithm".`
-	lbType 	       string `json:"lbType" description:"Type of the load balancer public/private"`
-	CertificatesDir string `json:"certificatesDir" description:"directory path of where all PEM files for custom domains will be added"`
-	serverUrl 	string `description:"The server URL to access governance"`
+	Name                     string `json:"name" description:"Name of the load balancer, eg: haproxy."`
+	ReloadCmd                string `json:"reloadCmd" description:"command used to reload the load balancer."`
+	Config                   string `json:"config" description:"path to loadbalancers configuration file."`
+	Template                 string `json:"template" description:"template for the load balancer config."`
+	Algorithm                string `json:"algorithm" description:"loadbalancing algorithm."`
+	startSyslog              bool   `description:"indicates if the load balancer uses syslog."`
+	sslCert                  string `json:"sslCert" description:"PEM for ssl."`
+	sslCaCert                string `json:"sslCaCert" description:"PEM to verify client's certificate."`
+	lbDefAlgorithm           string `description:"custom default load balancer algorithm".`
+	lbType                   string `json:"lbType" description:"Type of the load balancer public/private"`
+	CertificatesDir          string `json:"certificatesDir" description:"directory path of where all PEM files for custom domains will be added"`
+	serverUrl                string `description:"The server URL to access governance"`
 	authorizationHeaderValue string `description:"The login credentials for governance"`
-	encodedKey string `description:"The private key used for encryption"`
- }
+	encodedKey               string `description:"The private key used for encryption"`
+}
 
 type staticPageHandler struct {
 	pagePath     string
@@ -561,7 +560,7 @@ func (lbc *loadBalancerController) getServices() (httpSvc []service, httpsTermSv
 			//Set the tenant domain in the service
 			if val, ok := serviceLabels(s.ObjectMeta.Labels).getTenantDomain(); ok {
 				newSvc.TenantDomain = val
-				*appTenantDomain = val;
+				*appTenantDomain = val
 			}
 
 			//Set the exposure level in the service
@@ -579,8 +578,7 @@ func (lbc *loadBalancerController) getServices() (httpSvc []service, httpsTermSv
 						//Governance REST api, obtain certs and add to certs directory
 						resourceFilePath := lbc.cfg.CertificatesDir + *appTenantDomain + hypenSeparator +
 							appName + pemFileExtension
-						if _, err := os.Stat(resourceFilePath);
-							os.IsNotExist(err) {
+						if _, err := os.Stat(resourceFilePath); os.IsNotExist(err) {
 							resourcePath := lbc.cfg.serverUrl + registryPath + cloudType +
 								*appTenantDomain + securityCertificates + appName +
 								forwardSlashSeparator
@@ -705,7 +703,7 @@ func newLoadBalancerController(cfg *loadBalancerConfig, kubeClient *unversioned.
 // parseCfg parses the given configuration file.
 // cmd line params take precedence over config directives.
 func parseCfg(configPath string, defLbAlgorithm string, sslCert string, sslCaCert string, lbType string,
-			serverUrl string, authorizationHeaderValue string, encodedKey string) *loadBalancerConfig {
+	serverUrl string, authorizationHeaderValue string, encodedKey string) *loadBalancerConfig {
 	jsonBlob, err := ioutil.ReadFile(configPath)
 	if err != nil {
 		glog.Fatalf("Could not parse lb config: %v", err)
@@ -845,7 +843,7 @@ func main() {
 		dryRun(lbc)
 	} else {
 		lbc.cfg.reload()
-		wait.Until(lbc.worker, 10 * time.Second, wait.NeverStop)
+		wait.Until(lbc.worker, 10*time.Second, wait.NeverStop)
 	}
 
 }
