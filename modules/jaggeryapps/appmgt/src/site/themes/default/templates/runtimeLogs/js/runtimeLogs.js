@@ -33,7 +33,49 @@ $(document).ready(function () {
         lineWrapping: true,
         theme:'icecoder'
     });
+
+    $("#disable-tailing").hide();
     initData(selectedRevision, true);
+
+    $('#noOfLines').on('change', function () {
+        setLogArea(fullLogVal, true);
+    });
+
+    $("#log-reload").click(function () {
+        initData(selectedRevision, true);
+    });
+
+    $("#disable-tailing").click(function () {
+        $("#enable-tailing").show();
+        $("#disable-tailing").hide();
+        clearInterval(timerId);
+    });
+
+    $("#enable-tailing").click(function () {
+        $("#enable-tailing").hide();
+        $("#disable-tailing").show();
+        timerId = setInterval(function () {
+            initData(selectedRevision, true);
+        }, 5000);
+    });
+
+    $('#revision').on('change', function (e) {
+        selectedRevision = this.value;
+        initData(selectedRevision, true);
+    });
+    $('#revision').prop("disabled", false);
+
+    $('#replicas').on('change', function (e) {
+        selectedReplica = this.value;
+        setLogArea(selectedRevisionLogMap[selectedReplica], true);
+    });
+
+    $('#noOfLines').on('change', function (e) {
+        selectedReplica =  $('#replicas').val();
+        setLogArea(selectedRevisionLogMap[selectedReplica], true);
+    });
+
+    $('#log-download').off('click').on('click', downloadLogs);
 });
 
 function regenerateReplicasList(selectedRevisionReplicaList) {
@@ -90,6 +132,7 @@ function setLogArea(logVal, isFirstRequest){
 }
 
 function initData(selectedRevision, isFirstRequest){
+    jagg.removeMessage("view_log");
     if(isFirstRequest){
         $('#replicas').empty();
         setLogArea("Loading...", true);
@@ -100,7 +143,6 @@ function initData(selectedRevision, isFirstRequest){
         selectedRevision:selectedRevision,
         isFirstRequest:isFirstRequest
     },function (result) {
-        initelements();
         result = result.replace(/\t+/g, "    ");
         selectedRevisionLogMap = jQuery.parseJSON(result);
         if(!jQuery.isEmptyObject(selectedRevisionLogMap)){
@@ -118,25 +160,23 @@ function initData(selectedRevision, isFirstRequest){
                 result = result.trim();
                 var revisionStatus = result;
                 if (revisionStatus == APPLICATION_STOPPED) {
-                    //clearInterval(timerId);
+                    clearInterval(timerId);
                     jagg.message({
                         content: "The " + cloudSpecificApplicationRepresentation.toLowerCase() + " is currently stopped. Please restart the " + cloudSpecificApplicationRepresentation.toLowerCase()+ " to see its logs.",
                         type: 'information',
-                        id: 'view_log',
-                        timeout: '20000'
+                        id: 'view_log'
                     });
                     setLogArea("Logs are unavailable as the " + cloudSpecificApplicationRepresentation.toLowerCase() + " is stopped.", true);
                 } else if (revisionStatus == APPLICATION_INACTIVE) {
-                    //clearInterval(timerId);
+                    clearInterval(timerId);
                     jagg.message({
                         content: "The " + cloudSpecificApplicationRepresentation.toLowerCase() + " is stopped due to inactivity. Please restart it to see its logs.",
                         type: 'information',
-                        id: 'view_log',
-                        timeout: '20000'
+                        id: 'view_log'
                     });
                     setLogArea("Logs are unavailable as the " + cloudSpecificApplicationRepresentation.toLowerCase() + " is stopped..", true);
                 } else {
-                    //clearInterval(timerId);
+                    clearInterval(timerId);
                     jagg.message({
                         content: "Deployment is in progress. Please wait.",
                         type: 'information',
@@ -156,39 +196,6 @@ function initData(selectedRevision, isFirstRequest){
         $('#revision').prop("disabled", false);
         jagg.message({content: "An error occurred while loading the logs.", type: 'error', id:'view_log'});
     });
-}
-
-function initelements(){
-    //Url text loaded from the span element
-    var urlText = $('.version-url a span').text();
-
-    //Maximum character limit is 90. further than that the text would not show and the title would!
-    if (urlText.length > 90){
-        $('.version-url a').prop('title',urlText).find('span').text(urlText);
-    } else {
-        $('.version-url a span').text(urlText);
-    }
-
-    var revisionElement = $('#revision');
-    revisionElement.prop("disabled", false);
-
-    revisionElement.on('change', function (e) {
-        selectedRevision = this.value;
-        $(this).prop("disabled", true);
-        initData(selectedRevision, true);
-    });
-
-    $('#replicas').on('change', function (e) {
-        selectedReplica = this.value;
-        setLogArea(selectedRevisionLogMap[selectedReplica], true);
-    });
-
-    $('#noOfLines').on('change', function (e) {
-        selectedReplica =  $('#replicas').val();
-        setLogArea(selectedRevisionLogMap[selectedReplica], true);
-    });
-
-    $('#log-download').off('click').on('click', downloadLogs);
 }
 
 function downloadLogs(e) {
@@ -261,6 +268,5 @@ function saveTextAsFile(textToWrite) {
     downloadLink.click();
 }
 
-$("#log-reload").click(function () {
-    initData(selectedRevision, true);
-});
+
+
