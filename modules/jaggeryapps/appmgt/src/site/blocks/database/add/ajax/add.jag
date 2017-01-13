@@ -52,6 +52,21 @@ var databaseModule = jagg.module("databases");
             return;
         }
 
+        var isDatabaseUserExists;
+        try {
+            isDatabaseUserExists = mod.isDatabaseUserExists(userNameFromRequest);
+        } catch (e) {
+            var msg = "Error while checking  existance for database user : " + userNameFromRequest;
+            log.error(msg);
+            log.error(e);
+            isDatabaseUserExists = false;
+        }
+        if(isDatabaseUserExists == "true"){
+            response.status = 400;
+            response.content = "Database user already exists";
+            return;
+        }
+
         try{
             var databaseCount = databaseModule.getDatabaseCount();
             var maxDatabases = databaseModule.getMaxDatabaseCount();
