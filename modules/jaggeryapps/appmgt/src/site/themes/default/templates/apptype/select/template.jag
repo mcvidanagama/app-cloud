@@ -117,7 +117,7 @@ jagg.template("apptype/select", function(inputs, outputs, jagg) {
         var createApplicationButtonHtml = ' <a href="" id="continueButton" class="cu-btn cu-btn-md cu-btn-blue"><span class="fw-stack fw-lg">' +
                             '<i class="fw fw-circle-outline fw-stack-2x"></i><i class="fw fw-right-arrow fw-stack-1x"></i></span>Create Application</a>'
                             + '<a href="'+ customDockerImagesPage + '" id="verifyImagesButton" class="cu-btn cu-btn-md cu-btn-gr-dark"><span class="fw-stack fw-lg">' +
-                       '<i class="fw fw-circle-outline fw-stack-2x"></i><i class="fw fw-right-arrow fw-stack-1x"></i></span>Verify Images</a>';
+                       '<i class="fw fw-circle-outline fw-stack-2x"></i><i class="fw fw-right-arrow fw-stack-1x"></i></span>Add Images</a>';
         //content replace with custom html attributes call data
         $('.app-type-info-template').find('.data-appname').html(appName);
         $('.app-type-info-template').find('.app-description').html(appDescription);

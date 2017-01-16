@@ -20,9 +20,8 @@
 include("/jagg/jagg.jag");
 
 jagg.template("customDockerImages", function (inputs, outputs, jagg) {
-
     %>
-
+<!-- BOF App factory menu actionbar -->
    <div class="action-bar">
        <a href="/appmgt/site/pages/select-apptype.jag" class="btn-action">
                <span class="fw-stack fw-lg btn-action-ico">
@@ -30,8 +29,75 @@ jagg.template("customDockerImages", function (inputs, outputs, jagg) {
                    <i class="fw fw-left-arrow fw-stack-1x"></i>
                </span> <span class="hidden-xs">Back </span>
         </a>
-    </div>
+    </div><!-- EOF App factory menu actionbar-->
+    <div class="container-fluid cloud-container" id="outerContainer">
+        <div class="row">
+            <form name="addImageForm" id="addImageForm" enctype="multipart/form-data" method='post' action='#'>
+                <div class="col-md-5 col-lg-5 forms">
+                    <div class="form-group col-md-12 ">
+                        <label for="imageUrl">Image Url: * </label>
+                        <input type="text" class="form-control" id="imageUrl"  name="imageUrl"  placeholder="eg: docker.io/testuser/testimage:testtag">
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="form-group col-md-6">
+                        <label for="userName">User Name: <I>(only for private images)</I></label>
+                        <input type="text" class="form-control" id="userName" name="userName" placeholder="Enter user name">
+                    </div>
+                    <div class="clearfix"></div>
+                     <div class="form-group col-md-6">
+                        <label for="password">Password: <I>(only for private images)</I></label>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Enter password">
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="form-group col-md-6">
+                        <button type="button" class="cu-btn cu-btn-sm cu-btn-blue" id="addImage" name="addImage" onclick="addNewImage()">
+                            <span class="fw-stack fw-lg btn-action-ico">
+                                <i class="fw fw-circle-outline fw-stack-2x"></i>
+                                <i class="fw fw-add fw-stack-1x"></i>
+                            </span>
+                            Add Image
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="row col-md-8">
+           <div class="panel panel-default">
+            <!-- Default panel contents -->
+                <div class="panel-heading">Images List</div>
+
+            <!-- Table -->
+            <table class="table image-panel">
+                <tr>
+                    <th class="hidden"></th>
+                    <th>Image url</th>
+                    <th>Status</th>
+                    <th>Test Report</th>
+                    <th></th>
+                </tr>
+
+                <tr>
+                    <td class="hidden"></td>
+                    <td>docker.io/maheshcwso2/node-js-app:latest</td>
+                    <td><i class="fw fw-block"></i></td>
+                    <td><i class="fw fw-checklist"></i></td>
+                    <td><a href="">Create Application Using Image</a></td>
+                </tr>
+
+                <tr>
+                    <td class="hidden"></td>
+                    <td>docker.io/maheshcwso2/node-js-app:latest</td>
+                    <td><i class="fw fw-success"></i></td>
+                    <td><i class="fw fw-checklist"></i></td>
+                    <td><a href="">Create Application Using Image</a></td>
+                </tr>
+            </table>
+</div>
+        </div>
+
+    </div><!-- /.container -->
 
 
-        <%
-}); %>
+<script src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('templates/customDockerImages/js/customDockerImages.js'))%>"></script>
+
+<%}); %>
