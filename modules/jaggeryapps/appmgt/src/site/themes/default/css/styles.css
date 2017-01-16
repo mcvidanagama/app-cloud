@@ -3064,3 +3064,9 @@ ul.overview-inner-list li {
   top: 0;
   left: 4px;
 }
+
+.image-panel tr{
+    background-color: #696969;
+    padding: 10px;
+    /*font-size: 16px;*/
+}

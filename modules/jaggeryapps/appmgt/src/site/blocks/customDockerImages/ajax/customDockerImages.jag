@@ -27,8 +27,11 @@ include("/jagg/constants.jag");
 
     var log = new Log();
 
-    if (action == "") {
+    if (action == "addImageAndCheckSecurity") {
 
+        var imageUrl = request.getParameter("imageUrl");
+
+        print("image verified");
 
     } else {
         log.error("No action specified");
