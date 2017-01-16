@@ -31,6 +31,10 @@ include("/jagg/constants.jag");
 
         var applicationKey = request.getParameter("applicationKey");
         var selectedRevision = request.getParameter("selectedRevision");
+        var Util = Packages.org.wso2.appcloud.core.Util;
+        var ApplicationManager = Packages.org.wso2.appcloud.core.ApplicationManager;
+        var applicationName = ApplicationManager.getApplicationNameByHashId(applicationKey);
+        var versionHashId = Util.getVersionHashId(applicationName, selectedRevision, modManager.getTenantId());
         var isFirstRequest = request.getParameter("isFirstRequest");
         var mod = jagg.module("runtimeLogs");
         var modApplication = jagg.module("application");
@@ -52,8 +56,8 @@ include("/jagg/constants.jag");
         var mod = jagg.module("runtimeLogs");
         var modApplication = jagg.module("application");
         try {
-            var applicationType = modApplication.getApplication(applicationKey).applicationType;
-            var logMap = mod.getDownloadableRuntimeLogs(applicationKey, selectedRevision, applicationType);
+            var applicationType = modApplication.getApplication(applicationKey).applicationType;            
+	    var logMap = mod.getDownloadableRuntimeLogs(versionHashId);
             print(logMap);
         } catch(e) {
             var msg = "Error while getting deployment logs";
