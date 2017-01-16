@@ -30,6 +30,7 @@ jagg.template("runtimeLogs", function (inputs, outputs, jagg) {
     // currently selected revision
     // ex: "1.0.0"
     var selectedRevision = outputs.selectedRevision;
+    var selectedReplica = request.getParameter("selectedReplica");
     var cloudSpecificApplicationRepresentation = outputs.cloudSpecificApplicationRepresentation;
 
 %>
@@ -44,6 +45,7 @@ jagg.template("runtimeLogs", function (inputs, outputs, jagg) {
     var APPLICATION_RUNNING = "<%=APPLICATION_RUNNING%>";
     var APPLICATION_INACTIVE = "<%=APPLICATION_INACTIVE%>";
     var cloudSpecificApplicationRepresentation = "<%=cloudSpecificApplicationRepresentation%>";
+    var selectedReplica = "<%=selectedReplica%>";
 </script>
 
    <!-- right pane wrapper -->
@@ -66,6 +68,20 @@ jagg.template("runtimeLogs", function (inputs, outputs, jagg) {
                         <i class="fw fw-circle-outline fw-stack-2x"></i>
                         <i class="fw fw fw-refresh fa-stack-1x"></i>
                     </span> <span class="hidden-xs"> Reload Logs</span>
+            </a>
+
+            <a class="btn-action" data-toggle="tooltip" data-placement="top" title="Disable Tailing Logs" id="disable-tailing" style="display: none">
+                    <span class="fw-stack fw-lg btn-action-ico">
+                        <i class="fw fw-circle-outline fw-stack-2x"></i>
+                        <i class="fw fw fw-uncheck fa-stack-1x"></i>
+                    </span> <span class="hidden-xs"> Disable Tailing</span>
+            </a>
+
+            <a class="btn-action" data-toggle="tooltip" data-placement="top" title="Enable Tailing" id="enable-tailing">
+                    <span class="fw-stack fw-lg btn-action-ico">
+                        <i class="fw fw-circle-outline fw-stack-2x"></i>
+                        <i class="fw fw fw-check fa-stack-1x"></i>
+                    </span> <span class="hidden-xs"> Enable Tailing</span>
             </a>
         </div><!-- EOF App factory menu actionbar-->
 

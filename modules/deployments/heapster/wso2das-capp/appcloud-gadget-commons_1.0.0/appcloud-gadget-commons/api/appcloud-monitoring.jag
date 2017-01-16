@@ -90,7 +90,7 @@
                         }
                         if (hashIds.indexOf(hashId) < 0) {
                             hashIds.push(hashId);
-                            result.push(appname + "_" + version + "_" + hashId);
+                            // result.push(appname + "_" + version + "_" + hashId);
                         }
                     }
                 } catch(e) {
@@ -101,11 +101,11 @@
             case TYPE_GET_CPU_DATA:
                 timeFrom = timeFrom.substring(0, 10);
                 timeTo = timeTo.substring(0, 10);
-                var versionHashId = id.split("_")[2];
+                var podName = id.split("_")[2];
                 query =
-                        "SELECT sum(\"value\") FROM \"cpu/usage_rate\" WHERE \"type\" = 'pod_container' AND \"namespace_name\" =~ /" + tenantDomain + "$/ AND \"labels\" =~ /" + versionHashId + "$/ AND time > " + timeFrom + "s and time < " + timeTo + "s GROUP BY time(1m), \"container_name\" fill(null) " +
-                        "SELECT sum(\"value\") FROM \"cpu/limit\" WHERE \"type\" = 'pod_container' AND \"namespace_name\" =~ /" + tenantDomain + "$/ AND \"labels\" =~ /" + versionHashId + "$/ AND time > " + timeFrom + "s and time < " + timeTo + "s GROUP BY time(1m), \"container_name\" fill(null) " +
-                        "SELECT sum(\"value\") FROM \"cpu/request\" WHERE \"type\" = 'pod_container' AND \"namespace_name\" =~ /" + tenantDomain + "$/ AND \"labels\" =~ /" + versionHashId + "$/ AND time > " + timeFrom + "s and time < " + timeTo + "s GROUP BY time(1m), \"container_name\" fill(null) ";
+                        "SELECT sum(\"value\") FROM \"cpu/usage_rate\" WHERE \"type\" = 'pod_container' AND \"namespace_name\" =~ /" + tenantDomain + "$/ AND \"pod_name\" =~ /" + podName + "$/ AND time > " + timeFrom + "s and time < " + timeTo + "s GROUP BY time(1m), \"container_name\" fill(null) " +
+                        "SELECT sum(\"value\") FROM \"cpu/limit\" WHERE \"type\" = 'pod_container' AND \"namespace_name\" =~ /" + tenantDomain + "$/ AND \"pod_name\" =~ /" + podName + "$/ AND time > " + timeFrom + "s and time < " + timeTo + "s GROUP BY time(1m), \"container_name\" fill(null) " +
+                        "SELECT sum(\"value\") FROM \"cpu/request\" WHERE \"type\" = 'pod_container' AND \"namespace_name\" =~ /" + tenantDomain + "$/ AND \"pod_name\" =~ /" + podName + "$/ AND time > " + timeFrom + "s and time < " + timeTo + "s GROUP BY time(1m), \"container_name\" fill(null) ";
 
                 try {
                     resp = get(influxdb_url, {pretty : "true", db : influxdb_db, q : query}, 'json');
@@ -117,12 +117,12 @@
             case TYPE_GET_MEMORY_DATA:
                 timeFrom = timeFrom.substring(0,10);
                 timeTo = timeTo.substring(0,10);
-                var versionHashId = id.split("_")[2];
+                var podName = id.split("_")[2];
                 query =
-                        "SELECT sum(\"value\")/1048576 FROM \"memory/usage\" WHERE \"type\" = 'pod_container' AND \"namespace_name\" =~ /" + tenantDomain + "$/ AND \"labels\" =~ /" + versionHashId + "$/ AND time > " + timeFrom + "s and time < " + timeTo + "s GROUP BY time(1m), \"container_name\" fill(null) " +
-                        "SELECT sum(\"value\")/1048576 FROM \"memory/limit\" WHERE \"type\" = 'pod_container' AND \"namespace_name\" =~ /" + tenantDomain + "$/ AND \"labels\" =~ /" + versionHashId + "$/ AND time > " + timeFrom + "s and time < " + timeTo + "s GROUP BY time(1m), \"container_name\" fill(null) " +
-                        "SELECT sum(\"value\")/1048576 FROM \"memory/request\" WHERE \"type\" = 'pod_container' AND \"namespace_name\" =~ /" + tenantDomain + "$/ AND \"labels\" =~ /" + versionHashId + "$/ AND time > " + timeFrom + "s and time < " + timeTo + "s GROUP BY time(1m), \"container_name\" fill(null) " +
-                        "SELECT sum(\"value\")/1048576 FROM \"memory/working_set\" WHERE \"type\" = 'pod_container' AND \"namespace_name\" =~ /" + tenantDomain + "$/ AND \"labels\" =~ /" + versionHashId + "$/ AND time > " + timeFrom + "s and time < " + timeTo + "s GROUP BY time(1m), \"container_name\" fill(null)";
+                        "SELECT sum(\"value\")/1048576 FROM \"memory/usage\" WHERE \"type\" = 'pod_container' AND \"namespace_name\" =~ /" + tenantDomain + "$/ AND \"pod_name\" =~ /" + podName + "$/ AND time > " + timeFrom + "s and time < " + timeTo + "s GROUP BY time(1m), \"container_name\" fill(null) " +
+                        "SELECT sum(\"value\")/1048576 FROM \"memory/limit\" WHERE \"type\" = 'pod_container' AND \"namespace_name\" =~ /" + tenantDomain + "$/ AND \"pod_name\" =~ /" + podName + "$/ AND time > " + timeFrom + "s and time < " + timeTo + "s GROUP BY time(1m), \"container_name\" fill(null) " +
+                        "SELECT sum(\"value\")/1048576 FROM \"memory/request\" WHERE \"type\" = 'pod_container' AND \"namespace_name\" =~ /" + tenantDomain + "$/ AND \"pod_name\" =~ /" + podName + "$/ AND time > " + timeFrom + "s and time < " + timeTo + "s GROUP BY time(1m), \"container_name\" fill(null) " +
+                        "SELECT sum(\"value\")/1048576 FROM \"memory/working_set\" WHERE \"type\" = 'pod_container' AND \"namespace_name\" =~ /" + tenantDomain + "$/ AND \"pod_name\" =~ /" + podName + "$/ AND time > " + timeFrom + "s and time < " + timeTo + "s GROUP BY time(1m), \"container_name\" fill(null)";
 
                 try {
                     resp = get(influxdb_url, {pretty: "true", db: influxdb_db, q: query}, 'json');

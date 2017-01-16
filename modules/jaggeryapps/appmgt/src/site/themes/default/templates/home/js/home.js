@@ -35,8 +35,78 @@ $(document).ready(function() {
     }
     loadEndpointView();
     loadDashboards();
+    loadReplicas();
     rcCount = replicaCount;
 });
+
+function loadReplicas() {
+    $("#replica-data").html('');
+    var replicaInfo = null;
+    var replicaCount = 0;
+
+    // get running replica info from k8s cluster
+    jagg.post("../blocks/application/application.jag", {
+        action: "getReplicaInfo",
+        appType: application.applicationType,
+        applicationName: applicationName,
+        versionName: selectedRevision
+    }, function(result) {
+        replicaInfo = JSON.parse(result);
+
+        // get replica count per version
+        jagg.post("../blocks/settings/settings.jag", {
+            action: "getReplicaCountForVersion",
+            applicationName: applicationName,
+            versionName: selectedRevision
+        },function (result) {
+            replicaCount = JSON.parse(result);
+
+            var diff = replicaCount - replicaInfo.length;
+            var replicas_html = "";
+
+            for (var i = 0; i < replicaInfo.length; i++) {
+                replicas_html += '<div class="block-replicas">' +
+                    '<figure class="node-cicle" data-percent="100">' +
+                    '<figcaption>' +
+                    '<span>' + (i + 1) + '</span>' +
+                    '</figcaption>';
+
+                replicas_html += '<svg width="100" height="100">' +
+                    '<circle class="outer" cx="142" cy="48" r="42" transform="rotate(-90, 95, 95)"></circle>' +
+                    '</svg>';
+                if (parseInt(replicaInfo[i].restartCount) > 0) {
+                    replicas_html += '<span href="#" onclick="displayRestartCountMessage();"><span class="restart-count">Restarts : ' + replicaInfo[i].restartCount + '</span></span>';
+                }
+                replicas_html += '<a href="/appmgt/site/pages/runtimeLogs.jag?applicationKey=' + applicationKey + '&selectedRevision=' + selectedRevision + '&selectedReplica=Replica_' + (i+1) + '_' + replicaInfo[i].podName + '" title="View Logs"><i class="fw fw-hdd"></i></a>' +
+                    ' <a target="_blank" href="' + dataAnalyticsServerUrl + '/portal/t/' + tenantDomain + '/dashboards/operational-dashboard/?shared=true&id=' + applicationName + '_' + selectedRevision + '_' + replicaInfo[i].podName + '" title="View Operational Dashboard"><i class="fw fw-dashboard"></i></a>';
+
+                replicas_html += '</figure>' +
+                    '</div>';
+            }
+
+            if (diff > 0) {
+                for (var i = 0; i < diff; i++) {
+                    replicas_html += '<div class="block-replicas">' +
+                        '<figure class="node-cicle" data-percent="100">' +
+                        '<figcaption>' +
+                        '<span>' + (i + 1) + '</span>' +
+                        '</figcaption>';
+                    replicas_html += '<svg width="100" height="100">' +
+                        '<circle class="outer" style="stroke: #ACAFAD;" cx="142" cy="48" r="42" transform="rotate(-90, 95, 95)"/>' +
+                        '</svg>';
+                    replicas_html += '</figure>' +
+                        '</div>';
+                }
+            }
+
+            $("#replica-data").html(replicas_html);
+        },function (jqXHR, textStatus, errorThrown) {
+
+        });
+    }, function(jqXHR, data, errorThrown) {
+
+    });
+}
 
 // wrapping functions
 function initPageView() {
@@ -207,7 +277,7 @@ function changeSelectedRevision(newRevision){
     $("#selectedRevision").val(newRevision);
     selectedRevision = newRevision;
     selectedApplicationRevision = application.versions[newRevision];
-    getReplicaCountForVersion(selectedRevision);
+
     //Changing deploymentURL
     var deploymentURL = selectedApplicationRevision.deploymentURL;
     var repoUrlHtml = generateLunchUrl(deploymentURL);
@@ -258,14 +328,11 @@ function changeSelectedRevision(newRevision){
 
         $('#version-app-launch-block').empty();
         $('#version-app-launch-block').html(
-                       '<div class="btn-group ctrl-edit-button btn-edit-code"><a type="button" ' +
-                       'class="btn cu-btn cu-btn-md cu-btn-red" onclick="stopApplicationPopUp();">Stop' +
-                       '<span id="stop-in-progress"><span></a></div><div class="btn-group ctrl-edit-button btn-edit-code">' +
-                       '<a type="button" class="btn cu-btn cu-btn-md cu-btn-gray" onclick="redeployApplicationPopUp();">' +
-                       'Redeploy<span id="redeploy-in-progress"><span></a></div>');
-
-        $('.block-replica').empty();
-        $('.block-replica').html(generateBlockReplica());
+                '<div class="btn-group ctrl-edit-button btn-edit-code"><a type="button" ' +
+                'class="btn cu-btn cu-btn-md cu-btn-red" onclick="stopApplicationPopUp();">Stop' +
+                '<span id="stop-in-progress"><span></a></div><div class="btn-group ctrl-edit-button btn-edit-code">' +
+                '<a type="button" class="btn cu-btn cu-btn-md cu-btn-gray" onclick="redeployApplicationPopUp();">' +
+                'Redeploy<span id="redeploy-in-progress"><span></a></div>');
 
     } else if(selectedApplicationRevision.status == APPLICATION_STOPPED || selectedApplicationRevision.status == APPLICATION_INACTIVE){
 
@@ -277,12 +344,8 @@ function changeSelectedRevision(newRevision){
 
         $('#version-app-launch-block').empty();
         $('#version-app-launch-block').html(
-                       '<div class="btn-group ctrl-edit-button btn-edit-code"><a type="button" ' +
-                       'class="btn cu-btn cu-btn-md cu-btn-blue" onclick="startApplication();">Start</a></div>');
-
-        $('.block-replica').empty();
-        $('.block-replica').html(generateInactiveBlockReplica());
-
+                '<div class="btn-group ctrl-edit-button btn-edit-code"><a type="button" ' +
+                'class="btn cu-btn cu-btn-md cu-btn-blue" onclick="startApplication();">Start</a></div>');
     } else {
 
         $('#launch-default-url-block').empty();
@@ -293,14 +356,16 @@ function changeSelectedRevision(newRevision){
 
         $('#version-app-launch-block').empty();
         $('#version-app-launch-block').html('<div class="btn-group ctrl-edit-button btn-edit-code">' +
-                                            '<a type="button" class="btn cu-btn cu-btn-md cu-btn-red" ' +
-                                            'href="#yourlink">Error has occurred.</a></div>');
-
+            '<a type="button" class="btn cu-btn cu-btn-md cu-btn-red" ' +
+            'href="#yourlink">Error has occurred.</a></div>');
     }
+
+    loadReplicas();
+
     // Set upload revision btn
     var uploadRevisionUrl = appCreationPageBaseUrl+"?appTypeName="+application.applicationType +
-                            "&applicationName="+applicationName + "&encodedLabels="+encodedLabels + "&encodedEnvs="
-                                    + encodedEnvs + "&newVersion=true" + "&versionArray=" + encodeURI(versionArray);
+        "&applicationName="+applicationName + "&encodedLabels="+encodedLabels + "&encodedEnvs="
+        + encodedEnvs + "&newVersion=true" + "&versionArray=" + encodeURI(versionArray);
     $('#upload-revision').attr("href", uploadRevisionUrl);
 
     changeRuntimeProps(selectedApplicationRevision);
@@ -460,103 +525,4 @@ function redirectAppHome() {
 
 function getVersionCount(){
     return Object.keys(application.versions).length;
-}
-
-function generateBlockReplica() {
-    console.log("generateBlockReplica:" + rcCount);
-
-    var blockReplicaHtml = "<a href=\"/appmgt/site/pages/settings.jag?applicationKey=" + applicationKey + "&selectedRevision=" + selectedRevision + "&scale=true\">" +
-                                                                "<div class=\"btn-create-version\">" +
-                                                                  "<span class=\"fw-stack fw-lg btn-action-ico\">" +
-                                                                     "<i class=\"fw fw-circle-outline fw-stack-2x\"></i>" +
-                                                                     "<i class=\"fw fw-settings fw-stack-1x\"></i>" +
-                                                                  "</span>" +
-                                                                    "&nbsp;" +
-                                                                        "Scale Deployment" +
-                                                                "</div>" +
-                                                                "</a>" +
-                                                                "<h3>Replicas</h3>" +
-                                                                "<h5>" +
-                                                                    "Container Specification:" +
-                                                                    "<span class=\"container-spec-info\">" +
-                                                                        "<span id=\"memory\">" + selectedApplicationRevision.conSpecMemory + "</span>MB RAM and" +
-                                                                        "<span id=\"cpu\">" + selectedApplicationRevision.conSpecCpu/1000 + "</span> vCPU" +
-                                                                    "</span>" +
-                                                                "</h5>";
-
-
-    for (i = 0; i < rcCount; i++) {
-        blockReplicaHtml = blockReplicaHtml + "<div class=\"block-replicas\">" +
-                                                "<figure class=\"node-cicle\" data-percent=\"100\">" +
-                                                   "<figcaption>" +
-                                                       "<span>" + (i + 1).toString() + "</span>" +
-                                                   "</figcaption>" +
-                                                    "<svg width=\"100\" height=\"100\">" +
-                                                       "<circle class=\"outer\" cx=\"142\" cy=\"48\" r=\"42\" transform=\"rotate(-90, 95, 95)\"></circle>" +
-                                                    "</svg>" +
-                                                    "<a href=\"/appmgt/site/pages/runtimeLogs.jag?applicationKey=" + applicationKey + "&selectedRevision=" + selectedRevision + "\"><span class=\"view-log\">View Logs</span></a>" +
-                                                "</figure>" +
-                                              "</div>";
-    }
-    blockReplicaHtml = blockReplicaHtml + "</div>";
-
-console.log(blockReplicaHtml);
-
-return blockReplicaHtml;
-
-}
-
-function generateInactiveBlockReplica() {
-    console.log("generateBlockReplica:" + rcCount);
-
-    var blockReplicaHtml = "<a href=\"/appmgt/site/pages/settings.jag?applicationKey=" + applicationKey + "&selectedRevision=" + selectedRevision + "&scale=true\">" +
-                                                                "<div class=\"btn-create-version\">" +
-                                                                  "<span class=\"fw-stack fw-lg btn-action-ico\">" +
-                                                                     "<i class=\"fw fw-circle-outline fw-stack-2x\"></i>" +
-                                                                     "<i class=\"fw fw-settings fw-stack-1x\"></i>" +
-                                                                  "</span>" +
-                                                                    "&nbsp;" +
-                                                                        "Scale Deployment" +
-                                                                "</div>" +
-                                                                "</a>" +
-                                                                "<h3>Replicas</h3>" +
-                                                                "<h5>" +
-                                                                    "Container Specification:" +
-                                                                    "<span class=\"container-spec-info\">" +
-                                                                        "<span id=\"memory\">" + selectedApplicationRevision.conSpecMemory + "</span>MB RAM and" +
-                                                                        "<span id=\"cpu\">" + selectedApplicationRevision.conSpecCpu/1000 + "</span> vCPU" +
-                                                                    "</span>" +
-                                                                "</h5>";
-
-
-    for (i = 0; i < rcCount; i++) {
-        blockReplicaHtml = blockReplicaHtml + "<div class=\"block-replicas\">" +
-                                                "<figure class=\"node-cicle\" data-percent=\"100\">" +
-                                                   "<figcaption>" +
-                                                       "<span>" + (i + 1).toString() + "</span>" +
-                                                   "</figcaption>" +
-                                                    "<svg width=\"100\" height=\"100\">" +
-                                                       "<circle class=\"outer\" style=\"stroke: #ACAFAD;\" cx=\"142\" cy=\"48\" r=\"42\" transform=\"rotate(-90, 95, 95)\"></circle>" +
-                                                    "</svg>" +
-                                                "</figure>" +
-                                              "</div>";
-    }
-    blockReplicaHtml = blockReplicaHtml + "</div>";
-
-console.log(blockReplicaHtml);
-
-return blockReplicaHtml;
-
-}
-
-function getReplicaCountForVersion(selectedRevision) {
-    jagg.syncPost("../blocks/settings/settings.jag", {
-        action: "getReplicaCountForVersion",
-        applicationName: applicationName,
-        versionName: selectedRevision
-    },function getReplicaCountForVersion(result) {
-        rcCount = result;
-    },function (jqXHR, textStatus, errorThrown) {
-        jagg.message({content: jqXHR.responseText, type: 'error', id: 'view_log'});
-    });
 }
