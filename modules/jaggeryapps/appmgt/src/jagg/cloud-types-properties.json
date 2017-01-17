@@ -1,5 +1,5 @@
 {
-    "app-cloud" : {
+    "app_cloud" : {
         "pageTitle": "WSO2 App Cloud",
         "cloudTitle" : "Application Cloud",
         "cloudIcon" : "fa fa-cubes",
@@ -9,7 +9,7 @@
             "supportUrl": "AppCloud.Support.Url"
         }
     },
-    "integration-cloud" : {
+    "integration_cloud" : {
         "pageTitle": "WSO2 Integration Cloud",
         "cloudTitle" : "Integration Cloud",
         "cloudIcon" : "fw fw-service",

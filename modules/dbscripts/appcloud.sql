@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `AppCloudDB`.`AC_APPLICATION` (
   `default_version` varchar(24) DEFAULT NULL,
   `app_type_id` INT NULL,
   `custom_domain` VARCHAR(200) NULL,
-  `cloud_id` INT NOT NULL,
+  `cloud_id` VARCHAR(50) NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT uk_Application_NAME_TID_REV UNIQUE(`name`, `tenant_id`),
   CONSTRAINT `fk_Application_ApplicationType1`
@@ -116,11 +116,6 @@ CREATE TABLE IF NOT EXISTS `AppCloudDB`.`AC_APPLICATION` (
     REFERENCES `AppCloudDB`.`AC_APP_TYPE` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT fk_Application_CloudType1
-    FOREIGN KEY (cloud_id)
-    REFERENCES AppCloudDB.AC_CLOUD (id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
@@ -395,10 +390,9 @@ CREATE TABLE IF NOT EXISTS AC_SUBSCRIPTION_PLANS (
     PLAN_NAME   VARCHAR(200) NOT NULL,	
     MAX_APPLICATIONS	INT NOT NULL,
     MAX_DATABASES INT NOT NULL,
-    CLOUD_ID INT NOT NULL,
+    CLOUD_ID VARCHAR(50) NOT NULL,
     MAX_REPLICA_COUNT INT(11) NOT NULL,
     PRIMARY KEY (PLAN_ID),
-    CONSTRAINT fk_SubscriptionPlans_CloudType1 FOREIGN KEY (CLOUD_ID) REFERENCES AppCloudDB.AC_CLOUD (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
     CONSTRAINT uk_SubscriptionPlans_PlanName_CloudId UNIQUE(PLAN_NAME, CLOUD_ID))
 ENGINE = InnoDB;
 
@@ -423,10 +417,9 @@ CREATE TABLE IF NOT EXISTS `AppCloudDB`.`AC_WHITE_LISTED_TENANTS` (
   `tenant_id` INT NOT NULL,
   `max_app_count` INT(11) DEFAULT -1,
   `max_database_count` INT(11) DEFAULT -1,
-  `cloud_id` INT NOT NULL,
+  `cloud_id` VARCHAR(50) NOT NULL,
   `max_replica_count` INT(11) NOT NULL DEFAULT 4,
   PRIMARY KEY (`id`, `tenant_id`),
-  CONSTRAINT fk_WhiteListedTenants_CloudType1 FOREIGN KEY (cloud_id) REFERENCES AppCloudDB.AC_CLOUD (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT uk_WhiteListedTenants UNIQUE (tenant_id, cloud_id))
 ENGINE = InnoDB;
 
@@ -499,10 +492,10 @@ INSERT INTO `AC_CONTAINER_SPECIFICATIONS` (`CON_SPEC_NAME`, `CPU`, `MEMORY`, `CO
 ('1024MB RAM and 0.5x vCPU', 500, 1024, 4);
 
 INSERT INTO `AC_SUBSCRIPTION_PLANS` (`PLAN_ID`, `PLAN_NAME`, `MAX_APPLICATIONS`, `MAX_DATABASES`, `CLOUD_ID`, `MAX_REPLICA_COUNT`) VALUES
-(1, 'FREE', 3, 3, 1, 2),
-(2, 'PAID', 10, 6, 1, 4),
-(3, 'FREE', 3, 3, 2, 2),
-(4, 'PAID', 10, 6, 2, 4);
+(1, 'FREE', 3, 3, 'app_cloud', 2),
+(2, 'PAID', 10, 6, 'app_cloud', 4),
+(3, 'FREE', 3, 3, 'integration_cloud', 2),
+(4, 'PAID', 10, 6, 'integration_cloud', 4);
 
 INSERT INTO `AC_RUNTIME_CONTAINER_SPECIFICATIONS` (`id`, `CON_SPEC_ID`) VALUES
 (1, 3),
@@ -542,36 +535,12 @@ INSERT INTO `AC_RUNTIME_CONTAINER_SPECIFICATIONS` (`id`, `CON_SPEC_ID`) VALUES
 (17, 4);
 
 -- -----------------------------------------------------
--- Table `AppCloudDB`.`AC_CLOUD`
--- -----------------------------------------------------
-
-CREATE TABLE IF NOT EXISTS `AppCloudDB`.`AC_CLOUD` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(100) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE (`name`))
-ENGINE = InnoDB;
-
--- -----------------------------------------------------
--- Populate Data to `AppCloudDB`.`AC_CLOUD`
--- -----------------------------------------------------
-
-INSERT INTO `AC_CLOUD` (`id`, `name`) VALUES
-(1, 'app-cloud'),
-(2, 'integration-cloud');
-
--- -----------------------------------------------------
 -- Table `AppCloudDB`.`AC_CLOUD_APP_TYPE`
 -- -----------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `AppCloudDB`.`AC_CLOUD_APP_TYPE` (
-  `cloud_id` INT NOT NULL,
+  `cloud_id` VARCHAR(50) NOT NULL,
   `app_type_id` INT NOT NULL,
-  CONSTRAINT `fk_cloud_has_cloudAppType_cloud`
-    FOREIGN KEY (`cloud_id`)
-    REFERENCES `AppCloudDB`.`AC_CLOUD` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
   CONSTRAINT `fk_cloud_has_cloudAppType_appType`
     FOREIGN KEY (`app_type_id`)
     REFERENCES `AppCloudDB`.`AC_APP_TYPE` (`id`)
@@ -584,13 +553,20 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 
 INSERT INTO `AC_CLOUD_APP_TYPE` (`cloud_id`, `app_type_id`) VALUES
-(1, 1),
-(1, 2),
-(1, 3),
-(1, 4),
-(1, 5),
-(1, 6),
-(1, 7);
+('app_cloud', 1),
+('app_cloud', 2),
+('app_cloud', 3),
+('app_cloud', 4),
+('app_cloud', 5),
+('app_cloud', 6),
+('app_cloud', 7),
+('integration_cloud', 1),
+('integration_cloud', 2),
+('integration_cloud', 3),
+('integration_cloud', 4),
+('integration_cloud', 5),
+('integration_cloud', 6),
+('integration_cloud', 7);
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
