@@ -2044,8 +2044,6 @@ var getthrottledAllowedContainerSpecs = function(allowedContainerSpecs){
     var isThrottled = true;
     //Get  Tier CPU and RAM
     var tenantTierInfo = getTenantTierInfo(tenantId);
-    //Get allowed container spec resources
-    var containerSpecResources = getContainerSpecResources(allowedContainerSpecs);
     //Get total resource usage of all running applications
     var tenantTotalResourceUsage = getTenantTotalResourceUsage(tenantId);
     var maxCpu = tenantTierInfo.getCpuLimit();
