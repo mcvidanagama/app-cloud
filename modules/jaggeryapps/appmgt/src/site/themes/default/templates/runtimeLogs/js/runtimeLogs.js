@@ -200,6 +200,7 @@ function downloadLogs(e) {
                             '</div>' +
                         '</div>' +
                     '</div>';
+    var selectedReplica = $("#replicas").val();
     var table = "<table class='table' style='width:100%; color:black'>"
                 + "<tr class='active'><td>Get logs from the server</td>"
                 + "<td></td>" + "<td><i class=\"fa fa-circle-o-notch fa-spin\"></i></td></tr>" + "</table>";
@@ -211,6 +212,7 @@ function downloadLogs(e) {
     jagg.post("../blocks/runtimeLogs/ajax/runtimeLogs.jag", {
         action:"downloadLogs",
         applicationKey:applicationKey,
+        selectedReplica:selectedReplica,
         selectedRevision:selectedRevision
     },function (result) {
         result = result.replace(/\t+/g, "    ");
