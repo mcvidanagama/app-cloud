@@ -59,6 +59,13 @@ CREATE TABLE IF NOT EXISTS AC_TENANT_SUBSCRIPTION (
   PRIMARY KEY (`tenant_id`, `cloud_id`))
 ENGINE = InnoDB;
 
+-- ---------------------------------------
+-- custom docker images transport
+-- ---------------------------------------
+DELETE FROM AC_RUNTIME_TRANSPORT WHERE runtime_id = 11;
+INSERT INTO `AC_RUNTIME_TRANSPORT` (`transport_id`, `runtime_id`) VALUES
+(5, 11),
+(6, 11);
 
 
 
