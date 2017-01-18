@@ -219,7 +219,6 @@
         <module>modules/components/org.wso2.appcloud.common</module>
         <module>modules/components/org.wso2.appcloud.core</module>
         <module>modules/components/org.wso2.appcloud.provisioning.runtime</module>
-        <module>modules/components/org.wso2.appcloud.metering</module>
         <module>modules/jaggeryapps/appmgt</module>
         <module>modules/webapps/appCloudTierapi</module>
     </modules>

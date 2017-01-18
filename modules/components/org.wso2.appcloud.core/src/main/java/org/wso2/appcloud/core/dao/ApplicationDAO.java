@@ -1972,7 +1972,6 @@ public class ApplicationDAO {
             DBUtil.closeResultSet(resultSet);
             DBUtil.closePreparedStatement(preparedStatement);
         }
-        System.out.println("Plan Name" + usageTier.getPlanName());
         return usageTier;
     }
 

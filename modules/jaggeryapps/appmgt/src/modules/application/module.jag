@@ -303,6 +303,18 @@ jagg.module("application", {
     },
     getMaxReplicaCount:function () {
         return jagg.require(jagg.getModulesDir() + "application/application.jag").getMaxReplicaCount.apply(this, arguments);
+    },
+    getThrottledStatus:function () {
+            return jagg.require(jagg.getModulesDir() + "application/application.jag").getThrottledStatus.apply(this, arguments);
+    },
+    getTenantTierInfo:function () {
+            return jagg.require(jagg.getModulesDir() + "application/application.jag").getTenantTierInfo.apply(this, arguments);
+    },
+    getthrottledAllowedContainerSpecs:function () {
+            return jagg.require(jagg.getModulesDir() + "application/application.jag").getthrottledAllowedContainerSpecs.apply(this, arguments);
+    },
+    getFreeTierStatus:function () {
+            return jagg.require(jagg.getModulesDir() + "application/application.jag").getFreeTierStatus.apply(this, arguments);
     }
 });
 %>

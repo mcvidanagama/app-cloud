@@ -59,7 +59,10 @@ jagg.block("application", {
                 '&subject=' + requestMoreAppsSubjectMessage;
         var allDBInfo = databaseModule.getAllDatabasesInfo();
         var noOfDbs = allDBInfo.length;
-
+        var isThrottled = applicationModule.getThrottledStatus(allowedContainerSpecs);
+        var isFreeTier = applicationModule.getFreeTierStatus();
+        //get container spec list that fit to resources
+        var throttledAllowedContainerSpecs = applicationModule.getthrottledAllowedContainerSpecs(allowedContainerSpecs);
         return {
             "runtimes" : runtimes,
             "appType" : appType,
@@ -76,7 +79,10 @@ jagg.block("application", {
             "requestNewAppTypeURL" : requestNewAppTypeURL,
             "requestMoreAppseURL" : requestMoreAppseURL,
             "allDBInfo": allDBInfo,
-            "noOfDbs": noOfDbs
+            "noOfDbs": noOfDbs,
+            "isThrottled": isThrottled,
+            "isFreeTier": isFreeTier,
+            "throttledAllowedContainerSpecs": throttledAllowedContainerSpecs
         };
     }
 });
