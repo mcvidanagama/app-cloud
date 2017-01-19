@@ -208,11 +208,10 @@ function getValidationOptions(){
 
 function validatePattern(userNameVal) {
     var validation = true;
-    var username = userNameVal.trim();
-    if (!username) {
+    if (!userNameVal) {
         validation=false;
     }
-    if (username.length > 0 && !usernamePattern.test(username)) {
+    if (userNameVal.length > 0 && !usernamePattern.test(userNameVal)) {
         validation=false;
     }
     return validation;

@@ -506,8 +506,18 @@ var deployApplication = function(applicationName, versionName, appTypeName, depl
 
     var resourceQuotaLimit = new ResourceQuotaLimit();
     try{
+        // increase allocated cpu to fit with memory so that cpu to memory percentage is 1:1.
+        if (conSpecCpu < 250) {
+            resourceQuotaLimit.setCpuRequest(conSpecCpu * 0.3);
+        } else if (conSpecCpu < 350) {
+            resourceQuotaLimit.setCpuRequest(conSpecCpu * 0.4);
+        } else {
+            resourceQuotaLimit.setCpuRequest(conSpecCpu * 0.5);
+        }
         resourceQuotaLimit.setCpuLimit(conSpecCpu);
+        // allow memory so that guaranteed memory is provided.
         resourceQuotaLimit.setMemoryLimit(conSpecMemory);
+        resourceQuotaLimit.setMemoryRequest(conSpecMemory);
     }catch(e){
         var msg = "Error while updating the Resource Quota";
         log.error(msg);
@@ -592,7 +602,18 @@ var getRestartCounts = function (applicationName, versionName, applicationType){
     var kubService = new KubernetesRuntime(applicationCtx);
     var restartCounts = kubService.getPodRestartCounts();
     return restartCounts;
-}
+};
+
+var getReplicaInfo = function (applicationName, versionName, applicationType) {
+    var versionHashId = getVersionHashId(applicationName, versionName);
+    var exposureLevel = getExposureLevel(applicationName, versionName);
+    var applicationCtx = KubernetesProvisioningUtils.getApplicationContext(
+            applicationName, versionName, applicationType , modManager.getTenantId(true), modManager.getTenantDomain(true), versionHashId, exposureLevel);
+
+    var kubService = new KubernetesRuntime(applicationCtx);
+    var replicaInfo = kubService.getReplicaInfo();
+    return replicaInfo;
+};
 
 var constructAppLaunchURL = function(applicationName, versionName){
     var appLaunchURL = null;

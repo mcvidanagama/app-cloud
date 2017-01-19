@@ -701,6 +701,14 @@ var log = new Log();
         var endpoints = mod.getAppTypeUtil(appType).getEndpoints(deploymentURL, versionId);
         print(endpoints);
 
+    } else if (action == "getReplicaInfo") {
+        var mod = jagg.module("application");
+        var applicationName = request.getParameter("applicationName");
+        var versionName = request.getParameter("versionName");
+        var appType = request.getParameter("appType");
+        var replicaInfo = mod.getReplicaInfo(applicationName, versionName, appType);
+        print(""+replicaInfo);
+
     } else if (action == "getExposureLevel") {
 
         var applicationName = request.getParameter("applicationName");

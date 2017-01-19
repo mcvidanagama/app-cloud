@@ -355,7 +355,8 @@ var getDatabaseCount = function () {
 var getMaxDatabaseCount = function () {
 	try {
 		var tenantId = modManager.getTenantId();
-		var cloudTypes = ApplicationManager.getCloudTypes();
+        var cloud = jagg.getCloudTypePropertyConfFilePath();
+        var cloudTypes =  Object.keys(cloud);
 		var maxDatabaseCount = 0;
                 var ftStatus = modAppManager.getFreeTierStatus();
                 if(ftStatus){

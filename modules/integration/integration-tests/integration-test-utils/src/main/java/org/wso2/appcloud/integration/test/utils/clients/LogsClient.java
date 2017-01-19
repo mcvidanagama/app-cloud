@@ -76,7 +76,7 @@ public class LogsClient extends BaseClient{
             HttpPost httppost = new HttpPost(this.endpoint);
             httppost.setConfig(requestConfig);
             List<NameValuePair> params = new ArrayList<NameValuePair>(3);
-            params.add(new BasicNameValuePair(PARAM_NAME_ACTION, "downloadLogs"));
+            params.add(new BasicNameValuePair(PARAM_NAME_ACTION, "getSnapshotLogs"));
             params.add(new BasicNameValuePair(PARAM_NAME_APPLICATION_HASH_ID, applicationKey));
             params.add(new BasicNameValuePair(PARAM_NAME_APPLICATION_REVISION, applicationRevision));
             httppost.setEntity(new UrlEncodedFormEntity(params, UTF_8_ENCODING));
