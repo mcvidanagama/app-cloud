@@ -5,8 +5,7 @@
         "cloudIcon" : "fa fa-cubes",
         "cloudSpecificApplicationRepresentation" : "Application",
         "properties" : {
-            "documentationUrl": "AppCloud.Documentation.Url",
-            "supportUrl": "AppCloud.Support.Url"
+            "documentationUrl": "AppCloud.Documentation.Url"
         },
         "billing" : {
             "isBillingEnabled" : false,
@@ -22,8 +21,7 @@
         "cloudIcon" : "fw fw-service",
         "cloudSpecificApplicationRepresentation" : "Project",
         "properties" : {
-            "documentationUrl": "IntegrationCloud.Documentation.Url",
-            "supportUrl": "IntegrationCloud.Support.Url"
+            "documentationUrl": "IntegrationCloud.Documentation.Url"
         },
         "billing" : {
             "isBillingEnabled" : true,

@@ -39,3 +39,25 @@ ALTER TABLE AC_SUBSCRIPTION_PLANS ADD CUMULATIVE_RAM int(11);
 
 -- ALTER TABLE AC_SUBSCRIPTION_PLANS ADD MAX_CPU int(11);
 -- ALTER TABLE AC_SUBSCRIPTION_PLANS ADD MAX_RAM int(11);
+
+update AC_SUBSCRIPTION_PLANS set CUMULATIVE_CPU = 1000 , CUMULATIVE_RAM = 2048 where PLAN_NAME ='FREE';
+update AC_SUBSCRIPTION_PLANS set CUMULATIVE_CPU = 2000 , CUMULATIVE_RAM = 4096 where PLAN_NAME ='PAID';
+
+-- -----------------------------------------------------
+-- Table `AppCloudDB`.`AC_TENANT_SUBSCRIPTION_PLAN`
+-- -----------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS AC_TENANT_SUBSCRIPTION (
+  `tenant_id` INT NOT NULL,
+  `plan` VARCHAR(50) NOT NULL,
+  `max_app_count` INT(11) NOT NULL  DEFAULT -1,
+  `max_database_count` INT(11) NOT NULL DEFAULT -1,
+  `cloud_id` VARCHAR(50) NOT NULL,
+  `max_replica_count` INT(11) NOT NULL DEFAULT -1,
+  `max_memory` INT(11) NOT NULL DEFAULT -1,
+  `max_cpu` INT(11) NOT NULL DEFAULT -1,
+  `start_date`DATETIME NOT NULL,
+  `end_date` DATETIME NOT NULL,
+  `is_white_listed` TINYINT unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`tenant_id`, `cloud_id`))
+ENGINE = InnoDB;

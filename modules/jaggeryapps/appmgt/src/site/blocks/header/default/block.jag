@@ -40,7 +40,6 @@ jagg.block("header/default", {
         var tenantDomain = manager.getTenantDomain(true);
         var cloudTypeProperties = manager.getCloudTypeProperties();
         var docUrl = manager.getPropertyValue(cloudTypeProperties.properties.documentationUrl);
-        var supportUrl = manager.getPropertyValue(cloudTypeProperties.properties.supportUrl);
         var cloudTitle = cloudTypeProperties.cloudTitle;
         var cloudIcon = cloudTypeProperties.cloudIcon;
 
@@ -50,16 +49,14 @@ jagg.block("header/default", {
         var integrationCloudURL = manager.getPropertyValue(INTEGRATION_CLOUD_URL);
         var apiCloudPublisherURL = manager.getPropertyValue(API_CLOUD_PUBLISHER__URL);
         var cloudMgtURL = manager.getPropertyValue(CLOUD_MGT_URL);
-        var changePasswordURL = manager.getPropertyValue(CHANGE_PASSWORD_URL);
-        var profileURL = manager.getPropertyValue(PROFILE_URL);
         var zopimChatId = manager.getPropertyValue(ZOPIM_CHAT_ID);
 
+        var isBillingEnabled = cloudTypeProperties.billing.isBillingEnabled;
         return {
             "user": user,
             "loggedInUserName": loggedInUserName,
             "tenantDomain": tenantDomain,
             "docUrl": docUrl,
-            "supportUrl": supportUrl,
             "cloudTitle" : cloudTitle,
             "isGoogleAnalyticsEnabled" : isGoogleAnalyticsEnabled,
             "googleTrackingId" : googleTrackingId,
@@ -68,9 +65,8 @@ jagg.block("header/default", {
             "apiCloudPublisherURL" : apiCloudPublisherURL,
             "cloudMgtURL" : cloudMgtURL,
             "cloudIcon" : cloudIcon,
-            "changePasswordURL" : changePasswordURL,
-            "profileURL" : profileURL,
-            "zopimChatId": zopimChatId
+            "zopimChatId": zopimChatId,
+            "isBillingEnabled": isBillingEnabled
         };
     }
 });
