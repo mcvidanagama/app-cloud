@@ -281,7 +281,7 @@ var generateDatabaseInfoForDataTable = function () {
             // currently we dont record database type, support only MySQL.change this when multiple types are allowed
             singleDatabaseInfo.type = "MySQL";
             var attachedUsersArray = getAttachedUsers(singleDatabaseInfo.dbName);
-            log.info(attachedUsersArray);
+            log.debug(attachedUsersArray);
             var attachedUsersString = "";
             for (var k in attachedUsersArray) {
                 if (k > 0) {
