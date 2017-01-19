@@ -306,7 +306,7 @@
             <defaultRevision>1.0.0</defaultRevision>
             <newRevision>2.0.0</newRevision>
             <runtimeIDs>
-                <runtimeID key="tomcat">1</runtimeID>
+                <runtimeID key="tomcat">16</runtimeID>
                 <runtimeID key="tomcat-as600m2">6</runtimeID>
                 <runtimeID key="tomcat-as600m3">10</runtimeID>
                 <runtimeID key="msf4j">2</runtimeID>
