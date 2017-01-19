@@ -18,6 +18,7 @@
  */
 
 include("/jagg/jagg.jag");
+include("/jagg/constants.jag");
 
 var log = new Log("module/runtimeLogs/runtimeLogs.jag");
 var modManager = jagg.module("manager");
@@ -28,6 +29,8 @@ var KubernetesProvisioningUtils = Packages.org.wso2.appcloud.provisioning.runtim
 var DeploymentLogs = Packages.org.wso2.appcloud.provisioning.runtime.beans.DeploymentLogs;
 var DeploymentLogStream = Packages.org.wso2.appcloud.provisioning.runtime.beans.DeploymentLogStream;
 var applicationModule = jagg.module("application");
+var DASReceiverEp = modManager.getPropertyValue(DAS_RECEIVER_EP);
+var ReceiverAuth = modManager.getPropertyValue(DAS_RECEIVER_AUTH_BASE64);
 
 var getRuntimeLogs = function (applicationKey, selectedRevision, applicationType, isStream) {
 
@@ -68,7 +71,7 @@ var getFormattedRuntimeLogs = function (applicationKey, selectedRevision, applic
         result = null;
     }
     if (result == null || isFirstRequest === 'true'){
-        log.info("Acquiring streams of logs for applicationKey : " + applicationKey + ", selectedRevision : " + selectedRevision);
+        log.debug("Acquiring streams of logs for applicationKey : " + applicationKey + ", selectedRevision : " + selectedRevision);
         result = getRuntimeLogs(applicationKey, selectedRevision, applicationType, true);
         session.put(sessionKey, result);
     }
@@ -98,20 +101,43 @@ var getFormattedRuntimeLogs = function (applicationKey, selectedRevision, applic
     }
 }
 
-var getDownloadableRuntimeLogs = function (applicationKey, selectedRevision, applicationType) {
-    var result = getRuntimeLogs(applicationKey, selectedRevision, applicationType, false);
-    var logMap = {};
-    if (result instanceof DeploymentLogs){
-        var map = result.getDeploymentLogs();
-        if(map && map.entrySet()) {
-            var iterator = map.entrySet().iterator();
-            while (iterator.hasNext()) {
-                var entry = iterator.next();
-                logMap[entry.getKey()] = entry.getValue().toString();
+var getDownloadableRuntimeLogs = function (selectedReplicaId) {
+    try {
+        var data = {
+            "tableName": "ORG_WSO2_APPCLOUD_CONTAINER_LOG_STREAM",
+            "query": "kubernetes_pod_name:'"+selectedReplicaId+"'",
+            "columns": ["log"],
+            "start": 0,
+            "count": 1000,
+            "sortBy" : [{
+               "field" : "_timestamp",
+               "sortType" : "ASC"
             }
+           ]
+
+        };
+        var url = DASReceiverEp + '/analytics/search';
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", url);
+        xhr.setRequestHeader('Authorization', "Basic " + ReceiverAuth);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(data);
+
+        var responseText = xhr.responseText;
+        var result = parse(responseText);
+        var logMap = {};
+        var lines = [];
+        for (var key in result) {
+                if(result.hasOwnProperty(key)) {
+                    var values = result[key].values;
+                    lines.push(values.log);
+                }
         }
+
+        logMap[0] = lines;
         return logMap;
-    } else {
-        throw "Error while calling mod.getRuntimeLogs. Results are not instances of DeploymentLogs";
-    }
+
+    } catch (e) {
+        log.error(e);
+   }
 }

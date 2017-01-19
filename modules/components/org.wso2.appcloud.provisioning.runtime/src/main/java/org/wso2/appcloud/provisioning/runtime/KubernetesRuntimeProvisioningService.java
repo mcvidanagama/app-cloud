@@ -23,8 +23,11 @@ import io.fabric8.kubernetes.client.AutoAdaptableKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.fabric8.kubernetes.client.dsl.LogWatch;
 import io.fabric8.kubernetes.client.dsl.PrettyLoggable;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.wso2.appcloud.provisioning.runtime.Utils.KubernetesProvisioningUtils;
 import org.wso2.appcloud.provisioning.runtime.beans.*;
 import org.wso2.appcloud.provisioning.runtime.beans.Container;
@@ -141,8 +144,10 @@ public class KubernetesRuntimeProvisioningService implements RuntimeProvisioning
         List<String> serviceNameList = new ArrayList<>();
         String cpuLimitInt = resourceQuotaLimit.getCpuLimit();
         String cpuLimit = cpuLimitInt.concat("m");
+        String cpuRequest = resourceQuotaLimit.getCpuRequest().concat("m");
         String memoryLimitInt = resourceQuotaLimit.getMemoryLimit();
         String memoryLimit = memoryLimitInt.concat("Mi");
+        String memoryRequest = resourceQuotaLimit.getMemoryRequest().concat("Mi");
 
         try {
             //Deployment creation
@@ -154,7 +159,11 @@ public class KubernetesRuntimeProvisioningService implements RuntimeProvisioning
 
                 ResourceRequirementsBuilder resourceRequirementsBuilder = new ResourceRequirementsBuilder();
                 ResourceRequirements resourceRequirement = resourceRequirementsBuilder
-                        .addToLimits("cpu", new Quantity(cpuLimit)).addToLimits("memory", new Quantity(memoryLimit)).build();
+                                                                   .addToLimits("cpu", new Quantity(cpuLimit))
+                                                                   .addToRequests("cpu", new Quantity(cpuRequest))
+                                                                   .addToLimits("memory", new Quantity(memoryLimit))
+                                                                   .addToRequests("memory", new Quantity(memoryRequest))
+                                                                   .build();
                 kubContainer.setResources(resourceRequirement);
 
                 //Checking whether the container is including volume mounts
@@ -396,7 +405,7 @@ public class KubernetesRuntimeProvisioningService implements RuntimeProvisioning
                             logs = (String) prettyLoggablePrev.getLog(true);
                         }
                         logs += (String) prettyLoggable.getLog(true);
-                        logOutPut.put("Replica-" + podCounter + "-" + container.getName(), logs);
+                        logOutPut.put("Replica_" + podCounter + "_" + pod.getMetadata().getName(), logs);
                         deploymentLogs.setDeploymentLogs(logOutPut);
                     }
                     podCounter++;
@@ -1050,6 +1059,39 @@ public class KubernetesRuntimeProvisioningService implements RuntimeProvisioning
 			throw new RuntimeProvisioningException(message);
 		}
 	}
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JSONArray getReplicaInfo() throws RuntimeProvisioningException {
+        PodList podList = KubernetesProvisioningUtils.getPods(applicationContext);
+        if (podList != null) {
+            JSONArray jsonArray = new JSONArray();
+            for (Pod pod : podList.getItems()) {
+                if(pod.getStatus().getContainerStatuses().size() > 0) {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("podName", pod.getMetadata().getName());
+                    jsonObject.put("restartCount", pod.getStatus().getContainerStatuses().get(0).getRestartCount());
+                    jsonArray.put(jsonObject);
+                } else {
+                    //In case query is done before the pod get fully created,
+                    //Restart count wont be available so returning 0
+                    //Pod name return as empty
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("podName", "");
+                    jsonObject.put("restartCount", String.valueOf(0));
+                    jsonArray.put(jsonObject);
+                }
+            }
+            return jsonArray;
+        } else {
+            String message = "Could not find a pod associated with pod for application : " + applicationContext.getId() +
+                    ", version : " + applicationContext.getVersion();
+            log.error(message);
+            throw new RuntimeProvisioningException(message);
+        }
+    }
 
     /**
      * {@inheritDoc}

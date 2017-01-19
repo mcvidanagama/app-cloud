@@ -34,6 +34,7 @@ var KUB_SERVICE_BACKEND_PORT = 8080;
 var KUB_SERVICE_PHP_BACKEND_PORT = 80;
 var KUB_SERVICE_PROTOCOL = "TCP";
 var DATA_ANALYTICS_SERVER_URL = "DataAnalyticsServerURL";
+var DAS_RECEIVER_EP = "DASReceiverEp";
 var APP_CLOUD_URL = "AppCloud.Url";
 var INTEGRATION_CLOUD_URL = "IntegrationCloud.Url";
 var API_CLOUD_PUBLISHER__URL = "APICloud.Publisher.Url";
@@ -87,10 +88,13 @@ var DOC_URL = "_doc_url";
 var CLOUD_TYPES_PROPERTIES_CONFIG = "/jagg/cloud-types-properties.json";
 var DASHBOARD_TYPES_PROPERTIES_CONFIG = "/jagg/dashboard-types-properties.json";
 var SELECTED_CLOUD = "SELECTED_CLOUD";
-var APP_CLOUD = "app-cloud";
+var APP_CLOUD = "app_cloud";
 var APP_CLOUD_HOSTNAME = "AppCloud.Hostname";
-var INTEGRATION_CLOUD = "integration-cloud";
+var INTEGRATION_CLOUD = "integration_cloud";
 var INTEGRATION_CLOUD_HOSTNAME = "IntegrationCloud.Hostname";
+
+//DAS receiver default login base64 encoded
+var DAS_RECEIVER_AUTH_BASE64 = "Receiver.Auth";
 
 var CUSTOM = "custom";
 var PROFILE_URL = "Profile.Url";
