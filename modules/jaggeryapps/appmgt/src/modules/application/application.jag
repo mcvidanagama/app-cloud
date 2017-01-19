@@ -2012,9 +2012,6 @@ var getTenantTotalResourceUsage = function(tenantId){
                             var app = applicationList.get(i);
                             if (app != null) {
                             var obj = {};
-                             //DEBUG
-                             log.info("CPU " + app.getCpu());
-                             log.info("CRAM " + app.getRam());
                              totalCpu = totalCpu + app.getCpu();
                              totalRam = totalRam + app.getRam();
                              } else {
