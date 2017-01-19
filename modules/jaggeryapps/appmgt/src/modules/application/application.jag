@@ -2032,24 +2032,16 @@ var getTenantTotalResourceUsage = function(tenantId){
 
 var getTenantTierInfo = function(tenantId){
     var tenantTierInfo = ApplicationManager.getTenantTierInfo(tenantId);
-    log.info("Tenant Tier Info " + stringify(tenantTierInfo.getPlanName()));
     return tenantTierInfo;
 }
 
 var getthrottledAllowedContainerSpecs = function(allowedContainerSpecs){
     var tenantId = modManager.getTenantId(true);
-    //DEBUG
-    log.info("Tenant Id " + tenantId);
-    log.info("allowedRuntimeContainerSpecJson " + stringify(allowedContainerSpecs));
     var isThrottled = true;
-    //Get  Tier CPU and RAM
     var tenantTierInfo = getTenantTierInfo(tenantId);
-    //Get total resource usage of all running applications
     var tenantTotalResourceUsage = getTenantTotalResourceUsage(tenantId);
     var maxCpu = tenantTierInfo.getCpuLimit();
     var maxRam = tenantTierInfo.getRamLimit();
-    log.info("CPU Limit " + tenantTierInfo.getCpuLimit());
-    log.info("RAM Limit " + tenantTierInfo.getRamLimit());
     for(var i = 0 ; i < allowedContainerSpecs.data.length; i++ ) {
         var conSpecs = {};
         conSpecs["cpu"] = JSON.parse(allowedContainerSpecs.data[i].cpu);
