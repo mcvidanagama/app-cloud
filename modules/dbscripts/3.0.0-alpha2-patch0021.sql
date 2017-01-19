@@ -46,6 +46,9 @@ INSERT INTO AC_CLOUD_APP_TYPE (`cloud_id`, `app_type_id`) VALUES
 ('integration_cloud', 6),
 ('integration_cloud', 7);
 
+-- -----------------------------------------------------------------
+-- This is a temporary table we use to start implementing throttling
+-- -----------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS AC_TENANT_SUBSCRIPTION (
   `tenant_id` INT NOT NULL,
   `plan` VARCHAR(50) NOT NULL,
@@ -54,8 +57,10 @@ CREATE TABLE IF NOT EXISTS AC_TENANT_SUBSCRIPTION (
   `cloud_id` VARCHAR(50) NOT NULL,
   `max_replica_count` INT(11) NOT NULL DEFAULT -1,
   `max_memory` INT(11) NOT NULL DEFAULT -1,
+  `max_cpu` INT(11) NOT NULL DEFAULT -1,
   `start_date`DATETIME NOT NULL,
   `end_date` DATETIME NOT NULL,
+  `is_white_listed` TINYINT unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`tenant_id`, `cloud_id`))
 ENGINE = InnoDB;
 
