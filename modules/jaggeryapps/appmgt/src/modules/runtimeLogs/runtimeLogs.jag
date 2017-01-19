@@ -71,7 +71,7 @@ var getFormattedRuntimeLogs = function (applicationKey, selectedRevision, applic
         result = null;
     }
     if (result == null || isFirstRequest === 'true'){
-        log.info("Acquiring streams of logs for applicationKey : " + applicationKey + ", selectedRevision : " + selectedRevision);
+        log.debug("Acquiring streams of logs for applicationKey : " + applicationKey + ", selectedRevision : " + selectedRevision);
         result = getRuntimeLogs(applicationKey, selectedRevision, applicationType, true);
         session.put(sessionKey, result);
     }
