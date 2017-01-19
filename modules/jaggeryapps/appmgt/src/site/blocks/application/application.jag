@@ -244,7 +244,10 @@ var log = new Log();
                 //less than the maximum amount of applications that can be created
                 var RunningApplicationCount = applicationModule.getRunningApplicationVersionCount();
                 var maxRunningAppCount = applicationModule.getMaxInstanceCount();
-                if (RunningApplicationCount < maxRunningAppCount) {
+                //Check resource availability in the subscribed tier to create new application.
+                var isThrottled = applicationModule.getThrottledStatus(conSpecId);
+                log.info("isThrottled " + isThrottled);
+                if ((RunningApplicationCount < maxRunningAppCount) && !isThrottled) {
                     isAppCountLowerThanMax = true;
                 } else {
                     logMessage = "Application creation request not accepted because the application count has " +

@@ -1972,7 +1972,6 @@ public class ApplicationDAO {
             DBUtil.closeResultSet(resultSet);
             DBUtil.closePreparedStatement(preparedStatement);
         }
-        System.out.println("Plan Name" + usageTier.getPlanName());
         return usageTier;
     }
 
@@ -2650,7 +2649,6 @@ public class ApplicationDAO {
             preparedStatement.setInt(2, tenantId);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                System.out.println("ReplicaCount DAO: " + resultSet.getInt(SQLQueryConstants.REPLICA_COUNT));
                 replicaCount = resultSet.getInt(SQLQueryConstants.REPLICA_COUNT);
             }
             dbConnection.commit();

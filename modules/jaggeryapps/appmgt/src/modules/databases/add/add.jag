@@ -23,6 +23,7 @@ include("/jagg/constants.jag");
 var log = new Log('modules/databases/add/add.jag');
 
 var modManager = jagg.module("manager");
+var modAppManager = jagg.module("application");
 var wso2_rss_instanceName = 'SYSTEM';
 var storageServerURL = modManager.getPropertyValue(PROPERTY_STORAGE_SERVER_URL);
 var environmentName = modManager.getPropertyValue(PROPERTY_RSS_ENVIRONMENT_NAME);
@@ -356,6 +357,8 @@ var getMaxDatabaseCount = function () {
 		var tenantId = modManager.getTenantId();
 		var cloudTypes = ApplicationManager.getCloudTypes();
 		var maxDatabaseCount = 0;
+                var ftStatus = modAppManager.getFreeTierStatus();
+                if(ftStatus){
 		for (var i = 0; i < cloudTypes.length; i++) {
 		    var dbCount = ApplicationManager.getMaxDatabaseCountForWhiteListedTenants(tenantId, cloudTypes[i]);
 		    if (dbCount == -1) {
@@ -369,6 +372,11 @@ var getMaxDatabaseCount = function () {
 		        maxDatabaseCount += dbCount;
 		    }
 		}
+
+		} else{
+                var tenantTierInfo = ApplicationManager.getTenantTierInfo(tenantId);
+                maxDatabaseCount = tenantTierInfo.getMaxDatabaseCount();
+             }
 		return maxDatabaseCount;
 	} catch (e) {
 		log.error("Error while getting the maximum database count for tenant id : " + tenantId);

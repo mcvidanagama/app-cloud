@@ -1779,13 +1779,19 @@ var getMaxInstanceCount = function () {
 var getMaxReplicaCount = function() {
     try {
         var tenantId = modManager.getTenantId();
-        var maxReplicaCount = ApplicationManager.getMaxReplicaCountForWhiteListedTenants(tenantId, jagg.getSelectedCloud());
-        var subscriptionPlanBaseURL = modManager.getPropertyValue("SubscriptionPlanBaseURL");
-        var subscriptionPlanURL = subscriptionPlanBaseURL + "/plans/" + jagg.getSelectedCloud() + "/FREE";
+        var maxReplicaCount = 1;
+        if(getFreeTierStatus()){
+            maxReplicaCount = ApplicationManager.getMaxReplicaCountForWhiteListedTenants(tenantId, jagg.getSelectedCloud());
+            var subscriptionPlanBaseURL = modManager.getPropertyValue("SubscriptionPlanBaseURL");
+            var subscriptionPlanURL = subscriptionPlanBaseURL + "/plans/" + jagg.getSelectedCloud() + "/FREE";
 
-        if (maxReplicaCount == -1) {
-            var maxReplicaJson = get(subscriptionPlanURL, {}, "json");
-            maxReplicaCount = parseInt(maxReplicaJson.data.maxReplicas);
+            if (maxReplicaCount == -1) {
+                var maxReplicaJson = get(subscriptionPlanURL, {}, "json");
+                maxReplicaCount = parseInt(maxReplicaJson.data.maxReplicas);
+            }
+        } else{
+            var tenantTierInfo = getTenantTierInfo(tenantId);
+            maxReplicaCount = tenantTierInfo.getMaxReplicaCount();
         }
         return maxReplicaCount;
     } catch (e) {
@@ -1960,4 +1966,102 @@ var getReplicaCountForVersion = function (applicationName, versionName) {
          throw e;
     }
 }
+
+//Get total resource usage by adding all running instances resources in to new instance resource and
+//compare with allowed cumulative resource usage.
+var getThrottledStatus = function(allowedContainerSpecs){
+    var tenantId = modManager.getTenantId(true);
+    log.info("Tenant Id " + tenantId);
+    log.info("allowedRuntimeContainerSpecJson " + stringify(allowedContainerSpecs));
+    var isThrottled = true;
+    //Get  Tier CPU and RAM
+    var tenantTierInfo = getTenantTierInfo(tenantId);
+    //Get total resource usage of all running applications
+    var tenantTotalResourceUsage = getTenantTotalResourceUsage(tenantId);
+    var maxCpu = tenantTierInfo.getCpuLimit();
+    var maxRam = tenantTierInfo.getRamLimit();
+        for(var i = 0 ; i < allowedContainerSpecs.data.length; i++ ) {
+            var conSpecs = {};
+            conSpecs["cpu"] = JSON.parse(allowedContainerSpecs.data[i].cpu);
+            conSpecs["ram"] = JSON.parse(allowedContainerSpecs.data[i].memory);
+            var cumCpu = conSpecs["cpu"] + tenantTotalResourceUsage["totalCpu"];
+            var cumRam = conSpecs["ram"] + tenantTotalResourceUsage["totalRam"];
+            log.info("cum CPU " + cumCpu);
+            if(maxCpu > cumCpu && maxRam > cumRam){
+                       isThrottled = false;
+            }
+        }
+    return isThrottled;
+}
+
+//Get total resource usage by adding all running instances resources
+var getTenantTotalResourceUsage = function(tenantId){
+    var tenantId = modManager.getTenantId(true);
+    var allTenantRunningApplicationMap = ApplicationManager.getRunningApplicationsOfTenant(tenantId);
+    var totalRam = 0;
+    var totalCpu = 0;
+    if (allTenantRunningApplicationMap && allTenantRunningApplicationMap.entrySet()) {
+        var iterator = allTenantRunningApplicationMap.entrySet().iterator();
+            while (iterator.hasNext()) {
+                var entry = iterator.next();
+                var tenantId = entry.getKey();
+                var appList = [];
+                var applicationList = entry.getValue();
+                    for (var i = 0; i < applicationList.size(); i++) {
+                        if (applicationList != null) {
+                            var app = applicationList.get(i);
+                            if (app != null) {
+                            var obj = {};
+                             totalCpu = totalCpu + app.getCpu();
+                             totalRam = totalRam + app.getRam();
+                             } else {
+                                 log.warn("One of the running applications of tenant:" + tenantId + " has a null app.");
+                             }
+                             } else {
+                                     log.warn("Number of running application for the tenant:" + tenantId + " is zero.");
+                             }
+                        }
+                     }
+        return { "totalCpu": totalCpu,
+                  "totalRam": totalRam };
+        }
+}
+
+var getTenantTierInfo = function(tenantId){
+    var tenantTierInfo = ApplicationManager.getTenantTierInfo(tenantId);
+    return tenantTierInfo;
+}
+
+var getthrottledAllowedContainerSpecs = function(allowedContainerSpecs){
+    var tenantId = modManager.getTenantId(true);
+    var isThrottled = true;
+    var tenantTierInfo = getTenantTierInfo(tenantId);
+    var tenantTotalResourceUsage = getTenantTotalResourceUsage(tenantId);
+    var maxCpu = tenantTierInfo.getCpuLimit();
+    var maxRam = tenantTierInfo.getRamLimit();
+    for(var i = 0 ; i < allowedContainerSpecs.data.length; i++ ) {
+        var conSpecs = {};
+        conSpecs["cpu"] = JSON.parse(allowedContainerSpecs.data[i].cpu);
+        conSpecs["ram"] = JSON.parse(allowedContainerSpecs.data[i].memory);
+        var cumCpu = conSpecs["cpu"] + tenantTotalResourceUsage["totalCpu"];
+        var cumRam = conSpecs["ram"] + tenantTotalResourceUsage["totalRam"];
+        log.info("cum CPU " + cumCpu);
+            if(cumCpu > maxCpu || cumRam > maxRam){
+                allowedContainerSpecs.data.splice(i,1);
+            }
+        }
+    return allowedContainerSpecs;
+}
+
+var getFreeTierStatus = function(){
+    var tenantId = modManager.getTenantId(true);
+    var tenantTierInfo = ApplicationManager.getTenantTierInfo(tenantId);
+    var tenantTierName = tenantTierInfo.getPlanName();
+    var freeTierStatus = false;
+    if(tenantTierName === "FREE" ||  (typeof tenantTierName === "undefined" && tenantTierName === null)){
+        freeTierStatus = true;
+    }
+    return freeTierStatus;
+}
+
 %>
