@@ -2055,7 +2055,7 @@ var getFreeTierStatus = function(){
     var tenantTierInfo = ApplicationManager.getTenantTierInfo(tenantId);
     var tenantTierName = tenantTierInfo.getPlanName();
     var freeTierStatus = false;
-    if(tenantTierName === "FREE" ||  (typeof tenantTierName === "undefined" && tenantTierName === null)){
+    if(tenantTierName == "FREE" || (typeof tenantTierName === "undefined" && tenantTierName === null)){
         freeTierStatus = true;
     }
     return freeTierStatus;

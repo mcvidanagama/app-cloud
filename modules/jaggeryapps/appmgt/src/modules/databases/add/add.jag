@@ -357,8 +357,8 @@ var getMaxDatabaseCount = function () {
 		var tenantId = modManager.getTenantId();
 		var cloudTypes = ApplicationManager.getCloudTypes();
 		var maxDatabaseCount = 0;
-                var ftStatus = modAppManager.getFreeTierStatus();
-                if(ftStatus){
+        var ftStatus = modAppManager.getFreeTierStatus();
+        if(ftStatus){
 		for (var i = 0; i < cloudTypes.length; i++) {
 		    var dbCount = ApplicationManager.getMaxDatabaseCountForWhiteListedTenants(tenantId, cloudTypes[i]);
 		    if (dbCount == -1) {
@@ -373,11 +373,12 @@ var getMaxDatabaseCount = function () {
 		    }
 		}
 
-		} else{
-                var tenantTierInfo = ApplicationManager.getTenantTierInfo(tenantId);
-                maxDatabaseCount = tenantTierInfo.getMaxDatabaseCount();
+		}else{
+             var tenantTierInfo = ApplicationManager.getTenantTierInfo(tenantId);
+             maxDatabaseCount = tenantTierInfo.getMaxDatabaseCount();
              }
-		return maxDatabaseCount;
+
+	return maxDatabaseCount;
 	} catch (e) {
 		log.error("Error while getting the maximum database count for tenant id : " + tenantId);
 		log.error(e);
