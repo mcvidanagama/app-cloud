@@ -75,7 +75,7 @@ public class SQLQueryConstants {
 
     public static final String ADD_APPLICATION =
             "INSERT INTO AC_APPLICATION (name, hash_id, description, tenant_id, default_version, app_type_id, cloud_id) values " +
-            "(?, ?, ?, ?, ?, (SELECT id FROM AC_APP_TYPE WHERE name=?), (SELECT id FROM AC_CLOUD WHERE name=?))";
+            "(?, ?, ?, ?, ?, (SELECT id FROM AC_APP_TYPE WHERE name=?), ?)";
 
     public static final String ADD_VERSION =
             "INSERT INTO AC_VERSION (name, hash_id, application_id, runtime_id, tenant_id, con_spec_cpu, con_spec_memory, exposure_level) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -104,20 +104,20 @@ public class SQLQueryConstants {
 
     public static final String ADD_WHITE_LISTED_TENANT =
             "INSERT INTO AC_WHITE_LISTED_TENANTS (tenant_id, max_app_count, max_database_count, cloud_id, max_replica_count) " +
-                    "values (?, ?, ?, (SELECT id from AC_CLOUD WHERE name=?), ?) " +
+                    "values (?, ?, ?, ?, ?) " +
                     "ON DUPLICATE KEY UPDATE max_app_count=?, max_database_count=?, max_replica_count=?";
 
     public static final String ADD_WHITE_LISTED_MAX_DATABASE_COUNT_FOR_TENANT =
             "INSERT INTO AC_WHITE_LISTED_TENANTS (tenant_id, max_database_count, cloud_id) " +
-                    "values (?, ?, (SELECT id from AC_CLOUD WHERE name=?)) ON DUPLICATE KEY UPDATE max_database_count=?";
+                    "values (?, ?, ?) ON DUPLICATE KEY UPDATE max_database_count=?";
 
     public static final String ADD_WHITE_LISTED_MAX_APP_COUNT_FOR_TENANT =
             "INSERT INTO AC_WHITE_LISTED_TENANTS (tenant_id, max_app_count, cloud_id) " +
-                    "values (?, ?, (SELECT id from AC_CLOUD WHERE name=?)) ON DUPLICATE KEY UPDATE max_app_count=?";
+                    "values (?, ?, ?) ON DUPLICATE KEY UPDATE max_app_count=?";
 
     public static final String ADD_WHITE_LISTED_MAX_REPLICA_COUNT_FOR_TENANT =
             "INSERT INTO AC_WHITE_LISTED_TENANTS (tenant_id, cloud_id, max_replica_count) " +
-                    "values (?, (SELECT id from AC_CLOUD WHERE name=?), ?) ON DUPLICATE KEY UPDATE max_replica_count=?";
+                    "values (?, ?, ?) ON DUPLICATE KEY UPDATE max_replica_count=?";
 
     public static final String ADD_APPLICATION_CONTEXT_FOR_APPLICATION =
             "INSERT INTO AC_APPLICAION_CONTEXTS (tenant_id, version_id, context) values (?,?,?)";
@@ -129,7 +129,7 @@ public class SQLQueryConstants {
     public static final String GET_ALL_APPLICATIONS_LIST =
             "SELECT app.name as application_name, app.hash_id as hash_id, type.name as app_type_name, icon.icon as icon " +
             "FROM AC_APPLICATION app JOIN AC_APP_TYPE type ON app.app_type_id = type.id LEFT OUTER JOIN AC_APP_ICON icon" +
-            " ON app.id = icon.application_id WHERE app.tenant_id=? AND app.cloud_id=(select id from AC_CLOUD WHERE name=?)";
+            " ON app.id = icon.application_id WHERE app.tenant_id=? AND app.cloud_id=?";
 
     public static final String GET_VERSION_LIST_OF_APPLICATION =
             "SELECT name FROM AC_VERSION WHERE application_id = (SELECT id FROM AC_APPLICATION WHERE hash_id=? AND tenant_id=?)";
@@ -179,7 +179,7 @@ public class SQLQueryConstants {
 
     public static final String GET_ALL_APP_TYPES_FOR_CLOUD =
             "SELECT * FROM AC_APP_TYPE WHERE id IN (SELECT app_type_id FROM AC_CLOUD_APP_TYPE WHERE cloud_id=" +
-                    "(SELECT id FROM AC_CLOUD WHERE name=?))";
+                    "?)";
 
     public static final String GET_RUNTIMES_FOR_APP_TYPE_OF_TENANT =
             "SELECT * FROM AC_RUNTIME WHERE id IN (SELECT runtime_id FROM AC_APP_TYPE_RUNTIME WHERE app_type_id=" +
@@ -212,7 +212,7 @@ public class SQLQueryConstants {
             "AND tenant_id NOT IN (SELECT tenant_id FROM AC_WHITE_LISTED_TENANTS)";
 
 	public static final String GET_WHITE_LISTED_TENANT_DETAILS = "SELECT * FROM AC_WHITE_LISTED_TENANTS WHERE " +
-            "tenant_id=? AND cloud_id=(SELECT id FROM AC_CLOUD WHERE name=?)";
+            "tenant_id=? AND cloud_id=?";
 
     public static final String GET_CUSTOM_DOMAIN = "SELECT custom_domain FROM AC_APPLICATION " +
             "WHERE hash_id=? AND AC_APPLICATION.tenant_id=?";
@@ -248,7 +248,7 @@ public class SQLQueryConstants {
             "LEFT OUTER JOIN AC_APP_ICON icon ON app.id = icon.application_id " +
             "JOIN AC_VERSION version ON app.id = version.application_id " +
             "JOIN AC_TAG tag ON version.id = tag.version_id " +
-            "WHERE app.tenant_id=? AND app.cloud_id=(select id from AC_CLOUD WHERE name=?)";
+            "WHERE app.tenant_id=? AND app.cloud_id=?";
 
     public static final String GET_APPLICATION_CONTEXT =
             "SELECT * FROM AC_APPLICAION_CONTEXTS WHERE tenant_id=? AND version_id=?";
@@ -324,7 +324,7 @@ public class SQLQueryConstants {
 
     public static final String RUNNING_APPLICATION_VERSION_COUNT = "SELECT COUNT(id) AS ACTIVE_CONTAINERS_COUNT FROM " +
             "AC_VERSION WHERE application_id IN (SELECT id FROM AC_APPLICATION WHERE tenant_id = ? AND " +
-            "cloud_id = (select id from AC_CLOUD WHERE name=?)) AND status='running'";
+            "cloud_id = ?) AND status='running'";
 
     public static final String GET_VERSION_EXPOSURE_LEVEL = "SELECT exposure_level FROM AC_VERSION WHERE hash_id=? AND tenant_id=?";
 
