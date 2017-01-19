@@ -108,7 +108,13 @@ var getDownloadableRuntimeLogs = function (selectedReplicaId) {
             "query": "kubernetes_pod_name:'"+selectedReplicaId+"'",
             "columns": ["log"],
             "start": 0,
-            "count": 1000
+            "count": 1000,
+            "sortBy" : [{
+               "field" : "_timestamp",
+               "sortType" : "ASC"
+            }
+           ]
+
         };
         var url = DASReceiverEp + '/analytics/search';
         var xhr = new XMLHttpRequest();
