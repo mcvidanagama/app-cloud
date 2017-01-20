@@ -36,6 +36,7 @@ jagg.template("header/default", function(inputs, outputs, jagg) {
     var managerModule = jagg.module("manager");
     var hasCustomURLSettingsAccess = managerModule.hasCustomURLSettingsAccess();
     var isBillingEnabled = outputs.isBillingEnabled;
+    var remainingDays = outputs.remainingDays;
     if(isGoogleAnalyticsEnabled) {
 %>
            
@@ -119,7 +120,7 @@ $zopim(function () {
                 </li>
                 <% if (isBillingEnabled) { %>
                 <li class="dropdown user-name">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fw fw-resource"></i> Trial Expired
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fw fw-resource"></i> <% if (remainingDays > 0) { %> Trial - <%=remainingDays%> days to upgrade <% } else { %> Trial Expired <% } %>
                         <i class="fa fa-chevron-circle-down"></i>
                     <ul class="dropdown-menu" role="menu">
                         <li><a href="<%=cloudMgtURL + UPGRADE_BILLING_PLAN_URL + "?cloud-type=" + jagg.getSelectedCloud()%>" target=_blank>Upgrade Now</a></li>

@@ -64,6 +64,11 @@ public class SQLQueryConstants {
     public static final String MATCHING_VERSION_COUNT = "matching_version_count";
     public static final String EXPOSURE_LEVEL = "exposure_level";
     public static final String REPLICA_COUNT = "replicas";
+    public static final String PLAN = "plan";
+    public static final String MAX_MEMORY = "max_memory";
+    public static final String MAX_CPU = "max_cpu";
+    public static final String START_DATE = "start_date";
+    public static final String END_DATE = "end_date";
 
 
     /*==============================
@@ -123,6 +128,10 @@ public class SQLQueryConstants {
             "INSERT INTO AC_APPLICAION_CONTEXTS (tenant_id, version_id, context) values (?,?,?)";
 
     public static final String INSERT_APPLICATION_ICON = "INSERT INTO AC_APP_ICON (icon, application_id) VALUES (?, ?)";
+
+    public static final String ADD_SUBSCRIPTION = "INSERT INTO AC_TENANT_SUBSCRIPTION (tenant_id, plan, max_app_count, " +
+            "max_database_count, cloud_id, max_replica_count, max_memory, max_cpu, start_date, end_date, is_white_listed, " +
+            "status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     /*Select Queries*/
 
@@ -278,6 +287,7 @@ public class SQLQueryConstants {
 
     public static final String IS_CUSTOM_DOMAIN_AVAILABLE = "SELECT * FROM AC_APPLICATION WHERE custom_domain=?";
 
+    public static final String GET_SUBSCRIPTION = "SELECT * FROM AC_TENANT_SUBSCRIPTION WHERE tenant_id = ? AND cloud_id = ?";
     /* Update Queries */
 
     public static final String UPDATE_APPLICATION_ICON = "INSERT INTO AC_APP_ICON (icon, application_id) VALUES (?, ?) ON" +
@@ -308,7 +318,9 @@ public class SQLQueryConstants {
     public static final String UPDATE_APP_VERSION_CON_SPEC = "UPDATE AC_VERSION SET con_spec_cpu = ?, " +
             "con_spec_memory = ? WHERE hash_id = ? AND tenant_id=?";
 
-
+    public static final String UPDATE_SUBSCRIPTION = "UPDATE AC_TENANT_SUBSCRIPTION set plan = ?, max_app_count = ?, " +
+            "max_database_count = ?, max_replica_count = ?, max_memory = ?, max_cpu = ?, start_date = ?, end_date = ?, " +
+            "is_white_listed = ?, status = ? WHERE tenant_id = ? AND cloud_id = ?";
 
     /*Delete Queries*/
 

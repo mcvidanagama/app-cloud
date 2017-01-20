@@ -1606,4 +1606,66 @@ public class ApplicationManager {
             DBUtil.closeConnection(dbConnection);
         }
     }
+
+    /**
+     * Method to get subscriotion details
+     *
+     * @param tenantId  tenant id
+     * @param cloudType cloud type
+     * @return Subscriotion object
+     * @throws AppCloudException
+     */
+    public static Subscription getSubscription(int tenantId, String cloudType) throws AppCloudException {
+        Connection dbConnection = DBUtil.getDBConnection();
+        try {
+            return ApplicationDAO.getInstance().getSubscription(dbConnection, tenantId, cloudType);
+        } catch (AppCloudException e) {
+            String msg = "Error while retrieving subscription info for tenant id : " + tenantId + " and cloud : "
+                    + cloudType;
+            log.error(msg, e);
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeConnection(dbConnection);
+        }
+    }
+
+    /**
+     * Method to create new subscription
+     *
+     * @param subscription subscription object
+     * @throws AppCloudException
+     */
+    public static void addNewSubscription(Subscription subscription) throws AppCloudException {
+        Connection dbConnection = DBUtil.getDBConnection();
+        try {
+            ApplicationDAO.getInstance().addSubscription(dbConnection, subscription);
+        } catch (AppCloudException e) {
+            String msg = "Error while adding subscription for tenant id: " + subscription.getTenantId() + ", cloud : "
+                    + subscription.getCloudType();
+            log.error(msg, e);
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeConnection(dbConnection);
+        }
+    }
+
+    /**
+     * Method to update subscription
+     *
+     * @param subscription subscription object
+     * @throws AppCloudException
+     */
+    public static void updateSubscription(Subscription subscription) throws AppCloudException {
+        Connection dbConnection = DBUtil.getDBConnection();
+        try {
+            ApplicationDAO.getInstance().updateSubscription(dbConnection, subscription);
+        } catch (AppCloudException e) {
+            String msg = "Error while updating subscription for tenant id: " + subscription.getTenantId() + ", cloud : "
+                    + subscription.getCloudType();
+            log.error(msg, e);
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeConnection(dbConnection);
+        }
+    }
 }

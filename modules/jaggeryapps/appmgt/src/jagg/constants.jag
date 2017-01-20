@@ -114,4 +114,8 @@ var DEFAULT_LOGIN_PERMISSION = "default.Login.Permission";
 //Service Prefixes
 var HTTP_SERVICE_PREFIX = "htp-";
 var HTTPS_SERVICE_PREFIX = "hts-";
+
+var MYSQL_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+var MYSQL_MAX_DATETIME_STRING = "9999-12-31 12:59:59";
+var MYSQL_MIN_DATETIME_STRING = "1000-01-01 00:00:00";
 %>
