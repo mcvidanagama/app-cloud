@@ -1992,8 +1992,6 @@ var getReplicaCountForVersion = function (applicationName, versionName) {
 //compare with allowed cumulative resource usage.
 var getThrottledStatus = function(allowedContainerSpecs){
     var tenantId = modManager.getTenantId(true);
-    log.info("Tenant Id " + tenantId);
-    log.info("allowedRuntimeContainerSpecJson " + stringify(allowedContainerSpecs));
     var isThrottled = true;
     //Get  Tier CPU and RAM
     var tenantTierInfo = getTenantTierInfo(tenantId);
@@ -2007,7 +2005,6 @@ var getThrottledStatus = function(allowedContainerSpecs){
             conSpecs["ram"] = JSON.parse(allowedContainerSpecs.data[i].memory);
             var cumCpu = conSpecs["cpu"] + tenantTotalResourceUsage["totalCpu"];
             var cumRam = conSpecs["ram"] + tenantTotalResourceUsage["totalRam"];
-            log.info("cum CPU " + cumCpu);
             if(maxCpu > cumCpu && maxRam > cumRam){
                        isThrottled = false;
             }
@@ -2079,7 +2076,7 @@ var getFreeTierStatus = function(){
     var tenantTierInfo = ApplicationManager.getTenantTierInfo(tenantId);
     var tenantTierName = tenantTierInfo.getPlanName();
     var freeTierStatus = false;
-    if(tenantTierName === "FREE" ||  (typeof tenantTierName === "undefined" && tenantTierName === null)){
+    if(tenantTierName == "FREE" || (typeof tenantTierName === "undefined" && tenantTierName === null)){
         freeTierStatus = true;
     }
     return freeTierStatus;
