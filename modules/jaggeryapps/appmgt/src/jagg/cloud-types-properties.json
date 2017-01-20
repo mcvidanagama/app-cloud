@@ -9,9 +9,11 @@
         },
         "billing" : {
             "isBillingEnabled" : false,
+            "defaultPlan" : "FREE",
+            "trialPeriod" : 0,
             "plans" : [
-                {"id" : "free", "maxApplications" : 3, "maxDatabases" : 3, "maxReplicas" : 2},
-                {"id" : "paid", "maxApplications" : 10, "maxDatabases" : 6, "maxReplicas" : 4}
+                {"id" : "FREE", "maxApplicationCount" : 3, "maxDatabaseCount" : 3, "maxReplicaCount" : 2,"maxMemory" : 2048, "maxCpu" : 1000},
+                {"id" : "PAID", "maxApplicationCount" : 3, "maxDatabaseCount" : 3, "maxReplicaCount" : 2,"maxMemory" : 2048, "maxCpu" : 1000}
             ]
         }
     },
@@ -25,9 +27,12 @@
         },
         "billing" : {
             "isBillingEnabled" : true,
+            "defaultPlan" : "TRIAL",
+            "trialPeriod" : 14,
             "plans" : [
-                {"id" : "free", "maxApplications" : 3, "maxDatabases" : 3, "maxReplicas" : 2},
-                {"id" : "paid", "maxApplications" : 10, "maxDatabases" : 6, "maxReplicas" : 4}
+                {"id" : "TRIAL", "maxApplicationCount" : 3, "maxDatabaseCount" : 3, "maxReplicaCount" : 2,"maxMemory" : 2048, "maxCpu" : 1000},
+                {"id" : "starter", "maxApplicationCount" : 3, "maxDatabaseCount" : 3, "maxReplicaCount" : 2,"maxMemory" : 2048, "maxCpu" : 1000},
+                {"id" : "gettingTraction", "maxApplicationCount" : 3, "maxDatabaseCount" : 3, "maxReplicaCount" : 2,"maxMemory" : 2048, "maxCpu" : 1000}
             ]
         }
     }

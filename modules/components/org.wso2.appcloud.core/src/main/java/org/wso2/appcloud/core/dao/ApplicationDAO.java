@@ -2662,4 +2662,131 @@ public class ApplicationDAO {
         }
         return replicaCount;
     }
+
+    /**
+     * Get subscription details of tenant for a given cloud
+     *
+     * @param dbConnection database connection
+     * @param tenantId     tenant id
+     * @param cloudType    cloud type
+     * @return Subscription details
+     * @throws AppCloudException
+     */
+    public Subscription getSubscription(Connection dbConnection, int tenantId, String cloudType)
+            throws AppCloudException {
+        PreparedStatement preparedStatement = null;
+        Subscription subscription = null;
+        ResultSet resultSet = null;
+
+        try {
+
+            preparedStatement = dbConnection.prepareStatement(SQLQueryConstants.GET_SUBSCRIPTION);
+            preparedStatement.setInt(1, tenantId);
+            preparedStatement.setString(2, cloudType);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                subscription = new Subscription();
+                subscription.setPlan(resultSet.getString(SQLQueryConstants.PLAN));
+                subscription.setMaxApplicationCount(resultSet.getInt(SQLQueryConstants.MAX_APP_COUNT));
+                subscription.setMaxDatabaseCount(resultSet.getInt(SQLQueryConstants.MAX_DATABASE_COUNT));
+                subscription.setMaxReplicaCount(resultSet.getInt(SQLQueryConstants.MAX_REPLICA_COUNT));
+                subscription.setMaxMemory(resultSet.getInt(SQLQueryConstants.MAX_MEMORY));
+                subscription.setMaxCpu(resultSet.getInt(SQLQueryConstants.MAX_CPU));
+                subscription.setStartDate(resultSet.getString(SQLQueryConstants.START_DATE));
+                subscription.setEndDate(resultSet.getString(SQLQueryConstants.END_DATE));
+                subscription.setIsWhiteListed(resultSet.getInt(SQLQueryConstants.IS_WHITE_LISTED));
+                subscription.setStatus(resultSet.getString(SQLQueryConstants.STATUS));
+            }
+
+        } catch (SQLException e) {
+            String msg =
+                    "Error while retrieving subscription detail for tenant : " + tenantId + " in " + cloudType;
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeResultSet(resultSet);
+            DBUtil.closePreparedStatement(preparedStatement);
+        }
+        return subscription;
+    }
+
+    /**
+     * Add new subscription for a tenant per given cloud
+     *
+     * @param dbConnection database connection
+     * @param subscription subscription
+     * @throws AppCloudException
+     */
+    public void addSubscription(Connection dbConnection, Subscription subscription) throws AppCloudException {
+        PreparedStatement preparedStatement = null;
+
+        try {
+            preparedStatement = dbConnection.prepareStatement(SQLQueryConstants.ADD_SUBSCRIPTION);
+            preparedStatement.setInt(1, subscription.getTenantId());
+            preparedStatement.setString(2, subscription.getPlan());
+            preparedStatement.setInt(3, subscription.getMaxApplicationCount());
+            preparedStatement.setInt(4, subscription.getMaxDatabaseCount());
+            preparedStatement.setString(5, subscription.getCloudType());
+            preparedStatement.setInt(6, subscription.getMaxReplicaCount());
+            preparedStatement.setInt(7, subscription.getMaxMemory());
+            preparedStatement.setInt(8, subscription.getMaxCpu());
+            preparedStatement.setString(9, subscription.getStartDate());
+            preparedStatement.setString(10, subscription.getEndDate());
+            preparedStatement.setInt(11, subscription.getIsWhiteListed());
+            preparedStatement.setString(12, subscription.getStatus());
+
+            preparedStatement.execute();
+            dbConnection.commit();
+
+        } catch (SQLException e) {
+
+            String msg =
+                    "Error occurred while adding subscription : " + subscription.getPlan() + " to database " +
+                            "in tenant : " + subscription.getTenantId() + " and cloud : " + subscription.getCloudType();
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closePreparedStatement(preparedStatement);
+        }
+    }
+
+    /**
+     * Update existing subscription for a tenant per given cloud
+     *
+     * @param dbConnection database connection
+     * @param subscription subscription
+     * @throws AppCloudException
+     */
+    public void updateSubscription(Connection dbConnection, Subscription subscription) throws AppCloudException {
+        PreparedStatement preparedStatement = null;
+
+        try {
+            preparedStatement = dbConnection.prepareStatement(SQLQueryConstants.UPDATE_SUBSCRIPTION);
+
+            preparedStatement.setString(1, subscription.getPlan());
+            preparedStatement.setInt(2, subscription.getMaxApplicationCount());
+            preparedStatement.setInt(3, subscription.getMaxDatabaseCount());
+            preparedStatement.setString(4, subscription.getCloudType());
+            preparedStatement.setInt(5, subscription.getMaxReplicaCount());
+            preparedStatement.setInt(6, subscription.getMaxMemory());
+            preparedStatement.setInt(7, subscription.getMaxCpu());
+            preparedStatement.setString(8, subscription.getStartDate());
+            preparedStatement.setString(9, subscription.getEndDate());
+            preparedStatement.setString(10, subscription.getStatus());
+            preparedStatement.setInt(11, subscription.getTenantId());
+            preparedStatement.setInt(12, subscription.getIsWhiteListed());
+
+            preparedStatement.execute();
+            dbConnection.commit();
+
+        } catch (SQLException e) {
+
+            String msg =
+                    "Error occurred while updating subscription : " + subscription.getPlan() + " to database " +
+                            "in tenant : " + subscription.getTenantId() + " and cloud : " + subscription.getCloudType();
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closePreparedStatement(preparedStatement);
+        }
+    }
+
 }

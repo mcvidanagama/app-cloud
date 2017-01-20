@@ -52,6 +52,35 @@ jagg.block("header/default", {
         var zopimChatId = manager.getPropertyValue(ZOPIM_CHAT_ID);
 
         var isBillingEnabled = cloudTypeProperties.billing.isBillingEnabled;
+        var throttlingManager = jagg.module("throttling");
+        var adminModule = jagg.module("admin");
+        var isFirstLogin = throttlingManager.isFirstLogin();
+        if (isFirstLogin) {
+
+            // This added temporary, to add subscription record when tenant login first time
+            // once we integrate with the cloudmgt we need to remove this.
+            // correct fix is invoking cloudmgt rest api
+            var cloudType = jagg.getSelectedCloud();
+            var plan = cloudTypeProperties.billing.defaultPlan;
+            var trialPeriod = cloudTypeProperties.billing.trialPeriod;
+            var startDate = new Packages.java.util.Date();
+            var endDate = MYSQL_MAX_DATETIME_STRING;
+            var sqlDateFormatter = new java.text.SimpleDateFormat(MYSQL_DATETIME_FORMAT);
+            if(trialPeriod > 0) {
+                var cal = Packages.java.util.Calendar.getInstance();
+                cal.setTime(startDate);
+                cal.add(Packages.java.util.Calendar.DATE, trialPeriod);
+                endDate = sqlDateFormatter.format(cal.getTime());
+            }
+            adminModule.publishTenantSubscription(tenantDomain, cloudType, plan, sqlDateFormatter.format(startDate), endDate , "ACTIVE");
+        }
+
+        var remainingDays = -1;
+        // is billing enabled -> get the remaining days to upgrade and display in ui
+        if (isBillingEnabled) {
+            remainingDays = throttlingManager.getRemainingDaysToUpgrade(tenantDomain, jagg.getSelectedCloud());
+        }
+
         return {
             "user": user,
             "loggedInUserName": loggedInUserName,
@@ -66,7 +95,8 @@ jagg.block("header/default", {
             "cloudMgtURL" : cloudMgtURL,
             "cloudIcon" : cloudIcon,
             "zopimChatId": zopimChatId,
-            "isBillingEnabled": isBillingEnabled
+            "isBillingEnabled": isBillingEnabled,
+            "remainingDays" : remainingDays
         };
     }
 });

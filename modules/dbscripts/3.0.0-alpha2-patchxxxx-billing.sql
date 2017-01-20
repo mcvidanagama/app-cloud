@@ -59,5 +59,8 @@ CREATE TABLE IF NOT EXISTS AC_TENANT_SUBSCRIPTION (
   `start_date`DATETIME NOT NULL,
   `end_date` DATETIME NOT NULL,
   `is_white_listed` TINYINT unsigned NOT NULL DEFAULT 0,
+  `status` VARCHAR(50) NOT NULL,
   PRIMARY KEY (`tenant_id`, `cloud_id`))
 ENGINE = InnoDB;
+
+INSERT INTO AC_TENANT_SUBSCRIPTION VALUES (-1234, 'TRIAL', 3, 3, 'integration_cloud', 2, 2048, 1000, '2017-01-19 14:18:29', '2017-02-02 14:18:29', 0, 'ACTIVE');

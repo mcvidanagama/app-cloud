@@ -262,18 +262,18 @@ var whiteListApplicationVersion = function (applicationName, applicationRevision
 };
 
 var whiteListTenant = function (tenantDomain, maxAppCount, maxDatabaseCount, cloudType, replicaCount) {
-    var tenantId = modManager.getTenantIdForGivenTenantDomain(tenantDomain);
+    var tenantId = managerModule.getTenantIdForGivenTenantDomain(tenantDomain);
     ApplicationManager.whiteListTenant(tenantId, maxAppCount, maxDatabaseCount, cloudType, replicaCount);
 };
 
 var getVersionHashId = function(applicationName, versionName, tenantDomain){
-    var tenantId = modManager.getTenantIdForGivenTenantDomain(tenantDomain);
+    var tenantId = managerModule.getTenantIdForGivenTenantDomain(tenantDomain);
     var versionHashId = Util.getVersionHashId(applicationName, versionName, tenantId)
     return versionHashId;
 };
 
 var getApplicationVersions = function (tenantDomain, applicationName) {
-    var tenantId = modManager.getTenantIdForGivenTenantDomain(tenantDomain);
+    var tenantId = managerModule.getTenantIdForGivenTenantDomain(tenantDomain);
     var applicationHashId = Util.getApplicationHashId(applicationName, tenantId);
     var applicationVersions = [];
 
@@ -346,22 +346,22 @@ var updateContainerSpecification = function (tenantDomain, applicationName, appl
 };
 
 var whiteListMaxDatabaseCount = function (tenantDomain, maxDatabaseCount, cloudType) {
-    var tenantId = modManager.getTenantIdForGivenTenantDomain(tenantDomain);
+    var tenantId = managerModule.getTenantIdForGivenTenantDomain(tenantDomain);
     ApplicationManager.whiteListMaxDatabaseCount(tenantId, maxDatabaseCount, cloudType);
 };
 
 var whiteListMaxApplicationCount = function (tenantDomain, maxAppCount, cloudType) {
-    var tenantId = modManager.getTenantIdForGivenTenantDomain(tenantDomain);
+    var tenantId = managerModule.getTenantIdForGivenTenantDomain(tenantDomain);
     ApplicationManager.whiteListMaxAppCount(tenantId, maxAppCount, cloudType);
 };
 
 var whiteListMaxReplicaCount = function (tenantDomain, cloudType, replicaCount) {
-    var tenantId = modManager.getTenantIdForGivenTenantDomain(tenantDomain);
+    var tenantId = managerModule.getTenantIdForGivenTenantDomain(tenantDomain);
     ApplicationManager.whiteListMaxReplicaCount(tenantId, cloudType, replicaCount);
 };
 
 var getTenantMaxDatabaseCount = function (tenantDomain, cloudType) {
-    var tenantId = modManager.getTenantIdForGivenTenantDomain(tenantDomain);
+    var tenantId = managerModule.getTenantIdForGivenTenantDomain(tenantDomain);
     var databaseCountObj = {};
     try {
         databaseCountObj.maxDatabaseCount = ApplicationManager.getMaxDatabaseCountForWhiteListedTenants(tenantId, cloudType);
@@ -370,6 +370,18 @@ var getTenantMaxDatabaseCount = function (tenantDomain, cloudType) {
         throw e;
     }
     return databaseCountObj;
+};
+
+var publishTenantSubscription = function (tenantDomain, cloudType, plan, startDate, endDate, status) {
+    var tenantId = managerModule.getTenantIdForGivenTenantDomain(tenantDomain);
+    var throttlingManager = jagg.module("throttling");
+
+    var subscription = ApplicationManager.getSubscription(tenantId, cloudType);
+    if (subscription) {
+        throttlingManager.upgradeTenantSubscription(tenantId, cloudType, plan, startDate, endDate, status);
+    }else {
+        throttlingManager.addNewTenantSubscription(tenantId, cloudType, plan, startDate, endDate, status);
+    }
 };
 
 %>
