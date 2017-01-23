@@ -1984,9 +1984,9 @@ var getThrottledStatus = function(allowedContainerSpecs){
             var conSpecs = {};
             conSpecs["cpu"] = JSON.parse(allowedContainerSpecs.data[i].cpu);
             conSpecs["ram"] = JSON.parse(allowedContainerSpecs.data[i].memory);
-            var cumCpu = conSpecs["cpu"] + tenantTotalResourceUsage["totalCpu"];
-            var cumRam = conSpecs["ram"] + tenantTotalResourceUsage["totalRam"];
-            if((maxApps > runningAppCount) && (maxCpu > cumCpu && maxRam > cumRam)){
+            var aggregateCpu = conSpecs["cpu"] + tenantTotalResourceUsage["totalCpu"];
+            var aggregateRam = conSpecs["ram"] + tenantTotalResourceUsage["totalRam"];
+            if((maxApps > runningAppCount) && (maxCpu > aggregateCpu && maxRam > aggregateRam)){
                        isThrottled = false;
             }
         }
@@ -2042,9 +2042,9 @@ var getthrottledAllowedContainerSpecs = function(allowedContainerSpecs){
         var conSpecs = {};
         conSpecs["cpu"] = JSON.parse(allowedContainerSpecs.data[i].cpu);
         conSpecs["ram"] = JSON.parse(allowedContainerSpecs.data[i].memory);
-        var cumCpu = conSpecs["cpu"] + tenantTotalResourceUsage["totalCpu"];
-        var cumRam = conSpecs["ram"] + tenantTotalResourceUsage["totalRam"];
-            if(cumCpu > maxCpu || cumRam > maxRam){
+        var aggregateCpu = conSpecs["cpu"] + tenantTotalResourceUsage["totalCpu"];
+        var aggregateRam = conSpecs["ram"] + tenantTotalResourceUsage["totalRam"];
+            if(aggregateCpu > maxCpu || aggregateRam > maxRam){
                 allowedContainerSpecs.data.splice(i,1);
             }
         }
