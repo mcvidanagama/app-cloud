@@ -53,11 +53,19 @@ include("/jagg/constants.jag");
 
         var applicationKey = request.getParameter("applicationKey");
         var selectedRevision = request.getParameter("selectedRevision");
+        var selectedReplica = request.getParameter("selectedReplica");
+
+	//splitting from the second_ to get the selectedReplica ID
+        var undScore1 = selectedReplica.split("_")[0];
+        var undScore2 = selectedReplica.split("_")[1];
+        var bothUndScores = undScore1 + "_" + undScore2 + "_";
+        var selectedReplicaId = selectedReplica.split(bothUndScores)[1];
+
         var mod = jagg.module("runtimeLogs");
         var modApplication = jagg.module("application");
         try {
             var applicationType = modApplication.getApplication(applicationKey).applicationType;            
-	    var logMap = mod.getDownloadableRuntimeLogs(versionHashId);
+	    var logMap = mod.getDownloadableRuntimeLogs(selectedReplicaId);
             print(logMap);
         } catch(e) {
             var msg = "Error while getting deployment logs";

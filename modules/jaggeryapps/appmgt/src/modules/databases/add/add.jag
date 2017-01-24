@@ -354,7 +354,8 @@ var getDatabaseCount = function () {
 var getMaxDatabaseCount = function () {
 	try {
 		var tenantId = modManager.getTenantId();
-		var cloudTypes = ApplicationManager.getCloudTypes();
+        var cloud = jagg.getCloudTypePropertyConfFilePath();
+        var cloudTypes =  Object.keys(cloud);
 		var maxDatabaseCount = 0;
 		for (var i = 0; i < cloudTypes.length; i++) {
 		    var dbCount = ApplicationManager.getMaxDatabaseCountForWhiteListedTenants(tenantId, cloudTypes[i]);
