@@ -25,6 +25,7 @@ var PROPERTY_DOCKER_REGISTRY_URL_INFRA="DockerRegistryURL_Infra";
 var PROPERTY_STORAGE_SERVER_URL="StorageServerURL";
 var PROPERTY_RSS_ENVIRONMENT_NAME="RSSEnvironmentName";
 var DOCKER_FILE_NAME = "Dockerfile";
+var DOCKER_TEMPLATE_FILE_DIR_NAME = "dockerfiles";
 var TENANT_DOMAIN_NAME = "tenantDomainName";
 var SUPER_TENANT_DOMAIN_NAME = "carbon.super";
 var CLOUD_TYPE = "AppCloud";
@@ -88,15 +89,16 @@ var DOC_URL = "_doc_url";
 var CLOUD_TYPES_PROPERTIES_CONFIG = "/jagg/cloud-types-properties.json";
 var DASHBOARD_TYPES_PROPERTIES_CONFIG = "/jagg/dashboard-types-properties.json";
 var SELECTED_CLOUD = "SELECTED_CLOUD";
-var APP_CLOUD = "app-cloud";
+var APP_CLOUD = "app_cloud";
 var APP_CLOUD_HOSTNAME = "AppCloud.Hostname";
-var INTEGRATION_CLOUD = "integration-cloud";
+var INTEGRATION_CLOUD = "integration_cloud";
 var INTEGRATION_CLOUD_HOSTNAME = "IntegrationCloud.Hostname";
 
 //DAS receiver default login base64 encoded
 var DAS_RECEIVER_AUTH_BASE64 = "Receiver.Auth";
 
 var CUSTOM = "custom";
+var DEFAULT = "default";
 var PROFILE_URL = "Profile.Url";
 var CHANGE_PASSWORD_URL = "ChangePassword.Url";
 

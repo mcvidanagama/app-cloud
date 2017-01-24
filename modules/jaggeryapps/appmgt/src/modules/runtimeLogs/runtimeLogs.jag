@@ -71,7 +71,7 @@ var getFormattedRuntimeLogs = function (applicationKey, selectedRevision, applic
         result = null;
     }
     if (result == null || isFirstRequest === 'true'){
-        log.info("Acquiring streams of logs for applicationKey : " + applicationKey + ", selectedRevision : " + selectedRevision);
+        log.debug("Acquiring streams of logs for applicationKey : " + applicationKey + ", selectedRevision : " + selectedRevision);
         result = getRuntimeLogs(applicationKey, selectedRevision, applicationType, true);
         session.put(sessionKey, result);
     }
@@ -101,16 +101,22 @@ var getFormattedRuntimeLogs = function (applicationKey, selectedRevision, applic
     }
 }
 
-var getDownloadableRuntimeLogs = function (versionHashId) {
+var getDownloadableRuntimeLogs = function (selectedReplicaId) {
     try {
         var data = {
             "tableName": "ORG_WSO2_APPCLOUD_CONTAINER_LOG_STREAM",
-            "query": "kubernetes_labels:'"+versionHashId+"'",
-            "columns": ["log", "stream", "_timestamp"],
+            "query": "kubernetes_pod_name:'"+selectedReplicaId+"'",
+            "columns": ["log"],
             "start": 0,
-            "count": 1000
+            "count": 1000,
+            "sortBy" : [{
+               "field" : "_timestamp",
+               "sortType" : "ASC"
+            }
+           ]
+
         };
-        var url = DASReceiverEp + 'analytics/search';
+        var url = DASReceiverEp + '/analytics/search';
         var xhr = new XMLHttpRequest();
         xhr.open("POST", url);
         xhr.setRequestHeader('Authorization', "Basic " + ReceiverAuth);

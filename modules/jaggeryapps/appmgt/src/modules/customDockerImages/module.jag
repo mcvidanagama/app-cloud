@@ -17,26 +17,10 @@
  *   under the License.
  */
 
-include("/jagg/jagg.jag");
-include("/jagg/constants.jag");
+jagg.module("customDockerImages", {
 
-(function () {
-    var mod, obj,
-            action = request.getParameter("action"),
-            site = require("/site/conf/site.json");
-
-    var log = new Log();
-    mod = jagg.module("customDockerImages");
-
-    if (action == "addImageAndCheckSecurity") {
-
-        var imageUrl = request.getParameter("imageUrl");
-        log.info("block imageUrl : " + imageUrl);
-        mod.addImageAndCheckSecurity(imageUrl);
-        print("image verified");
-
-    } else {
-        log.error("No action specified");
+    addImageAndCheckSecurity:function () {
+        return jagg.require(jagg.getModulesDir() + "customDockerImages/customDockerImages.jag").addImageAndCheckSecurity.apply(this, arguments);
     }
-}());
+});
 %>

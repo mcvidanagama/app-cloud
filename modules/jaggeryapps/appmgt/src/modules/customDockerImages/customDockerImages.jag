@@ -1,0 +1,94 @@
+<%
+/*
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *   WSO2 Inc. licenses this file to you under the Apache License,
+ *   Version 2.0 (the "License"); you may not use this file except
+ *   in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing,
+ *   software distributed under the License is distributed on an
+ *   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *   KIND, either express or implied.  See the License for the
+ *   specific language governing permissions and limitations
+ *   under the License.
+ */
+
+include("/jagg/jagg.jag");
+include("/jagg/constants.jag");
+
+var log = new Log("module/customDockerImages/customDockerImages.jag");
+var modManager = jagg.module("manager");
+var modApplication = jagg.module("application");
+//var ApplicationManager = Packages.org.wso2.appcloud.core.ApplicationManager;
+//var Application = Packages.org.wso2.appcloud.core.dto.Application;
+//var Version = Packages.org.wso2.appcloud.core.dto.Version;
+//var KubernetesProvisioningUtils =  Packages.org.wso2.appcloud.provisioning.runtime.Utils.KubernetesProvisioningUtils;
+//var KubernetesRuntime =  Packages.org.wso2.appcloud.provisioning.runtime.KubernetesRuntimeProvisioningService;
+//var EventsManager = Packages.org.wso2.appcloud.core.EventsManager;
+//var Event = Packages.org.wso2.appcloud.core.dto.Event;
+//var Deployment = Packages.org.wso2.appcloud.core.dto.Deployment;
+//var Container = Packages.org.wso2.appcloud.core.dto.Container;
+//var ServiceProxy = Packages.org.wso2.appcloud.core.dto.ContainerServiceProxy;
+//var CloudUtil = Packages.org.wso2.appcloud.common.util.AppCloudUtil;
+//var RuntimeProperty = Packages.org.wso2.appcloud.core.dto.RuntimeProperty;
+//var CarbonUtils = Packages.org.wso2.carbon.utils.CarbonUtils;
+//var Util = Packages.org.wso2.appcloud.core.Util;
+//var ResourceQuotaLimit = Packages.org.wso2.appcloud.provisioning.runtime.beans.ResourceQuotaLimit;
+//var List = Packages.java.util.List;
+//var Arrays = Packages.java.util.Arrays;
+var DockerClient = Packages.org.wso2.appcloud.core.docker.DockerClient;
+var TestClass = Packages.org.wso2.appcloud.core.docker.TestClass;
+
+var fileSeparator = Packages.java.io.File.separator;
+var DOCKER_IN_DOCKER_BASE_IMAGE = "Dockerfile.docker-in-docker-base-image";
+
+
+var addImageAndCheckSecurity = function (imageUrl) {
+    var dockerClient = new DockerClient(modManager.getPropertyValue("DockerClientURL"));
+
+     log.info("imageUrl : " + imageUrl);
+     var alphaNeumericImageUrl = imageUrl.replace(/[^A-Za-z0-9]/g, '');
+     log.info("alphaNeumericImageUrl : " + alphaNeumericImageUrl);
+     var dockerFileDir = modManager.getPropertyValue(PROPERTY_APPMGT_DEPLOYMENT_DIR_PATH) + fileSeparator +
+                         TMP_UPLOADED_APPLICATIONS_PATH + fileSeparator + modManager.getTenantDomain() + fileSeparator +
+                         alphaNeumericImageUrl;
+     createDockerFile(imageUrl, alphaNeumericImageUrl, dockerFileDir, dockerClient);
+     var buildDockerImageStatus = buildDockerImage(alphaNeumericImageUrl, dockerFileDir, dockerClient);
+
+     var dockerImageName = modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL) + fileSeparator + CUSTOM + ":" +
+                           modManager.getTenantDomain() + "-" + alphaNeumericImageUrl;
+     log.info("docker image name : " + dockerImageName);
+
+};
+
+
+var createDockerFile = function (imageUrl, alphaNeumericImageUrl, dockerFileDir, dockerClient) {
+
+
+    var dockerFilePath =  dockerFileDir + fileSeparator + DOCKER_FILE_NAME; // ..../appmgt/tmpUploads/tenant/imageName/Dockerfile
+
+    log.info("dockerFilePath : " + dockerFilePath);
+    if (log.isDebugEnabled()) {
+        log.debug("Docker file path for deployment: " + dockerFilePath);
+    }
+    var dockerTemplateFilePath = modManager.getPropertyValue(PROPERTY_APPMGT_DEPLOYMENT_DIR_PATH) + fileSeparator +
+                                 DOCKER_TEMPLATE_FILE_DIR_NAME + fileSeparator + CUSTOM + fileSeparator + DEFAULT +
+                                 fileSeparator + DOCKER_FILE_NAME; // appmgt/dockerfiles/custom/default/Dockerfile
+
+    log.info("dockerTemplateFilePath : " + dockerTemplateFilePath);
+    var dockerFilePropertyMap = new java.util.HashMap();
+    dockerFilePropertyMap.put("CUSTOM_DOCKER_IMAGE_URL_VALUE", imageUrl);
+    modApplication.getAppTypeUtil(CUSTOM).setDockerEnvironmentVariables(dockerFilePropertyMap);
+    dockerClient.createDockerFile(dockerFilePath, null, dockerTemplateFilePath, null, dockerFilePropertyMap, null);
+};
+
+var buildDockerImage = function (alphaNeumericImageUrl, dockerFilePath, dockerClient) {
+    var tagName = modManager.getTenantDomain() + "-" + alphaNeumericImageUrl;
+    dockerClient.buildDockerImage(modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL), CUSTOM, tagName, dockerFilePath);
+};
+
+%>
