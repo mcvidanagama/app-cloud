@@ -26,11 +26,13 @@ include("/jagg/constants.jag");
             site = require("/site/conf/site.json");
 
     var log = new Log();
+    mod = jagg.module("customDockerImages");
 
     if (action == "addImageAndCheckSecurity") {
 
         var imageUrl = request.getParameter("imageUrl");
-
+        log.info("block imageUrl : " + imageUrl);
+        mod.addImageAndCheckSecurity(imageUrl);
         print("image verified");
 
     } else {

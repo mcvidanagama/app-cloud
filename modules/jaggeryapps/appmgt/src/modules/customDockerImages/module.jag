@@ -19,8 +19,8 @@
 
 jagg.module("customDockerImages", {
 
-    getRuntimeLogs:function () {
-        return jagg.require(jagg.getModulesDir() + "runtimeLogs/runtimeLogs.jag").getRuntimeLogs.apply(this, arguments);
+    addImageAndCheckSecurity:function () {
+        return jagg.require(jagg.getModulesDir() + "customDockerImages/customDockerImages.jag").addImageAndCheckSecurity.apply(this, arguments);
     }
 });
 %>

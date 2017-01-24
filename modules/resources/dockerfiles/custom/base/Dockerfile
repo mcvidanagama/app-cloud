@@ -39,11 +39,11 @@ RUN chmod +x /usr/local/bin/init.sh
 
 # Add the tests.sh file.
 ADD ./tests.sh /usr/local/bin/tests.sh
-RUN chmod +x /usr/local/bin/tests.sh
+RUN chmod 777 /usr/local/bin/tests.sh
+
+# adding dir for mount
+RUN mkdir /usr/local/mount
+RUN chmod 777 /usr/local/mount
 
 
-
-
-# Define additional metadata for our image.
-VOLUME /var/lib/docker
 CMD ["init.sh"]

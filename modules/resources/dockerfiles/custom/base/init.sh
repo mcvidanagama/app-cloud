@@ -40,7 +40,7 @@ until docker info >/dev/null 2>&1
 docker run -d $CUSTOM_DOCKER_IMAGE_URL
 
 # calling tests
-sh tests.sh
+sudo sh /usr/local/bin/tests.sh
 
 
-exec bash --login
+exec

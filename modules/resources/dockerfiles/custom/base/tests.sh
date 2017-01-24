@@ -19,18 +19,31 @@
 #
 # ------------------------------------------------------------------------
 
-# Security check 01 : 4.1  - Create a user for the container
 
-user=$(docker ps --quiet | xargs docker inspect --format 'User={{.Config.User}}')
-test1="true"
+test_result_mount=/usr/local/mount/test_result
+
+# wait until container runs
+running_containers=$(docker ps | sed '1d' | awk '{print $NF}')
+while [ -z "$running_containers" ]; do
+echo "no running containers yet, sleeping for 1s"
+sleep 1
+running_containers=$(docker ps | sed '1d' | awk '{print $NF}')
+done
+
+echo $runnig_containers
+
+
+# Security check 01 : 4.1  - Create a user for the container
+user=$(docker ps --quiet -a | xargs docker inspect --format 'User={{.Config.User}}')
+test1="pass"
 if [ "$user" = "User=" -o "$user" = "User=[]" -o "$user" = "User=<no value>" ]; then
-        test1="false";
+        test1="fail";
 fi
-echo "1-$test1" >> result.log
+echo "1-$test1" >> $test_result_mount
+
 
 # Security check 02 : 5.5 Do not mount sensitive host system directories on containers
-
-volumes=$(docker ps --quiet | xargs docker inspect --format 'Volumes={{ .Mounts }}')
+volumes=$(docker ps --quiet -a | xargs docker inspect --format 'Volumes={{ .Mounts }}')
 sensitive_dirs='/boot
 /dev
 /etc
@@ -41,23 +54,22 @@ sensitive_dirs='/boot
 
 for v in $sensitive_dirs; do
 
-test2="true"
+test2="pass"
 if [[ $volumes == *"$v"* ]]
 then
-        test2="false";
+        test2="fail";
         break;
 fi
 done
-echo "2-$test2" >> result.log
+echo "2-$test2" >> $test_result_mount
+
 
 # Security check 03 : 5.6 Do not run ssh within containers
-
 container_name=$(docker ps | sed '1d' |  awk '{print $NF}')
 processes=$(docker exec "$container_name" ps -el 2>/dev/null | grep -c sshd | awk '{print $1}')
-test3="true"
+test3="pass"
 if [ "$processes" -ge 1 ]; then
-        test3="false"
+        test3="fail"
 fi
 
-echo "2-$test3" >> result.log
-
+echo "2-$test3" >> $test_result_mount

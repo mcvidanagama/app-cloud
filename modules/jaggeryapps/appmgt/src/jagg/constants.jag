@@ -25,6 +25,7 @@ var PROPERTY_DOCKER_REGISTRY_URL_INFRA="DockerRegistryURL_Infra";
 var PROPERTY_STORAGE_SERVER_URL="StorageServerURL";
 var PROPERTY_RSS_ENVIRONMENT_NAME="RSSEnvironmentName";
 var DOCKER_FILE_NAME = "Dockerfile";
+var DOCKER_TEMPLATE_FILE_DIR_NAME = "dockerfiles";
 var TENANT_DOMAIN_NAME = "tenantDomainName";
 var SUPER_TENANT_DOMAIN_NAME = "carbon.super";
 var CLOUD_TYPE = "AppCloud";
@@ -97,6 +98,7 @@ var INTEGRATION_CLOUD_HOSTNAME = "IntegrationCloud.Hostname";
 var DAS_RECEIVER_AUTH_BASE64 = "Receiver.Auth";
 
 var CUSTOM = "custom";
+var DEFAULT = "default";
 var PROFILE_URL = "Profile.Url";
 var CHANGE_PASSWORD_URL = "ChangePassword.Url";
 
