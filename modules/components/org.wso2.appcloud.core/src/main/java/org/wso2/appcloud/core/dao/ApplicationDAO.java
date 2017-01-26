@@ -1949,21 +1949,22 @@ public class ApplicationDAO {
      * @return usageTier
      * @throws AppCloudException
      */
-    public UsageTier getTenantTierInfo(Connection dbConnection, int tenantId) throws AppCloudException {
+    public UsageTier getTenantTierInfo(Connection dbConnection, int tenantId, String cloudType) throws AppCloudException {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         UsageTier usageTier = new UsageTier();
         try {
             preparedStatement = dbConnection.prepareStatement(SQLQueryConstants.GET_TENANT_TIER_INFO);
             preparedStatement.setInt(1, tenantId);
+            preparedStatement.setString(2, cloudType);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 usageTier.setPlanName(resultSet.getString("PLAN_NAME"));
-                usageTier.setMaxApplicationCount(resultSet.getInt("MAX_APPLICATIONS"));
+                usageTier.setMaxApplicationCount(resultSet.getInt("MAX_APPLICATION_COUNT"));
                 usageTier.setMaxReplicaCount(resultSet.getInt("MAX_REPLICA_COUNT"));
-                usageTier.setMaxDatabaseCount(resultSet.getInt("MAX_DATABASES"));
-                usageTier.setCpuLimit(resultSet.getInt("CUMULATIVE_CPU"));
-                usageTier.setRamLimit(resultSet.getInt("CUMULATIVE_RAM"));
+                usageTier.setMaxDatabaseCount(resultSet.getInt("MAX_DATABASE_COUNT"));
+                usageTier.setCpuLimit(resultSet.getInt("MAX_CPU"));
+                usageTier.setRamLimit(resultSet.getInt("MAX_MEMORY"));
             }
         } catch (SQLException e) {
             String msg = "Error while getting tire info for tenant : " + tenantId ;
