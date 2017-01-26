@@ -20,7 +20,7 @@
 # ------------------------------------------------------------------------
 
 
-test_result_mount=/usr/local/mount/test_result
+test_result_mount=/usr/local/mount/$IMAGE_TAG
 
 # wait until container runs
 running_containers=$(docker ps | sed '1d' | awk '{print $NF}')
