@@ -57,11 +57,19 @@ var addImageAndCheckSecurity = function (imageUrl) {
                          TMP_UPLOADED_APPLICATIONS_PATH + fileSeparator + modManager.getTenantDomain() + fileSeparator +
                          alphaNeumericImageUrl;
      createDockerFile(imageUrl, alphaNeumericImageUrl, dockerFileDir, dockerClient);
-     var buildDockerImageStatus = buildDockerImage(alphaNeumericImageUrl, dockerFileDir, dockerClient);
+     var buildStatus = buildDockerImage(alphaNeumericImageUrl, dockerFileDir, dockerClient);
 
-     var dockerImageName = modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL) + fileSeparator + CUSTOM + ":" +
-                           modManager.getTenantDomain() + "-" + alphaNeumericImageUrl;
-     log.info("docker image name : " + dockerImageName);
+    var dockerImageName = modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL) + fileSeparator + CUSTOM + ":" +
+                          modManager.getTenantDomain() + "-" + alphaNeumericImageUrl;
+    log.info("docker image name : " + dockerImageName);
+    if(buildStatus) {
+        var containerId = createDockerContainer(dockerImageName);
+        if(containerId) {
+            startContainer(containerId);
+
+        }
+
+    }
 
 };
 
@@ -82,6 +90,7 @@ var createDockerFile = function (imageUrl, alphaNeumericImageUrl, dockerFileDir,
     log.info("dockerTemplateFilePath : " + dockerTemplateFilePath);
     var dockerFilePropertyMap = new java.util.HashMap();
     dockerFilePropertyMap.put("CUSTOM_DOCKER_IMAGE_URL_VALUE", imageUrl);
+    dockerFilePropertyMap.put("IMAGE_TAG_VALUE", modManager.getTenantDomain() + "-" + alphaNeumericImageUrl);
     modApplication.getAppTypeUtil(CUSTOM).setDockerEnvironmentVariables(dockerFilePropertyMap);
     dockerClient.createDockerFile(dockerFilePath, null, dockerTemplateFilePath, null, dockerFilePropertyMap, null);
 };
@@ -89,6 +98,52 @@ var createDockerFile = function (imageUrl, alphaNeumericImageUrl, dockerFileDir,
 var buildDockerImage = function (alphaNeumericImageUrl, dockerFilePath, dockerClient) {
     var tagName = modManager.getTenantDomain() + "-" + alphaNeumericImageUrl;
     dockerClient.buildDockerImage(modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL), CUSTOM, tagName, dockerFilePath);
+   // return modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL) + "/" + CUSTOM + ":" + tagName;
+    return true;
 };
 
+
+var createDockerContainer = function (createdImage) {
+
+    var createContainerEndPoint = modManager.getPropertyValue(PROPERTY_DOCKER_CLIENT_URL) + "/containers/create";
+    var data = {
+        Image:createdImage,
+        Mounts: {
+            "/var/lib/docker":"/usr/local/mount"
+        },
+        HostConfig: {
+            Privileged: true
+        }
+    };
+
+
+    var headers = {
+        "Content-Type": "application/json",
+        "charset":"utf-8"
+    };
+    var type  = "json";
+    var result = post(createContainerEndPoint, stringify(data), headers, type);
+    log.info("result : " + result.data.Id);
+    return result.data.Id;
+
+};
+
+var startContainer = function (containerId) {
+
+    var startContainerEndPoint = modManager.getPropertyValue(PROPERTY_DOCKER_CLIENT_URL) + "/containers/" + containerId + "/start";
+    var result = post(startContainerEndPoint);
+
+    log.info("@@@@@@@@@@@@@@ : " + stringify(result));
+    log.info("@@@@@@@@@@@@@@ : " + result.xhr.status);
+
+
+};
+
+var readTestResults = function () {
+
+};
+
+var updateDbWithTestResults = function () {
+
+}
 %>
