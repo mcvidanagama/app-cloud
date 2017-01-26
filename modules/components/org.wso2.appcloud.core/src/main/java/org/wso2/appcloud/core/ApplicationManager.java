@@ -1139,10 +1139,10 @@ public class ApplicationManager {
      * @return
      * @throws AppCloudException
      */
-    public static UsageTier getTenantTierInfo(int tenantId) throws AppCloudException {
+    public static UsageTier getTenantTierInfo(int tenantId, String cloudType) throws AppCloudException {
         Connection dbConnection = DBUtil.getDBConnection();
         try {
-            return ApplicationDAO.getInstance().getTenantTierInfo(dbConnection, tenantId);
+            return ApplicationDAO.getInstance().getTenantTierInfo(dbConnection, tenantId, cloudType);
         } catch (AppCloudException e) {
             String msg = "Error while getting tenant tier info tenant id : " +
                     tenantId;

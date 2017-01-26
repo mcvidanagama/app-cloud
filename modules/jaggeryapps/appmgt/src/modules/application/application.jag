@@ -2027,7 +2027,7 @@ var getTenantTotalResourceUsage = function(tenantId){
 }
 
 var getTenantTierInfo = function(tenantId){
-    var tenantTierInfo = ApplicationManager.getTenantTierInfo(tenantId);
+    var tenantTierInfo = ApplicationManager.getTenantTierInfo(tenantId, jagg.getSelectedCloud());
     return tenantTierInfo;
 }
 
