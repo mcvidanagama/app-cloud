@@ -35,6 +35,8 @@ include("/jagg/constants.jag");
         mod.addImageAndCheckSecurity(imageUrl);
         print("image verified");
 
+    } else if (action == "publishTestResults") {
+            log.info("Test Results published.....!!!!!!!!!!!!!!!");
     } else {
         log.error("No action specified");
     }

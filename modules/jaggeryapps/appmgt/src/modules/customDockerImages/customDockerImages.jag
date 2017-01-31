@@ -63,7 +63,7 @@ var addImageAndCheckSecurity = function (imageUrl) {
                           modManager.getTenantDomain() + "-" + alphaNeumericImageUrl;
     log.info("docker image name : " + dockerImageName);
     if(buildStatus) {
-        var containerId = createDockerContainer(dockerImageName);
+        var containerId = createDockerContainer(dockerImageName, dockerFileDir);
         if(containerId) {
             startContainer(containerId);
 
@@ -91,6 +91,9 @@ var createDockerFile = function (imageUrl, alphaNeumericImageUrl, dockerFileDir,
     var dockerFilePropertyMap = new java.util.HashMap();
     dockerFilePropertyMap.put("CUSTOM_DOCKER_IMAGE_URL_VALUE", imageUrl);
     dockerFilePropertyMap.put("IMAGE_TAG_VALUE", modManager.getTenantDomain() + "-" + alphaNeumericImageUrl);
+    dockerFilePropertyMap.put("APPCLOUD_URL_VALUE", modManager.getPropertyValue(APP_CLOUD_URL));
+    dockerFilePropertyMap.put("ADMIN_USERNAME_VALUE", modManager.getPropertyValue(ADMIN_USERNAME));
+    dockerFilePropertyMap.put("ADMIN_PASSWORD_VALUE", modManager.getPropertyValue(ADMIN_PASSWORD));
     modApplication.getAppTypeUtil(CUSTOM).setDockerEnvironmentVariables(dockerFilePropertyMap);
     dockerClient.createDockerFile(dockerFilePath, null, dockerTemplateFilePath, null, dockerFilePropertyMap, null);
 };
@@ -103,20 +106,20 @@ var buildDockerImage = function (alphaNeumericImageUrl, dockerFilePath, dockerCl
 };
 
 
-var createDockerContainer = function (createdImage) {
+var createDockerContainer = function (createdImage, dockerFileDir) {
 
     var createContainerEndPoint = modManager.getPropertyValue(PROPERTY_DOCKER_CLIENT_URL) + "/containers/create";
     var data = {
-        Image:createdImage,
-        Mounts: {
-            "/var/lib/docker":"/usr/local/mount"
+        Image: createdImage,
+        Volumes: {
+                "/usr/local/mount": {}
         },
         HostConfig: {
+            Binds: [dockerFileDir + ":/usr/local/mount"],
             Privileged: true
         }
     };
-
-
+log.info("!!!!!!!!!!!!!!!!!!! : " + stringify(data));
     var headers = {
         "Content-Type": "application/json",
         "charset":"utf-8"
@@ -124,6 +127,7 @@ var createDockerContainer = function (createdImage) {
     var type  = "json";
     var result = post(createContainerEndPoint, stringify(data), headers, type);
     log.info("result : " + result.data.Id);
+    // if no container started this will return null
     return result.data.Id;
 
 };

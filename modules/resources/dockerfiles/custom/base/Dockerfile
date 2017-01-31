@@ -1,5 +1,3 @@
-# ------------------------------------------------------------------------
-#
 # Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 #
 #   WSO2 Inc. licenses this file to you under the Apache License,
@@ -41,9 +39,6 @@ RUN chmod +x /usr/local/bin/init.sh
 ADD ./tests.sh /usr/local/bin/tests.sh
 RUN chmod 777 /usr/local/bin/tests.sh
 
-# adding dir for mount
-RUN mkdir /usr/local/mount
-RUN chmod 777 /usr/local/mount
-
 
 CMD ["init.sh"]
+

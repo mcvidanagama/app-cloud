@@ -211,6 +211,9 @@ var log = new Log('site/blocks/admin/admin.jag');
             response.status = 400;
             response.content = 'Failed to redeploy all applications of all tenants due to ' + e.message;
         }
+    } else if (action == "publishDockerSecurityTestResults") {
+        log.info("SHala dhala laadkfasjldfksadfasdfasdflasdkfjasldfk@@@@@@@@@@@@@@@@@@");
+        log.info(request.getParameter("testResultsJson"));
     } else {
         throw new Error("No action specified for: " + action);
     }
