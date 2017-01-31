@@ -120,7 +120,6 @@ $(document).ready(function() {
             //Disable "Add Environment Variable" button
             $(this).css('pointer-events', 'none');
             $(this).attr("title", "Save Environment Variable to Enable");
-
             var valueControl;
             if(noOfDbs == 0){
                 valueControl = '<input type="text" class="form-control element-value-holder" id="value" placeholder="Value">';
@@ -156,14 +155,12 @@ $(document).ready(function() {
             if(noOfDbs != 0){
                 initSelect2(null, valueElem, "", allDBInfo);
             }
-
             //Disable Other environment variables "Edit" button
             $(".fw-edit").each( function(i) {
                 if (i!=0) {
                     $(this).addClass("edit-disable");
                 }
             });
-
         });
 
         $(document).on('click', '.fw-edit', function() {
@@ -183,7 +180,6 @@ $(document).ready(function() {
                 $(".add-env").css('pointer-events', 'none');
                 $(".add-env").attr("title", "Save Environment Variable to Enable");
                 $(this).parent().parent().find('.fw-delete').removeClass('fw-delete').addClass('fw-cancel');
-
                 //Disable Other environment variables "Edit" button
                 var parentElement = $(this).parent().filter('.edit-env')[0];
                 $('.edit-env').each(function() {
@@ -195,13 +191,11 @@ $(document).ready(function() {
                         $(this).addClass('edit-disable');
                     }
                 });
-
                 var keyElem = $(this).parent().parent().parent().find('.element-key-holder')[0];
                 var valueElem = $(this).parent().parent().parent().find('.element-value-holder')[0];
                 keyElem.readOnly = false;
                 prevKey = keyElem.value;
                 prevValue = valueElem.value;
-
                 var data = [];
                 var prevData = {};
                 prevData.id = prevValue;
@@ -211,7 +205,6 @@ $(document).ready(function() {
                 //Hide edit icon and display save icon
                 $(this).hide();
                 $(this).parent().find('#saveIcon').show();
-
                 //Remove displayed value and reinitialize select2 container
                 $(valueElem).children('option').remove();
                 $(valueElem).prop('disabled', false);
@@ -226,7 +219,6 @@ $(document).ready(function() {
                 //Enable "Add Environment Variable" button
                 $(".add-env").css('pointer-events', 'auto');
                 $(".add-env").attr("title", "Add Environment Variable");
-
                 //Enable other environment variables "Edit" Button
                 var siblingElement = $(this).parent().parent().find('.edit-env')[0];
                 $('.edit-env').each(function() {
@@ -235,7 +227,6 @@ $(document).ready(function() {
                         $(this).addClass('edit-enable');
                     }
                 });
-
                 $(this).parent().parent().parent().remove();
                 return;
             } else {
@@ -345,11 +336,9 @@ $(document).ready(function() {
         element.parent().parent().parent().find('.element-value-holder')[0].readOnly = true;
 
         displayAppRedeployNotification();
-
         //Enable "Add Environment Variable" button
         $(".add-env").css('pointer-events', 'auto');
         $(".add-env").attr("title", "Add Environment Variable");
-
         //Enable Other environment variables "Edit" button
         var parentElement = element.parent().filter('.edit-env')[0];
         $('.edit-env').each(function() {
@@ -358,7 +347,6 @@ $(document).ready(function() {
                 element.removeClass("edit-disable");
             }
         });
-
         //Disable current env variables Value text-box
         var valueSelectionBox = element.parent().parent().parent().find('.select2-container')[0];
         $(valueSelectionBox).addClass('select2-disable');
@@ -426,7 +414,6 @@ $(document).on('click', '.panel-heading a', function (e) {
 });
 
 </script >
-
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -435,6 +422,5 @@ $(document).on('click', '.panel-heading a', function (e) {
     <![endif]-->
     <script src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('js/select2-4.0.0/select2.min.js'))%>"></script>
     <script src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('js/common.js'))%>"></script>
-
 <%
 }); %>
