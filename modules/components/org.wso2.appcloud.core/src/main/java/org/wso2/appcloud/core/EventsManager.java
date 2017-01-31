@@ -55,7 +55,7 @@ public class EventsManager {
             throw new AppCloudException(msg, e);
         } catch (SQLException e) {
             String msg = "Error occured committing transaction for adding application creation event for event with " +
-                    "name : " + event.getEventName() + ", status: " + event.getEventStatus() + ", timestamp : " +
+                    "name : " + event.getEventName() + ", status : " + event.getEventStatus() + ", timestamp : " +
                     event.getTimestamp() + " for version : " + versionHashId + " in tenant : " + tenantId;
             log.error(msg, e);
             throw new AppCloudException(msg, e);
@@ -100,13 +100,13 @@ public class EventsManager {
             EventsDAO.getInstance().deleteAppVersionEvents(dbConnection, versionHashId, tenantId);
             dbConnection.commit();
         } catch (AppCloudException e) {
-            String msg = "Error occurred while deleting all the events for the app version has id " + versionHashId +
-                    " in tenant : " + tenantId;
+            String msg = "Error occurred while deleting all the events for the application version hash id : "
+                    + versionHashId + " in tenant : " + tenantId;
             log.error(msg, e);
             throw new AppCloudException(msg, e);
         } catch (SQLException e) {
             String msg = "Error occurred while committing transaction for deleting all the events for application " +
-                    "version hash id " + versionHashId + " in tenant : " + tenantId;
+                    "version hash id : " + versionHashId + " in tenant : " + tenantId;
             log.error(msg, e);
             throw new AppCloudException(msg, e);
         } finally {

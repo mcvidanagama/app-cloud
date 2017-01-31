@@ -599,7 +599,7 @@ public class ApplicationManager {
                     getRuntimesForAppType(dbConnection, appType, tenantId);
             return runtimes.toArray(new ApplicationRuntime[runtimes.size()]);
         } catch (AppCloudException e) {
-            String msg = "Error while getting all runtimes for application type for type: " + appType +
+            String msg = "Error while getting all runtimes for application type for type : " + appType +
                     " for tenant id : " + tenantId;
             log.error(msg, e);
             throw new AppCloudException(msg, e);
