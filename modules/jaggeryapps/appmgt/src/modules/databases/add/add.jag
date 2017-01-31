@@ -346,11 +346,21 @@ var getAllDatabasesInfo = function () {
     return allDBInfo;
 };
 
+/**
+ * Method to get the number of databases created by the tenant
+ *
+ * @returns {the number of all databases}
+ */
 var getDatabaseCount = function () {
 	var allDatabases = getDatabases();
 	return allDatabases.length;
 };
 
+/**
+ * Method to get the maximum number of databases allowed for the logged in tenant
+ *
+ * @returns {the maximum database limit}
+ */
 var getMaxDatabaseCount = function () {
 	try {
 		var tenantId = modManager.getTenantId();

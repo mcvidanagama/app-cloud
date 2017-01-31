@@ -345,11 +345,25 @@ var updateContainerSpecification = function (tenantDomain, applicationName, appl
     }
 };
 
+/**
+ * Method to update the maximum number of databases that can be created by given tenant.
+ *
+ * @param tenantDomain      tenant domain
+ * @param maxDatabaseCount  maximum database count
+ * @param cloudType         cloud type
+ */
 var whiteListMaxDatabaseCount = function (tenantDomain, maxDatabaseCount, cloudType) {
     var tenantId = modManager.getTenantIdForGivenTenantDomain(tenantDomain);
     ApplicationManager.whiteListMaxDatabaseCount(tenantId, maxDatabaseCount, cloudType);
 };
 
+/**
+ * Method to update the maximum number of applications that can be created by given tenant.
+ *
+ * @param tenantDomain  tenant domain
+ * @param maxAppCount   maximum application count
+ * @param cloudType     cloud type
+ */
 var whiteListMaxApplicationCount = function (tenantDomain, maxAppCount, cloudType) {
     var tenantId = modManager.getTenantIdForGivenTenantDomain(tenantDomain);
     ApplicationManager.whiteListMaxAppCount(tenantId, maxAppCount, cloudType);
@@ -360,6 +374,13 @@ var whiteListMaxReplicaCount = function (tenantDomain, cloudType, replicaCount) 
     ApplicationManager.whiteListMaxReplicaCount(tenantId, cloudType, replicaCount);
 };
 
+/**
+ * Method to get the maximum database count for given tenant
+ *
+ * @param tenantDomain  tenant domain
+ * @param cloudType     cloud type
+ * @returns {JSON object with the maximum database count for given tenant}
+ */
 var getTenantMaxDatabaseCount = function (tenantDomain, cloudType) {
     var tenantId = modManager.getTenantIdForGivenTenantDomain(tenantDomain);
     var databaseCountObj = {};
