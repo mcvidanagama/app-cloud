@@ -45,7 +45,6 @@ jagg.template("header/default", function(inputs, outputs, jagg) {
         billingMenuString = "Trial - " + parseInt(remainingDays) + " days to upgrade";
     }
 
-    //log.info()
     if(isGoogleAnalyticsEnabled) {
 %>
            
