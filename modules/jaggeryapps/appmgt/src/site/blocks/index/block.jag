@@ -32,6 +32,7 @@ jagg.block("index", {
         var applications = applicationModule.getAllApplications();
         var applicationName = request.getParameter("applicationName");
         var appTypes = applicationModule.getAllAppTypes();
+        var appTypesProperties = require(parse(jagg.getAppTypePropertyConfFilePath()));
         var appTypeCount = appTypes.length;
         if (appTypeCount > 0) {
             var appType = appTypes[0].name;
@@ -43,7 +44,11 @@ jagg.block("index", {
         var docURL = managerModule.getPropertyValue(managerModule.getCloudTypeProperties().properties.documentationUrl);
         var cloudSpecificApplicationRepresentation = managerModule.getCloudTypeProperties().cloudSpecificApplicationRepresentation;
 
-
+        // include application category too.
+        for (var x = 0; x < applications.length; x++) {
+            applications[x].category = appTypesProperties[applications[x].applicationType].category;
+        }
+        
         return {
             "applications" : applications,
             "applicationName" :applicationName,

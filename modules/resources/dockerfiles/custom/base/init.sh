@@ -1,7 +1,5 @@
 #!/bin/bash
-
 # ------------------------------------------------------------------------
-#
 # Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 #
 #   WSO2 Inc. licenses this file to you under the Apache License,
@@ -25,7 +23,7 @@
 # delete it so that docker can start.
 rm -rf /var/run/docker.pid
 
-docker daemon $DOCKER_DAEMON_ARGS &
+dockerd $DOCKER_DAEMON_ARGS &
 (( timeout = 60 + SECONDS ))
 until docker info >/dev/null 2>&1
         do
@@ -40,7 +38,8 @@ until docker info >/dev/null 2>&1
 docker run -d $CUSTOM_DOCKER_IMAGE_URL
 
 # calling tests
-sudo sh /usr/local/bin/tests.sh
+# sh /usr/local/bin/tests.sh
 
 
-exec
+
+exec bash --login
