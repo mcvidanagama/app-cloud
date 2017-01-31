@@ -144,8 +144,10 @@ public class KubernetesRuntimeProvisioningService implements RuntimeProvisioning
         List<String> serviceNameList = new ArrayList<>();
         String cpuLimitInt = resourceQuotaLimit.getCpuLimit();
         String cpuLimit = cpuLimitInt.concat("m");
+        String cpuRequest = resourceQuotaLimit.getCpuRequest().concat("m");
         String memoryLimitInt = resourceQuotaLimit.getMemoryLimit();
         String memoryLimit = memoryLimitInt.concat("Mi");
+        String memoryRequest = resourceQuotaLimit.getMemoryRequest().concat("Mi");
 
         try {
             //Deployment creation
@@ -157,7 +159,11 @@ public class KubernetesRuntimeProvisioningService implements RuntimeProvisioning
 
                 ResourceRequirementsBuilder resourceRequirementsBuilder = new ResourceRequirementsBuilder();
                 ResourceRequirements resourceRequirement = resourceRequirementsBuilder
-                        .addToLimits("cpu", new Quantity(cpuLimit)).addToLimits("memory", new Quantity(memoryLimit)).build();
+                                                                   .addToLimits("cpu", new Quantity(cpuLimit))
+                                                                   .addToRequests("cpu", new Quantity(cpuRequest))
+                                                                   .addToLimits("memory", new Quantity(memoryLimit))
+                                                                   .addToRequests("memory", new Quantity(memoryRequest))
+                                                                   .build();
                 kubContainer.setResources(resourceRequirement);
 
                 //Checking whether the container is including volume mounts

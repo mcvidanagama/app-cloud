@@ -31,6 +31,7 @@
      var applicationKey = request.getParameter('applicationKey');
      var versionKey = request.getParameter('versionKey');
      var selectedRevision = request.getParameter('selectedRevision');
+     var selectedReplica = request.getParameter('selectedReplica');
      jagg.render({
          "name":"page/master",
          "inputs":{
@@ -51,6 +52,7 @@
                                  "applicationKey":applicationKey,
                                  "versionKey":versionKey,
                                  "selectedRevision":selectedRevision,
+                                 "selectedReplica":selectedReplica,
                                  "pageName":"logs"
                              }
                              }
@@ -61,7 +63,8 @@
                                  "inputs": {
                                      "applicationKey": applicationKey,
                                      "versionKey": versionKey,
-                                     selectedRevision: selectedRevision,
+                                     "selectedRevision": selectedRevision,
+                                     "selectedReplica": selectedReplica,
                                      "pageName": "Logs"
                                  }
                              }
