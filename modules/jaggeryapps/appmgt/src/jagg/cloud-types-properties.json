@@ -30,9 +30,12 @@
             "defaultPlan" : "TRIAL",
             "trialPeriod" : 14,
             "plans" : [
-                {"id" : "TRIAL", "maxApplicationCount" : 3, "maxDatabaseCount" : 3, "maxReplicaCount" : 2,"maxMemory" : 2048, "maxCpu" : 1000},
-                {"id" : "starter", "maxApplicationCount" : 3, "maxDatabaseCount" : 3, "maxReplicaCount" : 2,"maxMemory" : 2048, "maxCpu" : 1000},
-                {"id" : "gettingTraction", "maxApplicationCount" : 3, "maxDatabaseCount" : 3, "maxReplicaCount" : 2,"maxMemory" : 2048, "maxCpu" : 1000}
+                {"id" : "TRIAL", "maxApplicationCount" : 2, "maxDatabaseCount" : 2, "maxReplicaCount" : 1,"maxMemory" : 2048, "maxCpu" : 1000},
+                {"id" : "integration_cloud_starter", "maxApplicationCount" : 2, "maxDatabaseCount" : 2, "maxReplicaCount" : 1,"maxMemory" : 2048, "maxCpu" : 1000},
+                {"id" : "integration_cloud_getting_traction", "maxApplicationCount" : 5, "maxDatabaseCount" : 5, "maxReplicaCount" : 2,"maxMemory" : 2048, "maxCpu" : 1000},
+                {"id" : "integration_cloud_medium", "maxApplicationCount" : 6, "maxDatabaseCount" : 6, "maxReplicaCount" : 2,"maxMemory" : 2048, "maxCpu" : 1000},
+                {"id" : "integration_cloud_large", "maxApplicationCount" : 7, "maxDatabaseCount" : 7, "maxReplicaCount" : 2,"maxMemory" : 2048, "maxCpu" : 1000},
+                {"id" : "integration_cloud_extra_large", "maxApplicationCount" : 8, "maxDatabaseCount" : 8, "maxReplicaCount" : 2,"maxMemory" : 2048, "maxCpu" : 1000}
             ]
         }
     }

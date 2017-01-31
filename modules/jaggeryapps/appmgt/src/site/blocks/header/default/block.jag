@@ -51,34 +51,54 @@ jagg.block("header/default", {
         var cloudMgtURL = manager.getPropertyValue(CLOUD_MGT_URL);
         var zopimChatId = manager.getPropertyValue(ZOPIM_CHAT_ID);
 
-        var isBillingEnabled = cloudTypeProperties.billing.isBillingEnabled;
-        var throttlingManager = jagg.module("throttling");
-        var adminModule = jagg.module("admin");
-        var isFirstLogin = throttlingManager.isFirstLogin();
+        var subscriptionManager = jagg.module("subscription");
+        var isFirstLogin = subscriptionManager.isFirstLogin();
         if (isFirstLogin) {
+            //call cloud mgt api
+            var data = {
+                action: "informFirstLogin",
+                tenantDomain: tenantDomain,
+                cloudType: jagg.getSelectedCloud()
+            };
+            var informFirstLoginApi= cloudMgtURL + "/site/blocks/admin/admin.jag";
+            try {
+                var result = post(informFirstLoginApi, data, {}, 'json');
+            } catch (e) {
+                log.error(e);
+                // redirect to cloudmgt
+            }
 
             // This added temporary, to add subscription record when tenant login first time
             // once we integrate with the cloudmgt we need to remove this.
             // correct fix is invoking cloudmgt rest api
-            var cloudType = jagg.getSelectedCloud();
-            var plan = cloudTypeProperties.billing.defaultPlan;
-            var trialPeriod = cloudTypeProperties.billing.trialPeriod;
-            var startDate = new Packages.java.util.Date();
-            var endDate = MYSQL_MAX_DATETIME_STRING;
-            var sqlDateFormatter = new java.text.SimpleDateFormat(MYSQL_DATETIME_FORMAT);
-            if(trialPeriod > 0) {
-                var cal = Packages.java.util.Calendar.getInstance();
-                cal.setTime(startDate);
-                cal.add(Packages.java.util.Calendar.DATE, trialPeriod);
-                endDate = sqlDateFormatter.format(cal.getTime());
-            }
-            adminModule.publishTenantSubscription(tenantDomain, cloudType, plan, sqlDateFormatter.format(startDate), endDate , "ACTIVE");
+            /*
+             var cloudType = jagg.getSelectedCloud();
+             var plan = cloudTypeProperties.billing.defaultPlan;
+             var trialPeriod = cloudTypeProperties.billing.trialPeriod;
+             var startDate = new Packages.java.util.Date();
+             var endDate = MYSQL_MAX_DATETIME_STRING;
+             var sqlDateFormatter = new java.text.SimpleDateFormat(MYSQL_DATETIME_FORMAT);
+             if(trialPeriod > 0) {
+             var cal = Packages.java.util.Calendar.getInstance();
+             cal.setTime(startDate);
+             cal.add(Packages.java.util.Calendar.DATE, trialPeriod);
+             endDate = sqlDateFormatter.format(cal.getTime());
+             }
+             adminModule.publishTenantSubscription(tenantDomain, cloudType, plan, sqlDateFormatter.format(startDate), endDate , "ACTIVE");
+             */
+        }
+
+        var isAdminUser = manager.isAdminUser();
+        var isBillingEnabled = false;
+        var isPaidAccount = false;
+        if (isAdminUser) {
+            isBillingEnabled = cloudTypeProperties.billing.isBillingEnabled;
+            isPaidAccount = subscriptionManager.isPaidAccount();
         }
 
         var remainingDays = -1;
-        // is billing enabled -> get the remaining days to upgrade and display in ui
         if (isBillingEnabled) {
-            remainingDays = throttlingManager.getRemainingDaysToUpgrade(tenantDomain, jagg.getSelectedCloud());
+            remainingDays = subscriptionManager.getRemainingDaysToUpgrade(tenantDomain, jagg.getSelectedCloud());
         }
 
         return {
@@ -96,7 +116,9 @@ jagg.block("header/default", {
             "cloudIcon" : cloudIcon,
             "zopimChatId": zopimChatId,
             "isBillingEnabled": isBillingEnabled,
-            "remainingDays" : remainingDays
+            "remainingDays" : remainingDays,
+            "isPaidAccount" : isPaidAccount,
+            "isAdminUser" : isAdminUser
         };
     }
 });

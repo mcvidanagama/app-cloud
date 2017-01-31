@@ -20,20 +20,12 @@
 var isNewUser = true;
 var dbNameValidationErrorMsg = "";
 $(document).ready(function () {
-    if ((databaseCount >= maxDatabases) && freeTierStatus === 'true') {
-        $('#outerContainer').empty();
-        $('#outerContainer').html('<div class="container-fluid"><div class="row row-centered">' +
-            '<div class="col-centered col-xs-10 col-sm-7  col-md-7 col-lg-6"><div class="cloud-new-content">' +
-            '<h3>You cannot create more than ' + maxDatabases + ' databases on a free subscription. ' +
-            'Please delete an existing database to continue...</h3></div></div></div></div>');
-        return;
-    } else if ((databaseCount >= maxDatabases) && freeTierStatus === 'false'){
-
+    if (isDatabaseCountThrottled == 'true') {
         $('#outerContainer').empty();
                 $('#outerContainer').html('<div class="container-fluid"><div class="row row-centered">' +
                     '<div class="col-centered col-xs-10 col-sm-7  col-md-7 col-lg-6"><div class="cloud-new-content">' +
                     '<h3>You cannot create more than ' + maxDatabases + ' databases on your subscription. ' +
-                    'Please delete an existing database to continue...</h3></div></div></div></div>');
+                    'Please upgrade your subscription plan to continue...</h3></div></div></div></div>');
                 return;
     }
 //select 2

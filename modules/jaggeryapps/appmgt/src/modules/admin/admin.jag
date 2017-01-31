@@ -373,15 +373,7 @@ var getTenantMaxDatabaseCount = function (tenantDomain, cloudType) {
 };
 
 var publishTenantSubscription = function (tenantDomain, cloudType, plan, startDate, endDate, status) {
-    var tenantId = managerModule.getTenantIdForGivenTenantDomain(tenantDomain);
-    var throttlingManager = jagg.module("throttling");
-
-    var subscription = ApplicationManager.getSubscription(tenantId, cloudType);
-    if (subscription) {
-        throttlingManager.upgradeTenantSubscription(tenantId, cloudType, plan, startDate, endDate, status);
-    }else {
-        throttlingManager.addNewTenantSubscription(tenantId, cloudType, plan, startDate, endDate, status);
-    }
+    jagg.module("subscription").publishTenantSubscription(tenantDomain, cloudType, plan, startDate, endDate, status);
 };
 
 %>

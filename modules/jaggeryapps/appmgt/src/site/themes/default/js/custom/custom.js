@@ -15,8 +15,10 @@
  *   specific language governing permissions and limitations
  *   under the License.
  */
-$('.cloud-menu-popover').popover({
+$('.cloud-menu-popover  i.fw-tiles').popover({
     html : true,
+    trigger:'click',
+    placement:'bottom',
     title: function() {
         return $("#popover-head").html();
     },
