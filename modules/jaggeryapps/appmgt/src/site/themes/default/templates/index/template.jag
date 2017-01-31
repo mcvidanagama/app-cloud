@@ -38,14 +38,20 @@ jagg.template("index", function(inputs, outputs, jagg) {
         var taggedApplicationsList;
         var searchbox;
 
-        $(document).ready(function (){
 
+        $(document).on("click","#app-category li", function(e){
+            $('.active').removeClass('active');
+            $($(this)[0]).addClass('active');
+            $('#button-category').html($(this)[0].id+' <span class="caret"></span>');
+            drawApplicationList();
+
+        });
+
+        function drawApplicationList() {
             for (var i = 0; i < applicationList.length; i++){
                 addTableRow(applicationList[i]);
             }
-
             applicationList.sort(NameComparator);
-
             $("#search-apps").bind("keyup", function () {
                 if ($(this).val() === null || $(this).val() === undefined || $(this).val().length === 0) {
                     init();
@@ -91,66 +97,68 @@ jagg.template("index", function(inputs, outputs, jagg) {
                     }
                 }
             });
+        }
+
+        $(document).ready(function (){
+            drawApplicationList();
         });
 
 
     function addTableRow(application) {
+        var searchCriteria = $('#button-category').text().trim().toLocaleLowerCase();
+        removeTableRow(application.applicationName);
+        if(searchCriteria == 'all' || application.category.toLocaleLowerCase() == searchCriteria){
+            application = getIconDetail(application);
+            // This logic is specific to filter
+            var displayName = "";
 
-        application = getIconDetail(application);
-    removeTableRow(application.applicationName);
-    // This logic is specific to filter
-    var displayName = "";
-
-    if (application.highlightedName === undefined || application.highlightedName === "") {
-        displayName = application.applicationName;
-    } else {        // if this application is in search results
-        displayName = application.highlightedName;
-        // mark the search keyword in yellow in the app name
-        displayName = displayName.replace("^", "<b style=\"background-color:yellow;\">").replace("~", "</b>");
-        application.highlightedName = "";
-    }
-
-
-    var theLi;
-    var appIcon;
-    if (application.icon) {
-        imgSrc = "data:image/bmp;base64,"+application.icon;
-        appIcon = '<div class="app-icon">' +
-            '<img src="'+imgSrc+'" class="square-element">' +
-            '</div>';
-    } else {
-        appIcon = '<div class="app-icon" style="background:'+ application.uniqueColor + ';">' +
-            '<div class="square-element">' +
-             '<div class="app-name-icon">' + application.nameToChar + '</div>' +
-            '</div>' +
-         '</div>';
-    }
+            if (application.highlightedName === undefined || application.highlightedName === "") {
+                displayName = application.applicationName;
+            } else {        // if this application is in search results
+                displayName = application.highlightedName;
+                // mark the search keyword in yellow in the app name
+                displayName = displayName.replace("^", "<b style=\"background-color:yellow;\">").replace("~", "</b>");
+                application.highlightedName = "";
+            }
 
 
-
-        theLi  = '<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" id="' + application.applicationName + '">' +
-
-                            '<div class="cloud-app-listing app-color-one">'+
-                                    '<a href="/appmgt/site/pages/home.jag?applicationKey=' + application.hashId + '">'+
-                                    '<i class="fw '+application.appTypeIcon+' fw-2x app-type-icon" data-toggle="tooltip" data-placement="right" title="' + application.appTypeTitle + '"></i>' +
-                                     appIcon +
-                                    '<div class="app-name ellipsis">' + displayName + '</div>' +
-                                    '</a>' +
-                                    '<a class="dropdown-toggle app-extra" data-toggle="dropdown">' +
-                                        '<i class="fa fa-ellipsis-v"></i>' +
-                                        '<span class="sr-only">Toggle Dropdown</span>' +
-                                    '</a>' +
-                                    '<ul class="dropdown-menu app-extra-menu" role="menu">' +
-                                        '<li><a onclick="deleteApplicationPopUp(' +  "'" + displayName + "'," +  "'" + application.hashId + "'"  + ')">Delete</a></li>' +
-                                    '</ul>' +
-
-                            '</div>' +
-
+            var theLi;
+            var appIcon;
+            if (application.icon) {
+                imgSrc = "data:image/bmp;base64,"+application.icon;
+                appIcon = '<div class="app-icon">' +
+                    '<img src="'+imgSrc+'" class="square-element">' +
                     '</div>';
+            } else {
+                appIcon = '<div class="app-icon" style="background:'+ application.uniqueColor + ';">' +
+                    '<div class="square-element">' +
+                     '<div class="app-name-icon">' + application.nameToChar + '</div>' +
+                    '</div>' +
+                 '</div>';
+            }
 
+            theLi  = '<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" id="' + application.applicationName + '">' +
 
+                                '<div class="cloud-app-listing app-color-one">'+
+                                        '<a href="/appmgt/site/pages/home.jag?applicationKey=' + application.hashId + '">'+
+                                        '<i class="fw '+application.appTypeIcon+' fw-2x app-type-icon" data-toggle="tooltip" data-placement="right" title="' + application.appTypeTitle + '"></i>' +
+                                         appIcon +
+                                        '<div class="app-name ellipsis">' + displayName + '</div>' +
+                                        '</a>' +
+                                        '<a class="dropdown-toggle app-extra" data-toggle="dropdown">' +
+                                            '<i class="fa fa-ellipsis-v"></i>' +
+                                            '<span class="sr-only">Toggle Dropdown</span>' +
+                                        '</a>' +
+                                        '<ul class="dropdown-menu app-extra-menu" role="menu">' +
+                                            '<li><a onclick="deleteApplicationPopUp(' +  "'" + displayName + "'," +  "'" + application.hashId + "'"  + ')">Delete</a></li>' +
+                                        '</ul>' +
 
-        $("#item_list").append(theLi);
+                                '</div>' +
+
+                        '</div>';
+
+            $("#item_list").append(theLi);
+        }
     }
 
     function NameComparator(a, b) {
@@ -271,29 +279,46 @@ jagg.template("index", function(inputs, outputs, jagg) {
     <% } else { %>
         <a href="/appmgt/site/pages/select-apptype.jag" class="btn-action" data-toggle="tooltip" data-placement="top" title="Create <%=cloudSpecificApplicationRepresentation%>">
     <% } %>
-            <span class="fw-stack fw-lg btn-action-ico">
+            <span class="fw-stack fw-lg">
                 <i class="fw fw-circle-outline fw-stack-2x"></i>
-                <i class="fw fw-add fw-stack-1x"></i>
-            </span> <span class="hidden-xs">Create <%=cloudSpecificApplicationRepresentation%></span>
+                <i class="fw fw-application fw-stack-1x"></i>
+		<span class="fw-stack fw-move-right fw-move-bottom">
+                  <i class="fw fw-circle fw-stack-2x fw-stroke"></i>
+                  <i class="fw fw-add fw-stack-1x fw-inverse"></i>
+               </span>
+            </span>
+            <span class="hidden-xs">Create <%=cloudSpecificApplicationRepresentation%></span>
         </a>
-    <% if (jagg.getSelectedCloud() != INTEGRATION_CLOUD) { %>
         <a href="<%=jagg.getAbsoluteUrl("/site/pages/newdatabase.jag")%>?isEdit=false" class="btn-action" data-toggle="tooltip" data-placement="top" title="Create Database">
-            <span class="fw-stack fw-lg btn-action-ico">
-                <i class="fw fw-circle-outline fw-stack-2x"></i>
-                <i class="fw fw-add fw-stack-1x"></i>
-            </span> <span class="hidden-xs">Create Database</span>
+            <span class="fw-stack fw-lg">
+               <i class="fw fw-circle-outline fw-stack-2x"></i>
+               <i class="fw fw-database fw-stack-1x"></i>
+               <span class="fw-stack fw-move-right fw-move-bottom">
+                  <i class="fw fw-circle fw-stack-2x fw-stroke"></i>
+                  <i class="fw fw-add fw-stack-1x fw-inverse"></i>
+               </span>
+            </span><span class="hidden-xs">Create Database</span>
         </a>
-    <% } %>
     </div>
-    <div class="container-fluid">
 
-    </div><!-- /.container -->
-    <div class="container-fluid">
+    <div class="container-fluid app-type-listing">
     <% if (applications.length > 0 ) { %>
         <div class="row row-centered app-sort-bar">
             <div class="col-centered col-md-5 search">
-                <input type="text" class="form-control" id="search-apps" placeholder="Search <%=cloudSpecificApplicationRepresentation%>s" maxlength="100">
-                <i class="fa fa-2x fa-search" ></i>
+
+                <div class="input-group">
+                    <input type="text" class="form-control" id="search-apps" placeholder="Search applications">
+                    <div class="input-group-btn">
+                        <i class="icon fa fa-2x fa-search"></i>
+                        <button id="button-category" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">All <span class="caret"></span></button>
+                        <ul id="app-category" class="dropdown-menu dropdown-menu-right">
+                          <li id="All" class="active"><a href="#">All</a></li>
+                          <li id="Integration"><a href="#">Integration</a></li>
+                          <li id="Services"><a href="#">Services</a></li>
+                          <li id="Custom"><a href="#">Custom</a></li>
+                        </ul>
+                    </div><!-- /btn-group -->
+                </div><!-- /input-group -->
             </div>
         </div>
     <% } else { %>
@@ -314,7 +339,7 @@ jagg.template("index", function(inputs, outputs, jagg) {
             </div>
         </div>
     <% } %>
-        <div class="row row-centered app-listing">
+        <div class="row row-centered app-listing listing">
             <!-- BOF listing block -->
             <div class="" id="item_list"></div>
         </div>
