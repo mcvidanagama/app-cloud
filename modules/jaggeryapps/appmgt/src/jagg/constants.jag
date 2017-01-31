@@ -101,6 +101,7 @@ var CHANGE_PASSWORD_URL = "/site/pages/change-password.jag";
 var CUSTOM_URL_SETTINGS_PAGE_URL = "/site/pages/custom_url.jag";
 var UPGRADE_BILLING_PLAN_URL= "/site/pages/payment-plans.jag";
 var CONTACT_US_URL= "/site/pages/contact-us.jag";
+var ACCOUNT_SUMMARY_URL = "/site/pages/account-summary.jag";
 
 //Regex patterns
 var ENV_KEY_REGEX = "^[A-Za-z0-9_]+$";

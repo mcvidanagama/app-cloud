@@ -54,7 +54,7 @@ jagg.block("home", {
         var tenantDomain = managerModule.getTenantDomain();
 
         var pageTitle = managerModule.getCloudTypeProperties().pageTitle;
-        var maxAppCount = applicationModule.getMaxInstanceCount();
+        var maxAppCount = jagg.module("throttling").getMaxInstanceCount();
         var applicationCount = applicationModule.getRunningApplicationVersionCount();
         var cloudSpecificApplicationRepresentation = managerModule.getCloudTypeProperties().cloudSpecificApplicationRepresentation;
 

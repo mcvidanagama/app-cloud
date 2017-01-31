@@ -69,6 +69,12 @@ public class SQLQueryConstants {
     public static final String MAX_CPU = "max_cpu";
     public static final String START_DATE = "start_date";
     public static final String END_DATE = "end_date";
+    public static final String CLOUD_ID = "cloud_id";
+    public static final String CON_SPEC_ID = "CON_SPEC_ID";
+    public static final String CON_SPEC_NAME = "CON_SPEC_NAME";
+    public static final String CPU = "CPU";
+    public static final String MEMORY = "MEMORY";
+    public static final String COST_PER_HOUR = "COST_PER_HOUR";
 
 
     /*==============================
@@ -249,6 +255,10 @@ public class SQLQueryConstants {
     public static final String GET_CUSTOM_DOMAIN_DETAILS_FOR_TENANT = "SELECT name, custom_domain " +
             "FROM AC_APPLICATION WHERE tenant_id =?";
 
+    public static final String GET_CONTAINER_SPECIFICATIONS_BY_RUNTIME_ID = "SELECT * FROM AC_CONTAINER_SPECIFICATIONS "
+            + "JOIN AC_RUNTIME_CONTAINER_SPECIFICATIONS ON AC_CONTAINER_SPECIFICATIONS.CON_SPEC_ID = " +
+            "AC_RUNTIME_CONTAINER_SPECIFICATIONS.CON_SPEC_ID WHERE AC_RUNTIME_CONTAINER_SPECIFICATIONS.id = ?";
+
     /* Update Queries */
     public static final String GET_ALL_APPLICATIONS_LIST_WITH_TAG =
             "SELECT app.name as application_name, app.hash_id as hash_id, type.name as app_type_name, " +
@@ -277,23 +287,12 @@ public class SQLQueryConstants {
                     "JOIN AC_APPLICATION ON AC_VERSION.application_id=AC_APPLICATION.id INNER JOIN AC_APP_TYPE " +
                     "ON AC_APPLICATION.app_type_id = AC_APP_TYPE.id WHERE AC_VERSION.status='running' AND AC_VERSION.tenant_id=?;";
 
-//    public static final String GET_TENANT_TIER_INFO = "SELECT AC_SUBSCRIPTION_PLANS.PLAN_ID as PLAN_ID, " +
-//            "AC_SUBSCRIPTION_PLANS.PLAN_NAME as PLAN_NAME, AC_SUBSCRIPTION_PLANS.MAX_APPLICATIONS as MAX_APPLICATIONS," +
-//            "AC_SUBSCRIPTION_PLANS.MAX_DATABASES as MAX_DATABASES, AC_SUBSCRIPTION_PLANS.MAX_REPLICA_COUNT as " +
-//            "MAX_REPLICA_COUNT, AC_SUBSCRIPTION_PLANS.CUMULATIVE_CPU as CUMULATIVE_CPU, " +
-//            "AC_SUBSCRIPTION_PLANS.CUMULATIVE_RAM as CUMULATIVE_RAM FROM AC_SUBSCRIPTION_PLANS INNER JOIN " +
-//            "AC_TENANT_SUBSCRIPTION_PLANS WHERE AC_TENANT_SUBSCRIPTION_PLANS.plan_id = AC_SUBSCRIPTION_PLANS.PLAN_ID " +
-//            "AND AC_TENANT_SUBSCRIPTION_PLANS.tenant_id = ?;";
-
-    public static final String GET_TENANT_TIER_INFO = "SELECT AC_TENANT_SUBSCRIPTION.PLAN as PLAN_NAME, " +
-            "AC_TENANT_SUBSCRIPTION.MAX_APP_COUNT as MAX_APPLICATIONS_COUNT, AC_TENANT_SUBSCRIPTION.MAX_DATABASE_COUNT " +
-            "as MAX_DATABASE_COUNT, AC_TENANT_SUBSCRIPTION.MAX_REPLICA_COUNT as MAX_REPLICA_COUNT, " +
-            "AC_TENANT_SUBSCRIPTION.MAX_CPU as MAX_CPU, AC_TENANT_SUBSCRIPTION.MAX_MEMORY as MAX_MEMORY FROM " +
-            "AC_TENANT_SUBSCRIPTION WHERE TENANT_ID = ? AND CLOUD_ID = ?;";
-
     public static final String IS_CUSTOM_DOMAIN_AVAILABLE = "SELECT * FROM AC_APPLICATION WHERE custom_domain=?";
 
     public static final String GET_SUBSCRIPTION = "SELECT * FROM AC_TENANT_SUBSCRIPTION WHERE tenant_id = ? AND cloud_id = ?";
+
+    public static final String GET_VERSION_BY_HASH_ID = "SELECT * FROM AC_VERSION WHERE hash_id = ?";
+
     /* Update Queries */
 
     public static final String UPDATE_APPLICATION_ICON = "INSERT INTO AC_APP_ICON (icon, application_id) VALUES (?, ?) ON" +

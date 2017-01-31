@@ -37,6 +37,15 @@ jagg.template("header/default", function(inputs, outputs, jagg) {
     var hasCustomURLSettingsAccess = managerModule.hasCustomURLSettingsAccess();
     var isBillingEnabled = outputs.isBillingEnabled;
     var remainingDays = outputs.remainingDays;
+    var isPaidAccount = outputs.isPaidAccount;
+    var isAdminUser = outputs.isAdminUser;
+
+    var billingMenuString = "Trial Expired";
+    if (parseInt(remainingDays) > 0) {
+        billingMenuString = "Trial - " + parseInt(remainingDays) + " days to upgrade";
+    }
+
+    //log.info()
     if(isGoogleAnalyticsEnabled) {
 %>
            
@@ -118,16 +127,24 @@ $zopim(function () {
                 <li>
                     <a href="#" target="_parent"><i class="fa fa-bank"></i> <%=tenantDomain%></a>
                 </li>
-                <% if (isBillingEnabled) { %>
+                <% if (isPaidAccount) { %>
                 <li class="dropdown user-name">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fw fw-resource"></i> <% if (remainingDays > 0) { %> Trial - <%=remainingDays%> days to upgrade <% } else { %> Trial Expired <% } %>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fw fw-resource"></i> Account %>
                         <i class="fa fa-chevron-circle-down"></i>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="<%=cloudMgtURL + UPGRADE_BILLING_PLAN_URL + "?cloud-type=" + jagg.getSelectedCloud()%>" target=_blank>Upgrade Now</a></li>
+                        <li><a href="<%=cloudMgtURL + ACCOUNT_SUMMARY_URL%>">Account Summary</a></li>
+                    </ul>
+                </li>
+                <% } else if (!isPaidAccount && isBillingEnabled) { %>
+                <li class="dropdown user-name">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fw fw-resource"></i> <%=billingMenuString%>
+                        <i class="fa fa-chevron-circle-down"></i>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="<%=cloudMgtURL + UPGRADE_BILLING_PLAN_URL + "?cloud-type=" + jagg.getSelectedCloud()%>">Upgrade Now</a></li>
                         <li><a href="<%=cloudMgtURL + CONTACT_US_URL + "?cloud-type=" + jagg.getSelectedCloud() + "&request-extension=true"%>" target=_blank>Request Extension</a></li>
                     </ul>
                 </li>
-                <% } %>
+                <% } else { }%>
                 <li><a href="<%=docUrl%>" target=_blank><i class="fa fa-book"></i> Documentation</a></li>
                 <li><a href="<%=cloudMgtURL + CONTACT_US_URL + "?cloudType=" + jagg.getSelectedCloud()%>" target=_blank><i class="fa fa-envelope"></i> Support</a></li>
                 <li class="dropdown user-name">
@@ -238,7 +255,40 @@ $zopim(function () {
 
 <script>
     var hasCustomURLSettingsAccess = "<%=hasCustomURLSettingsAccess%>";
+    var remainingDays = <%=remainingDays%>;
+    var cloudMgtURL = '<%=cloudMgtURL%>';
+    var cloudType = '<%=jagg.getSelectedCloud()%>';
+    var isTrialExpired = false;
+    if (remainingDays <= 0) {
+        isTrialExpired = true;
+    }
+    var isAdminUser = <%=isAdminUser%>;
     $(document).ready(function() {
+        if (isTrialExpired) {
+            if (isAdminUser) {
+                jagg.popMessage({
+                    content:"Was it a successful trial? Your trial unfortunately expired, " +
+                     "however it is really easy to upgrade to a paid plan and keep using WSO2 API Cloud.",
+                    title:"Trial Expired" ,
+                    modalStatus: true,
+                    yesText: "Upgrade Now",
+                    yesCallback:function(){
+                    window.location.href = cloudMgtURL + "/site/pages/payment-plans.jag?cloud-type=" + cloudType;
+                    },
+                    noText:"Request Extension",
+                    noCallback:function(){
+                    window.location.href = cloudMgtURL + "/site/pages/contact-us.jag?cloud-type=" + cloudType + "&request-extension=true";
+                    }
+                });
+            }else{
+                jagg.popMessage({
+                    content:"Unfortunately your trial period is expired, " +
+                     "Please contact organization administrator for more details.",
+                    title:"Trial Expired"
+                });
+            }
+        }
+
         if (hasCustomURLSettingsAccess == "true") {
             $("#customUrlBlock").css("display", "block");
         }

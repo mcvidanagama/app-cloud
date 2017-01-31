@@ -352,39 +352,4 @@ var getDatabaseCount = function () {
 	return allDatabases.length;
 };
 
-var getMaxDatabaseCount = function () {
-	try {
-		var tenantId = modManager.getTenantId();
-        var cloud = jagg.getCloudTypePropertyConfFilePath();
-        var cloudTypes =  Object.keys(cloud);
-		var maxDatabaseCount = 0;
-        var ftStatus = modAppManager.getFreeTierStatus();
-        if(ftStatus){
-		for (var i = 0; i < cloudTypes.length; i++) {
-		    var dbCount = ApplicationManager.getMaxDatabaseCountForWhiteListedTenants(tenantId, cloudTypes[i]);
-		    if (dbCount == -1) {
-		        var subscriptionPlanBaseURL = modManager.getPropertyValue("SubscriptionPlanBaseURL");
-		        var subscriptionPlanURL = subscriptionPlanBaseURL + "/plans/" + cloudTypes[i] + "/FREE";
-		        var maxInstancesJson = get(subscriptionPlanURL, {}, "json");
-		        dbCount = parseInt(maxInstancesJson.data.maxDatabases);
-		    }
-
-		    if (dbCount > -1) {
-		        maxDatabaseCount += dbCount;
-		    }
-		}
-
-		}else{
-             var tenantTierInfo = ApplicationManager.getTenantTierInfo(tenantId);
-             maxDatabaseCount = tenantTierInfo.getMaxDatabaseCount();
-             }
-
-	return maxDatabaseCount;
-	} catch (e) {
-		log.error("Error while getting the maximum database count for tenant id : " + tenantId);
-		log.error(e);
-		throw e;
-	}
-};
-
 %>

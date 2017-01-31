@@ -1134,26 +1134,6 @@ public class ApplicationManager {
     }
 
     /**
-     * Get tenant's tier info
-     * @param tenantId
-     * @return
-     * @throws AppCloudException
-     */
-    public static UsageTier getTenantTierInfo(int tenantId, String cloudType) throws AppCloudException {
-        Connection dbConnection = DBUtil.getDBConnection();
-        try {
-            return ApplicationDAO.getInstance().getTenantTierInfo(dbConnection, tenantId, cloudType);
-        } catch (AppCloudException e) {
-            String msg = "Error while getting tenant tier info tenant id : " +
-                    tenantId;
-            log.error(msg, e);
-            throw new AppCloudException(msg, e);
-        } finally {
-            DBUtil.closeConnection(dbConnection);
-        }
-    }
-
-    /**
      * Method for updating container specification.
      *
      * @param versionHashId hash id of version
@@ -1662,6 +1642,49 @@ public class ApplicationManager {
         } catch (AppCloudException e) {
             String msg = "Error while updating subscription for tenant id: " + subscription.getTenantId() + ", cloud : "
                     + subscription.getCloudType();
+            log.error(msg, e);
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeConnection(dbConnection);
+        }
+    }
+
+    /**
+     * Get version by hash id
+     *
+     * @param hashId hash id of version
+     * @return version info
+     * @throws AppCloudException
+     */
+    public static Version getVersionByHashId(String hashId) throws AppCloudException {
+        Connection dbConnection = DBUtil.getDBConnection();
+        try {
+            return ApplicationDAO.getInstance().getVersionByHashId(dbConnection, hashId);
+        } catch (AppCloudException e) {
+            String msg = "Error while retrieving version info for version hash id : " + hashId;
+            log.error(msg, e);
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeConnection(dbConnection);
+        }
+    }
+
+    /**
+     * Get allowed container specifications for runtime
+     *
+     * @param runtimeId id of runtime
+     * @return list of container specifications
+     * @throws AppCloudException
+     */
+    public static ContainerSpecification[] getAllowedContainerSpecificationsForRuntime(int runtimeId)
+            throws AppCloudException {
+        Connection dbConnection = DBUtil.getDBConnection();
+        try {
+            List<ContainerSpecification> containerSpecifications = ApplicationDAO.getInstance()
+                    .getAllowedContainerSpecificationsForRuntime(dbConnection, runtimeId);
+            return containerSpecifications.toArray(new ContainerSpecification[containerSpecifications.size()]);
+        } catch (AppCloudException e) {
+            String msg = "Error while retrieving container specs for runtime id : " + runtimeId;
             log.error(msg, e);
             throw new AppCloudException(msg, e);
         } finally {

@@ -1943,40 +1943,6 @@ public class ApplicationDAO {
     }
 
     /**
-     * Get tier information of a tenant
-     * @param dbConnection database connection
-     * @param tenantId tenant's id
-     * @return usageTier
-     * @throws AppCloudException
-     */
-    public UsageTier getTenantTierInfo(Connection dbConnection, int tenantId, String cloudType) throws AppCloudException {
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        UsageTier usageTier = new UsageTier();
-        try {
-            preparedStatement = dbConnection.prepareStatement(SQLQueryConstants.GET_TENANT_TIER_INFO);
-            preparedStatement.setInt(1, tenantId);
-            preparedStatement.setString(2, cloudType);
-            resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                usageTier.setPlanName(resultSet.getString("PLAN_NAME"));
-                usageTier.setMaxApplicationCount(resultSet.getInt("MAX_APPLICATION_COUNT"));
-                usageTier.setMaxReplicaCount(resultSet.getInt("MAX_REPLICA_COUNT"));
-                usageTier.setMaxDatabaseCount(resultSet.getInt("MAX_DATABASE_COUNT"));
-                usageTier.setCpuLimit(resultSet.getInt("MAX_CPU"));
-                usageTier.setRamLimit(resultSet.getInt("MAX_MEMORY"));
-            }
-        } catch (SQLException e) {
-            String msg = "Error while getting tire info for tenant : " + tenantId ;
-            throw new AppCloudException(msg, e);
-        } finally {
-            DBUtil.closeResultSet(resultSet);
-            DBUtil.closePreparedStatement(preparedStatement);
-        }
-        return usageTier;
-    }
-
-    /**
      * Method for whitelisting tenant per cloud
      *
      * @param dbConnection     database connection
@@ -2688,9 +2654,11 @@ public class ApplicationDAO {
 
             while (resultSet.next()) {
                 subscription = new Subscription();
+                subscription.setTenantId(resultSet.getInt(SQLQueryConstants.TENANT_ID));
                 subscription.setPlan(resultSet.getString(SQLQueryConstants.PLAN));
                 subscription.setMaxApplicationCount(resultSet.getInt(SQLQueryConstants.MAX_APP_COUNT));
                 subscription.setMaxDatabaseCount(resultSet.getInt(SQLQueryConstants.MAX_DATABASE_COUNT));
+                subscription.setCloudType(resultSet.getString(SQLQueryConstants.CLOUD_ID));
                 subscription.setMaxReplicaCount(resultSet.getInt(SQLQueryConstants.MAX_REPLICA_COUNT));
                 subscription.setMaxMemory(resultSet.getInt(SQLQueryConstants.MAX_MEMORY));
                 subscription.setMaxCpu(resultSet.getInt(SQLQueryConstants.MAX_CPU));
@@ -2766,15 +2734,15 @@ public class ApplicationDAO {
             preparedStatement.setString(1, subscription.getPlan());
             preparedStatement.setInt(2, subscription.getMaxApplicationCount());
             preparedStatement.setInt(3, subscription.getMaxDatabaseCount());
-            preparedStatement.setString(4, subscription.getCloudType());
-            preparedStatement.setInt(5, subscription.getMaxReplicaCount());
-            preparedStatement.setInt(6, subscription.getMaxMemory());
-            preparedStatement.setInt(7, subscription.getMaxCpu());
-            preparedStatement.setString(8, subscription.getStartDate());
-            preparedStatement.setString(9, subscription.getEndDate());
+            preparedStatement.setInt(4, subscription.getMaxReplicaCount());
+            preparedStatement.setInt(5, subscription.getMaxMemory());
+            preparedStatement.setInt(6, subscription.getMaxCpu());
+            preparedStatement.setString(7, subscription.getStartDate());
+            preparedStatement.setString(8, subscription.getEndDate());
+            preparedStatement.setInt(9, subscription.getIsWhiteListed());
             preparedStatement.setString(10, subscription.getStatus());
             preparedStatement.setInt(11, subscription.getTenantId());
-            preparedStatement.setInt(12, subscription.getIsWhiteListed());
+            preparedStatement.setString(12, subscription.getCloudType());
 
             preparedStatement.execute();
             dbConnection.commit();
@@ -2790,4 +2758,85 @@ public class ApplicationDAO {
         }
     }
 
+    /**
+     * Get version by hash id
+     *
+     * @param dbConnection database connection
+     * @param hashId       hash id of version
+     * @return version information
+     * @throws AppCloudException
+     */
+    public Version getVersionByHashId(Connection dbConnection, String hashId) throws AppCloudException {
+        PreparedStatement preparedStatement = null;
+        Version version = null;
+        ResultSet resultSet = null;
+
+        try {
+
+            preparedStatement = dbConnection.prepareStatement(SQLQueryConstants.GET_VERSION_BY_HASH_ID);
+            preparedStatement.setString(1, hashId);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                version = new Version();
+                version.setVersionName(resultSet.getString(SQLQueryConstants.NAME));
+                version.setHashId(resultSet.getString(SQLQueryConstants.HASH_ID));
+                version.setRuntimeId(resultSet.getInt(SQLQueryConstants.RUNTIME_ID));
+                version.setStatus(resultSet.getString(SQLQueryConstants.STATUS));
+                version.setConSpecCpu(resultSet.getString(SQLQueryConstants.CON_SPEC_CPU));
+                version.setConSpecMemory(resultSet.getString(SQLQueryConstants.CON_SPEC_MEMORY));
+            }
+
+        } catch (SQLException e) {
+            String msg =
+                    "Error while retrieving version detail for vershion hash Id : " + hashId;
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeResultSet(resultSet);
+            DBUtil.closePreparedStatement(preparedStatement);
+        }
+        return version;
+    }
+
+    /**
+     * Get allowed container specifications for runtime
+     *
+     * @param dbConnection database connection
+     * @param runtimeId    id of runtime
+     * @return list of container specifications
+     * @throws AppCloudException
+     */
+    public List<ContainerSpecification> getAllowedContainerSpecificationsForRuntime(Connection dbConnection,
+            int runtimeId) throws AppCloudException {
+        PreparedStatement preparedStatement = null;
+        List<ContainerSpecification> containerSpecifications = new ArrayList<ContainerSpecification>();
+        ResultSet resultSet = null;
+
+        try {
+
+            preparedStatement = dbConnection
+                    .prepareStatement(SQLQueryConstants.GET_CONTAINER_SPECIFICATIONS_BY_RUNTIME_ID);
+            preparedStatement.setInt(1, runtimeId);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                ContainerSpecification containerSpec = new ContainerSpecification();
+                containerSpec.setId(resultSet.getInt(SQLQueryConstants.CON_SPEC_ID));
+                containerSpec.setConSpecName(resultSet.getString(SQLQueryConstants.CON_SPEC_NAME));
+                containerSpec.setCpu(resultSet.getInt(SQLQueryConstants.CPU));
+                containerSpec.setMemory(resultSet.getInt(SQLQueryConstants.MEMORY));
+                containerSpec.setCostPerHour(resultSet.getInt(SQLQueryConstants.COST_PER_HOUR));
+                containerSpecifications.add(containerSpec);
+            }
+
+        } catch (SQLException e) {
+            String msg =
+                    "Error while retrieving container specifications for runtime id : " + runtimeId;
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeResultSet(resultSet);
+            DBUtil.closePreparedStatement(preparedStatement);
+        }
+        return containerSpecifications;
+    }
 }

@@ -202,10 +202,6 @@ jagg.module("application", {
         return jagg.require(jagg.getModulesDir() + "application/application.jag").getNotAllowedEnvVariables.apply(this, arguments);
     },
 
-    getMaxInstanceCount: function () {
-        return jagg.require(jagg.getModulesDir() + "application/application.jag").getMaxInstanceCount.apply(this, arguments);
-    },
-
     stopOtherVersions: function () {
         return jagg.require(jagg.getModulesDir() + "application/application.jag").stopOtherVersions.apply(this, arguments);
     },
@@ -303,20 +299,8 @@ jagg.module("application", {
     getReplicaCountForVersion:function () {
         return jagg.require(jagg.getModulesDir() + "application/application.jag").getReplicaCountForVersion.apply(this, arguments);
     },
-    getMaxReplicaCount:function () {
-        return jagg.require(jagg.getModulesDir() + "application/application.jag").getMaxReplicaCount.apply(this, arguments);
-    },
-    getThrottledStatus:function () {
-            return jagg.require(jagg.getModulesDir() + "application/application.jag").getThrottledStatus.apply(this, arguments);
-    },
-    getTenantTierInfo:function () {
-            return jagg.require(jagg.getModulesDir() + "application/application.jag").getTenantTierInfo.apply(this, arguments);
-    },
-    getthrottledAllowedContainerSpecs:function () {
-            return jagg.require(jagg.getModulesDir() + "application/application.jag").getthrottledAllowedContainerSpecs.apply(this, arguments);
-    },
-    getFreeTierStatus:function () {
-            return jagg.require(jagg.getModulesDir() + "application/application.jag").getFreeTierStatus.apply(this, arguments);
+    getVersionByHashId:function () {
+        return jagg.require(jagg.getModulesDir() + "application/application.jag").getVersionByHashId.apply(this, arguments);
     }
 });
 %>
