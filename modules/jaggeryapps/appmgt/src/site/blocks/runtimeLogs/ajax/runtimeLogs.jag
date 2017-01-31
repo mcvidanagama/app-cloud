@@ -78,7 +78,6 @@ include("/jagg/constants.jag");
         var applicationKey = request.getParameter("applicationKey");
         var selectedRevision = request.getParameter("selectedRevision");
         var mod = jagg.module("application");
-
         try {
             var status = mod.getApplicationRevisionStatus(applicationKey, selectedRevision);
             print(status);
@@ -87,7 +86,6 @@ include("/jagg/constants.jag");
             response.status = 400;
             response.content = msg;
         }
-
     } else {
         log.error("No action specified");
     }

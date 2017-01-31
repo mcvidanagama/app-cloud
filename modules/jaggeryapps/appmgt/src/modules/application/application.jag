@@ -1818,7 +1818,6 @@ var getMaxReplicaCount = function() {
 
 var getApplicationRevisionStatus = function(applicationKey, selectedRevision) {
     var selectedRevisionStatus = null;
-
     try {
         var versions = getVersionsOfApplication(applicationKey);
         for (var i = 0; i < versions.length; i++) {
@@ -1837,7 +1836,6 @@ var getApplicationRevisionStatus = function(applicationKey, selectedRevision) {
 
 var getVersionsOfApplication = function(applicationKey) {
     var applicationVersions = [];
-
     try {
         var versions = ApplicationManager.getAllVersionsOfApplication(applicationKey);
         for (var i = 0; i < versions.size(); i++) {
