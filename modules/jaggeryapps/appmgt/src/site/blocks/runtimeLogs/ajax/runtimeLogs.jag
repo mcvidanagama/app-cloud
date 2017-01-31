@@ -45,7 +45,7 @@ include("/jagg/constants.jag");
         } catch(e) {
             var msg = "Error while getting deployment logs";
             log.error(e);
-            log.error(msg+" for application: "+applicationKey+ " and revision: "+ selectedRevision);
+            log.error(msg + " for application: " + applicationKey + " and revision: " + selectedRevision);
             response.status = 400;
             response.content = msg;
         }
