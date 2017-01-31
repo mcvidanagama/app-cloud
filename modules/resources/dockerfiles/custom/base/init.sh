@@ -38,7 +38,7 @@ until docker info >/dev/null 2>&1
 docker run -d $CUSTOM_DOCKER_IMAGE_URL
 
 # calling tests
-# sh /usr/local/bin/tests.sh
+sh /usr/local/bin/tests.sh
 
 
 
