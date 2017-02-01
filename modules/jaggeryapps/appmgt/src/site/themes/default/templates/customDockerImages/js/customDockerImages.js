@@ -28,26 +28,43 @@ function addNewImage() {
     // var formValidated = validator.form();
     // if (formValidated) {
     //     $("#add-database").loadingButton({action:'show'});
-        jagg.post("../blocks/customDockerImages//ajax/customDockerImages.jag", {
-            action: "addImageAndCheckSecurity",
-            imageUrl: $("#imageUrl").val().trim()
-        }, function (result) {
-            alert(result);
-            // result = $.trim(result);
-            // result = JSON.parse(result);
-            // if (result.value == 'success') {
-            //     window.location.href = "databases.jag";
-            // } else {
+    jagg.post("../blocks/customDockerImages//ajax/customDockerImages.jag", {
+        action: "isImageAvailable",
+        imageUrl: $("#imageUrl").val().trim()
+    }, function (result) {
+        result = $.trim(result);
+        if(result=="false") { // isImageAvailable=false means image is not added currently.
+
+            jagg.post("../blocks/customDockerImages//ajax/customDockerImages.jag", {
+                action: "addImageAndCheckSecurity",
+                imageUrl: $("#imageUrl").val().trim()
+            }, function (result) {
                 jagg.message({content: 'New Image added and queued for security check.', type: 'info', id: 'addnewcustomdockerimage'});
-            // }
-        }, function (jqXHR, textStatus, errorThrown) {
+            }, function (jqXHR, textStatus, errorThrown) {
+                jagg.message({
+                                 content: jqXHR.responseText,
+                                 type: 'error',
+                                 id: 'addnewcustomdockerimage',
+                                 timeout: 8000
+                             });
+            });
+        } else {
             jagg.message({
-                             content: jqXHR.responseText,
+                             content: "Cant add image. Image has been already added.",
                              type: 'error',
                              id: 'addnewcustomdockerimage',
                              timeout: 8000
                          });
-            $("#add-database").loadingButton({action:'hide'});
-        });
-    // }
+        }
+
+    }, function (jqXHR, textStatus, errorThrown) {
+        jagg.message({
+                         content: jqXHR.responseText,
+                         type: 'error',
+                         id: 'isImageAlreadyAdded',
+                         timeout: 8000
+                     });
+
+    });
+
 }

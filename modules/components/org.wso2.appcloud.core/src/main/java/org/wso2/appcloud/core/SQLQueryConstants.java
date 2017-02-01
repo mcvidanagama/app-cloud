@@ -124,6 +124,9 @@ public class SQLQueryConstants {
 
     public static final String INSERT_APPLICATION_ICON = "INSERT INTO AC_APP_ICON (icon, application_id) VALUES (?, ?)";
 
+    public static final String ADD_CUSTOM_DOCKER_IMAGE =
+            "INSERT INTO AC_CUSTOM_DOCKER_IMAGES (image_id, tenant_id, remote_url, test_results_json, status, last_updated)" +
+            " values (?,?,?,?,?,?)";
     /*Select Queries*/
 
     public static final String GET_ALL_APPLICATIONS_LIST =
@@ -262,6 +265,7 @@ public class SQLQueryConstants {
                     "ON AC_APPLICATION.app_type_id = AC_APP_TYPE.id WHERE AC_VERSION.status='running';";
 
     public static final String IS_CUSTOM_DOMAIN_AVAILABLE = "SELECT * FROM AC_APPLICATION WHERE custom_domain=?";
+    public static final String IS_CUSTOM_IMAGE_AVAILABLE = "SELECT * FROM AC_CUSTOM_DOCKER_IMAGES WHERE remote_url=? AND tenant_id=?";
 
     /* Update Queries */
 
@@ -293,7 +297,8 @@ public class SQLQueryConstants {
     public static final String UPDATE_APP_VERSION_CON_SPEC = "UPDATE AC_VERSION SET con_spec_cpu = ?, " +
             "con_spec_memory = ? WHERE hash_id = ? AND tenant_id=?";
 
-
+    public static final String UPDATE_CUSTOM_DOCKER_IMAGE_DETAILS =
+            "UPDATE AC_CUSTOM_DOCKER_IMAGES SET test_results_json=?, status=?, last_updated=? WHERE image_id=?";
 
     /*Delete Queries*/
 

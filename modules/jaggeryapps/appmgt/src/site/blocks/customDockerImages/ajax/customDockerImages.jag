@@ -35,8 +35,10 @@ include("/jagg/constants.jag");
         mod.addImageAndCheckSecurity(imageUrl);
         print("image verified");
 
-    } else if (action == "publishTestResults") {
-            log.info("Test Results published.....!!!!!!!!!!!!!!!");
+    } else if (action == "isImageAvailable") {
+        var imageUrl = request.getParameter("imageUrl");
+        print(mod.isImageAvailable(imageUrl));
+
     } else {
         log.error("No action specified");
     }

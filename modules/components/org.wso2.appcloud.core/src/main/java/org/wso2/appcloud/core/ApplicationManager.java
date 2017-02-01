@@ -35,6 +35,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -1569,6 +1572,73 @@ public class ApplicationManager {
         } catch (AppCloudException e) {
             String msg = "Error while checking replica count for the application version: " + versionKey +
                     " and tenant id: " + tenantId + ".";
+            log.error(msg, e);
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeConnection(dbConnection);
+        }
+    }
+
+    /**
+     * Add custom image details to database
+     * @param imageId tenant domain-alphaneumeric umage url
+     * @param remoteUrl image url
+     * @throws AppCloudException
+     */
+    public static void addCustomDockerImage(String imageId, String remoteUrl) throws AppCloudException{
+        Connection dbConnection = DBUtil.getDBConnection();
+        int tenantId = CarbonContext.getThreadLocalCarbonContext().getTenantId();
+        try {
+            Date date = new Date();
+            String timeStamp = String.valueOf(new java.sql.Timestamp(date.getTime()));
+            ApplicationDAO.getInstance().
+                    addCustomDockerImage(dbConnection, imageId, tenantId, remoteUrl, timeStamp);
+            dbConnection.commit();
+        } catch (AppCloudException e) {
+            String msg = "Error while adding custom image of : " + remoteUrl + " for tenant id : " + tenantId;
+            log.error(msg, e);
+            throw new AppCloudException(msg, e);
+        } catch (SQLException e) {
+            String msg = "Error while committing transaction for adding image from : " +
+                         remoteUrl + " for tenant id : " + tenantId;
+            log.error(msg, e);
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeConnection(dbConnection);
+        }
+    }
+
+    public static void updateCustomDockerTestResults(String imageId, String resultsJsonString, String status)
+            throws AppCloudException {
+        Connection dbConnection = DBUtil.getDBConnection();
+        try {
+            Date date = new Date();
+            String timeStamp = String.valueOf(new java.sql.Timestamp(date.getTime()));
+            ApplicationDAO.getInstance().
+                    updateCustomDockerImageRecord(dbConnection, imageId, resultsJsonString, status, timeStamp);
+            dbConnection.commit();
+        } catch (AppCloudException e) {
+            String msg = "Error while updating custom image  : " + imageId + " with results : " + resultsJsonString +
+                    " with status : " + status;
+            log.error(msg, e);
+            throw new AppCloudException(msg, e);
+        } catch (SQLException e) {
+            String msg = "Error while committing transaction for updating image : " + imageId;
+            log.error(msg, e);
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeConnection(dbConnection);
+        }
+    }
+
+    public static boolean isImageAvailable(String remoteUrl) throws AppCloudException {
+        Connection dbConnection = DBUtil.getDBConnection();
+        int tenantId = CarbonContext.getThreadLocalCarbonContext().getTenantId();
+        try {
+            return ApplicationDAO.getInstance().isImageAvailable(dbConnection, remoteUrl, tenantId);
+        } catch (AppCloudException e) {
+            String msg = "Error while chcking image availability in db for image : " + remoteUrl + " of tenant id : "
+                         + tenantId;
             log.error(msg, e);
             throw new AppCloudException(msg, e);
         } finally {

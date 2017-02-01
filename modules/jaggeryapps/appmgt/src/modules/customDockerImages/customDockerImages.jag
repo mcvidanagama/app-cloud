@@ -23,7 +23,7 @@ include("/jagg/constants.jag");
 var log = new Log("module/customDockerImages/customDockerImages.jag");
 var modManager = jagg.module("manager");
 var modApplication = jagg.module("application");
-//var ApplicationManager = Packages.org.wso2.appcloud.core.ApplicationManager;
+var ApplicationManager = Packages.org.wso2.appcloud.core.ApplicationManager;
 //var Application = Packages.org.wso2.appcloud.core.dto.Application;
 //var Version = Packages.org.wso2.appcloud.core.dto.Version;
 //var KubernetesProvisioningUtils =  Packages.org.wso2.appcloud.provisioning.runtime.Utils.KubernetesProvisioningUtils;
@@ -49,22 +49,23 @@ var DOCKER_IN_DOCKER_BASE_IMAGE = "Dockerfile.docker-in-docker-base-image";
 
 var addImageAndCheckSecurity = function (imageUrl) {
     var dockerClient = new DockerClient(modManager.getPropertyValue("DockerClientURL"));
+    log.info("imageUrl : " + imageUrl);
+    var alphaNeumericImageUrl = imageUrl.replace(/[^A-Za-z0-9]/g, '');
+    var imageId = modManager.getTenantDomain() + "-" + alphaNeumericImageUrl;
+    addImageInDataBase(imageId,imageUrl);
+    log.info("alphaNeumericImageUrl : " + alphaNeumericImageUrl);
+    var dockerFileDir = modManager.getPropertyValue(PROPERTY_APPMGT_DEPLOYMENT_DIR_PATH) + fileSeparator +
+                        TMP_UPLOADED_APPLICATIONS_PATH + fileSeparator + modManager.getTenantDomain() + fileSeparator +
+                        alphaNeumericImageUrl;
+    createDockerFile(imageUrl, alphaNeumericImageUrl, dockerFileDir, dockerClient);
+    var buildStatus = buildDockerImage(alphaNeumericImageUrl, dockerFileDir, dockerClient);
 
-     log.info("imageUrl : " + imageUrl);
-     var alphaNeumericImageUrl = imageUrl.replace(/[^A-Za-z0-9]/g, '');
-     log.info("alphaNeumericImageUrl : " + alphaNeumericImageUrl);
-     var dockerFileDir = modManager.getPropertyValue(PROPERTY_APPMGT_DEPLOYMENT_DIR_PATH) + fileSeparator +
-                         TMP_UPLOADED_APPLICATIONS_PATH + fileSeparator + modManager.getTenantDomain() + fileSeparator +
-                         alphaNeumericImageUrl;
-     createDockerFile(imageUrl, alphaNeumericImageUrl, dockerFileDir, dockerClient);
-     var buildStatus = buildDockerImage(alphaNeumericImageUrl, dockerFileDir, dockerClient);
-
-    var dockerImageName = modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL) + fileSeparator + CUSTOM + ":" +
-                          modManager.getTenantDomain() + "-" + alphaNeumericImageUrl;
+    var dockerImageName = modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL) + fileSeparator + CUSTOM_SECURITY + ":" +
+                          imageId;
     log.info("docker image name : " + dockerImageName);
-    if(buildStatus) {
+    if (buildStatus) {
         var containerId = createDockerContainer(dockerImageName, dockerFileDir);
-        if(containerId) {
+        if (containerId) {
             startContainer(containerId);
 
         }
@@ -77,7 +78,7 @@ var addImageAndCheckSecurity = function (imageUrl) {
 var createDockerFile = function (imageUrl, alphaNeumericImageUrl, dockerFileDir, dockerClient) {
 
 
-    var dockerFilePath =  dockerFileDir + fileSeparator + DOCKER_FILE_NAME; // ..../appmgt/tmpUploads/tenant/imageName/Dockerfile
+    var dockerFilePath = dockerFileDir + fileSeparator + DOCKER_FILE_NAME; // ..../appmgt/tmpUploads/tenant/imageName/Dockerfile
 
     log.info("dockerFilePath : " + dockerFilePath);
     if (log.isDebugEnabled()) {
@@ -100,8 +101,8 @@ var createDockerFile = function (imageUrl, alphaNeumericImageUrl, dockerFileDir,
 
 var buildDockerImage = function (alphaNeumericImageUrl, dockerFilePath, dockerClient) {
     var tagName = modManager.getTenantDomain() + "-" + alphaNeumericImageUrl;
-    dockerClient.buildDockerImage(modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL), CUSTOM, tagName, dockerFilePath);
-   // return modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL) + "/" + CUSTOM + ":" + tagName;
+    dockerClient.buildDockerImage(modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL), CUSTOM_SECURITY, tagName, dockerFilePath);
+    // return modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL) + "/" + CUSTOM + ":" + tagName;
     return true;
 };
 
@@ -112,19 +113,19 @@ var createDockerContainer = function (createdImage, dockerFileDir) {
     var data = {
         Image: createdImage,
         Volumes: {
-                "/usr/local/mount": {}
+            "/usr/local/mount": {}
         },
         HostConfig: {
             Binds: [dockerFileDir + ":/usr/local/mount"],
             Privileged: true
         }
     };
-log.info("!!!!!!!!!!!!!!!!!!! : " + stringify(data));
+    log.info("!!!!!!!!!!!!!!!!!!! : " + stringify(data));
     var headers = {
         "Content-Type": "application/json",
-        "charset":"utf-8"
+        "charset": "utf-8"
     };
-    var type  = "json";
+    var type = "json";
     var result = post(createContainerEndPoint, stringify(data), headers, type);
     log.info("result : " + result.data.Id);
     // if no container started this will return null
@@ -143,11 +144,61 @@ var startContainer = function (containerId) {
 
 };
 
-var readTestResults = function () {
+
+var updateDbWithTestResults = function (testResultsJsonString) {
+    var testResultsJson = parse(testResultsJsonString);
+    var imageId = testResultsJson.imageId;
+    var resultsJson = stringify(testResultsJson.results);
+    log.info("resultsJson : " + resultsJson);
+    var status = testResultsJson.status;
+
+
+
+    if (true) {//(status=="passed")
+        var imageUrl = testResultsJson.imageUrl;
+        var imageName,tagName;
+        var elementArray = imageUrl.split(":");
+        log.info("element array length : " + elementArray.length);
+        if (elementArray.length == 3 ) { // registry : port : tag
+            imageName = elementArray[0] + ":" + elementArray[1];
+            tagName = elementArray[2];
+            log.info("image name : " + imageName + " tag name : " + tagName);
+        } else { // registry : tag
+            imageName = elementArray[0];
+            tagName = elementArray[1];
+            log.info("image name : " + imageName + " tag name : " + tagName);
+        }
+        var dockerClient = new DockerClient(modManager.getPropertyValue("DockerClientURL"));
+        var pullStatus = pullImage(dockerClient, imageName, tagName);
+        if(pullStatus) {
+            var newImageName = modManager.getPropertyValue(PROPERTY_DOCKER_REGISTRY_URL) + fileSeparator + CUSTOM;
+            dockerClient.tagDockerImage(imageName, tagName, newImageName, imageId);
+            dockerClient.pushDockerImage(newImageName,imageId);
+            log.info("Image tagged and pushed to registry");
+        }
+        //pull image
+       // tagImage
+        // insert to registry
+    }
+
+    ApplicationManager.updateCustomDockerTestResults(imageId,resultsJson, status);
 
 };
 
-var updateDbWithTestResults = function () {
+var addImageInDataBase = function(imageId, imageRemoteUrl) {
+    ApplicationManager.addCustomDockerImage(imageId,imageRemoteUrl);
 
-}
+};
+
+var isImageAvailable = function(remoteUrl) {
+    log.info("checking image availability");
+    return ApplicationManager.isImageAvailable(remoteUrl);
+};
+
+var pullImage = function(dockerClient, imageName,tagName) {
+    log.info("pulling image.... image name : " + imageName + " tag : " + tagName);
+    dockerClient.pullDockerImage(imageName, tagName);
+    return true;
+};
+
 %>
