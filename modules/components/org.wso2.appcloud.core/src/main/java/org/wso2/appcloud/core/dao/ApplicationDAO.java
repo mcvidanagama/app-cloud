@@ -2602,4 +2602,77 @@ public class ApplicationDAO {
         }
         return replicaCount;
     }
+
+    /**
+     * Add the record in AC_CUSTOM_DOCKER table for custom image
+     * @param dbConnection database connection
+     * @param imageId imageid (tenant domain-alphaneumeric url)
+     * @param tenantId tnant id
+     * @param remoteUrl remote url of image
+     * @param updatedTime
+     * @throws AppCloudException
+     */
+    public void addCustomDockerImage(Connection dbConnection, String imageId, int tenantId, String remoteUrl, String updatedTime)
+            throws AppCloudException {
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = dbConnection.prepareStatement(SQLQueryConstants.ADD_CUSTOM_DOCKER_IMAGE);
+            preparedStatement.setString(1, imageId);
+            preparedStatement.setInt(2, tenantId);
+            preparedStatement.setString(3, remoteUrl);
+            preparedStatement.setString(4, null);
+            preparedStatement.setString(5, "scanning");
+            preparedStatement.setString(6, updatedTime);
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            String msg = "Error while adding custom docker image, image id : " + imageId + " from remote url : " + remoteUrl +
+                                   " for the tenant id : " + tenantId;
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closePreparedStatement(preparedStatement);
+        }
+    }
+
+    public void updateCustomDockerImageRecord(Connection dbConnection, String imageId, String resultsJson, String status, String updatedTime)
+            throws AppCloudException {
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = dbConnection.prepareStatement(SQLQueryConstants.UPDATE_CUSTOM_DOCKER_IMAGE_DETAILS);
+            preparedStatement.setString(1, resultsJson);
+            preparedStatement.setString(2, status);
+            preparedStatement.setString(3, updatedTime);
+            preparedStatement.setString(4, imageId);
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            String msg = "Error while updating custom docker image, image id : " + imageId + " with test results : " +
+                    resultsJson + " and status : " + status + " at : " + updatedTime;
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closePreparedStatement(preparedStatement);
+        }
+    }
+
+    public boolean isImageAvailable(Connection dbConnection, String remoteUrl, int tenantId) throws AppCloudException {
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            preparedStatement = dbConnection.prepareStatement(SQLQueryConstants.IS_CUSTOM_IMAGE_AVAILABLE);
+            preparedStatement.setString(1, remoteUrl);
+            preparedStatement.setInt(2, tenantId);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            String msg = "Error while checking availability of custom docker image: " + remoteUrl +
+                         " for tenant with tenant id: " + tenantId + ".";
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeResultSet(resultSet);
+            DBUtil.closePreparedStatement(preparedStatement);
+        }
+    }
+
 }

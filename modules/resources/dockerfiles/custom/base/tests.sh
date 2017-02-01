@@ -73,7 +73,7 @@ fi
 
 # =========================
 # publishing test results
-resultsJson="{\"imageId\":\"$IMAGE_TAG\",\"status\":\"$status\",\"test01\":\"$test1\",\"test02\":\"$test2\",\"test03\":\"$test3\"}"
+resultsJson="{\"imageId\":\"$IMAGE_TAG\",\"imageUrl\":\"$CUSTOM_DOCKER_IMAGE_URL\",\"status\":\"$status\",\"results\":{\"test01\":\"$test1\",\"test02\":\"$test2\",\"test03\":\"$test3\"}}"
 loginEndPoint="site/blocks/user/login/ajax/login.jag"
 adminEndPoint="site/blocks/admin/admin.jag"
 curl -c cookies -v -X POST -k $APPCLOUD_URL$loginEndPoint -d "action=login&userName=$ADMIN_USERNAME&password=$ADMIN_PASSWORD"

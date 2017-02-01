@@ -21,6 +21,12 @@ jagg.module("customDockerImages", {
 
     addImageAndCheckSecurity:function () {
         return jagg.require(jagg.getModulesDir() + "customDockerImages/customDockerImages.jag").addImageAndCheckSecurity.apply(this, arguments);
+    },
+    updateDbWithTestResults:function () {
+        return jagg.require(jagg.getModulesDir() + "customDockerImages/customDockerImages.jag").updateDbWithTestResults.apply(this, arguments);
+    },
+    isImageAvailable:function () {
+        return jagg.require(jagg.getModulesDir() + "customDockerImages/customDockerImages.jag").isImageAvailable.apply(this, arguments);
     }
 });
 %>

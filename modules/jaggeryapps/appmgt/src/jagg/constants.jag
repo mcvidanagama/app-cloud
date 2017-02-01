@@ -101,6 +101,7 @@ var INTEGRATION_CLOUD_HOSTNAME = "IntegrationCloud.Hostname";
 var DAS_RECEIVER_AUTH_BASE64 = "Receiver.Auth";
 
 var CUSTOM = "custom";
+var CUSTOM_SECURITY = "customsecurity";
 var DEFAULT = "default";
 var PROFILE_URL = "Profile.Url";
 var CHANGE_PASSWORD_URL = "ChangePassword.Url";
