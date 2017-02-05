@@ -2839,4 +2839,84 @@ public class ApplicationDAO {
         }
         return containerSpecifications;
     }
+
+    /**
+     * Method for getting trial application versions by running time period.
+     *
+     * @param dbConnection  database connection
+     * @param numberOfHours number of hours the application version has been running
+     * @return array of version objects
+     * @throws AppCloudException
+     */
+    public Version[] getTrialApplicationVersionsByRunningTimePeriod(Connection dbConnection, int numberOfHours)
+            throws AppCloudException {
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        List<Version> versions = new ArrayList<>();
+
+        try {
+
+            preparedStatement = dbConnection.prepareStatement(
+                    SQLQueryConstants.GET_ALL_TRIAL_APP_VERSIONS_CREATED_BEFORE_X_HOURS);
+            preparedStatement.setInt(1, numberOfHours);
+
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Version version = new Version();
+                version.setHashId(resultSet.getString(SQLQueryConstants.HASH_ID));
+                version.setCreatedTimestamp(resultSet.getTimestamp(SQLQueryConstants.EVENT_TIMESTAMP));
+                version.setTenantId(resultSet.getInt(SQLQueryConstants.TENANT_ID));
+
+                versions.add(version);
+            }
+
+
+        } catch (SQLException e) {
+            String msg = "Error while retrieving TRIAL application versions which was created before " + numberOfHours + " hours ";
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeResultSet(resultSet);
+            DBUtil.closePreparedStatement(preparedStatement);
+        }
+        return versions.toArray(new Version[versions.size()]);
+    }
+
+    /**
+     * Method for getting application versions which have reached cancel effective date.
+     *
+     * @param dbConnection  database connection
+     * @return array of version objects
+     * @throws AppCloudException
+     */
+    public Version[] getApplicationVersionsReachedCancelEffectiveDate(Connection dbConnection)
+            throws AppCloudException {
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        List<Version> versions = new ArrayList<>();
+
+        try {
+
+            preparedStatement = dbConnection.prepareStatement(
+                    SQLQueryConstants.GET_ALL_PENDING_DISABLE_APP_VERSIONS);
+
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Version version = new Version();
+                version.setHashId(resultSet.getString(SQLQueryConstants.HASH_ID));
+                version.setCreatedTimestamp(resultSet.getTimestamp(SQLQueryConstants.EVENT_TIMESTAMP));
+                version.setTenantId(resultSet.getInt(SQLQueryConstants.TENANT_ID));
+
+                versions.add(version);
+            }
+
+
+        } catch (SQLException e) {
+            String msg = "Error while retrieving application versions which have reached cancel effective date";
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeResultSet(resultSet);
+            DBUtil.closePreparedStatement(preparedStatement);
+        }
+        return versions.toArray(new Version[versions.size()]);
+    }
 }

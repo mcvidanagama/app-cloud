@@ -16,35 +16,8 @@
 --    under the License.
 --
 
--- --------------------------------------------------------
--- Biling feature db changes
--- --------------------------------------------------------
-
--- -----------------------------------------------------
--- Table `AppCloudDB`.`AC_TENANT_SUBSCRIPTION_PLANS`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `AppCloudDB`.`AC_TENANT_SUBSCRIPTION_PLANS` (
-  `tenant_id` INT NOT NULL,
-  `plan_id` INT NOT NULL,
-  CONSTRAINT `fk_Tenant_UsagePlans`
-    FOREIGN KEY (`plan_id`)
-    REFERENCES `AppCloudDB`.`AC_SUBSCRIPTION_PLANS` (`plan_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
-ALTER TABLE AC_SUBSCRIPTION_PLANS ADD CUMULATIVE_CPU int(11);
-ALTER TABLE AC_SUBSCRIPTION_PLANS ADD CUMULATIVE_RAM int(11);
-
--- ALTER TABLE AC_SUBSCRIPTION_PLANS ADD MAX_CPU int(11);
--- ALTER TABLE AC_SUBSCRIPTION_PLANS ADD MAX_RAM int(11);
-
-update AC_SUBSCRIPTION_PLANS set CUMULATIVE_CPU = 1000 , CUMULATIVE_RAM = 2048 where PLAN_NAME ='FREE';
-update AC_SUBSCRIPTION_PLANS set CUMULATIVE_CPU = 2000 , CUMULATIVE_RAM = 4096 where PLAN_NAME ='PAID';
-
--- -----------------------------------------------------
--- Table `AppCloudDB`.`AC_TENANT_SUBSCRIPTION_PLAN`
+--  -----------------------------------------------------
+-- Table `AppCloudDB`.`AC_TENANT_SUBSCRIPTION`
 -- -----------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS AC_TENANT_SUBSCRIPTION (

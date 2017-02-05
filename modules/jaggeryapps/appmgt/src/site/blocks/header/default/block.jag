@@ -54,18 +54,50 @@ jagg.block("header/default", {
         var subscriptionManager = jagg.module("subscription");
         var isFirstLogin = subscriptionManager.isFirstLogin();
         if (isFirstLogin) {
+
+            // login to cloud mgt and get cookie
+            var cookie = null;
+            try {
+                var loginUrl = cloudMgtURL + "/site/blocks/user/authenticate/ajax/login.jag";
+                var loginData = {
+                    "action": "login",
+                    "userName" : manager.getPropertyValue(CLOUD_ADMIN_USERNAME),
+                    "password" : manager.getPropertyValue(CLOUD_ADMIN_PASSWORD)
+                };
+
+                log.info("loginUrl " + loginUrl);
+                log.info("loginData " + stringify(loginData));
+
+                var loginResult = post(loginUrl, loginData, {} , 'json');
+                var loginResponse = loginResult.xhr.responseText;
+                if (loginResponse.error == "true") {
+                    throw new Error(loginResponse.message);
+                } else {
+                    cookie = loginResult.xhr.getResponseHeader(SET_COOKIE_HEADER);
+                }
+            } catch (e) {
+                log.error("Exception occurred during establishing connection to " + serviceId);
+                log.error(e);
+                throw e;
+            }
+
             //call cloud mgt api
             var data = {
                 action: "informFirstLogin",
                 tenantDomain: tenantDomain,
                 cloudType: jagg.getSelectedCloud()
             };
+            var header = {
+                "Cookie" : cookie
+            };
+
             var informFirstLoginApi= cloudMgtURL + "/site/blocks/admin/admin.jag";
             try {
-                var result = post(informFirstLoginApi, data, {}, 'json');
+                var result = post(informFirstLoginApi, data, header, 'json');
             } catch (e) {
+                log.error("Exception occurred during inform first login to cloud mgt");
                 log.error(e);
-                // redirect to cloudmgt
+                throw e;
             }
 
             // This added temporary, to add subscription record when tenant login first time
