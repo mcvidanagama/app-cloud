@@ -226,6 +226,14 @@ public class SQLQueryConstants {
             "AND timestamp <  timestampadd(HOUR, -?, now()) " +
             "AND tenant_id NOT IN (SELECT tenant_id FROM AC_WHITE_LISTED_TENANTS)";
 
+    public static final String GET_ALL_TRIAL_APP_VERSIONS_CREATED_BEFORE_X_HOURS = "SELECT * from AC_VERSION JOIN AC_TENANT_SUBSCRIPTION" +
+            " WHERE AC_VERSION.tenant_id = AC_TENANT_SUBSCRIPTION.tenant_id AND AC_VERSION.status = 'running' AND " +
+            "(AC_TENANT_SUBSCRIPTION.plan='TRIAL' AND AC_VERSION.timestamp <  timestampadd(HOUR, -?, now()))";
+
+    public static final String GET_ALL_PENDING_DISABLE_APP_VERSIONS = "SELECT * from AC_VERSION JOIN AC_TENANT_SUBSCRIPTION" +
+            " WHERE AC_VERSION.tenant_id = AC_TENANT_SUBSCRIPTION.tenant_id AND AC_VERSION.status = 'running' AND " +
+            "(AC_TENANT_SUBSCRIPTION.status = 'PENDING_DISABLE' AND AC_TENANT_SUBSCRIPTION.end_date < now())";
+
 	public static final String GET_WHITE_LISTED_TENANT_DETAILS = "SELECT * FROM AC_WHITE_LISTED_TENANTS WHERE " +
             "tenant_id=? AND cloud_id=?";
 

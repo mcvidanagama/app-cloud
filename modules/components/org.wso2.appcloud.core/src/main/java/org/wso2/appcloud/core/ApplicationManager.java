@@ -981,6 +981,12 @@ public class ApplicationManager {
         }
     }
 
+    /**
+     * Get running applications of all tenants
+     *
+     * @return map of running applications
+     * @throws AppCloudException
+     */
     public static Map<Integer, List<Application>> getRunningApplicationsOfAllTenants() throws AppCloudException {
         Connection dbConnection = DBUtil.getDBConnection();
         try {
@@ -1685,6 +1691,47 @@ public class ApplicationManager {
             return containerSpecifications.toArray(new ContainerSpecification[containerSpecifications.size()]);
         } catch (AppCloudException e) {
             String msg = "Error while retrieving container specs for runtime id : " + runtimeId;
+            log.error(msg, e);
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeConnection(dbConnection);
+        }
+    }
+
+    /**
+     * Get trial application versions by running time period.
+     *
+     * @param numberOfHours number of hours the application version has been running
+     * @return array of version objects
+     * @throws AppCloudException
+     */
+    public static Version[] getTrialApplicationVersionsByRunningTimePeriod(int numberOfHours) throws AppCloudException {
+        Connection dbConnection = DBUtil.getDBConnection();
+        try {
+            return ApplicationDAO.getInstance().
+                    getTrialApplicationVersionsByRunningTimePeriod(dbConnection, numberOfHours);
+        } catch (AppCloudException e) {
+            String msg = "Error while retrieving TRIAL application versions which was created before " + numberOfHours + " hours ";
+            log.error(msg, e);
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeConnection(dbConnection);
+        }
+    }
+
+    /**
+     * Get application versions which have reached cancel effective date.
+     *
+     * @return array of version objects
+     * @throws AppCloudException
+     */
+    public static Version[] getApplicationVersionsReachedCancelEffectiveDate() throws AppCloudException {
+        Connection dbConnection = DBUtil.getDBConnection();
+        try {
+            return ApplicationDAO.getInstance().
+                    getApplicationVersionsReachedCancelEffectiveDate(dbConnection);
+        } catch (AppCloudException e) {
+            String msg = "Error while retrieving application versions which have reached cancel effective date";
             log.error(msg, e);
             throw new AppCloudException(msg, e);
         } finally {

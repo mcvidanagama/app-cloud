@@ -376,4 +376,43 @@ var publishTenantSubscription = function (tenantDomain, cloudType, plan, startDa
     jagg.module("subscription").publishTenantSubscription(tenantDomain, cloudType, plan, startDate, endDate, status);
 };
 
+/*
+    This method will be used to stop following types of applications
+        1. Trial apps after 12 hours completed
+        3. apps which are in cancelled (PENDING_DISBALE) subscription plan status
+*/
+var killApplications = function (numberOfHours, isTrialCompleted, isSubscriptionCancelled) {
+    // stop trial apps after x hours
+    getTrialApplicationVersionsByRunningTimePeriod(numberOfHours);
+    // stop apps when subscription ends (trial and paid)
+    getApplicationVersionsReachedCancelEffectiveDate();
+};
+
+var getTrialApplicationVersionsByRunningTimePeriod = function (numberOfHours) {
+    var trialApplications = ApplicationManager.getTrialApplicationVersionsByRunningTimePeriod(numberOfHours);
+    for (var i = 0; i < trialApplications.length; i++) {
+        var trialApplication = trialApplications[i];
+        try {
+            stopIdleApplicationByRunningTimePeriod(trialApplication.getHashId(), trialApplication.getTenantId());
+        } catch (e) {
+            log.error("Failed to stop application with hashId:" + trialApplication.getHashId() +
+                    " and continue stopping other applications.");
+            log.error(e);
+        }
+    }
+};
+var getApplicationVersionsReachedCancelEffectiveDate = function() {
+    var applications = ApplicationManager.getApplicationVersionsReachedCancelEffectiveDate();
+    for (var i = 0; i < applications.length; i++) {
+        var application = applications[i];
+        try {
+            stopIdleApplicationByRunningTimePeriod(application.getHashId(), application.getTenantId());
+        } catch (e) {
+            log.error("Failed to stop application with hashId:" + application.getHashId() +
+                    " and continue stopping other applications.");
+            log.error(e);
+        }
+    }
+};
+
 %>
