@@ -94,7 +94,8 @@ jagg.template("apptype/select", function(inputs, outputs, jagg) {
             }
             %>
         </div>
-
+    <!--
+    Note: This will be enabled once custom docker image feature is completely supported.
         <h1 class="page-header">Custom</h1>
          <div class="row listing">
         <%
@@ -120,6 +121,7 @@ jagg.template("apptype/select", function(inputs, outputs, jagg) {
             }
             %>
             </div>
+    -->
     </div>
 
 
