@@ -107,7 +107,7 @@ body {
 }
 .app-type-listing {
     position: relative;
-    top: 73px;
+    top: 30px;
     z-index: 99;
 }
 .btn-action-txt {

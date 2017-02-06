@@ -43,6 +43,7 @@ jagg.template("index", function(inputs, outputs, jagg) {
             $('.active').removeClass('active');
             $($(this)[0]).addClass('active');
             $('#button-category').html($(this)[0].id+' <span class="caret"></span>');
+            $("#item_list").html('');
             drawApplicationList();
 
         });
@@ -97,6 +98,10 @@ jagg.template("index", function(inputs, outputs, jagg) {
                     }
                 }
             });
+            if ($("#item_list").children().length < 1) {
+                $("#item_list").append($('<div class="col-centered col-md-4 "><div class="cloud-new-content"> ' +
+                 '<h3>Your search did not match any application.</h3></div></div>'));
+            }
         }
 
         $(document).ready(function (){
@@ -315,7 +320,7 @@ jagg.template("index", function(inputs, outputs, jagg) {
                           <li id="All" class="active"><a href="#">All</a></li>
                           <li id="Integration"><a href="#">Integration</a></li>
                           <li id="Services"><a href="#">Services</a></li>
-                          <li id="Custom"><a href="#">Custom</a></li>
+                          <!--<li id="Custom"><a href="#">Custom</a></li>-->
                         </ul>
                     </div><!-- /btn-group -->
                 </div><!-- /input-group -->
