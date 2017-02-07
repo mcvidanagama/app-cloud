@@ -54,7 +54,7 @@ jagg.template("apptype/select", function(inputs, outputs, jagg) {
                                     <i class="fw <%=appTypes[x].cssProperties.icon%> fw-5x"></i>
                                     <div class="type-name" ><%=appTypes[x].cssProperties.displayName%></div>
                                 </div>
-                                <div class="description <%=appTypes[x].cssProperties.icon%>-dark">
+                                <div class="description <%=appTypes[x].cssProperties.color%>-dark">
                                     <i class="fw <%=appTypes[x].cssProperties.icon%> fw-5x"></i>
                                     <%=appTypes[x].description%>
                                 </div>
@@ -82,7 +82,7 @@ jagg.template("apptype/select", function(inputs, outputs, jagg) {
                                     <i class="fw <%=appTypes[y].cssProperties.icon%> fw-5x"></i>
                                     <div class="type-name" ><%=appTypes[y].cssProperties.displayName%></div>
                                 </div>
-                                <div class="description <%=appTypes[y].cssProperties.icon%>-dark">
+                                <div class="description <%=appTypes[y].cssProperties.color%>-dark">
                                     <i class="fw <%=appTypes[y].cssProperties.icon%> fw-5x"></i>
                                     <%=appTypes[y].description%>
                                 </div>
@@ -109,7 +109,7 @@ jagg.template("apptype/select", function(inputs, outputs, jagg) {
                                             <i class="fw <%=appTypes[z].cssProperties.icon%> fw-5x"></i>
                                             <div class="type-name" ><%=appTypes[z].cssProperties.displayName%></div>
                                         </div>
-                                        <div class="description <%=appTypes[z].cssProperties.icon%>-dark">
+                                        <div class="description <%=appTypes[z].cssProperties.color%>-dark">
                                             <i class="fw <%=appTypes[z].cssProperties.icon%> fw-5x"></i>
                                             <%=appTypes[z].description%>
                                         </div>
