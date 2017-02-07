@@ -145,16 +145,13 @@ var startContainer = function (containerId) {
 };
 
 
-var updateDbWithTestResults = function (testResultsJsonString) {
+var updateWithTestResults = function (testResultsJsonString) {
     var testResultsJson = parse(testResultsJsonString);
     var imageId = testResultsJson.imageId;
     var resultsJson = stringify(testResultsJson.results);
     log.info("resultsJson : " + resultsJson);
     var status = testResultsJson.status;
-
-
-
-    if (true) {//(status=="passed")
+    if (status==STATUS_PASSED) {//(status=="passed")
         var imageUrl = testResultsJson.imageUrl;
         var imageName,tagName;
         var elementArray = imageUrl.split(":");
@@ -176,11 +173,7 @@ var updateDbWithTestResults = function (testResultsJsonString) {
             dockerClient.pushDockerImage(newImageName,imageId);
             log.info("Image tagged and pushed to registry");
         }
-        //pull image
-       // tagImage
-        // insert to registry
     }
-
     ApplicationManager.updateCustomDockerTestResults(imageId,resultsJson, status);
 
 };
@@ -201,4 +194,11 @@ var pullImage = function(dockerClient, imageName,tagName) {
     return true;
 };
 
+var getAllVerifiedImages = function() {
+    return ApplicationManager.getAllCustomImages(STATUS_PASSED);
+};
+
+var getAllImages = function () {
+    return ApplicationManager.getAllCustomImages(null); // sending null will give all images regardless the status
+};
 %>

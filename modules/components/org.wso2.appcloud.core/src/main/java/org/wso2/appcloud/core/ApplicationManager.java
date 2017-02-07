@@ -16,6 +16,8 @@
 
 package org.wso2.appcloud.core;
 
+import com.nimbusds.jose.util.JSONObjectUtils;
+import net.minidev.json.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.appcloud.common.AppCloudException;
@@ -24,6 +26,7 @@ import org.wso2.appcloud.core.dto.Application;
 import org.wso2.appcloud.core.dto.ApplicationRuntime;
 import org.wso2.appcloud.core.dto.ApplicationType;
 import org.wso2.appcloud.core.dto.ContainerServiceProxy;
+import org.wso2.appcloud.core.dto.CustomImage;
 import org.wso2.appcloud.core.dto.Deployment;
 import org.wso2.appcloud.core.dto.RuntimeProperty;
 import org.wso2.appcloud.core.dto.Tag;
@@ -1645,4 +1648,20 @@ public class ApplicationManager {
             DBUtil.closeConnection(dbConnection);
         }
     }
+
+    public static CustomImage[] getAllCustomImages(String status) throws AppCloudException {
+        Connection dbConnection = DBUtil.getDBConnection();
+        int tenantId = CarbonContext.getThreadLocalCarbonContext().getTenantId();
+        try {
+            List<CustomImage> imagesList = ApplicationDAO.getInstance().getCustomImages(dbConnection, tenantId, status);
+            return imagesList.toArray(new CustomImage[imagesList.size()]);
+        } catch (AppCloudException e) {
+            String msg = "Error while retrieving custom images";
+            log.error(msg, e);
+            throw new AppCloudException(msg, e);
+        } finally {
+            DBUtil.closeConnection(dbConnection);
+        }
+    }
+
 }

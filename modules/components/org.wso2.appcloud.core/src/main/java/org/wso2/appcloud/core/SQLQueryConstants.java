@@ -64,6 +64,11 @@ public class SQLQueryConstants {
     public static final String MATCHING_VERSION_COUNT = "matching_version_count";
     public static final String EXPOSURE_LEVEL = "exposure_level";
     public static final String REPLICA_COUNT = "replicas";
+    public static final String IMAGE_ID = "image_id";
+    public static final String REMOTE_URL = "remote_url";
+    public static final String TEST_RESULTS_JSON = "test_results_json";
+    public static final String LAST_UPDATED = "last_updated";
+
 
 
     /*==============================
@@ -266,6 +271,8 @@ public class SQLQueryConstants {
 
     public static final String IS_CUSTOM_DOMAIN_AVAILABLE = "SELECT * FROM AC_APPLICATION WHERE custom_domain=?";
     public static final String IS_CUSTOM_IMAGE_AVAILABLE = "SELECT * FROM AC_CUSTOM_DOCKER_IMAGES WHERE remote_url=? AND tenant_id=?";
+    public static final String GET_ALL_CUSTOM_IMAGES = "SELECT * FROM AC_CUSTOM_DOCKER_IMAGES WHERE tenant_id=?";
+    public static final String GET_CUSTOM_IMAGES_BY_STATUS = "SELECT * FROM AC_CUSTOM_DOCKER_IMAGES WHERE tenant_id=? AND status=?";
 
     /* Update Queries */
 

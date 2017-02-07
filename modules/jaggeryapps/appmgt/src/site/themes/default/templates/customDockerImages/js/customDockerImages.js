@@ -19,15 +19,25 @@
  */
 
 
+$(document).ready(function () {
+    $('#imageUrl').on('focusout keyup blur click', function () { // fires on every keyup & blur
+        if ($('#imageUrl').val()) {
+            $("#addImage").prop("disabled", false);
+        } else {
+            $("#addImage").prop("disabled", true);
+        }
+    });
+    fillImagesListTable();
+});
+
 
 /**
  *  Adding new image
  */
 function addNewImage() {
-    // var validator = $("#addDatabaseForm").validate(getValidationOptions());
-    // var formValidated = validator.form();
-    // if (formValidated) {
-    //     $("#add-database").loadingButton({action:'show'});
+
+    $('#imageUrl').prop("disabled", true);
+    $("#addImage").loadingButton({action: 'show'});
     jagg.post("../blocks/customDockerImages//ajax/customDockerImages.jag", {
         action: "isImageAvailable",
         imageUrl: $("#imageUrl").val().trim()
@@ -35,10 +45,11 @@ function addNewImage() {
         result = $.trim(result);
         if(result=="false") { // isImageAvailable=false means image is not added currently.
 
-            jagg.post("../blocks/customDockerImages//ajax/customDockerImages.jag", {
+            jagg.post("../blocks/customDockerImages/ajax/customDockerImages.jag", {
                 action: "addImageAndCheckSecurity",
                 imageUrl: $("#imageUrl").val().trim()
             }, function (result) {
+                fillImagesListTable();
                 jagg.message({content: 'New Image added and queued for security check.', type: 'info', id: 'addnewcustomdockerimage'});
             }, function (jqXHR, textStatus, errorThrown) {
                 jagg.message({
@@ -56,7 +67,6 @@ function addNewImage() {
                              timeout: 8000
                          });
         }
-
     }, function (jqXHR, textStatus, errorThrown) {
         jagg.message({
                          content: jqXHR.responseText,
@@ -64,7 +74,41 @@ function addNewImage() {
                          id: 'isImageAlreadyAdded',
                          timeout: 8000
                      });
+    });
+}
+
+function fillImagesListTable() {
+    jagg.post("../blocks/customDockerImages/ajax/customDockerImages.jag", {
+        action: "getAllImages",
+        imageUrl: $("#imageUrl").val().trim()
+    }, function (result) {
+        var tableHtml = ' <tr><th>Image Url</th><th>Status</th><th>Test Report</th><th>Options</th></tr>';
+        var resObj = JSON.parse(result);
+
+        for (i = 0; i < resObj.length; i++) {
+            var statusIcon;
+            if (resObj[i].status == "passed") {
+                statusIcon = '<i class="fw fw-success fw-2x text-info"></i>';
+
+            } else if (resObj[i].status == "failed") {
+                statusIcon = '<i class="fw fw-block fw-2x text-danger"></i>';
+            } else {
+                statusIcon = '<i class="fw fw-loader5 fw-2x text-warning"></i>';
+
+            }
+            tableHtml = tableHtml + '<tr><td>' + resObj[i].remoteUrl + '</td>' +
+                        '<td>' + statusIcon + '</td>' +
+                        '<td>' + '<a href=""><i class="fw fw-checklist fw-2x"></i></a>' + '</td>' +
+                        '<td>' + '<a href=""><i class="fw fw-checklist fw-2x"></i></a>' +
+                        '<a href=""><i class="fw fw-checklist fw-2x"></i></a>' +
+                        '<a href=""><i class="fw fw-checklist fw-2x"></i></a>' +
+                        '<a href=""><i class="fw fw-checklist fw-2x"></i></a>' +
+
+                        '</td></tr>';
+        }
+        $('#customImagesTable').html(tableHtml);
+
+    }, function (jqXHR, textStatus, errorThrown) {
 
     });
-
 }

@@ -29,6 +29,7 @@ jagg.block("application", {
     },
 
     getOutputs:function (inputs) {
+        var log = new Log();
 
         var applicationModule = jagg.module("application");
         var databaseModule = jagg.module("databases");
@@ -38,6 +39,14 @@ jagg.block("application", {
         var parsedObject = parse(appTypePropertyConfPath);
         var appTypesProperties = require(parsedObject);
         var appType = appTypesProperties[inputs.appTypeName];
+        var verifiedCustomImages = null;
+        if (appType.type == CUSTOM) {
+            var customModule = jagg.module("customDockerImages");
+            verifiedCustomImages = customModule.getAllVerifiedImages();
+            if (verifiedCustomImages.length == 0) {
+                response.sendRedirect("custom-docker-images.jag"); // since no verified images available, redirect user to add images page
+            }
+        }
         var applicationName = inputs.applicationName;
         var runninngApplicationCount = applicationModule.getRunningApplicationVersionCount();
         var subscriptionPlanBaseURL = modManager.getPropertyValue("SubscriptionPlanBaseURL");
@@ -76,7 +85,8 @@ jagg.block("application", {
             "requestNewAppTypeURL" : requestNewAppTypeURL,
             "requestMoreAppseURL" : requestMoreAppseURL,
             "allDBInfo": allDBInfo,
-            "noOfDbs": noOfDbs
+            "noOfDbs": noOfDbs,
+            "verifiedCustomImages": verifiedCustomImages
         };
     }
 });

@@ -39,6 +39,23 @@ include("/jagg/constants.jag");
         var imageUrl = request.getParameter("imageUrl");
         print(mod.isImageAvailable(imageUrl));
 
+    } else if (action == "getAllImages") {
+        var allImages = mod.getAllImages();
+        //directly passing the result to front end doesn't work, its because this array contains CustomImages java objects
+        var allImagesArray = [];
+        for (var i = 0; i < allImages.length; i++) {
+            var image = allImages[i];
+            var imageJsonObj = {};
+            imageJsonObj.imageId = image.imageId;
+            imageJsonObj.tenantId = image.tenantId;
+            imageJsonObj.remoteUrl = image.remoteUrl;
+            imageJsonObj.results = image.results;
+            imageJsonObj.status = image.status;
+            imageJsonObj.lastUpdated = image.lastUpdated;
+            allImagesArray.push(imageJsonObj);
+        }
+        print(allImagesArray);
+
     } else {
         log.error("No action specified");
     }
