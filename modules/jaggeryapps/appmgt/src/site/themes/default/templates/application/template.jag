@@ -47,6 +47,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
         var requestMoreAppseURL = outputs.requestMoreAppseURL;
         var allDBInfo = outputs.allDBInfo;
         var noOfDbs = outputs.noOfDbs;
+        var verifiedCustomImages = outputs.verifiedCustomImages;
     %>
 
       <link rel="stylesheet" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/bootstrap-3.2.0/bootstrap.min.css'))%>">
@@ -256,7 +257,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                     formData.append('conSpec', conSpecs[optionSpec]);
                     formData.append('runtime', optionRuntime);
                     if(appTypeName === custom) {
-                        formData.append('remoteImageUrl', $("#remoteImageUrl").val());
+                        formData.append('imageId', $("#verifiedImages option:selected").val());
                        // formData.append('userName', $("#userName").val());
                        // formData.append('password', $("#password").val());
                         formData.append('appCreationMethod', custom);
@@ -290,7 +291,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                         var tagArray = new Array();
                         // base image will be added as a tag, then user can later see the base image in app home UI.
                         // otherwise there is no any other way to determine from which image this app has been created.
-                        var tagObj = { "key":"Base Image", "value":$("#remoteImageUrl").val() };
+                        var tagObj = { "key":"Base Image", "value":$("#verifiedImages option:selected").text() };
                         tagArray.push(tagObj);
                         formData.append('tags',JSON.stringify(tagArray));
                     } else {
@@ -764,10 +765,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
             validateArtifactURL($('#artifactUrl').val());
         });
 
-        $('#remoteImageUrl').on('focusout keyup blur click', function () { // fires on every keyup & blur
-            activateCreateApplication();
-        });
-    
+
         $("#clearArtifactFile").on('click', function () {
             $('#progress .progress-bar').css('width', '0%');
             $("#fileupload").find(".files").empty();
@@ -792,15 +790,13 @@ jagg.template("application", function (inputs, outputs, jagg) {
 
     function activateCreateApplication() {
 
-        //first disable the button and then enable it only if condions are satisfied
+        //first disable the button and then enable it only if conditions are satisfied
         $("#add-application").prop("disabled", true);
 
         if ($('#applicationName').val() && $('#applicationRevision').val() && $('#container option:selected').val() &&
             $('#runtime').val() > 0 && checkApplicationVersionExistence($('#applicationRevision').val())) {// mandatory validations for all app types
             if (appTypeName == custom) { // validations for custom app type
-                if ($("#remoteImageUrl").val()) {
-                    $("#add-application").prop("disabled", false);
-                }
+                    $("#add-application").prop("disabled", false); // for the custm app type mandatory fields are enough.
             } else {
                 if ($("#uploadedFileName").val() || $("#artifactUrl").val() || ($("#gitRepoUrl").val()  && $("#gitRepoBranch").val())) { // validations for non custom app types
                     if ($("#uploadedFileName").val() && progress == 100) {
@@ -1235,20 +1231,20 @@ jagg.template("application", function (inputs, outputs, jagg) {
             </div>
             <%} else {%>
              <div class="form-group" id="custom-docker-image-block">
-                <div class="input-group">
-                    <span class="input-group-addon">Image ID</span>
-                    <input id="remoteImageUrl" name="remoteImageUrl" type="text" class="form-control" placeholder="docker.io/testuser/testimage:testtag" />
+                <div class="form-group">
+                    <label for="runtime">Your Verified images: </label>
+                    <select name="verifiedImages" id="verifiedImages" class="form-control">
+                    <%
+                        for(var i = 0; i < verifiedCustomImages.length; i++) {
+                            var image = verifiedCustomImages[i];
+                            print('<option value="' + image.imageId + '">'+ image.remoteUrl + '</option>');
+
+                            %>
+
+                    <%}%>
+                    </select>
+                    <a  href="custom-docker-images.jag" class="btn btn-primary" >Manage Images</a>
                 </div>
-                </br>
-               <!-- <div class="input-group">
-                    <span class="input-group-addon">User name</span>
-                    <input id="userName" name="userName" type="text" class="form-control" placeholder="required only if repo is private" />
-                </div>
-                <br>
-                <div class="input-group">
-                    <span class="input-group-addon">Password</span>
-                    <input id="password" name="password" type="password" class="form-control" placeholder="required only if repo is private" />
-                </div> -->
             </div>
 
              <%}%>

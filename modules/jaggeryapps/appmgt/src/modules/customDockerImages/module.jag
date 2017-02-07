@@ -22,11 +22,17 @@ jagg.module("customDockerImages", {
     addImageAndCheckSecurity:function () {
         return jagg.require(jagg.getModulesDir() + "customDockerImages/customDockerImages.jag").addImageAndCheckSecurity.apply(this, arguments);
     },
-    updateDbWithTestResults:function () {
-        return jagg.require(jagg.getModulesDir() + "customDockerImages/customDockerImages.jag").updateDbWithTestResults.apply(this, arguments);
+    updateWithTestResults:function () {
+        return jagg.require(jagg.getModulesDir() + "customDockerImages/customDockerImages.jag").updateWithTestResults.apply(this, arguments);
     },
     isImageAvailable:function () {
         return jagg.require(jagg.getModulesDir() + "customDockerImages/customDockerImages.jag").isImageAvailable.apply(this, arguments);
+    },
+    getAllVerifiedImages:function () {
+        return jagg.require(jagg.getModulesDir() + "customDockerImages/customDockerImages.jag").getAllVerifiedImages.apply(this, arguments);
+    },
+    getAllImages:function () {
+        return jagg.require(jagg.getModulesDir() + "customDockerImages/customDockerImages.jag").getAllImages.apply(this, arguments);
     }
 });
 %>
