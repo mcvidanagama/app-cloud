@@ -107,7 +107,7 @@ body {
 }
 .app-type-listing {
     position: relative;
-    top: 65px;
+    top: 85px;
     z-index: 99;
 }
 .btn-action-txt {
@@ -920,12 +920,12 @@ a.btn-action {
     cursor: pointer;
 }
 .app-sort-bar {
-    top: 9em;
+    top: 5.2em;
     position: relative;
 }
 .app-listing {
     position: relative;
-    top: 11em;
+    top: 8em;
 }
 
 .app-listing-loader{
@@ -981,13 +981,6 @@ a.btn-action {
     font-weight: 300;
 }
 
-.app-sort-bar .search i {
-    color: #303030;
-    position: absolute;
-    top: 6px;
-    right: 22px;
-    cursor: pointer;
-}
 .app-sort-bar .sort i {
     color: #fff;
 }
