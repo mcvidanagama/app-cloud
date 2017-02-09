@@ -212,7 +212,6 @@ var log = new Log('site/blocks/admin/admin.jag');
             response.content = 'Failed to redeploy all applications of all tenants due to ' + e.message;
         }
     } else if (action == "publishDockerSecurityTestResults") {
-        log.info("##################################");
         var testResultJsonString = request.getParameter("testResultsJson");
         log.info(testResultJsonString);
         var modCustom = jagg.module("customDockerImages");

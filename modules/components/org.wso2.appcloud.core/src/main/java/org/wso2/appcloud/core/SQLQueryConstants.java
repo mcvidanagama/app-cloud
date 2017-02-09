@@ -272,7 +272,9 @@ public class SQLQueryConstants {
     public static final String IS_CUSTOM_DOMAIN_AVAILABLE = "SELECT * FROM AC_APPLICATION WHERE custom_domain=?";
     public static final String IS_CUSTOM_IMAGE_AVAILABLE = "SELECT * FROM AC_CUSTOM_DOCKER_IMAGES WHERE remote_url=? AND tenant_id=?";
     public static final String GET_ALL_CUSTOM_IMAGES = "SELECT * FROM AC_CUSTOM_DOCKER_IMAGES WHERE tenant_id=?";
+    public static final String GET_CUSTOM_IMAGE_BY_ID = "SELECT * FROM AC_CUSTOM_DOCKER_IMAGES WHERE image_id=?";
     public static final String GET_CUSTOM_IMAGES_BY_STATUS = "SELECT * FROM AC_CUSTOM_DOCKER_IMAGES WHERE tenant_id=? AND status=?";
+    public static final String DELETE_IMAGE = "DELETE FROM AC_CUSTOM_DOCKER_IMAGES WHERE image_id=?";
 
     /* Update Queries */
 

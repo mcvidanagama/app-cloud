@@ -54,7 +54,7 @@ jagg.template("apptype/select", function(inputs, outputs, jagg) {
                                     <i class="fw <%=appTypes[x].cssProperties.icon%> fw-5x"></i>
                                     <div class="type-name" ><%=appTypes[x].cssProperties.displayName%></div>
                                 </div>
-                                <div class="description <%=appTypes[x].cssProperties.icon%>-dark">
+                                <div class="description <%=appTypes[x].cssProperties.color%>-dark">
                                     <i class="fw <%=appTypes[x].cssProperties.icon%> fw-5x"></i>
                                     <%=appTypes[x].description%>
                                 </div>
@@ -82,7 +82,7 @@ jagg.template("apptype/select", function(inputs, outputs, jagg) {
                                     <i class="fw <%=appTypes[y].cssProperties.icon%> fw-5x"></i>
                                     <div class="type-name" ><%=appTypes[y].cssProperties.displayName%></div>
                                 </div>
-                                <div class="description <%=appTypes[y].cssProperties.icon%>-dark">
+                                <div class="description <%=appTypes[y].cssProperties.color%>-dark">
                                     <i class="fw <%=appTypes[y].cssProperties.icon%> fw-5x"></i>
                                     <%=appTypes[y].description%>
                                 </div>
@@ -94,8 +94,6 @@ jagg.template("apptype/select", function(inputs, outputs, jagg) {
     }
     %>
 </div>
-<!--
-Note: This will be enabled once custom docker image feature is completely supported.
 <h1 class="page-header">Custom</h1>
  <div class="row listing">
 <%
@@ -109,7 +107,7 @@ Note: This will be enabled once custom docker image feature is completely suppor
                                             <i class="fw <%=appTypes[z].cssProperties.icon%> fw-5x"></i>
                                             <div class="type-name" ><%=appTypes[z].cssProperties.displayName%></div>
                                         </div>
-                                        <div class="description <%=appTypes[z].cssProperties.icon%>-dark">
+                                        <div class="description <%=appTypes[z].cssProperties.color%>-dark">
                                             <i class="fw <%=appTypes[z].cssProperties.icon%> fw-5x"></i>
                                             <%=appTypes[z].description%>
                                         </div>
@@ -121,7 +119,6 @@ Note: This will be enabled once custom docker image feature is completely suppor
     }
     %>
     </div>
--->
 </div>
 
 

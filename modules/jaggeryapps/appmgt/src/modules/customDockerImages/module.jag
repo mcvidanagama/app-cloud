@@ -33,6 +33,12 @@ jagg.module("customDockerImages", {
     },
     getAllImages:function () {
         return jagg.require(jagg.getModulesDir() + "customDockerImages/customDockerImages.jag").getAllImages.apply(this, arguments);
+    },
+    deleteImage:function () {
+        return jagg.require(jagg.getModulesDir() + "customDockerImages/customDockerImages.jag").deleteImage.apply(this, arguments);
+    },
+    getImageById:function () {
+        return jagg.require(jagg.getModulesDir() + "customDockerImages/customDockerImages.jag").getImageById.apply(this, arguments);
     }
 });
 %>

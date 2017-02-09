@@ -48,6 +48,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
         var allDBInfo = outputs.allDBInfo;
         var noOfDbs = outputs.noOfDbs;
         var verifiedCustomImages = outputs.verifiedCustomImages;
+        var selectedImageId = outputs.selectedImageId;
     %>
 
       <link rel="stylesheet" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/bootstrap-3.2.0/bootstrap.min.css'))%>">
@@ -1231,19 +1232,28 @@ jagg.template("application", function (inputs, outputs, jagg) {
             </div>
             <%} else {%>
              <div class="form-group" id="custom-docker-image-block">
-                <div class="form-group">
-                    <label for="runtime">Your Verified images: </label>
-                    <select name="verifiedImages" id="verifiedImages" class="form-control">
-                    <%
-                        for(var i = 0; i < verifiedCustomImages.length; i++) {
-                            var image = verifiedCustomImages[i];
-                            print('<option value="' + image.imageId + '">'+ image.remoteUrl + '</option>');
+                <div class="row">
+                    <label class="col-md-12" for="runtime">Your Verified images: </label>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <select name="verifiedImages" id="verifiedImages" class="form-control">
+                            <%
+                                for(var i = 0; i < verifiedCustomImages.length; i++) {
+                                    var image = verifiedCustomImages[i];
+                                    if(image.imageId == selectedImageId) { // image is selected
+                                        print('<option selected value="' + image.imageId + '">' + image.remoteUrl + '</option>');
+                                    } else {
+                                        print('<option value="' + image.imageId + '">' + image.remoteUrl + '</option>');
+                                    }
+                                    %>
 
-                            %>
-
-                    <%}%>
+                            <%}%>
                     </select>
-                    <a  href="custom-docker-images.jag" class="btn btn-primary" >Manage Images</a>
+                    </div>
+                    <div class="col-md-4">
+                        <a  href="custom-docker-images.jag" class="btn btn-primary" >Manage Images</a>
+                    </div>
                 </div>
             </div>
 
