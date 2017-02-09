@@ -23,7 +23,7 @@ include("/jagg/constants.jag");
 var log = new Log("module/customDockerImages/customDockerImages.jag");
 var modManager = jagg.module("manager");
 var modApplication = jagg.module("application");
-var ApplicationManager = Packages.org.wso2.appcloud.core.ApplicationManager;
+var CustomDockerImageManager = Packages.org.wso2.appcloud.core.CustomDockerImageManager;
 //var Application = Packages.org.wso2.appcloud.core.dto.Application;
 //var Version = Packages.org.wso2.appcloud.core.dto.Version;
 //var KubernetesProvisioningUtils =  Packages.org.wso2.appcloud.provisioning.runtime.Utils.KubernetesProvisioningUtils;
@@ -120,14 +120,12 @@ var createDockerContainer = function (createdImage, dockerFileDir) {
             Privileged: true
         }
     };
-    log.info("!!!!!!!!!!!!!!!!!!! : " + stringify(data));
     var headers = {
         "Content-Type": "application/json",
         "charset": "utf-8"
     };
     var type = "json";
     var result = post(createContainerEndPoint, stringify(data), headers, type);
-    log.info("result : " + result.data.Id);
     // if no container started this will return null
     return result.data.Id;
 
@@ -137,8 +135,6 @@ var startContainer = function (containerId) {
 
     var startContainerEndPoint = modManager.getPropertyValue(PROPERTY_DOCKER_CLIENT_URL) + "/containers/" + containerId + "/start";
     var result = post(startContainerEndPoint);
-
-    log.info("@@@@@@@@@@@@@@ : " + stringify(result));
     log.info("@@@@@@@@@@@@@@ : " + result.xhr.status);
 
 
@@ -174,18 +170,18 @@ var updateWithTestResults = function (testResultsJsonString) {
             log.info("Image tagged and pushed to registry");
         }
     }
-    ApplicationManager.updateCustomDockerTestResults(imageId,resultsJson, status);
+    CustomDockerImageManager.updateCustomDockerTestResults(imageId,resultsJson, status);
 
 };
 
 var addImageInDataBase = function(imageId, imageRemoteUrl) {
-    ApplicationManager.addCustomDockerImage(imageId,imageRemoteUrl);
+    CustomDockerImageManager.addCustomDockerImage(imageId,imageRemoteUrl);
 
 };
 
 var isImageAvailable = function(remoteUrl) {
     log.info("checking image availability");
-    return ApplicationManager.isImageAvailable(remoteUrl);
+    return CustomDockerImageManager.isImageAvailable(remoteUrl);
 };
 
 var pullImage = function(dockerClient, imageName,tagName) {
@@ -195,10 +191,19 @@ var pullImage = function(dockerClient, imageName,tagName) {
 };
 
 var getAllVerifiedImages = function() {
-    return ApplicationManager.getAllCustomImages(STATUS_PASSED);
+    return CustomDockerImageManager.getAllCustomImages(STATUS_PASSED);
 };
 
 var getAllImages = function () {
-    return ApplicationManager.getAllCustomImages(null); // sending null will give all images regardless the status
+    return CustomDockerImageManager.getAllCustomImages(null); // sending null will give all images regardless the status
 };
+
+var deleteImage = function (imageId) {
+    return CustomDockerImageManager.deleteImage(imageId);
+};
+
+var getImageById = function (imageId) {
+    return CustomDockerImageManager.getImageById(imageId);
+};
+
 %>

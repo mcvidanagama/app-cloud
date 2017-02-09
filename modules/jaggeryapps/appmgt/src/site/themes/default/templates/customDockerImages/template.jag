@@ -23,11 +23,11 @@ jagg.template("customDockerImages", function (inputs, outputs, jagg) {
     %>
 <!-- BOF App factory menu actionbar -->
    <div class="action-bar">
-       <a href="/appmgt/site/pages/select-apptype.jag" class="btn-action">
+       <a href="/appmgt/site/pages/application.jag?appTypeName=custom" class="btn-action">
                <span class="fw-stack fw-lg btn-action-ico">
                    <i class="fw fw-circle-outline fw-stack-2x"></i>
                    <i class="fw fw-left-arrow fw-stack-1x"></i>
-               </span> <span class="hidden-xs">Back </span>
+               </span> <span class="hidden-xs">Back to application creation</span>
         </a>
     </div><!-- EOF App factory menu actionbar-->
     <div class="container-fluid cloud-container" id="outerContainer">
@@ -61,19 +61,39 @@ jagg.template("customDockerImages", function (inputs, outputs, jagg) {
                 </div>
             </form>
         </div>
-        <div class="row col-md-8">
+        <div class="row col-md-8" id="dockerImagesPanelDiv" hidden>
            <div class="panel panel-default">
             <!-- Default panel contents -->
                 <!--<div class="panel-heading">Images List</div>-->
-
             <!-- Table -->
             <table class="table image-panel" id="customImagesTable"></table>
 </div>
-        </div>
+ </div>
+
 
     </div><!-- /.container -->
 
+<!-- Modal -->
+<div class="modal fade" id="viewResultModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Test Results</h4>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <!--<div class="modal-footer">-->
+        <!--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>-->
+        <!--<button type="button" class="btn btn-primary">Save changes</button>-->
+      <!--</div>-->
+    </div>
+  </div>
+</div>
 
-<script src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('templates/customDockerImages/js/customDockerImages.js'))%>"></script>
+<script src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('templates/customDockerImages/js/customDockerImages.js'))
+    %>"></script>
 
-<%}); %>
+    <%
+}); %>

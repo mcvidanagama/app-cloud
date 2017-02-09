@@ -47,6 +47,7 @@ jagg.block("application", {
                 response.sendRedirect("custom-docker-images.jag"); // since no verified images available, redirect user to add images page
             }
         }
+        var selectedImageId = inputs.selectedImageId
         var applicationName = inputs.applicationName;
         var runninngApplicationCount = applicationModule.getRunningApplicationVersionCount();
         var subscriptionPlanBaseURL = modManager.getPropertyValue("SubscriptionPlanBaseURL");
@@ -86,7 +87,8 @@ jagg.block("application", {
             "requestMoreAppseURL" : requestMoreAppseURL,
             "allDBInfo": allDBInfo,
             "noOfDbs": noOfDbs,
-            "verifiedCustomImages": verifiedCustomImages
+            "verifiedCustomImages": verifiedCustomImages,
+            "selectedImageId": selectedImageId
         };
     }
 });
