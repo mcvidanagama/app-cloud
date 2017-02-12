@@ -39,7 +39,6 @@ COPY $WSO2CARBON_ZIP $INSTALL_PATH/
 RUN unzip $INSTALL_PATH/$WSO2CARBON_ZIP -d $INSTALL_PATH/ && \
     rm $INSTALL_PATH/$WSO2CARBON_ZIP && \
     rm -rf $CARBON_HOME_PATH/repository/deployment/server/axis2services/* && \
-    rm -rf $CARBON_HOME_PATH/repository/deployment/server/webapps/* && \
     rm -rf $CARBON_HOME_PATH/repository/deployment/server/dataservices/*
 
 COPY patches/ $CARBON_HOME_PATH/repository/components/patches/
