@@ -123,4 +123,6 @@ var MYSQL_MIN_DATETIME_STRING = "1000-01-01 00:00:00";
 var CLOUD_ADMIN_USERNAME="Cloud.Admin.Username";
 var CLOUD_ADMIN_PASSWORD="Cloud.Admin.Password";
 
+var SET_COOKIE_HEADER="Set-Cookie";
+
 %>

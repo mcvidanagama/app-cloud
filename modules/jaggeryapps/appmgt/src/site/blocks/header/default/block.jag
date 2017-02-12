@@ -73,10 +73,11 @@ jagg.block("header/default", {
                 if (loginResponse.error == "true") {
                     throw new Error(loginResponse.message);
                 } else {
-                    cookie = loginResult.xhr.getResponseHeader(SET_COOKIE_HEADER);
+                    cookie = loginResult.xhr.getResponseHeader('Set-Cookie');
                 }
             } catch (e) {
-                log.error("Exception occurred during establishing connection to " + serviceId);
+                //log.error("Exception occurred during establishing connection to " + serviceId);
+                log.error("Exception occurred during establishing connection to ");
                 log.error(e);
                 throw e;
             }
