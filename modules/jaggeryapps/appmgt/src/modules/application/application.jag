@@ -39,6 +39,9 @@ var Util = Packages.org.wso2.appcloud.core.Util;
 var ResourceQuotaLimit = Packages.org.wso2.appcloud.provisioning.runtime.beans.ResourceQuotaLimit;
 var List = Packages.java.util.List;
 var Arrays = Packages.java.util.Arrays;
+var appTypePropertyConfPath = jagg.getAppTypePropertyConfFilePath();
+var parsedObject = parse(appTypePropertyConfPath);
+var appTypesProperties = require(parsedObject);
 
 
 /**
@@ -447,10 +450,14 @@ var createDockerFile = function (applicationName, versionName, appTypeName, runt
         } else {
             uploadArtifactTmpName = uploadedFileName;
         }
+        var appType = appTypesProperties[appTypeName];
+        var isMultiArtifacts = (appType.multiArtifacts =='true');
         var dockerFilePropertyMap = new java.util.HashMap();
-        var artifactNameWithoutExtension = uploadArtifactTmpName.substring(0, uploadArtifactTmpName.lastIndexOf("."));
+        if(!isMultiArtifacts){
+            var artifactNameWithoutExtension = uploadArtifactTmpName.substring(0, uploadArtifactTmpName.lastIndexOf("."));
+            dockerFilePropertyMap.put("ARTIFACT_DIR", artifactNameWithoutExtension);
+        }
         dockerFilePropertyMap.put("ARTIFACT_NAME", uploadArtifactTmpName);
-        dockerFilePropertyMap.put("ARTIFACT_DIR", artifactNameWithoutExtension);
         dockerFilePropertyMap.put("HOST_NAME", hostName);
         dockerFilePropertyMap.put("ARTIFACT_URL", artifactUrl);
         dockerFilePropertyMap.put("VAL_TOTAL_MEMORY", conSpecMemory);
