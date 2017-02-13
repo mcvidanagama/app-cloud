@@ -408,7 +408,6 @@ jagg.template("home", function(inputs, outputs, jagg) {
                     timeout: '5000'
                 });
             });
-        }
     }
 
     function drawProgressWindow(heading){
