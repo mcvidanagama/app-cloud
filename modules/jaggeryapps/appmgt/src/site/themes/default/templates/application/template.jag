@@ -882,7 +882,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 }
             } else {
                 var isFileUploaded = (isMultiArtifacts ? isMultiArtifactsUploaded(): $("#uploadedFileName").val());
-                  
+
                 if (isFileUploaded || $("#artifactUrl").val() || ($("#gitRepoUrl").val()  && $("#gitRepoBranch").val())) { // validations for non custom app types
                     if (isFileUploaded && progress == 100) {
 
@@ -1002,7 +1002,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
         var tmpFileNames = getFileNames();
         if (tmpFileNames.length == 0 ) return false;
         return [].some.call(tmpFileNames, function(val) {
-            return val ===  $("#uploadedFileName").val();
+            return val ==  $("#uploadedFileName").val();
         });
     }
     //Get all the uploaded File Names as an array
