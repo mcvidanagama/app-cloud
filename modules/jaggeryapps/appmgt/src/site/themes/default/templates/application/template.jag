@@ -100,7 +100,6 @@ jagg.template("application", function (inputs, outputs, jagg) {
     var envKeyRegex = new RegExp("<%=ENV_KEY_REGEX%>");
     var applicationList = <%=applications%>;
     var versionList = "<%=versionList%>";
-    var currentUploadingFile;
     $(document).ready(function(){
             if (newVersion == "true") {
                 isNewVersion = true;
@@ -882,9 +881,10 @@ jagg.template("application", function (inputs, outputs, jagg) {
                     $("#add-application").prop("disabled", false);
                 }
             } else {
-
-                if ((isMultiArtifacts ? isMultiArtifactsUploaded(): $("#uploadedFileName").val()) || $("#artifactUrl").val() || ($("#gitRepoUrl").val()  && $("#gitRepoBranch").val())) { // validations for non custom app types
-                    if ((isMultiArtifacts ? isMultiArtifactsUploaded(): $("#uploadedFileName").val())  && progress == 100) {
+                var isFileUploaded = (isMultiArtifacts ? isMultiArtifactsUploaded(): $("#uploadedFileName").val());
+                  
+                if (isFileUploaded || $("#artifactUrl").val() || ($("#gitRepoUrl").val()  && $("#gitRepoBranch").val())) { // validations for non custom app types
+                    if (isFileUploaded && progress == 100) {
 
                         if (isMultiArtifacts ? (validateMultiArtifactTypes() && (!$("#uploadedFileName").val()))  : validateArtifactType($("#uploadedFileName").val())) {
                             $("#add-application").prop("disabled", false);
