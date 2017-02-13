@@ -357,8 +357,8 @@ jagg.template("application", function (inputs, outputs, jagg) {
                                         }
 
                                      });
-                                     $("#uploadedFileName").val("");
                                  }
+                                 $("#uploadedFileName").val("");
                            }else{
                              $("#uploadedFileName").val(currentUploadingFile);
                            }
@@ -410,7 +410,11 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 progress = 0;
                 activateCreateApplication();
                 $.each(data.files, function(index, file) {
-                    currentUploadingFile = file.name;
+                    if(isMultiArtifacts) {
+                        currentUploadingFile = file.name;
+                    }else{
+                        $("#uploadedFileName").val(file.name);
+                    }
                 });
                 $('#progress .progress-bar').replaceWith("<div class=\"progress-bar progress-bar-success\" style=\"width: 0%;\"></div>");
 
