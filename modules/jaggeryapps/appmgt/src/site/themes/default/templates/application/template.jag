@@ -27,7 +27,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
         var appTypeName = appType.type;
         var notAllowedEnvVariables = outputs.notAllowedEnvVariables;
         var isAppTypeBuildable = appType.buildable;
-        var isMultiArtifacts = (appType.multiArtifacts == 'true');
+        var isMultiArtifactsSupported = (appType.isMultiArtifactsSupported == 'true');
         var applicationName = outputs.applicationName;
         var subscriptionPlanBaseURL = outputs.subscriptionPlanBaseURL;
         var encodedLabels = request.getParameter("encodedLabels");
@@ -83,7 +83,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
     var uploadURLErrorMsg = "";
     var uploadMethod = "file";
     var custom = "<%=CUSTOM%>";
-    var isMultiArtifacts = <%=isMultiArtifacts%>;
+    var isMultiArtifactsSupported = <%=isMultiArtifactsSupported%>;
     if(appTypeName == custom){
         uploadMethod = "";
     }
@@ -263,7 +263,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                         formData.append('appCreationMethod', custom);
                     }
                     if (uploadMethod === "file") {
-                        if (isMultiArtifacts) {
+                        if (isMultiArtifactsSupported) {
                              formData.append('uploadedFileName', getFileNames().join(" "));
                         } else {
                             formData.append('uploadedFileName', $("#uploadedFileName").val());
@@ -332,13 +332,14 @@ jagg.template("application", function (inputs, outputs, jagg) {
                     var status = jqXHR.status;
                     if (status == 200) {
                         fileMoved = true;
-                        if (isMultiArtifacts) {
+                        if (isMultiArtifactsSupported) {
                             $('#btn-artifact-upload').replaceWith("<span class=\"btn btn-primary btn-file\" " +
                                     "id=\"btn-artifact-upload\" ><input id=\"fileupload\" type=\"file\" " +
                                     "name=\"fileupload\">Browse</span>");
                             //Check whether the uploaded file is valid or not
                             if (validateArtifact()) {
                                 if (!isFileAllReadyUploaded()) {
+
                                      $('#artifactlist').append(
                                                 '<li class="list-group-item justify-content-between " style="background:#666;">'+
                                                     '<span id="fileName" >'+$("#uploadedFileName").val()+'</span>'+
@@ -347,11 +348,13 @@ jagg.template("application", function (inputs, outputs, jagg) {
                                                      ' </span>'+
                                                  '</li>'
                                      );
+
                                      $(".artifact-delete-btn").on('click', function () {
                                         $(this).parent().parent().remove();
                                         if ($("#artifactlist").children().length === 0) {
                                             $('#progress .progress-bar').css('width', '0%');
                                         }
+
                                      });
                                 }
                                 $("#uploadedFileName").val("");
@@ -361,6 +364,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                                         '<span class="btn btn-primary btn-file" id="clearArtifactFile">'+
                                                 'Clear'+
                                         '</span>'
+
                                 );
 
                                 $("#clearArtifactFile").on('click', function () {
@@ -383,6 +387,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                                             change: onChangeFileUpload
                                         });
                                         $(this).remove();
+
                                    }
                                 });
                            }
@@ -392,13 +397,16 @@ jagg.template("application", function (inputs, outputs, jagg) {
                                                                   "name=\"fileupload\">Uploaded &nbsp <i class=\"fw fw-check\"></i></span>");
                          }
 
+
                         $('#fileupload').fileupload({
                                         submit: onSubmit,
                                         progressall: onProgressAll,
                                         change: onChangeFileUpload
                         });
 
-                        if (progress == 100) getVersionHashId();
+                        if (progress == 100) {
+                            getVersionHashId();
+                        }
                         var validator = $( "#application-details" ).validate();
                         validator.element( "#uploadedFileName" );
 
@@ -419,7 +427,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 $('#btn-artifact-upload').replaceWith("<span class=\"btn btn-primary btn-file\" " +
                                         "id=\"btn-artifact-upload\" disabled>Uploading &nbsp <i class=\"fw fw-loader2 fw-spin\"></i></span>");
                 progress = parseInt(data.loaded / data.total * 100, 10);
-                if (!isMultiArtifacts) {
+                if (!isMultiArtifactsSupported) {
                     $('#progress .progress-bar').css('width', progress + '%');
                 } else {
                     $('#progress .progress-bar').css('width', progress + '%')
@@ -436,9 +444,13 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 if (progress == 100) {
                     $('#btn-artifact-upload').replaceWith("<span class=\"btn btn-primary btn-file\" " +
                         "id=\"btn-artifact-upload\" disabled>Processing &nbsp <i class=\"fw fw-loader2 fw-spin\"></i></span>");
+
+                }
                 if (progress == 100 && fileMoved) {
                     getVersionHashId();
-                    if (isMultiArtifacts) fileMoved = false;
+                    if (isMultiArtifactsSupported) {
+                        fileMoved = false;
+                    }
                 }
             }
 
@@ -449,7 +461,6 @@ jagg.template("application", function (inputs, outputs, jagg) {
                   $("#uploadedFileName").val(file.name);
                 });
                 $('#progress .progress-bar').replaceWith("<div class=\"progress-bar progress-bar-success\" style=\"width: 0%;\"></div>");
-
             }
 
             $('#fileupload').fileupload({
@@ -848,7 +859,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
         $('#remoteImageUrl').on('focusout keyup blur click', function () { // fires on every keyup & blur
             activateCreateApplication();
         });
-        if (!isMultiArtifacts) {
+        if (!isMultiArtifactsSupported) {
              $("#clearArtifactFile").on('click', function () {
                     $('#progress .progress-bar').css('width', '0%');
                     $("#fileupload").find(".files").empty();
@@ -883,10 +894,10 @@ jagg.template("application", function (inputs, outputs, jagg) {
                     $("#add-application").prop("disabled", false);
                 }
             } else {
-                var isFileUploaded = (isMultiArtifacts ? isMultiArtifactsUploaded(): $("#uploadedFileName").val());
+                var isFileUploaded = (isMultiArtifactsSupported ? isMultiArtifactsUploaded(): $("#uploadedFileName").val());
                 if (isFileUploaded || $("#artifactUrl").val() || ($("#gitRepoUrl").val()  && $("#gitRepoBranch").val())) { // validations for non custom app types
                     if (isFileUploaded && progress == 100) {
-                        if (isMultiArtifacts ? (validateMultiArtifactTypes() && (!$("#uploadedFileName").val()))  : validateArtifactType($("#uploadedFileName").val())) {
+                        if (isMultiArtifactsSupported ? (validateMultiArtifactTypes() && (!$("#uploadedFileName").val()))  : validateArtifactType($("#uploadedFileName").val())) {
                             $("#add-application").prop("disabled", false);
                         }
                     } else if ($("#artifactUrl").val()) {
@@ -990,17 +1001,21 @@ jagg.template("application", function (inputs, outputs, jagg) {
 
     }
     function validateMultiArtifactTypes(){
-        if (isMultiArtifacts && isMultiArtifactsUploaded()) {
+        if (isMultiArtifactsSupported && isMultiArtifactsUploaded()) {
             var tmpFileNames = getFileNames();
-            for(var i = 0 ; i < tmpFileNames.length ; i++){
-                if (!validateArtifactType(tmpFileNames[i])) return false;
+            for (var i = 0 ; i < tmpFileNames.length ; i++) {
+                if (!validateArtifactType(tmpFileNames[i])) {
+                    return false;
+                }
             }
         }
             return true;
     }
     function isFileAllReadyUploaded(){
         var tmpFileNames = getFileNames();
-        if (tmpFileNames.length == 0 ) return false;
+        if (tmpFileNames.length == 0 ) {
+            return false;
+        }
         return [].some.call(tmpFileNames, function(val) {
             return val ==  $("#uploadedFileName").val();
         });
@@ -1009,7 +1024,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
     function getFileNames(){
         var fileNames = [];
         var fileElements = $("#artifactlist").children();
-        for(var i=0 ; i < fileElements.length ; i++){
+        for (var i=0 ; i < fileElements.length ; i++) {
             fileNames[i] = $(fileElements[i]).children("#fileName").text();
         }
         return fileNames;
@@ -1293,7 +1308,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
 
 
 
-                 <%if (isMultiArtifacts) {%>
+                 <%if (isMultiArtifactsSupported) {%>
                   <div>
                          <label for="application-description" >Upload  <b>.<%=appType.extension.toUpperCase()%></b> files: *</label>
                   </div>
@@ -1312,7 +1327,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                        <span class="btn btn-primary btn-file" id="btn-artifact-upload" disabled>
                            <input id="fileupload" type="file" name="fileupload">Browse</input>
                        </span>
-                    <%if (!isMultiArtifacts) {%>
+                    <%if (!isMultiArtifactsSupported) {%>
                         <span class="btn btn-primary btn-file" id="clearArtifactFile">
                             Clear
                         </span>
