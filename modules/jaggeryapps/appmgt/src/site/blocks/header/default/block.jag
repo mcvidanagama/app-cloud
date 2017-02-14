@@ -65,8 +65,8 @@ jagg.block("header/default", {
                     "password" : manager.getPropertyValue(CLOUD_ADMIN_PASSWORD)
                 };
 
-                log.info("loginUrl " + loginUrl);
-                log.info("loginData " + stringify(loginData));
+                log.debug("loginUrl " + loginUrl);
+                log.debug("loginData " + stringify(loginData));
 
                 var loginResult = post(loginUrl, loginData, {} , 'json');
                 var loginResponse = loginResult.xhr.responseText;
@@ -94,7 +94,7 @@ jagg.block("header/default", {
 
             var informFirstLoginApi= cloudMgtURL + "/site/blocks/admin/admin.jag";
             try {
-                var result = post(informFirstLoginApi, data, header, 'json');
+                var result = post(informFirstLoginApi, data, header, 'text');
             } catch (e) {
                 log.error("Exception occurred during inform first login to cloud mgt");
                 log.error(e);
