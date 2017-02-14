@@ -27,7 +27,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
         var appTypeName = appType.type;
         var notAllowedEnvVariables = outputs.notAllowedEnvVariables;
         var isAppTypeBuildable = appType.buildable;
-        var isMultiArtifacts = (appType.multiArtifacts =='true');
+        var isMultiArtifacts = (appType.multiArtifacts == 'true');
         var applicationName = outputs.applicationName;
         var subscriptionPlanBaseURL = outputs.subscriptionPlanBaseURL;
         var encodedLabels = request.getParameter("encodedLabels");
@@ -407,6 +407,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                         if (progress == 100) getVersionHashId();
                         var validator = $( "#application-details" ).validate();
                         validator.element( "#uploadedFileName" );
+
                     } else {
                         progress = 0;
                         $('#progress .progress-bar').css('width', progress + '%');
@@ -424,14 +425,29 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 $('#btn-artifact-upload').replaceWith("<span class=\"btn btn-primary btn-file\" " +
                                         "id=\"btn-artifact-upload\" disabled>Uploading &nbsp <i class=\"fw fw-loader2 fw-spin\"></i></span>");
                 progress = parseInt(data.loaded / data.total * 100, 10);
-                $('#progress .progress-bar').css('width', progress + '%');
+                if(!isMultiArtifacts){
+                    $('#progress .progress-bar').css('width', progress + '%');
+                }else{
+                    $('#progress .progress-bar').css('width', progress + '%')
+                                                    .delay(1000)
+                                                    .queue(function (next) {
+                                                                             $("#progress").replaceWith(
+                                                                                '<div id="progress" class="progress">'+
+                                                                                        ' <div class="progress-bar progress-bar-success" style="width: 0%;"></div>'+
+                                                                                ' </div>'
+                                                                             );
+                                                                             next();
+                                                                            });
+                }
                 if (progress == 100) {
                     $('#btn-artifact-upload').replaceWith("<span class=\"btn btn-primary btn-file\" " +
                         "id=\"btn-artifact-upload\" disabled>Processing &nbsp <i class=\"fw fw-loader2 fw-spin\"></i></span>");
+
                 }
                 if (progress == 100 && fileMoved) {
                     getVersionHashId();
                     if(isMultiArtifacts) fileMoved = false;
+
                 }
             }
 
@@ -1296,7 +1312,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
 
                  <%if(isMultiArtifacts){%>
                   <div>
-                         <label for="application-description" >Upload a <b>.<%=appType.extension.toUpperCase()%></b> files: *</label>
+                         <label for="application-description" >Upload  <b>.<%=appType.extension.toUpperCase()%></b> files: *</label>
                   </div>
                  <ul id = "artifactlist" class="list-group">
 

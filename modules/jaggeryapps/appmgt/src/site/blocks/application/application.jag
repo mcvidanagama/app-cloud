@@ -70,6 +70,7 @@ var log = new Log();
             try {
                 runtimeProperties = parse(unparsedRuntimeProps);
             } catch (e) {
+
                 response.status = 400;
                 response.content = "Invalid Json for runtimeProperties. Please validate the json.";
                 return;
@@ -126,8 +127,13 @@ var log = new Log();
         var uploadedFileName = request.getParameter("uploadedFileName");
 
         var appIcon = request.getFile("appIcon");
-        var uploadedArtifact = request.getFile("fileupload");
-
+        var isMultiArtifacts =  request.getParameter("isMultiArtifacts");
+        var uploadedArtifact;
+        if(isMultiArtifacts == 'true'){
+            uploadedArtifact = request.getAllFiles();
+        }else{
+            uploadedArtifact = request.getFile("fileupload");
+        }
         var isFileAttached = request.getParameter("isFileAttached");
         if (isFileAttached == 'true') {
             if (uploadedArtifact == null) {
@@ -257,8 +263,20 @@ var log = new Log();
             }
             if (isAppCountLowerThanMax) {
                 if (isFileAttached == 'true') {
-                    var fileSuccessfullyUploaded = applicationModule.
-                        uploadExistingArchive(uploadedArtifact, appTypeName, applicationName, applicationRevision);
+                    var fileSuccessfullyUploaded
+                    if(isMultiArtifacts == 'true'){
+
+                       for (var property in uploadedArtifact) {
+
+                         fileSuccessfullyUploaded = applicationModule.
+                            uploadExistingArchive(uploadedArtifact[property], appTypeName, applicationName, applicationRevision);
+                       }
+
+                    }else{
+                       fileSuccessfullyUploaded = applicationModule.
+                                                uploadExistingArchive(uploadedArtifact, appTypeName, applicationName, applicationRevision);
+
+                    }
                     if (!fileSuccessfullyUploaded) {
                         logMessage = "Error while uploading file: " + uploadedArtifact.getName();
                         log.error(logMessage);
