@@ -124,5 +124,6 @@ var CLOUD_ADMIN_USERNAME="Cloud.Admin.Username";
 var CLOUD_ADMIN_PASSWORD="Cloud.Admin.Password";
 
 var SET_COOKIE_HEADER="Set-Cookie";
+var ALL_APP_TYPES_ALLOWED_TENANTS="";
 
 %>
