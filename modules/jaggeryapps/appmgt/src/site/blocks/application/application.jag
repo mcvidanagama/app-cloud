@@ -70,7 +70,6 @@ var log = new Log();
             try {
                 runtimeProperties = parse(unparsedRuntimeProps);
             } catch (e) {
-
                 response.status = 400;
                 response.content = "Invalid Json for runtimeProperties. Please validate the json.";
                 return;
@@ -265,17 +264,13 @@ var log = new Log();
                 if (isFileAttached == 'true') {
                     var fileSuccessfullyUploaded
                     if(isMultiArtifacts == 'true'){
-
                        for (var property in uploadedArtifact) {
-
                          fileSuccessfullyUploaded = applicationModule.
                             uploadExistingArchive(uploadedArtifact[property], appTypeName, applicationName, applicationRevision);
                        }
-
                     }else{
                        fileSuccessfullyUploaded = applicationModule.
                                                 uploadExistingArchive(uploadedArtifact, appTypeName, applicationName, applicationRevision);
-
                     }
                     if (!fileSuccessfullyUploaded) {
                         logMessage = "Error while uploading file: " + uploadedArtifact.getName();
@@ -285,7 +280,6 @@ var log = new Log();
                         return ;
                     }
                 }
-
                 if (uploadedFileName || (remoteImageUrl)) {
                     applicationModule
                             .addApplication(applicationName, applicationRevision, applicationDescription, replicas,

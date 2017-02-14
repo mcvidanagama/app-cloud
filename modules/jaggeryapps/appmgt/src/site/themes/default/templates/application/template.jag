@@ -339,7 +339,6 @@ jagg.template("application", function (inputs, outputs, jagg) {
                             //Check whether the uploaded file is valid or not
                             if(validateArtifact()){
                                 if(!isFileAllReadyUploaded()){
-
                                      $('#artifactlist').append(
                                                 '<li class="list-group-item justify-content-between " style="background:#666;">'+
                                                     '<span id="fileName" >'+$("#uploadedFileName").val()+'</span>'+
@@ -348,13 +347,11 @@ jagg.template("application", function (inputs, outputs, jagg) {
                                                      ' </span>'+
                                                  '</li>'
                                      );
-
                                      $(".artifact-delete-btn").on('click', function () {
                                         $(this).parent().parent().remove();
                                         if($("#artifactlist").children().length === 0) {
                                             $('#progress .progress-bar').css('width', '0%');
                                         }
-
                                      });
                                 }
                                 $("#uploadedFileName").val("");
@@ -364,7 +361,6 @@ jagg.template("application", function (inputs, outputs, jagg) {
                                         '<span class="btn btn-primary btn-file" id="clearArtifactFile">'+
                                                 'Clear'+
                                         '</span>'
-
                                 );
 
                                 $("#clearArtifactFile").on('click', function () {
@@ -387,7 +383,6 @@ jagg.template("application", function (inputs, outputs, jagg) {
                                             change: onChangeFileUpload
                                         });
                                         $(this).remove();
-
                                    }
                                 });
                            }
@@ -396,7 +391,6 @@ jagg.template("application", function (inputs, outputs, jagg) {
                                                             "id=\"btn-artifact-upload\" disabled><input id=\"fileupload\" type=\"file\" " +
                                                                   "name=\"fileupload\">Uploaded &nbsp <i class=\"fw fw-check\"></i></span>");
                          }
-
 
                         $('#fileupload').fileupload({
                                         submit: onSubmit,
@@ -442,12 +436,9 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 if (progress == 100) {
                     $('#btn-artifact-upload').replaceWith("<span class=\"btn btn-primary btn-file\" " +
                         "id=\"btn-artifact-upload\" disabled>Processing &nbsp <i class=\"fw fw-loader2 fw-spin\"></i></span>");
-
-                }
                 if (progress == 100 && fileMoved) {
                     getVersionHashId();
                     if(isMultiArtifacts) fileMoved = false;
-
                 }
             }
 
@@ -628,7 +619,6 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 },
                 uploadedFileName: {
                     validateArtifact: true
-
                 },
                 runtime: {
                     validateRuntimeSelection: true
@@ -859,9 +849,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
             activateCreateApplication();
         });
         if(!isMultiArtifacts){
-
              $("#clearArtifactFile").on('click', function () {
-
                     $('#progress .progress-bar').css('width', '0%');
                     $("#fileupload").find(".files").empty();
                     $("#uploadedFileName").find(".files").empty();
@@ -879,8 +867,6 @@ jagg.template("application", function (inputs, outputs, jagg) {
                         change: onChangeFileUpload
                     });
             });
-
-
         }
         $('.radio-inline').hover(enableRadioButtons);
     });
@@ -898,10 +884,8 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 }
             } else {
                 var isFileUploaded = (isMultiArtifacts ? isMultiArtifactsUploaded(): $("#uploadedFileName").val());
-
                 if (isFileUploaded || $("#artifactUrl").val() || ($("#gitRepoUrl").val()  && $("#gitRepoBranch").val())) { // validations for non custom app types
                     if (isFileUploaded && progress == 100) {
-
                         if (isMultiArtifacts ? (validateMultiArtifactTypes() && (!$("#uploadedFileName").val()))  : validateArtifactType($("#uploadedFileName").val())) {
                             $("#add-application").prop("disabled", false);
                         }
@@ -1036,7 +1020,6 @@ jagg.template("application", function (inputs, outputs, jagg) {
         var tmpFileName ;
         var file = $("#uploadedFileName");
         return ((file.val() != "") ? validateArtifactType(file.val()) : true);
-
     }
 
     function validateEnvironmentVariable(value){
