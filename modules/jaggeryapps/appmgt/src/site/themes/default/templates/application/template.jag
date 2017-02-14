@@ -262,10 +262,10 @@ jagg.template("application", function (inputs, outputs, jagg) {
                        // formData.append('password', $("#password").val());
                         formData.append('appCreationMethod', custom);
                     }
-                    if(uploadMethod === "file"){
-                        if(isMultiArtifacts){
+                    if (uploadMethod === "file") {
+                        if (isMultiArtifacts) {
                              formData.append('uploadedFileName', getFileNames().join(" "));
-                        }else{
+                        } else {
                             formData.append('uploadedFileName', $("#uploadedFileName").val());
                         }
                         formData.append('appCreationMethod', 'default');
@@ -332,13 +332,13 @@ jagg.template("application", function (inputs, outputs, jagg) {
                     var status = jqXHR.status;
                     if (status == 200) {
                         fileMoved = true;
-                        if(isMultiArtifacts){
+                        if (isMultiArtifacts) {
                             $('#btn-artifact-upload').replaceWith("<span class=\"btn btn-primary btn-file\" " +
                                     "id=\"btn-artifact-upload\" ><input id=\"fileupload\" type=\"file\" " +
                                     "name=\"fileupload\">Browse</span>");
                             //Check whether the uploaded file is valid or not
-                            if(validateArtifact()){
-                                if(!isFileAllReadyUploaded()){
+                            if (validateArtifact()) {
+                                if (!isFileAllReadyUploaded()) {
                                      $('#artifactlist').append(
                                                 '<li class="list-group-item justify-content-between " style="background:#666;">'+
                                                     '<span id="fileName" >'+$("#uploadedFileName").val()+'</span>'+
@@ -349,13 +349,13 @@ jagg.template("application", function (inputs, outputs, jagg) {
                                      );
                                      $(".artifact-delete-btn").on('click', function () {
                                         $(this).parent().parent().remove();
-                                        if($("#artifactlist").children().length === 0) {
+                                        if ($("#artifactlist").children().length === 0) {
                                             $('#progress .progress-bar').css('width', '0%');
                                         }
                                      });
                                 }
                                 $("#uploadedFileName").val("");
-                           }else{
+                           } else {
                                 //append "clear" button only if the uploaded file is wrong type
                                 $(".input-group-btn").append(
                                         '<span class="btn btn-primary btn-file" id="clearArtifactFile">'+
@@ -364,7 +364,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                                 );
 
                                 $("#clearArtifactFile").on('click', function () {
-                                   if($("#uploadedFileName").val()){
+                                   if ($("#uploadedFileName").val()) {
 
                                         $('#progress .progress-bar').css('width', '0%');
                                         $("#fileupload").find(".files").empty();
@@ -386,7 +386,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                                    }
                                 });
                            }
-                         }else{
+                         } else {
                             $('#btn-artifact-upload').replaceWith("<span class=\"btn btn-primary btn-file\" " +
                                                             "id=\"btn-artifact-upload\" disabled><input id=\"fileupload\" type=\"file\" " +
                                                                   "name=\"fileupload\">Uploaded &nbsp <i class=\"fw fw-check\"></i></span>");
@@ -419,9 +419,9 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 $('#btn-artifact-upload').replaceWith("<span class=\"btn btn-primary btn-file\" " +
                                         "id=\"btn-artifact-upload\" disabled>Uploading &nbsp <i class=\"fw fw-loader2 fw-spin\"></i></span>");
                 progress = parseInt(data.loaded / data.total * 100, 10);
-                if(!isMultiArtifacts){
+                if (!isMultiArtifacts) {
                     $('#progress .progress-bar').css('width', progress + '%');
-                }else{
+                } else {
                     $('#progress .progress-bar').css('width', progress + '%')
                                                     .delay(1000)
                                                     .queue(function (next) {
@@ -438,7 +438,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                         "id=\"btn-artifact-upload\" disabled>Processing &nbsp <i class=\"fw fw-loader2 fw-spin\"></i></span>");
                 if (progress == 100 && fileMoved) {
                     getVersionHashId();
-                    if(isMultiArtifacts) fileMoved = false;
+                    if (isMultiArtifacts) fileMoved = false;
                 }
             }
 
@@ -848,7 +848,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
         $('#remoteImageUrl').on('focusout keyup blur click', function () { // fires on every keyup & blur
             activateCreateApplication();
         });
-        if(!isMultiArtifacts){
+        if (!isMultiArtifacts) {
              $("#clearArtifactFile").on('click', function () {
                     $('#progress .progress-bar').css('width', '0%');
                     $("#fileupload").find(".files").empty();
@@ -990,10 +990,10 @@ jagg.template("application", function (inputs, outputs, jagg) {
 
     }
     function validateMultiArtifactTypes(){
-        if(isMultiArtifacts && isMultiArtifactsUploaded()){
+        if (isMultiArtifacts && isMultiArtifactsUploaded()) {
             var tmpFileNames = getFileNames();
             for(var i = 0 ; i < tmpFileNames.length ; i++){
-                if(!validateArtifactType(tmpFileNames[i])) return false;
+                if (!validateArtifactType(tmpFileNames[i])) return false;
             }
         }
             return true;
@@ -1024,7 +1024,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
 
     function validateEnvironmentVariable(value){
         var keyValidation = validateEnvKey(value);
-        if(value != "" && $.inArray(value.toLowerCase(), notAllowedEnvVariables) > -1){
+        if (value != "" && $.inArray(value.toLowerCase(), notAllowedEnvVariables) > -1) {
             envVariableErrorMsg = value + " is not allowed";
             return false;
         } else if (!keyValidation.status) {
@@ -1293,14 +1293,14 @@ jagg.template("application", function (inputs, outputs, jagg) {
 
 
 
-                 <%if(isMultiArtifacts){%>
+                 <%if (isMultiArtifacts) {%>
                   <div>
                          <label for="application-description" >Upload  <b>.<%=appType.extension.toUpperCase()%></b> files: *</label>
                   </div>
                  <ul id = "artifactlist" class="list-group">
 
                 </ul>
-                <%}else{%>
+                <%} else {%>
                   <div>
                      <label for="application-description" >Upload a <b>.<%=appType.extension.toUpperCase()%></b> file: *</label>
                  </div>
@@ -1312,7 +1312,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                        <span class="btn btn-primary btn-file" id="btn-artifact-upload" disabled>
                            <input id="fileupload" type="file" name="fileupload">Browse</input>
                        </span>
-                    <%if(!isMultiArtifacts){%>
+                    <%if (!isMultiArtifacts) {%>
                         <span class="btn btn-primary btn-file" id="clearArtifactFile">
                             Clear
                         </span>
