@@ -356,7 +356,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                                 }
                                 $("#uploadedFileName").val("");
                            }else{
-                                //append "clear" button only if the uploaded file is correct type
+                                //append "clear" button only if the uploaded file is wrong type
                                 $(".input-group-btn").append(
                                         '<span class="btn btn-primary btn-file" id="clearArtifactFile">'+
                                                 'Clear'+
