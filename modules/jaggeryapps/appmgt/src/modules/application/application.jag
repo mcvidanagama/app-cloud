@@ -860,21 +860,24 @@ function getDeploymentConfig(containersList, versionHashId, replicas){
 /**
  * Method for getting all the available application types e.g : war, mss, car
  */
-var getAllAppTypes = function(){
+var getAllAppTypes = function () {
     var appTypeArray = [];
     try {
         var appTypes = ApplicationManager.getAllAppTypesForCloud(jagg.getSelectedCloud());
-
+        var isAllAppTypesAllowedTenant = modManager.isAllAppTypesAllowedTenant();
         for (var i = 0; i < appTypes.length; i++) {
             var appType = appTypes[i];
             var appTypeObject = {};
 
             appTypeObject.name = appType.appTypeName;
             appTypeObject.description = appType.description;
-
-            appTypeArray.push(appTypeObject);
+            if (isAllAppTypesAllowedTenant == true) {
+                appTypeArray.push(appTypeObject);
+            } else if (isAllAppTypesAllowedTenant == false && appTypeObject.name != 'projectx') {
+                appTypeArray.push(appTypeObject);
+            }
         }
-    } catch(e){
+    } catch (e) {
         log.error("Error while getting the list of apptypes");
         log.error(e);
         throw e;
