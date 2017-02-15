@@ -177,18 +177,10 @@ $zopim(function () {
                         <%
                             if (jagg.getSelectedCloud() == INTEGRATION_CLOUD) {
                         %>
-                        <a class="cloud-block" href="<%=appCloudURL%>" target="_blank">
-                            <i class="fa fa-3x fa-cubes"></i>
-                            <div class="cloud-name"> App Cloud</div>
-                        </a>
-                        <%
-                            } else {
-                        %>
-                        <!--to-do: need to fix this properly when integration cloud available to public-->
-                        <!--a class="cloud-block" href="<%=integrationCloudURL%>" target="_blank">
+                        <a class="cloud-block" href="<%=integrationCloudURL%>" target="_blank">
                             <i class="fw fw-3x fw-service"></i>
                             <div class="cloud-name"> Integration Cloud</div>
-                        </a-->
+                        </a>
                         <%
                             }
                         %>
@@ -209,7 +201,7 @@ $zopim(function () {
                             <i class="fa fa-3x  fa-database"></i>
                             <div class="cloud-name">Databases</div>
                         </a>
-                       <a id="customUrlBlock" style="display: none;" class="cloud-block-invert" href="<%=cloudMgtURL + CUSTOM_URL_SETTINGS_PAGE_URL + "?backUrl=" + appCloudURL%>">
+                       <a id="customUrlBlock" style="display: none;" class="cloud-block-invert" href="<%=cloudMgtURL + CUSTOM_URL_SETTINGS_PAGE_URL + "?backUrl=" + integrationCloudURL%>">
                             <i class="fa fa-3x  fa-link"></i>
                             <div class="cloud-name">CustomUrl</div>
                        </a>

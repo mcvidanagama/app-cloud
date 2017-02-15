@@ -135,7 +135,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 $('#outerContainer').empty();
                 $('#outerContainer').html('<div class="container-fluid"><div class="row row-centered">' +
                   '<div class="col-centered col-xs-10 col-sm-7  col-md-7 col-lg-6"><div class="cloud-new-content">' +
-                  '<h2>No enough resources to create new application.</h2>' +
+                  '<h2>Not enough resources to create new applications.</h2>' +
                   '1. Stop an existing ' + cloudSpecificApplicationRepresentation.toLowerCase() + '/version to continue.<br>'+
                   '2. <a href="<%=requestMoreAppseURL%>" target="_blank">Submit a request</a> to upgrade ' + cloudSpecificApplicationRepresentation.toLowerCase() + 's on your subscription.</div></div></div></div>');
                 return;
