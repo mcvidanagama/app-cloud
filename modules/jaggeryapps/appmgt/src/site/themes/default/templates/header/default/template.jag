@@ -267,7 +267,7 @@ $zopim(function () {
             if (isAdminUser) {
                 jagg.popMessage({
                     content:"Was it a successful trial? Your trial unfortunately expired, " +
-                     "however it is really easy to upgrade to a paid plan and keep using WSO2 API Cloud.",
+                     "however it is really easy to upgrade to a paid plan and keep using WSO2 Integration Cloud.",
                     title:"Trial Expired" ,
                     modalStatus: true,
                     yesText: "Upgrade Now",
@@ -279,7 +279,7 @@ $zopim(function () {
                     window.location.href = cloudMgtURL + "/site/pages/contact-us.jag?cloud-type=" + cloudType + "&request-extension=true";
                     }
                 });
-            }else{
+            } else{
                 jagg.popMessage({
                     content:"Unfortunately your trial period is expired, " +
                      "Please contact organization administrator for more details.",

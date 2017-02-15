@@ -130,9 +130,7 @@ jagg.block("header/default", {
         }
 
         var remainingDays = -1;
-        if (isBillingEnabled) {
-            remainingDays = subscriptionManager.getRemainingDaysToUpgrade(tenantDomain, jagg.getSelectedCloud());
-        }
+        remainingDays = subscriptionManager.getRemainingDaysToUpgrade(tenantDomain, jagg.getSelectedCloud());
 
         return {
             "user": user,
