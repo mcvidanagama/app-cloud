@@ -30,6 +30,7 @@ jagg.template("header/default", function(inputs, outputs, jagg) {
     var googleTrackingId = outputs.googleTrackingId;
     var appCloudURL = outputs.appCloudURL;
     var integrationCloudURL = outputs.integrationCloudURL;
+    var identityCloudURL = outputs.identityCloudURL;
     var apiCloudPublisherURL = outputs.apiCloudPublisherURL;
     var cloudMgtURL = outputs.cloudMgtURL;
     var zopimChatId = outputs.zopimChatId;
@@ -174,16 +175,11 @@ $zopim(function () {
                            <i class="fw fw-api fa-3x"></i>
                            <div class="cloud-name">API Cloud</div>
                        </a>
-                        <%
-                            if (jagg.getSelectedCloud() == INTEGRATION_CLOUD) {
-                        %>
-                        <a class="cloud-block" href="<%=integrationCloudURL%>" target="_blank">
-                            <i class="fw fw-3x fw-service"></i>
-                            <div class="cloud-name"> Integration Cloud</div>
+
+                        <a class="cloud-block" href="<%=identityCloudURL%>" target="_blank">
+                            <i class="fw fw-3x fw-security"></i>
+                            <div class="cloud-name">Identity Cloud</div>
                         </a>
-                        <%
-                            }
-                        %>
 
                        <div class="clearfix"></div> <!-- to make seperate -->
                    </div>
@@ -203,7 +199,7 @@ $zopim(function () {
                         </a>
                        <a id="customUrlBlock" style="display: none;" class="cloud-block-invert" href="<%=cloudMgtURL + CUSTOM_URL_SETTINGS_PAGE_URL + "?backUrl=" + integrationCloudURL%>">
                             <i class="fa fa-3x  fa-link"></i>
-                            <div class="cloud-name">CustomUrl</div>
+                            <div class="cloud-name">Custom URL</div>
                        </a>
                    </div>
                 </div>

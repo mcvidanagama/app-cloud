@@ -21,7 +21,7 @@
         "pageTitle": "WSO2 Integration Cloud",
         "cloudTitle" : "Integration Cloud",
         "cloudIcon" : "fw fw-service",
-        "cloudSpecificApplicationRepresentation" : "Project",
+        "cloudSpecificApplicationRepresentation" : "Application",
         "properties" : {
             "documentationUrl": "IntegrationCloud.Documentation.Url"
         },
