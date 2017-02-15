@@ -40,7 +40,7 @@ jagg.block("settings", {
         var maxReplicaCount = throttlingModule.getMaxReplicaCount();
         var requestIncreaseReplicaLimitSubjectMessage = 'Request to increase replica limit';
         var requestIncreaseReplicaLimitURL = modManager.getPropertyValue(CLOUD_MGT_URL) + CONTACT_US_URL +
-                '?cloudType=' + jagg.getSelectedCloud() + '&subject=' + requestIncreaseReplicaLimitSubjectMessage;
+                '?cloud-type=' + jagg.getSelectedCloud() + '&subject=' + requestIncreaseReplicaLimitSubjectMessage;
 
         return {
             "application": application,
