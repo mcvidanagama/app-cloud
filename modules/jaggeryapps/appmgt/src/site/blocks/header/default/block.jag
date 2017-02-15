@@ -47,6 +47,7 @@ jagg.block("header/default", {
         var googleTrackingId = manager.getPropertyValue(GOOGLE_TRACKING_ID);
         var appCloudURL = manager.getPropertyValue(APP_CLOUD_URL);
         var integrationCloudURL = manager.getPropertyValue(INTEGRATION_CLOUD_URL);
+        var identityCloudURL = manager.getPropertyValue(IDENTITY_CLOUD_URL);
         var apiCloudPublisherURL = manager.getPropertyValue(API_CLOUD_PUBLISHER__URL);
         var cloudMgtURL = manager.getPropertyValue(CLOUD_MGT_URL);
         var zopimChatId = manager.getPropertyValue(ZOPIM_CHAT_ID);
@@ -142,6 +143,7 @@ jagg.block("header/default", {
             "googleTrackingId" : googleTrackingId,
             "appCloudURL" : appCloudURL,
             "integrationCloudURL" : integrationCloudURL,
+            "identityCloudURL" : identityCloudURL,
             "apiCloudPublisherURL" : apiCloudPublisherURL,
             "cloudMgtURL" : cloudMgtURL,
             "cloudIcon" : cloudIcon,

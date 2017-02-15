@@ -37,6 +37,7 @@ var DATA_ANALYTICS_SERVER_URL = "DataAnalyticsServerURL";
 var DAS_RECEIVER_EP = "DASReceiverEp";
 var APP_CLOUD_URL = "AppCloud.Url";
 var INTEGRATION_CLOUD_URL = "IntegrationCloud.Url";
+var IDENTITY_CLOUD_URL = "IdentityCloud.Url";
 var API_CLOUD_PUBLISHER__URL = "APICloud.Publisher.Url";
 var CLOUD_MGT_URL = "CloudMgt.Url";
 var NOT_ALLOWED_ENV_VARIABLES = "EnvironmentVariables.NotAllowedVariables";
