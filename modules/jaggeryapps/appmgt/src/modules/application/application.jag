@@ -39,6 +39,8 @@ var Util = Packages.org.wso2.appcloud.core.Util;
 var ResourceQuotaLimit = Packages.org.wso2.appcloud.provisioning.runtime.beans.ResourceQuotaLimit;
 var List = Packages.java.util.List;
 var Arrays = Packages.java.util.Arrays;
+var subscriptionManager = jagg.module("subscription");
+var subscription = subscriptionManager.getSubscription();
 
 
 /**
@@ -857,6 +859,14 @@ function getDeploymentConfig(containersList, versionHashId, replicas){
     return deploymentConfig;
 }
 
+// temp fix to disable esb on certain tiers.
+function isAppTypeAllowed() {
+    if (subscription) {
+        return !(subscription.getPlan() == "integration_cloud_starter");
+    }
+    return false;
+}
+
 /**
  * Method for getting all the available application types e.g : war, mss, car
  */
@@ -871,11 +881,18 @@ var getAllAppTypes = function () {
 
             appTypeObject.name = appType.appTypeName;
             appTypeObject.description = appType.description;
-            if (isAllAppTypesAllowedTenant == true) {
-                appTypeArray.push(appTypeObject);
-            } else if (isAllAppTypesAllowedTenant == false && appTypeObject.name != 'projectx') {
+            if (appTypeObject.name == 'projectx') {
+                if (isAllAppTypesAllowedTenant == true) {
+                    appTypeArray.push(appTypeObject);
+                }
+            } else if (appTypeObject.name == 'wso2esb') {
+                if (isAppTypeAllowed('wso2esb') == true) {
+                    appTypeArray.push(appTypeObject);
+                }
+            } else {
                 appTypeArray.push(appTypeObject);
             }
+
         }
     } catch (e) {
         log.error("Error while getting the list of apptypes");
