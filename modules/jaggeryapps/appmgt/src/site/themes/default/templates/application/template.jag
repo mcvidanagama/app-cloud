@@ -100,7 +100,6 @@ jagg.template("application", function (inputs, outputs, jagg) {
     var envKeyRegex = new RegExp("<%=ENV_KEY_REGEX%>");
     var applicationList = <%=applications%>;
     var versionList = "<%=versionList%>";
-    var originalProgressStyle = $("#progress").attr('style');
     $(document).ready(function(){
             if (newVersion == "true") {
                 isNewVersion = true;
@@ -422,6 +421,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                                         "id=\"btn-artifact-upload\" disabled>Uploading &nbsp <i class=\"fw fw-loader2 fw-spin\"></i></span>");
                 progress = parseInt(data.loaded / data.total * 100, 10);
                 if (isMultiArtifactsSupported) {
+                     //Bring Progress bar from 0 to 100 and then from 100 to 0
                      $('#progress .progress-bar').css('width', progress + '%')
                                                  .delay(1000).queue(function (next) {
                                                    $(this).replaceWith(
@@ -435,18 +435,15 @@ jagg.template("application", function (inputs, outputs, jagg) {
                     $('#progress .progress-bar').css('width', progress + '%');
                 }
 
-//                 $('#progress .progress-bar').delay( 3000 ).css('width', '0%');
                 if (progress == 100) {
                     $('#btn-artifact-upload').replaceWith("<span class=\"btn btn-primary btn-file\" " +
                         "id=\"btn-artifact-upload\" disabled>Processing &nbsp <i class=\"fw fw-loader2 fw-spin\"></i></span>");
-
                 }
                 if (progress == 100 && fileMoved) {
                     getVersionHashId();
                     if(isMultiArtifactsSupported) {
                         fileMoved = false;
                     }
-
                 }
             }
 
@@ -1031,7 +1028,6 @@ jagg.template("application", function (inputs, outputs, jagg) {
 
     // Return whether the artifact is validated or not
     function validateArtifact(value) {
-        var tmpFileName ;
         var file = $("#uploadedFileName");
         return ((file.val() != "") ? validateArtifactType(file.val()) : true);
     }
@@ -1304,9 +1300,6 @@ jagg.template("application", function (inputs, outputs, jagg) {
             </div>
 
             <div class="form-group" id="file-upload-block">
-
-
-
                  <%if(isMultiArtifactsSupported){%>
                   <div>
                          <label for="application-description" >Upload  <b>.<%=appType.extension.toUpperCase()%></b> files: *</label>
