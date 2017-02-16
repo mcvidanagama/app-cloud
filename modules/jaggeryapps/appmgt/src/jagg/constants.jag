@@ -20,11 +20,13 @@ var TMP_UPLOADED_APPLICATIONS_PATH = "tmpUploadedApps";
 var ARTIFACT_UPLOAD_DIRECTORY = "/tmp/";
 var POD_TIMEOUT = "Pod.TimeOut";
 var PROPERTY_APPMGT_DEPLOYMENT_DIR_PATH="Appmgt.DeploymentDirPath";
+var PROPERTY_DOCKER_CLIENT_URL="DockerClientURL";
 var PROPERTY_DOCKER_REGISTRY_URL="DockerRegistryURL";
 var PROPERTY_DOCKER_REGISTRY_URL_INFRA="DockerRegistryURL_Infra";
 var PROPERTY_STORAGE_SERVER_URL="StorageServerURL";
 var PROPERTY_RSS_ENVIRONMENT_NAME="RSSEnvironmentName";
 var DOCKER_FILE_NAME = "Dockerfile";
+var DOCKER_TEMPLATE_FILE_DIR_NAME = "dockerfiles";
 var TENANT_DOMAIN_NAME = "tenantDomainName";
 var SUPER_TENANT_DOMAIN_NAME = "carbon.super";
 var CLOUD_TYPE = "AppCloud";
@@ -49,6 +51,9 @@ var GOOGLE_ANALYTICS_ENABLED = "Google.Analytics.Enabled";
 var GOOGLE_TRACKING_ID = "Google.Tracking.Id";
 var ZOPIM_CHAT_ID = "Zopim.Chat.Id";
 var FILE_UPLOAD_TIMEOUT = "File.Upload.Timeout";
+var CUSTOM_URL_SETTINGS_PAGE_URL = "CustomUrlSettingsPage.Url";
+var ADMIN_USERNAME = "Cloud.Admin.Username";
+var ADMIN_PASSWORD = "Cloud.Admin.Password";
 
 //events related constants
 var DATABASE_ADD = "Adding application to database";
@@ -97,6 +102,11 @@ var INTEGRATION_CLOUD_HOSTNAME = "IntegrationCloud.Hostname";
 var DAS_RECEIVER_AUTH_BASE64 = "Receiver.Auth";
 
 var CUSTOM = "custom";
+var STATUS_PASSED = "passed";
+var CUSTOM_SECURITY = "customsecurity";
+var DEFAULT = "default";
+var PROFILE_URL = "Profile.Url";
+var CHANGE_PASSWORD_URL = "ChangePassword.Url";
 var PROFILE_URL = "/site/pages/user-profile.jag";
 var CHANGE_PASSWORD_URL = "/site/pages/change-password.jag";
 var CUSTOM_URL_SETTINGS_PAGE_URL = "/site/pages/custom_url.jag";

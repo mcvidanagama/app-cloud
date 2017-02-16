@@ -16,10 +16,22 @@
 
 package org.wso2.appcloud.core.dao;
 
+import com.google.common.base.Strings;
 import org.apache.commons.io.IOUtils;
 import org.wso2.appcloud.common.AppCloudException;
 import org.wso2.appcloud.core.DBUtil;
 import org.wso2.appcloud.core.SQLQueryConstants;
+import org.wso2.appcloud.core.dto.Application;
+import org.wso2.appcloud.core.dto.ApplicationRuntime;
+import org.wso2.appcloud.core.dto.ApplicationType;
+import org.wso2.appcloud.core.dto.Container;
+import org.wso2.appcloud.core.dto.ContainerServiceProxy;
+import org.wso2.appcloud.core.dto.CustomImage;
+import org.wso2.appcloud.core.dto.Deployment;
+import org.wso2.appcloud.core.dto.RuntimeProperty;
+import org.wso2.appcloud.core.dto.Tag;
+import org.wso2.appcloud.core.dto.Transport;
+import org.wso2.appcloud.core.dto.Version;
 import org.wso2.appcloud.core.dto.*;
 
 import java.io.IOException;

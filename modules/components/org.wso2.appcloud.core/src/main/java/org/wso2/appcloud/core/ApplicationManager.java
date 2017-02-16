@@ -16,10 +16,21 @@
 
 package org.wso2.appcloud.core;
 
+import com.nimbusds.jose.util.JSONObjectUtils;
+import net.minidev.json.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.appcloud.common.AppCloudException;
 import org.wso2.appcloud.core.dao.ApplicationDAO;
+import org.wso2.appcloud.core.dto.Application;
+import org.wso2.appcloud.core.dto.ApplicationRuntime;
+import org.wso2.appcloud.core.dto.ApplicationType;
+import org.wso2.appcloud.core.dto.ContainerServiceProxy;
+import org.wso2.appcloud.core.dto.Deployment;
+import org.wso2.appcloud.core.dto.RuntimeProperty;
+import org.wso2.appcloud.core.dto.Tag;
+import org.wso2.appcloud.core.dto.Transport;
+import org.wso2.appcloud.core.dto.Version;
 import org.wso2.appcloud.core.dto.*;
 import org.wso2.carbon.context.CarbonContext;
 
@@ -27,6 +38,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
