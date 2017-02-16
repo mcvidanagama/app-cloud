@@ -39,6 +39,8 @@ var Util = Packages.org.wso2.appcloud.core.Util;
 var ResourceQuotaLimit = Packages.org.wso2.appcloud.provisioning.runtime.beans.ResourceQuotaLimit;
 var List = Packages.java.util.List;
 var Arrays = Packages.java.util.Arrays;
+var subscriptionManager = jagg.module("subscription");
+var subscription = subscriptionManager.getSubscription();
 
 
 /**
@@ -857,24 +859,42 @@ function getDeploymentConfig(containersList, versionHashId, replicas){
     return deploymentConfig;
 }
 
+// temp fix to disable esb on certain tiers.
+function isAppTypeAllowed() {
+    if (subscription) {
+        return !(subscription.getPlan() == "integration_cloud_starter");
+    }
+    return false;
+}
+
 /**
  * Method for getting all the available application types e.g : war, mss, car
  */
-var getAllAppTypes = function(){
+var getAllAppTypes = function () {
     var appTypeArray = [];
     try {
         var appTypes = ApplicationManager.getAllAppTypesForCloud(jagg.getSelectedCloud());
-
+        var isAllAppTypesAllowedTenant = modManager.isAllAppTypesAllowedTenant();
         for (var i = 0; i < appTypes.length; i++) {
             var appType = appTypes[i];
             var appTypeObject = {};
 
             appTypeObject.name = appType.appTypeName;
             appTypeObject.description = appType.description;
+            if (appTypeObject.name == 'projectx') {
+                if (isAllAppTypesAllowedTenant == true) {
+                    appTypeArray.push(appTypeObject);
+                }
+            } else if (appTypeObject.name == 'wso2esb') {
+                if (isAppTypeAllowed('wso2esb') == true) {
+                    appTypeArray.push(appTypeObject);
+                }
+            } else {
+                appTypeArray.push(appTypeObject);
+            }
 
-            appTypeArray.push(appTypeObject);
         }
-    } catch(e){
+    } catch (e) {
         log.error("Error while getting the list of apptypes");
         log.error(e);
         throw e;
@@ -1779,43 +1799,6 @@ var getNotAllowedEnvVariables = function () {
         return notAllowedVariables;
 };
 
-var getMaxInstanceCount = function () {
-    try {
-        var tenantId = modManager.getTenantId();
-        var maxAppCount = ApplicationManager.getMaxAppCountForWhiteListedTenants(tenantId, jagg.getSelectedCloud());
-        var subscriptionPlanBaseURL = modManager.getPropertyValue("SubscriptionPlanBaseURL");
-        var subscriptionPlanURL = subscriptionPlanBaseURL + "/plans/" + jagg.getSelectedCloud() + "/FREE";
-        if (maxAppCount == -1) {
-            var maxInstancesJson = get(subscriptionPlanURL, {}, "json");
-            maxAppCount = parseInt(maxInstancesJson.data.maxApplications);
-        }
-        return maxAppCount;
-    } catch (e) {
-        log.error("Error while getting the maximum application count for tenant: " + tenantId);
-        log.error(e);
-        throw e;
-    }
-};
-
-var getMaxReplicaCount = function() {
-    try {
-        var tenantId = modManager.getTenantId();
-        var maxReplicaCount = ApplicationManager.getMaxReplicaCountForWhiteListedTenants(tenantId, jagg.getSelectedCloud());
-        var subscriptionPlanBaseURL = modManager.getPropertyValue("SubscriptionPlanBaseURL");
-        var subscriptionPlanURL = subscriptionPlanBaseURL + "/plans/" + jagg.getSelectedCloud() + "/FREE";
-
-        if (maxReplicaCount == -1) {
-            var maxReplicaJson = get(subscriptionPlanURL, {}, "json");
-            maxReplicaCount = parseInt(maxReplicaJson.data.maxReplicas);
-        }
-        return maxReplicaCount;
-    } catch (e) {
-        log.error("Error while getting the maximum replica count for tenant: " + tenantId);
-        log.error(e);
-        throw e;
-    }
-};
-
 var getApplicationRevisionStatus = function(applicationKey, selectedRevision) {
     var selectedRevisionStatus = null;
 
@@ -1857,19 +1840,28 @@ var getRuntimePropertyMap = function (runtimePropertyArray) {
     return getRuntimeProperties(runtimePropertyList);
 };
 
-var getAllowedContainerSpecificationsForRuntime = function(runtimeID) {
+var getAllowedContainerSpecificationsForRuntime = function (runtimeId) {
     try {
-        var subscriptionPlanBaseURL = modManager.getPropertyValue("SubscriptionPlanBaseURL");
-        var runtimeContainerSpecURL = subscriptionPlanBaseURL + "/containerSpecs/allowedruntime/" + runtimeID;
-        var allowedRuntimeContainerSpecJson = get(runtimeContainerSpecURL, "", "json");
-
-        return allowedRuntimeContainerSpecJson;
+        var containerSpecifications = ApplicationManager.getAllowedContainerSpecificationsForRuntime(runtimeId);
+        var allowedContainerSpecifications = { "data": []};
+        for (var i = 0; i < containerSpecifications.length; i++) {
+            allowedContainerSpecifications.data.push(
+                    {
+                        "conSpecName": containerSpecifications[i].conSpecName,
+                        "costPerHour": containerSpecifications[i].costPerHour,
+                        "cpu": containerSpecifications[i].cpu,
+                        "id": containerSpecifications[i].id,
+                        "memory": containerSpecifications[i].memory
+                    }
+            );
+        }
+        return allowedContainerSpecifications;
     } catch (e) {
-        log.error("Error while getting allowed container specifications for runtime with ID: " + runtimeID);
+        log.error("Error while getting allowed container specifications for runtime with ID: " + runtimeId);
         log.error(e);
         throw e;
     }
-}
+};
 
 /**
   * Get the application summary with tags of all the tagged applications
@@ -1981,4 +1973,15 @@ var getReplicaCountForVersion = function (applicationName, versionName) {
          throw e;
     }
 }
+
+var getVersionByHashId = function (versionHashId) {
+    try {
+        return ApplicationManager.getVersionByHashId(versionHashId);
+    } catch (e) {
+        log.error("Error while getting version info by hash id : " + versionHashId);
+        log.error(e);
+        throw e;
+    }
+}
+
 %>

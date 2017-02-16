@@ -41,33 +41,39 @@ jagg.template("apptype/select", function(inputs, outputs, jagg) {
     </div>
 
     <div class="container-fluid app-type-listing padding-bottom-xlg padding-top-xlg">
-        <h1 class="page-header">Integration</h1>
-           <div class="row listing">
-              <%
-                if (appTypes.length > 0) {
-                    for (var x = 0; x < appTypes.length; x++) {
-                        if(appTypes[x].cssProperties && appTypes[x].cssProperties.category == 'integration'){
-                            %>
-                        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2 ">
-                            <div class="cloud-app-type <%=appTypes[x].cssProperties.color%>" app-type="<%=appTypes[x].name%>">
-                                <div class="app-thumbnail">
-                                    <i class="fw <%=appTypes[x].cssProperties.icon%> fw-5x"></i>
-                                    <div class="type-name" ><%=appTypes[x].cssProperties.displayName%></div>
-                                </div>
-                                <div class="description <%=appTypes[x].cssProperties.color%>-dark">
-                                    <i class="fw <%=appTypes[x].cssProperties.icon%> fw-5x"></i>
-                                    <%=appTypes[x].description%>
-                                </div>
-                            </div>
+      <%
+        var integrationAppTypeCount = 0;
+        if (appTypes.length > 0) {
+            for (var x = 0; x < appTypes.length; x++) {
+                if(appTypes[x].cssProperties && appTypes[x].cssProperties.category == 'integration'){
+                    integrationAppTypeCount++;
+                    if(integrationAppTypeCount==1){ %>
+                            <h1 class="page-header">Integration</h1>
+                            <div class="row listing"> <%
+                    }
+                    %>
+                <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2 ">
+                    <div class="cloud-app-type <%=appTypes[x].cssProperties.color%>" app-type="<%=appTypes[x].name%>">
+                        <div class="app-thumbnail">
+                            <i class="fw <%=appTypes[x].cssProperties.icon%> fw-5x"></i>
+                            <div class="type-name" ><%=appTypes[x].cssProperties.displayName%></div>
                         </div>
-                             <%
-
-                        }
+                        <div class="description <%=appTypes[x].cssProperties.color%>-dark">
+                            <i class="fw <%=appTypes[x].cssProperties.icon%> fw-5x"></i>
+                            <%=appTypes[x].description%>
+                        </div>
+                    </div>
+                </div>
+                     <%
+                    if(integrationAppTypeCount==1){ %>
+                        </div> <%
                     }
                 }
+            }
+        }
 
-                %>
-            </div>
+        %>
+
 
         <h1 class="page-header">Services</h1>
             <div class="row listing">

@@ -18,7 +18,9 @@
  */
 
 jagg.module("manager", {
-    setAuthHeaders: function () {
+    isAllAppTypesAllowedTenant: function () {
+        return jagg.require(jagg.getModulesDir() + "manager/manager.jag").isAllAppTypesAllowedTenant.apply(this, arguments);
+    },setAuthHeaders: function () {
         return jagg.require(jagg.getModulesDir() + "manager/manager.jag").setAuthHeaders.apply(this, arguments);
     },
     getPropertyValue: function () {
@@ -62,6 +64,9 @@ jagg.module("manager", {
     },
     hasCustomURLSettingsAccess:function () {
         return jagg.require(jagg.getModulesDir() + "manager/manager.jag").hasCustomURLSettingsAccess.apply(this, arguments);
+    },
+    isAdminUser:function () {
+        return jagg.require(jagg.getModulesDir() + "manager/manager.jag").isAdminUser.apply(this, arguments);
     }
 });
 %>
