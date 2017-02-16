@@ -446,26 +446,26 @@ var createDockerFile = function (applicationName, versionName, appTypeName, runt
         var appType = appTypesProperties[appTypeName];
         var isMultiArtifactsSupported = (appType.isMultiArtifactsSupported =='true');
 
-        var checkFileExtZIP = false;
         var uploadArtifactTmpName;
+        var artifactNameWithoutExtension;
         if (!isMultiArtifactsSupported) {
-            checkFileExtZIP = isFileExtZIP(uploadedFileName);
-        }
-        if (checkFileExtZIP && !artifactUrl) {
-            var fileName = uploadedFileName.substring(0, uploadedFileName.lastIndexOf("."));
-            uploadArtifactTmpName = fileName + FILE_EXTENSTION_ALTER;
+            var checkFileExtZIP = isFileExtZIP(uploadedFileName);
+            if (checkFileExtZIP && !artifactUrl) {
+                var fileName = uploadedFileName.substring(0, uploadedFileName.lastIndexOf("."));
+                uploadArtifactTmpName = fileName + FILE_EXTENSTION_ALTER;
+            } else {
+                uploadArtifactTmpName = uploadedFileName;
+            }
+            artifactNameWithoutExtension = uploadArtifactTmpName.substring(0, uploadArtifactTmpName.lastIndexOf("."));
         } else {
-            uploadArtifactTmpName = uploadedFileName;
+             uploadArtifactTmpName = uploadedFileName;
         }
         var dockerFilePropertyMap = new java.util.HashMap();
         dockerFilePropertyMap.put("ARTIFACT_NAME", uploadArtifactTmpName);
         dockerFilePropertyMap.put("HOST_NAME", hostName);
         dockerFilePropertyMap.put("ARTIFACT_URL", artifactUrl);
         dockerFilePropertyMap.put("VAL_TOTAL_MEMORY", conSpecMemory);
-        if (!isMultiArtifactsSupported) {
-            var artifactNameWithoutExtension = uploadArtifactTmpName.substring(0, uploadArtifactTmpName.lastIndexOf("."));
-            dockerFilePropertyMap.put("ARTIFACT_DIR", artifactNameWithoutExtension);
-        }
+        dockerFilePropertyMap.put("ARTIFACT_DIR", artifactNameWithoutExtension);
 
         var mod = jagg.module("application");
         mod.getAppTypeUtil(appTypeName).setDockerEnvironmentVariables(dockerFilePropertyMap);
