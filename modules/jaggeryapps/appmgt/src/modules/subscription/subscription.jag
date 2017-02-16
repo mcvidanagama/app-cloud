@@ -65,7 +65,7 @@ var getSubscription = function () {
 var generateSubscriptionObject = function (tenantId, cloudType, plan, startDate, endDate, status) {
     var billingPlanProperties = jagg.getCloudTypePropertyConfFilePath()[cloudType].billing.plans;
     var subscription = new Subscription();
-    for(var i = 0; billingPlanProperties.length; i++) {
+    for(var i = 0; i < billingPlanProperties.length; i++) {
         if (billingPlanProperties[i].id == plan) {
             subscription.setTenantId(tenantId);
             subscription.setPlan(plan);
