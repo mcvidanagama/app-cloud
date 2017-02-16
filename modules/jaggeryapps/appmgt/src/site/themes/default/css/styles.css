@@ -3305,3 +3305,50 @@ ul.overview-inner-list li {
   top: 0;
   left: 4px;
 }
+
+
+.image-panel td {
+    background-color: #161616;
+    padding-left: 10px;
+    padding-top: 5px;
+    padding-bottom: 10px;
+    font-size: 13px;
+    font-weight: 100;
+    color: #ffffff;
+
+}
+
+.image-panel td a{
+    color: #ffffff;
+}
+
+.image-panel th {
+    background-color: #696969;
+    padding-left: 10px;
+    padding-top: 5px;
+    padding-bottom: 10px;
+    font-size: 15px;
+    font-weight: 100;
+}
+
+.imagePanelOptionIcon {
+    padding-right: 6px;
+    padding-left: 6px;
+}
+
+.result-panel {
+    background-color: #696969;
+}
+
+.result-description {
+    font-weight:100;
+}
+
+.more-less {
+    float: right;
+}
+
+.panel-title > a {
+    display: block;
+    text-decoration: none;
+}

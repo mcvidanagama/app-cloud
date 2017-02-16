@@ -29,7 +29,6 @@ jagg.template("application", function (inputs, outputs, jagg) {
         var isAppTypeBuildable = appType.buildable;
         var isMultiArtifactsSupported = (appType.isMultiArtifactsSupported =='true');
         var applicationName = outputs.applicationName;
-        var subscriptionPlanBaseURL = outputs.subscriptionPlanBaseURL;
         var encodedLabels = request.getParameter("encodedLabels");
         var encodedEnvs = request.getParameter("encodedEnvs");
         var log = new Log();
@@ -37,7 +36,6 @@ jagg.template("application", function (inputs, outputs, jagg) {
         var decodedEnvs = parse(decodeURIComponent(encodedEnvs, "UTF-8"));
         var newVersion = request.getParameter("newVersion");
         var data = null;
-        var allowedRuntimeContainerSpecJson = outputs.allowedContainerSpecs;
 		var maxApplications = outputs.maxAppCount;
         var defaultVersion = outputs.defaultVersion;
         var appTypeCount = outputs.appTypeCount;
@@ -48,10 +46,17 @@ jagg.template("application", function (inputs, outputs, jagg) {
         var requestMoreAppseURL = outputs.requestMoreAppseURL;
         var allDBInfo = outputs.allDBInfo;
         var noOfDbs = outputs.noOfDbs;
+
+        var verifiedCustomImages = outputs.verifiedCustomImages;
+        var selectedImageId = outputs.selectedImageId;
+
+        var isThrottled = outputs.isThrottled;
+        var allowedRuntimeContainerSpecJson = outputs.throttledAllowedContainerSpecs;
+
     %>
 
       <link rel="stylesheet" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/bootstrap-3.2.0/bootstrap.min.css'))%>">
-      <link rel="stylesheet" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/font-wso2-1.0.0/css/font-wso2.css'))%>">
+      <link rel="stylesheet" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/font-wso2-1.2.1/css/font-wso2.css'))%>">
       <link rel="stylesheet" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/font-awesome-4.2.0/font-awesome.min.css'))%>">
       <link rel="stylesheet" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/web-fonts/Roboto.css'))%>">
       <link rel="stylesheet" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/styles.css'))%>">
@@ -73,6 +78,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
     var cloudSpecificApplicationRepresentation = "<%=cloudSpecificApplicationRepresentation%>";
     var runningApplicationCount = <%=runningApplicationCount%>;
     var maxApplications = <%=maxApplications%>;
+    var isThrottled = <%=isThrottled%>;
     var conSpecs = <%=conSpecs%>;
     var retryCount = 0;
     var iconErrorMsg = "Invalid Image";                // used to hold the validation error message of the app icon
@@ -130,13 +136,14 @@ jagg.template("application", function (inputs, outputs, jagg) {
             } else {
                 initSelect2(null, valueElem, "", allDBInfo);
             }
-            if (runningApplicationCount >= maxApplications) {
+
+            if (isThrottled){
                 $('#outerContainer').empty();
                 $('#outerContainer').html('<div class="container-fluid"><div class="row row-centered">' +
-                    '<div class="col-centered col-xs-10 col-sm-7  col-md-7 col-lg-6"><div class="cloud-new-content">' +
-                    '<h2>You can run only up to '+ maxApplications +' '+ cloudSpecificApplicationRepresentation.toLowerCase() + 's/versions simultaneously on a free subscription.</h2>' +
-                    '1. Stop an existing ' + cloudSpecificApplicationRepresentation.toLowerCase() + '/version to continue.<br>'+
-                    '2. <a href="<%=requestMoreAppseURL%>" target="_blank">Submit a request</a> to run more ' + cloudSpecificApplicationRepresentation.toLowerCase() + 's on free subscription.</div></div></div></div>');
+                  '<div class="col-centered col-xs-10 col-sm-7  col-md-7 col-lg-6"><div class="cloud-new-content">' +
+                  '<h2>Not enough resources to create new applications.</h2>' +
+                  '1. Stop an existing ' + cloudSpecificApplicationRepresentation.toLowerCase() + '/version to continue.<br>'+
+                  '2. <a href="<%=requestMoreAppseURL%>" target="_blank">Submit a request</a> to upgrade ' + cloudSpecificApplicationRepresentation.toLowerCase() + 's on your subscription.</div></div></div></div>');
                 return;
             }
 
@@ -257,7 +264,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                     formData.append('conSpec', conSpecs[optionSpec]);
                     formData.append('runtime', optionRuntime);
                     if(appTypeName === custom) {
-                        formData.append('remoteImageUrl', $("#remoteImageUrl").val());
+                        formData.append('imageId', $("#verifiedImages option:selected").val());
                        // formData.append('userName', $("#userName").val());
                        // formData.append('password', $("#password").val());
                         formData.append('appCreationMethod', custom);
@@ -293,7 +300,9 @@ jagg.template("application", function (inputs, outputs, jagg) {
                     }
                     if (appTypeName === custom) {
                         var tagArray = new Array();
-                        var tagObj = { "key":"Base Image", "value":$("#remoteImageUrl").val() };
+                        // base image will be added as a tag, then user can later see the base image in app home UI.
+                        // otherwise there is no any other way to determine from which image this app has been created.
+                        var tagObj = { "key":"Base Image", "value":$("#verifiedImages option:selected").text() };
                         tagArray.push(tagObj);
                         formData.append('tags',JSON.stringify(tagArray));
                     } else {
@@ -886,15 +895,13 @@ jagg.template("application", function (inputs, outputs, jagg) {
 
     function activateCreateApplication() {
 
-        //first disable the button and then enable it only if condions are satisfied
+        //first disable the button and then enable it only if conditions are satisfied
         $("#add-application").prop("disabled", true);
 
         if ($('#applicationName').val() && $('#applicationRevision').val() && $('#container option:selected').val() &&
             $('#runtime').val() > 0 && checkApplicationVersionExistence($('#applicationRevision').val())) {// mandatory validations for all app types
             if (appTypeName == custom) { // validations for custom app type
-                if ($("#remoteImageUrl").val()) {
-                    $("#add-application").prop("disabled", false);
-                }
+                    $("#add-application").prop("disabled", false); // for the custm app type mandatory fields are enough.
             } else {
                 var isFileUploaded = (isMultiArtifactsSupported ? isMultiArtifactsUploaded(): $("#uploadedFileName").val());
 
@@ -1211,6 +1218,14 @@ jagg.template("application", function (inputs, outputs, jagg) {
             </a>
         <%
     }
+    if(appType.type == CUSTOM) { %>
+        <a href="<%=jagg.getAbsoluteUrl("/site/pages/custom-docker-images.jag")%>" class="btn-action">
+                <span class="fw-stack fw-lg btn-action-ico">
+                    <i class="fw fw-circle-outline fw-stack-2x"></i>
+                    <i class="fw fw-build fw-stack-1x"></i> <!-- put  fw-docker icon once font-wso2 package is updated -->
+                </span> Manage Images
+            </a>
+   <% }
     %>
 </div>
 <!-- EOF App Cloud menu actionbar-->
@@ -1232,6 +1247,33 @@ jagg.template("application", function (inputs, outputs, jagg) {
             <div class="col-md-5 forms">
 
       <form id="application-details" method="post" action='<%=jagg.getAbsoluteUrl("/site/blocks/application/application.jag")%>' enctype="multipart/form-data">
+            </br>
+            <% if(appType.type == CUSTOM) {%>
+                <div class="form-group" id="custom-docker-image-block">
+                    <div class="row">
+                        <label class="col-md-12" for="runtime">Custom Image: </label>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <select name="verifiedImages" id="verifiedImages" class="form-control">
+                                <%
+                                for(var i = 0; i < verifiedCustomImages.length; i++) {
+                                    var image = verifiedCustomImages[i];
+                                    if(image.imageId == selectedImageId) { // image is selected
+                                        print('<option selected value="' + image.imageId + '">' + image.remoteUrl + '</option>');
+                                    } else {
+                                        print('<option value="' + image.imageId + '">' + image.remoteUrl + '</option>');
+                                    }
+                                %>
+                                <%}%>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <a  href="custom-docker-images.jag" class="btn btn-primary" >Manage Images</a>
+                        </div>
+                    </div>
+                </div>
+            <%}%>
             <div class="form-group">
                 <label for="application-name"><%=cloudSpecificApplicationRepresentation%> Name: *</label>
                 <input id="applicationName" name="applicationName" type="text" class="form-control" placeholder="Enter <%=cloudSpecificApplicationRepresentation.toLowerCase()%> name" maxlength="100" />
@@ -1372,24 +1414,6 @@ jagg.template("application", function (inputs, outputs, jagg) {
                     <input id="token" name="token" type="text" class="form-control" placeholder="Enter Personal access token" />
                 </div-->
             </div>
-            <%} else {%>
-             <div class="form-group" id="custom-docker-image-block">
-                <div class="input-group">
-                    <span class="input-group-addon">Image ID</span>
-                    <input id="remoteImageUrl" name="remoteImageUrl" type="text" class="form-control" placeholder="docker.io/testuser/testimage:testtag" />
-                </div>
-                </br>
-               <!-- <div class="input-group">
-                    <span class="input-group-addon">User name</span>
-                    <input id="userName" name="userName" type="text" class="form-control" placeholder="required only if repo is private" />
-                </div>
-                <br>
-                <div class="input-group">
-                    <span class="input-group-addon">Password</span>
-                    <input id="password" name="password" type="password" class="form-control" placeholder="required only if repo is private" />
-                </div> -->
-            </div>
-
              <%}%>
             <div class="form-group <%if(appType.type == CUSTOM) { %>hidden <% } %>">
                 <label for="runtime">Runtime: *
