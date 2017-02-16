@@ -442,11 +442,13 @@ var createDockerFile = function (applicationName, versionName, appTypeName, runt
             log.debug("Docker file path for deployment: " + dockerFilePath);
         }
         var dockerTemplateFilePath = modManager.getPropertyValue(PROPERTY_APPMGT_DEPLOYMENT_DIR_PATH) + "/" + "dockerfiles";
-        var uploadArtifactTmpName;
+
         var appType = appTypesProperties[appTypeName];
         var isMultiArtifactsSupported = (appType.isMultiArtifactsSupported =='true');
+
         var checkFileExtZIP = false;
-        if(!isMultiArtifactsSupported) {
+        var uploadArtifactTmpName;
+        if (!isMultiArtifactsSupported) {
             checkFileExtZIP = isFileExtZIP(uploadedFileName);
         }
         if (checkFileExtZIP && !artifactUrl) {
@@ -456,14 +458,14 @@ var createDockerFile = function (applicationName, versionName, appTypeName, runt
             uploadArtifactTmpName = uploadedFileName;
         }
         var dockerFilePropertyMap = new java.util.HashMap();
-        if(!isMultiArtifactsSupported){
-            var artifactNameWithoutExtension = uploadArtifactTmpName.substring(0, uploadArtifactTmpName.lastIndexOf("."));
-            dockerFilePropertyMap.put("ARTIFACT_DIR", artifactNameWithoutExtension);
-        }
         dockerFilePropertyMap.put("ARTIFACT_NAME", uploadArtifactTmpName);
         dockerFilePropertyMap.put("HOST_NAME", hostName);
         dockerFilePropertyMap.put("ARTIFACT_URL", artifactUrl);
         dockerFilePropertyMap.put("VAL_TOTAL_MEMORY", conSpecMemory);
+        if (!isMultiArtifactsSupported) {
+            var artifactNameWithoutExtension = uploadArtifactTmpName.substring(0, uploadArtifactTmpName.lastIndexOf("."));
+            dockerFilePropertyMap.put("ARTIFACT_DIR", artifactNameWithoutExtension);
+        }
 
         var mod = jagg.module("application");
         mod.getAppTypeUtil(appTypeName).setDockerEnvironmentVariables(dockerFilePropertyMap);
