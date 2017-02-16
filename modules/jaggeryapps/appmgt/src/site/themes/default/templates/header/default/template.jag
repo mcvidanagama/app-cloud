@@ -146,7 +146,7 @@ $zopim(function () {
                 </li>
                 <% } else { }%>
                 <li><a href="<%=docUrl%>" target=_blank><i class="fa fa-book"></i> Documentation</a></li>
-                <li><a href="<%=cloudMgtURL + CONTACT_US_URL + "?cloudType=" + jagg.getSelectedCloud()%>" target=_blank><i class="fa fa-envelope"></i> Support</a></li>
+                <li><a href="<%=cloudMgtURL + CONTACT_US_URL + "?cloud-type=" + jagg.getSelectedCloud()%>" target=_blank><i class="fa fa-envelope"></i> Support</a></li>
                 <li class="dropdown user-name">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <%=loggedInUserName%>
                         <i class="fa fa-chevron-circle-down"></i>
