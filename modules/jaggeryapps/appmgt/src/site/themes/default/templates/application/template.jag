@@ -55,7 +55,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
     %>
 
       <link rel="stylesheet" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/bootstrap-3.2.0/bootstrap.min.css'))%>">
-      <link rel="stylesheet" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/font-wso2-1.0.0/css/font-wso2.css'))%>">
+      <link rel="stylesheet" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/font-wso2-1.2.1/css/font-wso2.css'))%>">
       <link rel="stylesheet" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/font-awesome-4.2.0/font-awesome.min.css'))%>">
       <link rel="stylesheet" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/web-fonts/Roboto.css'))%>">
       <link rel="stylesheet" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/styles.css'))%>">
@@ -1086,6 +1086,14 @@ jagg.template("application", function (inputs, outputs, jagg) {
             </a>
         <%
     }
+    if(appType.type == CUSTOM) { %>
+        <a href="<%=jagg.getAbsoluteUrl("/site/pages/custom-docker-images.jag")%>" class="btn-action">
+                <span class="fw-stack fw-lg btn-action-ico">
+                    <i class="fw fw-circle-outline fw-stack-2x"></i>
+                    <i class="fw fw-build fw-stack-1x"></i> <!-- put  fw-docker icon once font-wso2 package is updated -->
+                </span> Manage Images
+            </a>
+   <% }
     %>
 </div>
 <!-- EOF App Cloud menu actionbar-->
@@ -1107,6 +1115,33 @@ jagg.template("application", function (inputs, outputs, jagg) {
             <div class="col-md-5 forms">
 
       <form id="application-details" method="post" action='<%=jagg.getAbsoluteUrl("/site/blocks/application/application.jag")%>' enctype="multipart/form-data">
+            </br>
+            <% if(appType.type == CUSTOM) {%>
+                <div class="form-group" id="custom-docker-image-block">
+                    <div class="row">
+                        <label class="col-md-12" for="runtime">Custom Image: </label>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <select name="verifiedImages" id="verifiedImages" class="form-control">
+                                <%
+                                for(var i = 0; i < verifiedCustomImages.length; i++) {
+                                    var image = verifiedCustomImages[i];
+                                    if(image.imageId == selectedImageId) { // image is selected
+                                        print('<option selected value="' + image.imageId + '">' + image.remoteUrl + '</option>');
+                                    } else {
+                                        print('<option value="' + image.imageId + '">' + image.remoteUrl + '</option>');
+                                    }
+                                %>
+                                <%}%>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <a  href="custom-docker-images.jag" class="btn btn-primary" >Manage Images</a>
+                        </div>
+                    </div>
+                </div>
+            <%}%>
             <div class="form-group">
                 <label for="application-name"><%=cloudSpecificApplicationRepresentation%> Name: *</label>
                 <input id="applicationName" name="applicationName" type="text" class="form-control" placeholder="Enter <%=cloudSpecificApplicationRepresentation.toLowerCase()%> name" maxlength="100" />
@@ -1235,33 +1270,6 @@ jagg.template("application", function (inputs, outputs, jagg) {
                     <input id="token" name="token" type="text" class="form-control" placeholder="Enter Personal access token" />
                 </div-->
             </div>
-            <%} else {%>
-             <div class="form-group" id="custom-docker-image-block">
-                <div class="row">
-                    <label class="col-md-12" for="runtime">Your Verified images: </label>
-                </div>
-                <div class="row">
-                    <div class="col-md-8">
-                        <select name="verifiedImages" id="verifiedImages" class="form-control">
-                            <%
-                                for(var i = 0; i < verifiedCustomImages.length; i++) {
-                                    var image = verifiedCustomImages[i];
-                                    if(image.imageId == selectedImageId) { // image is selected
-                                        print('<option selected value="' + image.imageId + '">' + image.remoteUrl + '</option>');
-                                    } else {
-                                        print('<option value="' + image.imageId + '">' + image.remoteUrl + '</option>');
-                                    }
-                                    %>
-
-                            <%}%>
-                    </select>
-                    </div>
-                    <div class="col-md-4">
-                        <a  href="custom-docker-images.jag" class="btn btn-primary" >Manage Images</a>
-                    </div>
-                </div>
-            </div>
-
              <%}%>
             <div class="form-group <%if(appType.type == CUSTOM) { %>hidden <% } %>">
                 <label for="runtime">Runtime: *

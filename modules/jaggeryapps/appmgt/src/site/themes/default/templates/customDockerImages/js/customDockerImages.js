@@ -27,34 +27,93 @@ $(document).ready(function () {
             $("#addImage").prop("disabled", true);
         }
     });
+
     fillImagesListTable();
 
-    $(document).on('click','.deleteImage',function(e){
+    $(document).on('click', '.deleteImage', function (e) {
         e.preventDefault();
         var imageId = $(this).closest('tr').data('uid');
-        console.log(imageId);
-        deleteImage(imageId);
+        jagg.popMessage({
+                            type: 'confirm',
+                            modalStatus: true,
+                            title: 'Delete Image',
+                            content: 'Are you sure you want to delete this image ?',
+                            yesCallback: function () {
+                                deleteImage(imageId);
+                            },
+                            noCallback: function () {
+                            }
+                        });
 
     });
+
     $(document).on('click','.updateImage',function(e){
         e.preventDefault();
         var imageId = $(this).closest('tr').data('uid');
-        updateImage(imageId);
+        jagg.popMessage({
+                            type: 'confirm',
+                            modalStatus: true,
+                            title: 'Delete Image',
+                            content: 'Are you sure you want to update this image ?',
+                            yesCallback: function () {
+                                updateImage(imageId);
+                            },
+                            noCallback: function () {
+                            }
+                        });
+    });
+
+    function toggleIcon(e) {
+        $(e.target)
+                .prev('.panel-heading')
+                .find(".more-less")
+                .toggleClass('glyphicon-plus glyphicon-minus');
+    }
+
+    $(document).on('hidden.bs.collapse', function (e) {
+        toggleIcon(e);
+    });
+
+    $(document).on('shown.bs.collapse', function (e) {
+        toggleIcon(e);
     });
     $(document).on('click', '.viewResult', function (e) {
         e.preventDefault();
         var resultJson = $(this).data('uid');
         resultJson = decodeURI(resultJson);
-        //resultJson = JSON.parse(resultJson);
+        resultJson = JSON.parse(resultJson);
+        console.log(testsJson);
+        console.log(resultJson);
 
-        $('#viewResultModal .modal-body').val(resultJson);
-       // $('#viewResultModal').show();
+        var modalBody = '<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">';
+        for (i = 0; i < testsJson.length; i++) {
+            var testId = testsJson[i].testId;
+            var panelColorClass;
+            if(resultJson[testId] == "pass") {
+                panelColorClass = "panel-success";
+            } else if (resultJson[testId] == "fail") {
+                panelColorClass = "panel-danger";
+
+            }
+            modalBody += '<div class="panel ' + panelColorClass + '">' +
+                         '<div class="panel-heading" role="tab" id="heading' + i + '">' + '<h4 class="panel-title">' +
+                         '<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse' + i + '" aria-expanded="true" aria-controls="collapse' + i + '">' +
+                         '<i class="more-less glyphicon glyphicon-plus"></i>' +
+                         testsJson[i].title + ' : ' + resultJson[testId]  + '</a></h4></div>' +
+                         '<div id="collapse' + i + '" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading' + i + '">' +
+                         '<div class="panel-body result-panel">' +
+                         '<p>Test :</p>' +
+                         '<p class="result-description">' + testsJson[i].description + '</p>' +
+                         '<p>Docker Benchmark Reference : </p>' +
+                         '<p class="result-description">' + testsJson[i].dockerBenchReference + '</p>' +
+                         '<p>Remedy : </p>' +
+                         '<p class="result-description">' + testsJson[i].remedy + '</p>' +
+
+                         '</div></div></div></div>';
+        }
+        $('#viewResultModal .modal-body').html(modalBody);
     });
 
-    //$(".deleteImage").click(function (event) {
-        //alert("hi");
-        //deleteImage("mc.com-rayyildizhelloworldgoweblatest");
-    //});
 });
 
 
@@ -116,7 +175,7 @@ $(document).ready(function () {
             action: "getAllImages",
             imageUrl: $("#imageUrl").val().trim()
         }, function (result) {
-            var tableHtml = '<tr><th>Image Url</th><th>Status</th><th>Test Report</th><th>Options</th><th>Last Updated</th></tr>';
+            var tableHtml = '<tr><th>Image URL</th><th class="col-centered">Last Updated</th><th class="col-centered">Status</th><th class="col-centered">Test Report</th><th class="col-centered">Options</th><th class="col-centered">Create Application</th></tr>';
             var resObj = JSON.parse(result);
             if (resObj.length > 0) { // panel will only be shown if there are 1 or more images
                 $('#dockerImagesPanelDiv').show();
@@ -127,25 +186,28 @@ $(document).ready(function () {
             for (i = 0; i < resObj.length; i++) {
                 var statusIcon, notActiveCreateApplication = "", notActiveModifyImage = "";
                 if (resObj[i].status == "passed") {
-                    statusIcon = '<i class="fw fw-success fw-2x text-info"></i>';
+                    statusIcon = '<i class="fw fw-success text-success"></i>';
                 } else if (resObj[i].status == "failed") {
-                    statusIcon = '<i class="fw fw-block fw-2x text-danger"></i>';
+                    statusIcon = '<i class="fw fw-error text-danger"></i>';
                     notActiveCreateApplication = "not-active";
                 } else {
-                    statusIcon = '<i class="fw fw-loader5 fw-spin fw-2x text-warning"></i>';
+                    statusIcon = '<i class="fw fw-loader5 fw-spin text-warning"></i>';
                     notActiveCreateApplication = "not-active";
                     notActiveModifyImage = "not-active";
                     pendingImagesAvailable = true;
 
                 }
                 tableHtml += '<tr data-uid="'+ resObj[i].imageId +'"><td>' + resObj[i].remoteUrl + '</td>' +
-                             '<td>' + statusIcon + '</td>' +
-                             '<td>' + '<a href="#viewResultModal" data-uid="' + encodeURI(resObj[i].results) + '" data-toggle="modal" class="' + notActiveModifyImage + ' viewResult" title="View test report"><i class="fw fw-checklist fw-2x"></i></a>' + '</td>' +
-                             '<td>' +
-                             '<a href="application.jag?appTypeName=custom&selectedImageId=bla" class="btn ' + notActiveCreateApplication + '" title="Create application using this image" ><i class="fw fw-application fw-2x"></i></a>' +
-                             '<a href="" class="btn ' + notActiveModifyImage + ' updateImage" title="Update image"><i class="fw fw-upload fw-2x "></i></a>' +
-                             '<a href="" class="btn ' + notActiveModifyImage + ' deleteImage" title="Delete image"><i class="fw fw-delete fw-2x "></i></a>' +
-                             '<td>' + resObj[i].lastUpdated + '</td>' +
+                             '<td class="col-centered">' + resObj[i].lastUpdated.split(".")[0] + '</td>' +
+                             '<td class="col-centered">' + statusIcon + '</td>' +
+                             '<td class="col-centered">' + '<a href="#viewResultModal" data-uid="' + encodeURI(resObj[i].results) + '" data-toggle="modal" class="' + notActiveModifyImage + ' viewResult" title="View test report"><i class="fw fw-checklist "></i></a>' + '</td>' +
+                             '<td class="col-centered">' +
+                             '<a href="" class="imagePanelOptionIcon ' + notActiveModifyImage + ' updateImage" title="Update image"><i class="fw fw-refresh  "></i></a>' +
+                             '<a href="" class="imagePanelOptionIcon ' + notActiveModifyImage + ' deleteImage" title="Delete image"><i class="fw fw-delete  "></i></a>' +
+                             '<td class="col-centered"> ' +
+                             '<a href="application.jag?appTypeName=custom&selectedImageId=bla" class=" ' + notActiveCreateApplication + '" title="Create application using this image" ><i class="fw fw-application"></i></a>' +
+                             '</td>' +
+
                              '</td></tr>';
             }
             $('#customImagesTable').html(tableHtml);
