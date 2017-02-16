@@ -20,7 +20,17 @@
 include("/jagg/jagg.jag");
 
 jagg.template("customDockerImages", function (inputs, outputs, jagg) {
+
+    var testsJson = outputs.testsJson;
+    var log = new Log();
+    log.info(testsJson);
     %>
+
+<script type="text/javascript">
+    var testsJson = '<%=testsJson%>';
+    testsJson = JSON.parse(testsJson);
+</script>
+
 <!-- BOF App factory menu actionbar -->
    <div class="action-bar">
        <a href="/appmgt/site/pages/application.jag?appTypeName=custom" class="btn-action">
@@ -35,8 +45,8 @@ jagg.template("customDockerImages", function (inputs, outputs, jagg) {
             <form name="addImageForm" id="addImageForm" enctype="multipart/form-data" method='post' action='#'>
                 <div class="col-md-5 col-lg-5 forms">
                     <div class="form-group col-md-12 ">
-                        <label for="imageUrl">Image Url: * </label>
-                        <input type="text" class="form-control" id="imageUrl"  name="imageUrl"  placeholder="eg: registry_url/image_name:tag" value="">
+                        <label for="imageUrl">Image URL: * </label>
+                        <input type="text" title="Paste here what you usually type with 'docker pull' command" class="form-control" id="imageUrl"  name="imageUrl"  placeholder="registry_url/image_name:tag" value="">
                     </div>
                     <div class="clearfix"></div>
                     <!--<div class="form-group col-md-6">-->

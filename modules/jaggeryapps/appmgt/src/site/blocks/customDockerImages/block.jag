@@ -20,6 +20,7 @@
 include('/jagg/constants.jag');
 include('/jagg/jagg.jag');
 var log = new Log();
+var modManager = jagg.module("manager");
 jagg.block("customDockerImages", {
     initialize: function (data) {
 
@@ -31,11 +32,11 @@ jagg.block("customDockerImages", {
     },
 
     getOutputs: function (inputs) {
-
+        var testsJson = modManager.getPropertyValue("CustomDocker.SecurityTests");
 
 
         return {
-
+            "testsJson": testsJson
         };
     }
 
