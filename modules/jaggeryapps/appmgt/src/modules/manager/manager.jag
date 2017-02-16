@@ -25,6 +25,17 @@ var carbon = require('carbon');
 var server = carbon.server;
 var multitenancy = carbon.multitenancy;
 
+var isAllAppTypesAllowedTenant = function () {
+    var tenant = getTenantDomain(true);
+    var tenants = ALL_APP_TYPES_ALLOWED_TENANTS.split(',');
+    for (var t in tenants) {
+        if (tenants[t] == tenant) {
+            return true;
+        }
+    }
+    return false;
+};
+
 
 var getPropertyValue = function(propertyName){
     var AppCloudUtil = Packages.org.wso2.appcloud.common.util.AppCloudUtil;
@@ -198,5 +209,13 @@ function hasCustomURLSettingsAccess() {
     var username = jagg.getUser();
     var permission = getPropertyValue(CUSTOM_URL_PERMISSION);
     return checkAuthorizationForUser(username, permission);
-}
+};
+
+var isAdminUser = function () {
+    var tenantId = getTenantId();
+    var realmService = server.osgiService('org.wso2.carbon.user.core.service.RealmService');
+    var isAdminUser = false;
+    isAdminUser = realmService.getTenantUserRealm(tenantId).getUserStoreManager().isUserInRole(getTenantAwareUsername(), "admin");
+    return isAdminUser;
+};
 %>
