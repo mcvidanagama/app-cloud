@@ -126,11 +126,10 @@ var log = new Log();
         var uploadedFileName = request.getParameter("uploadedFileName");
 
         var appIcon = request.getFile("appIcon");
-        var uploadedArtifact = request.getFile("fileupload");
-
+        var uploadedArtifacts = request.getAllFiles();
         var isFileAttached = request.getParameter("isFileAttached");
         if (isFileAttached == 'true') {
-            if (uploadedArtifact == null) {
+            if (uploadedArtifacts == null) {
                 response.status = 400;
                 response.content = "Bad request : fileupload is required!";
                 return;
@@ -215,14 +214,17 @@ var log = new Log();
             var isApplicationCreatePossible = jagg.module("throttling").isApplicationCreatePossible(conSpecCpu, conSpecMemory);
             if (isApplicationCreatePossible) {
                 if (isFileAttached == 'true') {
-                    var fileSuccessfullyUploaded = applicationModule.
-                        uploadExistingArchive(uploadedArtifact, appTypeName, applicationName, applicationRevision);
-                    if (!fileSuccessfullyUploaded) {
-                        logMessage = "Error while uploading file: " + uploadedArtifact.getName();
-                        log.error(logMessage);
-                        response.status = 400;
-                        response.content = logMessage + ". Please retry uploading";
-                        return ;
+                    for (var property in uploadedArtifacts) {
+                        var tmpUploadedArtifact = uploadedArtifacts[property];
+                        var fileSuccessfullyUploaded  = applicationModule.
+                              uploadExistingArchive(tmpUploadedArtifact, appTypeName, applicationName, applicationRevision);
+                        if (!fileSuccessfullyUploaded) {
+                            logMessage = "Error while uploading file: " + tmpUploadedArtifact.getName();
+                            response.status = 400;
+                            log.error(logMessage);
+                            response.content = logMessage + ". Please retry uploading";
+                            return ;
+                        }
                     }
                 }
 
