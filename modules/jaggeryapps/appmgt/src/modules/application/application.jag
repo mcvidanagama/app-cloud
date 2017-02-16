@@ -871,7 +871,6 @@ var getAllAppTypes = function(){
 
             appTypeObject.name = appType.appTypeName;
             appTypeObject.description = appType.description;
-
             appTypeArray.push(appTypeObject);
         }
     } catch(e){
@@ -901,7 +900,6 @@ var getAllRuntimes = function(appType){
             runtimeObject.imageName = runtime.imageName;
             runtimeObject.tag = runtime.tag;
             runtimeObject.description = runtime.description;
-
             runtimeArray.push(runtimeObject);
         }
     } catch(e){

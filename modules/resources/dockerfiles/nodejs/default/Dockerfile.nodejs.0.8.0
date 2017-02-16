@@ -1,0 +1,36 @@
+# ------------------------------------------------------------------------
+#
+# Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+#
+#   WSO2 Inc. licenses this file to you under the Apache License,
+#   Version 2.0 (the "License"); you may not use this file except
+#   in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing,
+#   software distributed under the License is distributed on an
+#   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+#   KIND, either express or implied.  See the License for the
+#   specific language governing permissions and limitations
+#   under the License.
+#
+# ------------------------------------------------------------------------
+
+FROM wso2-cloud/nodejs:0.8.0-base
+
+ENV APP_FILE_UPLOAD ARTIFACT_NAME
+ENV APP_LOCATION ARTIFACT_DIR
+ENV APP_FILE_ZIP "$APP_LOCATION.zip"
+COPY "$APP_FILE_UPLOAD" "$APP_HOME/"
+WORKDIR "$APP_HOME/"
+RUN mv "$APP_FILE_UPLOAD" ${APP_FILE_UPLOAD%.upload}.zip
+RUN unzip $APP_FILE_ZIP
+RUN rm  $APP_FILE_ZIP
+WORKDIR "$APP_HOME/$APP_LOCATION"
+RUN npm install
+
+CMD ["npm", "start"]
+
+#CMD ["bash", "-c", "source /init.sh"]
