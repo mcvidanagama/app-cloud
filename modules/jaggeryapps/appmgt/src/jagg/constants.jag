@@ -52,8 +52,8 @@ var GOOGLE_TRACKING_ID = "Google.Tracking.Id";
 var ZOPIM_CHAT_ID = "Zopim.Chat.Id";
 var FILE_UPLOAD_TIMEOUT = "File.Upload.Timeout";
 var CUSTOM_URL_SETTINGS_PAGE_URL = "CustomUrlSettingsPage.Url";
-var ADMIN_USERNAME = "Admin.Username";
-var ADMIN_PASSWORD = "Admin.Password";
+var ADMIN_USERNAME = "Cloud.Admin.Username";
+var ADMIN_PASSWORD = "Cloud.Admin.Password";
 
 //events related constants
 var DATABASE_ADD = "Adding application to database";
