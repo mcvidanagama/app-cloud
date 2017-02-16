@@ -342,9 +342,11 @@ jagg.template("application", function (inputs, outputs, jagg) {
                                      $('#artifactlist').append(
                                                 '<li class="list-group-item justify-content-between " style="background:#666;">'+
                                                     '<span id="fileName" >'+$("#uploadedFileName").val()+'</span>'+
+                                                    '<a href="#">'+
                                                     ' <span class="pull-right">'+
                                                      '      <i class="fw fw-delete fw-inverse artifact-delete-btn"></i>'+
                                                      ' </span>'+
+                                                     '</a>'+
                                                  '</li>'
                                      );
 
@@ -355,7 +357,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                                 $("#uploadedFileName").val("");
                            }else{
                                 //append "clear" button only if the uploaded file is correct type
-                                $(".input-group-btn").append(
+                                $("#file-upload-input-group").append(
                                         '<span class="btn btn-primary btn-file" id="clearArtifactFile">'+
                                                 'Clear'+
                                         '</span>'
@@ -1315,7 +1317,7 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 <%}%>
                 <div class="input-group">
                     <input id="uploadedFileName" name="uploadedFileName" type="text" class="form-control" readonly>
-                    <span class="input-group-btn">
+                    <span class="input-group-btn" id="file-upload-input-group">
                        <span class="btn btn-primary btn-file" id="btn-artifact-upload" disabled>
                            <input id="fileupload" type="file" name="fileupload">Browse</input>
                        </span>
