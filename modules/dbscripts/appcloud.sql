@@ -87,13 +87,14 @@ INSERT INTO `AC_RUNTIME` (`id`, `name`, `image_name`, `tag`, `description`) VALU
 (8, 'OracleJDK 8 + WSO2 MSF4J 2.0.0', 'msf4j', '2.0.0', 'OS:alpine-java, Oracle JDK:8u102'),
 (9, 'WSO2 Enterprise Service Bus - 5.0.0', 'wso2esb', '5.0.0', 'OS:Debian, Oracle JDK:8u102'),
 (10, 'Apache Tomcat 8.0.36 / WSO2 Application Server 6.0.0-M3 - Deprecated', 'wso2as', '6.0.0-m3', 'OS:alpine-java, Oracle JDK:8u102'),
-(11, 'Custom Docker Image runtime', 'custom', 'customtag', 'OS:Custom, JAVA Version:custom'),
+(11, 'Custom Docker http-9443 https-9763', 'custom', 'customtag', 'OS:Custom, JAVA Version:custom'),
 (12, 'WSO2 Data Services Server - 3.5.1', 'wso2dataservice', '3.5.1', 'OS:alpine-java, Oracle JDK:8u102'),
 (13, 'Apache Tomcat 8.5.5 (Alpine 3.4/Oracle JDK 1.8.0_112)', 'tomcat', '8.5.5-alpine3.4-oracle-jdk1.8.0', 'OS:Alpine 3.4, Oracle JDK 1.8.0_112'),
 (14, 'Apache Tomcat 8.5.5 (Ubuntu 16.04/Oracle JDK 1.8.0_112)', 'tomcat', '8.5.5-ubuntu16.04-oracle-jdk1.8.0', 'OS:Ubuntu 16.04, Oracle JDK 1.8.0_112'),
 (15, 'Apache Tomcat 8.5.5 (Alpine 3.4/Open JDK 1.8.0_92)', 'tomcat', '8.5.5-alpine3.4-open-jdk1.8.0', 'OS:Alpine 3.4, Open JDK 1.8.0_92'),
 (16, 'Apache Tomcat 8.5.5 (Ubuntu 16.04/Open JDK 1.8.0_91)', 'tomcat', '8.5.5-ubuntu16.04-open-jdk1.8.0', 'OS:Ubuntu 16.04, Open JDK 1.8.0_91'),
-(17, 'OracleJDK 8 + WSO2 MSF4J 2.1.0', 'msf4j', '2.0.0', 'OS:alpine-java, Oracle JDK:8u102');
+(17, 'OracleJDK 8 + WSO2 MSF4J 2.1.0', 'msf4j', '2.0.0', 'OS:alpine-java, Oracle JDK:8u102'),
+(18, 'Custom Docker http-8080 https-8443', 'custom', 'customtag', 'OS:Custom, JAVA Version:custom');
 
 
 -- -----------------------------------------------------
@@ -266,7 +267,8 @@ INSERT INTO `AC_APP_TYPE_RUNTIME` (`app_type_id`, `runtime_id`) VALUES
 (1, 14),
 (1, 15),
 (1, 16),
-(2, 17);
+(2, 17),
+(7, 18);
 
 
 -- -----------------------------------------------------
@@ -470,8 +472,8 @@ INSERT INTO `AC_RUNTIME_TRANSPORT` (`transport_id`, `runtime_id`) VALUES
 (8, 9),
 (3, 10),
 (4, 10),
-(5, 11),
-(6, 11),
+(3, 11),
+(4, 11),
 (5, 12),
 (6, 12),
 (3, 13),
@@ -483,7 +485,9 @@ INSERT INTO `AC_RUNTIME_TRANSPORT` (`transport_id`, `runtime_id`) VALUES
 (4, 15),
 (4, 16),
 (3, 17),
-(4, 17);
+(4, 17),
+(5, 19),
+(6, 19);
 
 INSERT INTO `AC_CONTAINER_SPECIFICATIONS` (`CON_SPEC_NAME`, `CPU`, `MEMORY`, `COST_PER_HOUR`) VALUES
 ('128MB RAM and 0.1x vCPU', 100, 128, 1),
@@ -532,7 +536,8 @@ INSERT INTO `AC_RUNTIME_CONTAINER_SPECIFICATIONS` (`id`, `CON_SPEC_ID`) VALUES
 (16, 4),
 (17, 2),
 (17, 3),
-(17, 4);
+(17, 4),
+(18, 4);
 
 -- -----------------------------------------------------
 -- Table `AppCloudDB`.`AC_CLOUD_APP_TYPE`
