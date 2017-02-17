@@ -64,6 +64,7 @@ include("/jagg/constants.jag");
         var image = mod.getImageById(imageId); // first retrieve the existing image
         var imageUrl = image.remoteUrl; // obtain the remoteUrl
         imageUrl = stringify(imageUrl); // need to convert the object to string
+        imageUrl = imageUrl.replace(/['"]+/g, ''); //remove the quotes from string
         log.info("^^^^^^^^^^^^^^ " + imageUrl);
         if (mod.deleteImage(imageId)) { // delete the existing image and re-add it using obtained remote url
             mod.addImageAndCheckSecurity(imageUrl);
