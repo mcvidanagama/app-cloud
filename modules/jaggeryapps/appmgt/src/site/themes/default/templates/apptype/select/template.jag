@@ -65,10 +65,10 @@ jagg.template("apptype/select", function(inputs, outputs, jagg) {
                     </div>
                 </div>
                      <%
-                if(integrationAppTypeCount==1){ %>
-                        </div> <%
-                }
             }
+        }
+        if (integrationAppTypeCount > 0) { %>
+                        </div> <%
         }
     }
 
