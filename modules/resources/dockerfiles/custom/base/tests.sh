@@ -18,16 +18,19 @@
 #   under the License.
 #
 # ------------------------------------------------------------------------
+loginEndPoint="site/blocks/user/login/ajax/login.jag"
+adminEndPoint="site/blocks/admin/admin.jag"
 
 
 # wait until container runs
+sleep 3
 running_containers=$(docker ps | sed '1d' | awk '{print $NF}')
-while [ -z "$running_containers" ]; do
-echo "no running containers yet, sleeping for 1s"
-sleep 1
-running_containers=$(docker ps | sed '1d' | awk '{print $NF}')
-done
-
+if [ "$running_containers" = "" ] || [ "$running_containers" = " " ] || [ "$running_containers" = "[]" ]; then
+    resultsJson="{\"imageId\":\"$IMAGE_TAG\",\"imageUrl\":\"$CUSTOM_DOCKER_IMAGE_URL\",\"status\":\"failed\",\"results\":{\"test00\":\"fail\",\"test01\":\"fail\",\"test02\":\"fail\",\"test03\":\"fail\"}}"
+    curl -c cookies -v -X POST -k $APPCLOUD_URL$loginEndPoint -d "action=login&userName=$ADMIN_USERNAME&password=$ADMIN_PASSWORD"
+    curl -b cookies  -v -X POST -k $APPCLOUD_URL$adminEndPoint -d "action=publishDockerSecurityTestResults&testResultsJson=$resultsJson"
+    exit
+fi
 
 status="passed"
 
@@ -73,9 +76,7 @@ fi
 
 # =========================
 # publishing test results
-resultsJson="{\"imageId\":\"$IMAGE_TAG\",\"imageUrl\":\"$CUSTOM_DOCKER_IMAGE_URL\",\"status\":\"$status\",\"results\":{\"test01\":\"$test1\",\"test02\":\"$test2\",\"test03\":\"$test3\"}}"
-loginEndPoint="site/blocks/user/login/ajax/login.jag"
-adminEndPoint="site/blocks/admin/admin.jag"
+resultsJson="{\"imageId\":\"$IMAGE_TAG\",\"imageUrl\":\"$CUSTOM_DOCKER_IMAGE_URL\",\"status\":\"$status\",\"results\":{\"test00\":\"pass\",\"test01\":\"$test1\",\"test02\":\"$test2\",\"test03\":\"$test3\"}}"
 curl -c cookies -v -X POST -k $APPCLOUD_URL$loginEndPoint -d "action=login&userName=$ADMIN_USERNAME&password=$ADMIN_PASSWORD"
 
 curl -b cookies  -v -X POST -k $APPCLOUD_URL$adminEndPoint -d "action=publishDockerSecurityTestResults&testResultsJson=$resultsJson"
