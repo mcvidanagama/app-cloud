@@ -203,7 +203,7 @@ $(document).ready(function () {
                              '<td class="col-centered">' + '<a href="#viewResultModal" data-uid="' + encodeURI(resObj[i].results) + '" data-toggle="modal" class="' + notActiveModifyImage + ' viewResult" title="View test report"><i class="fw fw-checklist "></i></a>' + '</td>' +
                              '<td class="col-centered">' +
                              '<a href="" class="imagePanelOptionIcon ' + notActiveModifyImage + ' updateImage" title="Update image"><i class="fw fw-refresh  "></i></a>' +
-                             '<a href="" class="imagePanelOptionIcon ' + notActiveModifyImage + ' deleteImage" title="Delete image"><i class="fw fw-delete  "></i></a>' +
+                             '<a href="" class="imagePanelOptionIcon deleteImage" title="Delete image"><i class="fw fw-delete  "></i></a>' +
                              '<td class="col-centered"> ' +
                              '<a href="application.jag?appTypeName=custom&selectedImageId=bla" class=" ' + notActiveCreateApplication + '" title="Create application using this image" ><i class="fw fw-application"></i></a>' +
                              '</td>' +
