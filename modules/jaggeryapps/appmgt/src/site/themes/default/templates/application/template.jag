@@ -45,13 +45,10 @@ jagg.template("application", function (inputs, outputs, jagg) {
         var requestMoreAppseURL = outputs.requestMoreAppseURL;
         var allDBInfo = outputs.allDBInfo;
         var noOfDbs = outputs.noOfDbs;
-<<<<<<< HEAD
         var verifiedCustomImages = outputs.verifiedCustomImages;
         var selectedImageId = outputs.selectedImageId;
-=======
         var isThrottled = outputs.isThrottled;
         var allowedRuntimeContainerSpecJson = outputs.throttledAllowedContainerSpecs;
->>>>>>> master
     %>
 
       <link rel="stylesheet" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/bootstrap-3.2.0/bootstrap.min.css'))%>">
