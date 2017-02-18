@@ -45,7 +45,7 @@ INSERT INTO AC_APP_TYPE_RUNTIME VALUES(7,18);
 
 -- link runtimes and transports
 DELETE FROM AC_RUNTIME_TRANSPORT WHERE runtime_id=11;
-INSERT INTO AC_RUNTIME_TRANSPORT VALUES (5,19),(6,19),(3,11),(4,11);
+INSERT INTO AC_RUNTIME_TRANSPORT VALUES (5,11),(6,11),(3,18),(4,18);
 
 
 -- setting runtime container spec new runtime
