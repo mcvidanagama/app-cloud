@@ -472,8 +472,8 @@ INSERT INTO `AC_RUNTIME_TRANSPORT` (`transport_id`, `runtime_id`) VALUES
 (8, 9),
 (3, 10),
 (4, 10),
-(3, 11),
-(4, 11),
+(5, 11),
+(6, 11),
 (5, 12),
 (6, 12),
 (3, 13),
@@ -486,8 +486,8 @@ INSERT INTO `AC_RUNTIME_TRANSPORT` (`transport_id`, `runtime_id`) VALUES
 (4, 16),
 (3, 17),
 (4, 17),
-(5, 19),
-(6, 19);
+(3, 18),
+(4, 18);
 
 INSERT INTO `AC_CONTAINER_SPECIFICATIONS` (`CON_SPEC_NAME`, `CPU`, `MEMORY`, `COST_PER_HOUR`) VALUES
 ('128MB RAM and 0.1x vCPU', 100, 128, 1),
