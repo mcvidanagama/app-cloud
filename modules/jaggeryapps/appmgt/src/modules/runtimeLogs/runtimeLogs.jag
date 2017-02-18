@@ -111,7 +111,7 @@ var getDownloadableRuntimeLogs = function (selectedReplicaId) {
             "count": 50000,
             "sortBy" : [{
                "field" : "_timestamp",
-               "sortType" : "ASC"
+               "sortType" : "DESC"
             }
            ]
 
@@ -127,9 +127,9 @@ var getDownloadableRuntimeLogs = function (selectedReplicaId) {
         var result = parse(responseText);
         var logMap = {};
         var lines = [];
-        for (var key in result) {
-                if(result.hasOwnProperty(key)) {
-                    var values = result[key].values;
+	for (var i = result.length-1; i>=0; i--) {
+                if(result.hasOwnProperty(i)) {
+                    var values = result[i].values;
                     lines.push(values.log);
                 }
         }
