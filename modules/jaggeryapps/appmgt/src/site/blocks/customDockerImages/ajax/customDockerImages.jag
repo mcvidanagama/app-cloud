@@ -1,0 +1,76 @@
+<%
+/*
+ * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *   WSO2 Inc. licenses this file to you under the Apache License,
+ *   Version 2.0 (the "License"); you may not use this file except
+ *   in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing,
+ *   software distributed under the License is distributed on an
+ *   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *   KIND, either express or implied.  See the License for the
+ *   specific language governing permissions and limitations
+ *   under the License.
+ */
+
+include("/jagg/jagg.jag");
+include("/jagg/constants.jag");
+
+(function () {
+    var mod, obj,
+            action = request.getParameter("action"),
+            site = require("/site/conf/site.json");
+
+    var log = new Log();
+    mod = jagg.module("customDockerImages");
+
+    if (action == "addImageAndCheckSecurity") {
+
+        var imageUrl = request.getParameter("imageUrl");
+        log.info("block imageUrl : " + imageUrl);
+        mod.addImageAndCheckSecurity(imageUrl);
+        print("image verified");
+
+    } else if (action == "isImageAvailable") {
+        var imageUrl = request.getParameter("imageUrl");
+        print(mod.isImageAvailable(imageUrl));
+
+    } else if (action == "getAllImages") {
+        var allImages = mod.getAllImages();
+        //directly passing the result to front end doesn't work, its because this array contains CustomImages java objects
+        var allImagesArray = [];
+        for (var i = 0; i < allImages.length; i++) {
+            var image = allImages[i];
+            var imageJsonObj = {};
+            imageJsonObj.imageId = image.imageId;
+            imageJsonObj.tenantId = image.tenantId;
+            imageJsonObj.remoteUrl = image.remoteUrl;
+            imageJsonObj.results = image.results;
+            imageJsonObj.status = image.status;
+            imageJsonObj.lastUpdated = image.lastUpdated;
+            allImagesArray.push(imageJsonObj);
+        }
+        print(allImagesArray);
+
+    } else if (action == "deleteImage") {
+        var imageId = request.getParameter("imageId");
+        print(mod.deleteImage(imageId));
+    } else if (action == "updateImage") {
+        var imageId = request.getParameter("imageId");
+        var image = mod.getImageById(imageId); // first retrieve the existing image
+        var imageUrl = image.remoteUrl; // obtain the remoteUrl
+        imageUrl = stringify(imageUrl); // need to convert the object to string
+        imageUrl = imageUrl.replace(/['"]+/g, ''); //remove the quotes from string
+        log.info("^^^^^^^^^^^^^^ " + imageUrl);
+        if (mod.deleteImage(imageId)) { // delete the existing image and re-add it using obtained remote url
+            mod.addImageAndCheckSecurity(imageUrl);
+        }
+    } else {
+        log.error("No action specified");
+    }
+}());
+%>

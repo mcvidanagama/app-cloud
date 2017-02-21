@@ -43,6 +43,7 @@ jagg.template("index", function(inputs, outputs, jagg) {
             $('.active').removeClass('active');
             $($(this)[0]).addClass('active');
             $('#button-category').html($(this)[0].id+' <span class="caret"></span>');
+            $("#item_list").html('');
             drawApplicationList();
 
         });
@@ -97,6 +98,10 @@ jagg.template("index", function(inputs, outputs, jagg) {
                     }
                 }
             });
+            if ($("#item_list").children().length < 1) {
+                $("#item_list").append($('<div class="col-centered col-md-4 "><div class="cloud-new-content"> ' +
+                 '<h3>Your search did not match any application.</h3></div></div>'));
+            }
         }
 
         $(document).ready(function (){
@@ -309,7 +314,7 @@ jagg.template("index", function(inputs, outputs, jagg) {
                 <div class="input-group">
                     <input type="text" class="form-control" id="search-apps" placeholder="Search applications">
                     <div class="input-group-btn">
-                        <i class="icon fa fa-2x fa-search"></i>
+			<i class="icon fa fa-2x fa-search"></i>
                         <button id="button-category" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">All <span class="caret"></span></button>
                         <ul id="app-category" class="dropdown-menu dropdown-menu-right">
                           <li id="All" class="active"><a href="#">All</a></li>
