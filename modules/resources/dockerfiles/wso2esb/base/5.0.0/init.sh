@@ -52,6 +52,15 @@ while read in; do rm -rf "$PLUGINS_DIR_PATH""$in" && sed -i "/$in/d" "$DEFAULT_P
 rm -rf $CARBON_HOME_PATH/repository/deployment/server/axis2services/*
 rm -rf $CARBON_HOME_PATH/repository/deployment/server/webapps/*
 
+#set user defined TIMEZONE
+if [ -n "$TIMEZONE" ]; then
+	export TIMEZONE=$TIMEZONE
+	echo ${TIMEZONE} >/etc/timezone
+fi
+
+#Enabling log enabled log4j properties
+echo $LOG4J_PROPERTIES | tr "," "\n" >>  $CARBON_HOME_PATH/repository/conf/log4j.properties
+
 #Check whether JAVA_OPTS env variable is defined and is not empty
 if [[ $JAVA_OPTS && ${JAVA_OPTS-_} ]]; then
 	export JAVA_OPTS=$JAVA_OPTS
