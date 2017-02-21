@@ -65,6 +65,7 @@ echo $LOG4J_PROPERTIES | tr "," "\n" >>  $CARBON_HOME_PATH/repository/conf/log4j
 if [ -n "$SO_TIMEOUT" ]; then
 	sed -i '/<transportSender name="http" class="org.apache.axis2.transport.http.CommonsHTTPTransportSender">/a <parameter name="SO_TIMEOUT">'$SO_TIMEOUT'</parameter>' $CARBON_HOME_PATH/repository/conf/axis2/axis2_blocking_client.xml
 	sed -i '/<transportSender name="https" class="org.apache.axis2.transport.http.CommonsHTTPTransportSender">/a <parameter name="SO_TIMEOUT">'$SO_TIMEOUT'</parameter>' $CARBON_HOME_PATH/repository/conf/axis2/axis2_blocking_client.xml
+fi
 
 #Check whether JAVA_OPTS env variable is defined and is not empty
 if [[ $JAVA_OPTS && ${JAVA_OPTS-_} ]]; then
