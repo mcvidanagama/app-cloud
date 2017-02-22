@@ -33,13 +33,9 @@ jagg.block("customDockerImages", {
 
     getOutputs: function (inputs) {
         var testsJson = modManager.getPropertyValue("CustomDocker.SecurityTests");
-
-
         return {
             "testsJson": testsJson
         };
     }
-
-
 });
 %>

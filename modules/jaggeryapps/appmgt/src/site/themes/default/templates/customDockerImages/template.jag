@@ -20,18 +20,16 @@
 include("/jagg/jagg.jag");
 
 jagg.template("customDockerImages", function (inputs, outputs, jagg) {
-
     var testsJson = outputs.testsJson;
     var log = new Log();
-    log.info(testsJson);
     %>
 
-<script type="text/javascript">
-    var testsJson = '<%=testsJson%>';
-    testsJson = JSON.parse(testsJson);
-</script>
+    <script type="text/javascript">
+        var testsJson = '<%=testsJson%>'; // This contains the json string value of the parameter CustomDocker.SecurityTests in appcloud.properties
+        testsJson = JSON.parse(testsJson);
+    </script>
 
-<!-- BOF App factory menu actionbar -->
+    <!-- BOF App factory menu actionbar -->
    <div class="action-bar">
        <a href="/appmgt/site/pages/application.jag?appTypeName=custom" class="btn-action">
                <span class="fw-stack fw-lg btn-action-ico">
@@ -39,8 +37,9 @@ jagg.template("customDockerImages", function (inputs, outputs, jagg) {
                    <i class="fw fw-left-arrow fw-stack-1x"></i>
                </span> <span class="hidden-xs">Back to application creation</span>
         </a>
-    </div><!-- EOF App factory menu actionbar-->
-    <div class="container-fluid cloud-container" id="outerContainer">
+   </div><!-- EOF App factory menu actionbar-->
+
+   <div class="container-fluid cloud-container" id="outerContainer">
         <div class="row">
             <form name="addImageForm" id="addImageForm" enctype="multipart/form-data" method='post' action='#'>
                 <div class="col-md-5 col-lg-5 forms">
@@ -49,6 +48,7 @@ jagg.template("customDockerImages", function (inputs, outputs, jagg) {
                         <input type="text" title="Paste here what you usually type with 'docker pull' command" class="form-control" id="imageUrl"  name="imageUrl"  placeholder="registry_url/image_name:tag" value="">
                     </div>
                     <div class="clearfix"></div>
+                    <!-- This will be enabled once authentication is done-->
                     <!--<div class="form-group col-md-6">-->
                         <!--<label for="userName">User Name: <I>(only for private images)</I></label>-->
                         <!--<input type="text" class="form-control" id="userName" name="userName" placeholder="Enter user name">-->
@@ -72,16 +72,11 @@ jagg.template("customDockerImages", function (inputs, outputs, jagg) {
             </form>
         </div>
         <div class="row col-md-8" id="dockerImagesPanelDiv" hidden>
-           <div class="panel panel-default">
-            <!-- Default panel contents -->
-                <!--<div class="panel-heading">Images List</div>-->
-            <!-- Table -->
-            <table class="table image-panel" id="customImagesTable"></table>
-</div>
- </div>
-
-
-    </div><!-- /.container -->
+            <div class="panel panel-default">
+                <table class="table image-panel" id="customImagesTable"></table>
+            </div>
+        </div>
+   </div><!-- /.container -->
 
 <!-- Modal -->
 <div class="modal fade" id="viewResultModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -91,19 +86,11 @@ jagg.template("customDockerImages", function (inputs, outputs, jagg) {
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel">Test Results</h4>
       </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <!--<div class="modal-footer">-->
-        <!--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>-->
-        <!--<button type="button" class="btn btn-primary">Save changes</button>-->
-      <!--</div>-->
+      <div class="modal-body"></div>
     </div>
   </div>
 </div>
 
-<script src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('templates/customDockerImages/js/customDockerImages.js'))
-    %>"></script>
+<script src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('templates/customDockerImages/js/customDockerImages.js'))%>"></script>
 
-    <%
-}); %>
+<%}); %>
