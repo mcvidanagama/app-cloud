@@ -8,6 +8,13 @@ sed -i "/port=\"9763\"/a    proxyPort=\"80\"" $CARBON_HOME_PATH/repository/conf/
 sed -i "/port=\"9443\"/a    proxyPort=\"443\"" $CARBON_HOME_PATH/repository/conf/tomcat/catalina-server.xml
 #sed -i '/<WebContextRoot>/c\\t<WebContextRoot>/dss</WebContextRoot>' $CARBON_HOME_PATH/repository/conf/carbon.xml
 
+#Change file properties
+if [ -z "$MY_PROPERTIES" ]; then
+   echo "MY_PROPERTIES is not set.";
+  else
+   cd $CARBON_HOME_PATH/repository/conf/ && bash config_modifier.sh $MY_PROPERTIES;
+fi
+
 #Changing tenant admin password
 if [ -z ${TENANT_PASSWORD+x} ]; then
     echo "TENANT_PASSWORD is not set.";
