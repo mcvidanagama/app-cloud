@@ -868,18 +868,13 @@ var getAllAppTypes = function () {
     var appTypeArray = [];
     try {
         var appTypes = ApplicationManager.getAllAppTypesForCloud(jagg.getSelectedCloud());
-        var isAllAppTypesAllowedTenant = modManager.isAllAppTypesAllowedTenant();
         for (var i = 0; i < appTypes.length; i++) {
             var appType = appTypes[i];
             var appTypeObject = {};
 
             appTypeObject.name = appType.appTypeName;
             appTypeObject.description = appType.description;
-            if (appTypeObject.name == 'projectx') {
-                if (isAllAppTypesAllowedTenant == true) {
-                    appTypeArray.push(appTypeObject);
-                }
-            } else if (appTypeObject.name == 'wso2esb') {
+            if (appTypeObject.name == 'wso2esb') {
                 if (isAppTypeAllowed('wso2esb') == true) {
                     appTypeArray.push(appTypeObject);
                 }
