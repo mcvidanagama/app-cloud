@@ -1,28 +1,25 @@
 #!/bin/bash
 
-if [ -z "$1" ]; then
-    exit 0;
-fi
- 
+
+# Get configurations
+allConfigs=($(printenv | awk '$1 ~ /CONFIG_PROPERTIES_/ {print $1}'));
+
 # Constant
-fileType_Properties=properties;
+fileType_Properties="CONFIG_PROPERTIES_";
+properties_ext=".properties";
 
-# decode user input
-userInputDecoded=$(echo -n "$1" | base64 -d);
-
-# Get all changes
-IFS='|' read -r -a fileChanges <<<$userInputDecoded;
-
-
+# Do Propertie file modifications
 function do_properties_file_modify {
- # Seperate the pattern and replacing value
+
  IFS='=' read -r -a tmp <<<$1;
  # Removing special characters
  local pattern=$(echo "$(echo "${tmp[0]}" | sed -e 's/\//\\\//g')" | sed -e 's/\$/\\$/');
  local replace=$(echo "$(echo "${tmp[1]}" | sed -e 's/\//\\\//g')" | sed -e 's/\$/\\$/');
- sed -i "/$pattern/c$pattern=$replace" "$file.$fileType";
+
+ sed -i "/$pattern=/c$pattern=$replace" $2;
 }
 
+# TODO
 function do_xml_file_modify {
 
  # Separate the  pattern and replacing value
@@ -50,32 +47,35 @@ function do_xml_file_modify {
 
 function do_file_modify {
  # Read the argument in to an array
- IFS='~' read -r -a userInput <<<$1;
+ IFS='=' read -r -a config <<<$1;
 
- local fileType=${userInput[0]};
- local file=${userInput[1]};
+ # Get the ENV name
+ envName=${config[0]};
 
- # Remove file and file name
- # Param=val array
- unset userInput[0];
- userInput=( "${userInput[@]}" );
- unset userInput[0];
- userInput=( "${userInput[@]}" );
+ local fileType=${envName:0:18};
+ local file=${envName:18};
+
+ changes=$( printenv $envName);
 
 
- for var in "${userInput[@]}"
+ # decode user input
+ allModificationsNotSeprated=$(echo -n $changes | base64 -d);
+ # Get each modifications
+ IFS='|' read -r -a allModificationsSeperated <<<$allModificationsNotSeprated;
+
+ for var in "${allModificationsSeperated[@]}"
    do
+
     if [ "${fileType}" = "$fileType_Properties" ]; then
-	do_properties_file_modify $var;
-     else
-       do_xml_file_modify "$var";
+	do_properties_file_modify $var "$file$properties_ext";
    fi
    done
 }
 
-for var in "${fileChanges[@]}"
-  do
-    do_file_modify "$var";
-  done
+# Iterate through each Env
+for var in "${allConfigs[@]}"
+ do
+  do_file_modify $var;
+ done
 
 
