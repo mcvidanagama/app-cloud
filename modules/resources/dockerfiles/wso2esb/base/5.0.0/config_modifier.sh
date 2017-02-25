@@ -59,11 +59,11 @@ function do_file_modify {
 
 
  # decode user input
- allModificationsNotSeprated=$(echo -n $changes | base64 -d);
+ allModificationsNotSeparated=$(echo -n $changes | base64 -d);
  # Get each modifications
- IFS='|' read -r -a allModificationsSeperated <<<$allModificationsNotSeprated;
+ IFS='|' read -r -a allModificationsSeparated <<<$allModificationsNotSeparated;
 
- for var in "${allModificationsSeperated[@]}"
+ for var in "${allModificationsSeparated[@]}"
    do
 
     if [ "${fileType}" = "$fileType_Properties" ]; then
