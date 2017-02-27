@@ -57,7 +57,8 @@ INSERT INTO `AC_APP_TYPE` (`id`, `name`, `description`) VALUES
 (4, 'jaggery', 'Allows you to write all parts of web applications, services and APIs in a completely JavaScript way.'),
 (5, 'wso2dataservice', 'Allows you to deploy a data service that is supported in WSO2 Data Services Server.'),
 (6, 'wso2esb', 'Allows you to deploy an ESB configuration that is supported by WSO2 Enterprise Service Bus'),
-(7, 'custom', 'Allows you to deploy applications using custom Docker images');
+(7, 'custom', 'Allows you to deploy applications using custom Docker images'),
+(8, 'ballerina', 'Allows you to deploy Ballerina service. Ballerina is a general purpose, concurrent and strongly typed programming language with both textual and graphical syntaxes.');
 
 -- -----------------------------------------------------
 -- Table `AppCloudDB`.`AC_RUNTIME`
@@ -94,7 +95,8 @@ INSERT INTO `AC_RUNTIME` (`id`, `name`, `image_name`, `tag`, `description`) VALU
 (15, 'Apache Tomcat 8.5.5 (Alpine 3.4/Open JDK 1.8.0_92)', 'tomcat', '8.5.5-alpine3.4-open-jdk1.8.0', 'OS:Alpine 3.4, Open JDK 1.8.0_92'),
 (16, 'Apache Tomcat 8.5.5 (Ubuntu 16.04/Open JDK 1.8.0_91)', 'tomcat', '8.5.5-ubuntu16.04-open-jdk1.8.0', 'OS:Ubuntu 16.04, Open JDK 1.8.0_91'),
 (17, 'OracleJDK 8 + WSO2 MSF4J 2.1.0', 'msf4j', '2.0.0', 'OS:alpine-java, Oracle JDK:8u102'),
-(18, 'Custom Docker http-8080 https-8443', 'custom', 'customtag', 'OS:Custom, JAVA Version:custom');
+(18, 'Custom Docker http-8080 https-8443', 'custom', 'customtag', 'OS:Custom, JAVA Version:custom'),
+(19, 'Ballerina 0.8.0 (Alpine 3.4/Oracle JDK 1.8.0_112)', 'ballerina', '0.8.0', 'OS:Alpine 3.4, Oracle JDK 1.8.0_112');
 
 
 -- -----------------------------------------------------
@@ -268,7 +270,8 @@ INSERT INTO `AC_APP_TYPE_RUNTIME` (`app_type_id`, `runtime_id`) VALUES
 (1, 15),
 (1, 16),
 (2, 17),
-(7, 18);
+(7, 18),
+(8, 19);
 
 
 -- -----------------------------------------------------
@@ -446,7 +449,9 @@ INSERT INTO `AC_TRANSPORT` (`id`, `name`, `port`, `protocol`, `service_prefix`, 
 (5, 'http', 9763, 'TCP', 'htp', 'HTTP servlet transport for carbon products'),
 (6, 'https', 9443, 'TCP', 'hts', 'HTTPS servlet transport for carbon products'),
 (7, 'http', 8280, 'TCP', 'htp', 'HTTP Protocol'),
-(8, 'https', 8243, 'TCP', 'hts', 'HTTPS Protocol');
+(8, 'https', 8243, 'TCP', 'hts', 'HTTPS Protocol'),
+(9, 'http', 9090, 'TCP', 'htp', 'HTTPS Protocol for Ballerina'),
+(10, 'https', 9092, 'TCP', 'hts', 'HTTPS Protocol for Ballerina');
 
 -- -----------------------------------------------------
 -- Populate Data to `AppCloudDB`.`ApplicationRuntimeService`
@@ -487,13 +492,16 @@ INSERT INTO `AC_RUNTIME_TRANSPORT` (`transport_id`, `runtime_id`) VALUES
 (3, 17),
 (4, 17),
 (3, 18),
-(4, 18);
+(4, 18),
+(9, 19),
+(10, 19);
 
 INSERT INTO `AC_CONTAINER_SPECIFICATIONS` (`CON_SPEC_NAME`, `CPU`, `MEMORY`, `COST_PER_HOUR`) VALUES
 ('128MB RAM and 0.1x vCPU', 100, 128, 1),
 ('256MB RAM and 0.2x vCPU', 200, 256, 2),
 ('512MB RAM and 0.3x vCPU', 300, 512, 3),
-('1024MB RAM and 0.5x vCPU', 500, 1024, 4);
+('1024MB RAM and 0.5x vCPU', 500, 1024, 4),
+('2048MB RAM and 1x vCPU', 1000, 2048, 5);
 
 INSERT INTO `AC_SUBSCRIPTION_PLANS` (`PLAN_ID`, `PLAN_NAME`, `MAX_APPLICATIONS`, `MAX_DATABASES`, `CLOUD_ID`, `MAX_REPLICA_COUNT`) VALUES
 (1, 'FREE', 3, 3, 'app_cloud', 2),
@@ -537,7 +545,9 @@ INSERT INTO `AC_RUNTIME_CONTAINER_SPECIFICATIONS` (`id`, `CON_SPEC_ID`) VALUES
 (17, 2),
 (17, 3),
 (17, 4),
-(18, 4);
+(18, 4),
+(19, 5),
+(19, 7);
 
 -- -----------------------------------------------------
 -- Table `AppCloudDB`.`AC_CLOUD_APP_TYPE`
@@ -571,7 +581,8 @@ INSERT INTO `AC_CLOUD_APP_TYPE` (`cloud_id`, `app_type_id`) VALUES
 ('integration_cloud', 4),
 ('integration_cloud', 5),
 ('integration_cloud', 6),
-('integration_cloud', 7);
+('integration_cloud', 7),
+('integration_cloud', 8);
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
