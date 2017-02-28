@@ -1,3 +1,19 @@
+/*
+* Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
 package org.wso2.appcloud.core.dao;
 
 import com.google.common.base.Strings;
@@ -13,6 +29,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO class for Custom Docker Images
+ */
 public class CustomDockerImageDAO {
     private static final CustomDockerImageDAO CUSTOM_DOCKER_IMAGE_DAO = new CustomDockerImageDAO();
 
@@ -40,7 +59,7 @@ public class CustomDockerImageDAO {
      * @param imageId      imageid (tenant domain-alphaneumeric url)
      * @param tenantId     tnant id
      * @param remoteUrl    remote url of image
-     * @param updatedTime
+     * @param updatedTime   current date time
      * @throws AppCloudException
      */
     public void addCustomDockerImage(Connection dbConnection, String imageId, int tenantId, String remoteUrl,
@@ -66,6 +85,15 @@ public class CustomDockerImageDAO {
         }
     }
 
+    /**
+     * Update custom docker image database record
+     * @param dbConnection db connection
+     * @param imageId image id
+     * @param resultsJson results json string
+     * @param status status
+     * @param updatedTime current date time
+     * @throws AppCloudException
+     */
     public void updateCustomDockerImageRecord(Connection dbConnection, String imageId, String resultsJson,
                                               String status, String updatedTime)
             throws AppCloudException {
@@ -86,6 +114,14 @@ public class CustomDockerImageDAO {
         }
     }
 
+    /**
+     * Check image availability in database for a given remote url and tenant id
+     * @param dbConnection db connection
+     * @param remoteUrl remote url
+     * @param tenantId tenant id
+     * @return
+     * @throws AppCloudException
+     */
     public boolean isImageAvailable(Connection dbConnection, String remoteUrl, int tenantId) throws AppCloudException {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -109,6 +145,14 @@ public class CustomDockerImageDAO {
         }
     }
 
+    /**
+     * Get custom image details
+     * @param dbConnection
+     * @param tenantId tenant id
+     * @param requiredStatus status i.e. : pass,failed , null ; null means all
+     * @return array list of CustomImage objects
+     * @throws AppCloudException
+     */
     public List<CustomImage> getCustomImages(Connection dbConnection, int tenantId, String requiredStatus)
             throws AppCloudException {
         List<CustomImage> imagesList = new ArrayList<>();
@@ -144,6 +188,13 @@ public class CustomDockerImageDAO {
         return imagesList;
     }
 
+    /**
+     * Delete images from database
+     * @param dbConnection
+     * @param imageId image id
+     * @return
+     * @throws AppCloudException
+     */
     public boolean deleteImage(Connection dbConnection, String imageId) throws AppCloudException {
         PreparedStatement preparedStatement = null;
         try {
@@ -160,7 +211,13 @@ public class CustomDockerImageDAO {
         return true;
     }
 
-
+    /**
+     * Retrieve image details for a given image id
+     * @param dbConnection
+     * @param imageId image id
+     * @return CustomImage object
+     * @throws AppCloudException
+     */
     public CustomImage getImageById(Connection dbConnection, String imageId) throws AppCloudException {
         CustomImage customImage = new CustomImage();
         PreparedStatement preparedStatement = null;

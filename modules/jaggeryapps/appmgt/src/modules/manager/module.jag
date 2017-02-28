@@ -18,9 +18,7 @@
  */
 
 jagg.module("manager", {
-    isAllAppTypesAllowedTenant: function () {
-        return jagg.require(jagg.getModulesDir() + "manager/manager.jag").isAllAppTypesAllowedTenant.apply(this, arguments);
-    },setAuthHeaders: function () {
+    setAuthHeaders: function () {
         return jagg.require(jagg.getModulesDir() + "manager/manager.jag").setAuthHeaders.apply(this, arguments);
     },
     getPropertyValue: function () {

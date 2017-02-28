@@ -1,3 +1,19 @@
+/*
+* Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
 package org.wso2.appcloud.core;
 
 import org.apache.commons.logging.Log;
@@ -12,6 +28,9 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Managing Custom Docker Images
+ */
 public class CustomDockerImageManager {
     private static Log log = LogFactory.getLog(CustomDockerImageManager.class);
 
@@ -27,6 +46,10 @@ public class CustomDockerImageManager {
         try {
             Date date = new Date();
             String timeStamp = String.valueOf(new java.sql.Timestamp(date.getTime()));
+            if(log.isDebugEnabled()) {
+                log.debug("Adding custom docker image with image id : " + imageId + " pulled from remote url : " +
+                          remoteUrl + " for tenant id : " + tenantId + " at : " + timeStamp);
+            }
             CustomDockerImageDAO.getInstance().
                     addCustomDockerImage(dbConnection, imageId, tenantId, remoteUrl, timeStamp);
             dbConnection.commit();
@@ -44,6 +67,14 @@ public class CustomDockerImageManager {
         }
     }
 
+    /**
+     * Update image details with test results
+     * @param imageId image id
+     * @param resultsJsonString json string consists of test results
+     *                          sample result json : {"test00":"pass","test01":"fail","test02":"pass","test03":"pass"}
+     * @param status
+     * @throws AppCloudException
+     */
     public static void updateCustomDockerTestResults(String imageId, String resultsJsonString, String status)
             throws AppCloudException {
         Connection dbConnection = DBUtil.getDBConnection();
@@ -67,6 +98,12 @@ public class CustomDockerImageManager {
         }
     }
 
+    /**
+     * Check image availability
+     * @param remoteUrl remote url
+     * @return true if image is available (i.e. already added)
+     * @throws AppCloudException
+     */
     public static boolean isImageAvailable(String remoteUrl) throws AppCloudException {
         Connection dbConnection = DBUtil.getDBConnection();
         int tenantId = CarbonContext.getThreadLocalCarbonContext().getTenantId();
@@ -82,6 +119,12 @@ public class CustomDockerImageManager {
         }
     }
 
+    /**
+     * Get all custom images
+     * @param status null meanns all images, other possible options are pass,failed
+     * @return arraylist of CustomImages
+     * @throws AppCloudException
+     */
     public static CustomImage[] getAllCustomImages(String status) throws AppCloudException { // status null means all
         Connection dbConnection = DBUtil.getDBConnection();
         int tenantId = CarbonContext.getThreadLocalCarbonContext().getTenantId();
@@ -101,6 +144,12 @@ public class CustomDockerImageManager {
         }
     }
 
+    /**
+     * Delete image
+     * @param imageId image id
+     * @return true if successfull
+     * @throws AppCloudException
+     */
     public static boolean deleteImage(String imageId) throws AppCloudException {
         Connection dbConnection = DBUtil.getDBConnection();
         try {
@@ -114,6 +163,12 @@ public class CustomDockerImageManager {
         }
     }
 
+    /**
+     * Get image by id
+     * @param imageId image id
+     * @return CustomImage object
+     * @throws AppCloudException
+     */
     public static CustomImage getImageById(String imageId) throws AppCloudException {
         Connection dbConnection = DBUtil.getDBConnection();
         try {
@@ -128,6 +183,5 @@ public class CustomDockerImageManager {
         }
 
     }
-
 
 }
