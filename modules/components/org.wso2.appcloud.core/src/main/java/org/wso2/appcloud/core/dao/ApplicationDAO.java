@@ -459,6 +459,7 @@ public class ApplicationDAO {
      * @param dbConnection  database connection
      * @param inputStream   input stream object
      * @param applicationId id of application object
+     * @param tenantId      id of tenant
      * @throws AppCloudException
      */
     public void updateApplicationIcon(Connection dbConnection, InputStream inputStream, int applicationId, int tenantId)
@@ -476,7 +477,7 @@ public class ApplicationDAO {
         } catch (SQLException e) {
             String msg =
                     "Error occurred while updating application icon for application with id : " + applicationId +
-                            " in tenant " + tenantId;
+                            " in tenant : " + tenantId;
             throw new AppCloudException(msg, e);
 
         } finally {
@@ -488,8 +489,10 @@ public class ApplicationDAO {
     /**
      * Method for updating the status of the given version.
      *
+     * @param dbConnection  database connection
      * @param status        status of the version
      * @param versionHashId version hash id
+     * @param tenantId      id of tenant
      * @throws AppCloudException
      */
     public void updateVersionStatus(Connection dbConnection, String status, String versionHashId, int tenantId)
@@ -871,6 +874,7 @@ public class ApplicationDAO {
      *
      * @param dbConnection      database connection
      * @param applicationHashId application hash id
+     * @param tenantId          id of tenant
      * @return application object
      * @throws AppCloudException
      */
@@ -919,6 +923,7 @@ public class ApplicationDAO {
      *
      * @param dbConnection      database connection
      * @param applicationHashId hash id of application
+     * @param tenantId          id of tenant
      * @return list of versions
      * @throws AppCloudException
      */
@@ -971,6 +976,7 @@ public class ApplicationDAO {
      *
      * @param dbConnection  database connection
      * @param versionHashId version hash id
+     * @param tenantId      id of tenant
      * @return list of tags
      * @throws AppCloudException
      */
@@ -1015,6 +1021,7 @@ public class ApplicationDAO {
      *
      * @param dbConnection  database connection
      * @param versionHashId version hash id
+     * @param tenantId      id of tenant
      * @return list of runtime properties
      * @throws AppCloudException
      */
@@ -1062,6 +1069,7 @@ public class ApplicationDAO {
      *
      * @param dbConnection      database connection
      * @param applicationHashId application hash id
+     * @param tenantId          id of tenant
      * @return application id
      * @throws AppCloudException
      */
@@ -1101,6 +1109,7 @@ public class ApplicationDAO {
      *
      * @param dbConnection database connection
      * @param hashId       hash id of version
+     * @param tenantId      id of tenant
      * @return version id
      * @throws AppCloudException
      */
@@ -1177,7 +1186,9 @@ public class ApplicationDAO {
     /**
      * Method for retrieving all the runtimes for a given application type.
      *
-     * @param appType application type
+     * @param dbConnection  database connection
+     * @param appType       application type
+     * @param tenantId      tenant Id
      * @return list of all application runtimes
      * @throws AppCloudException
      */
@@ -1208,7 +1219,7 @@ public class ApplicationDAO {
 
         } catch (SQLException e) {
             String msg = "Error while retrieving list of runtime from database for app type : " + appType +
-                    " in tenant " + tenantId;
+                    " in tenant : " + tenantId;
             throw new AppCloudException(msg, e);
         } finally {
             DBUtil.closeResultSet(resultSet);
@@ -1222,6 +1233,7 @@ public class ApplicationDAO {
      *
      * @param dbConnection database connection
      * @param runtimeId    id of runtime
+     * @param tenantId     id of tenant
      * @return application runtime object
      * @throws AppCloudException
      */
@@ -1303,7 +1315,7 @@ public class ApplicationDAO {
      *
      * @param dbConnection  database connection
      * @param deploymentId  id of deployment object
-     * @param versionHashId hahs id of version
+     * @param versionHashId hash id of version
      * @param tenantId      id of tenant
      * @return
      * @throws AppCloudException
@@ -1395,6 +1407,7 @@ public class ApplicationDAO {
      *
      * @param dbConnection database connection
      * @param runtimeId    id of runtime
+     * @param tenantId     id of tenant
      * @return list of transports
      * @throws AppCloudException
      */
@@ -1494,7 +1507,9 @@ public class ApplicationDAO {
     /**
      * Method for deleting an application.
      *
-     * @param applicationHashId application hash id.
+     * @param dbConnection      database connection
+     * @param applicationHashId application hash id
+     * @param tenantId          id of tenant
      * @throws AppCloudException
      */
     public void deleteApplication(Connection dbConnection, String applicationHashId, int tenantId)
@@ -1544,7 +1559,9 @@ public class ApplicationDAO {
     /**
      * Delete all the versions of an application.
      *
+     * @param dbConnection      database connection
      * @param applicationHashId application hash id
+     * @param tenantId          id of tenant
      * @throws AppCloudException
      */
     public void deleteAllVersionsOfApplication(Connection dbConnection, String applicationHashId, int tenantId)
@@ -1659,7 +1676,9 @@ public class ApplicationDAO {
     /**
      * Get service proxy for given version.
      *
-     * @param versionHashId
+     * @param dbConnection  database connection
+     * @param versionHashId hash id of version
+     * @param tenantId      id of tenant
      * @return list of container service proxies
      * @throws AppCloudException
      */
@@ -1827,6 +1846,7 @@ public class ApplicationDAO {
      *
      * @param dbConnection  database connection
      * @param numberOfHours number of hours the application version has been running
+     * @param tenantId      id of tenant
      * @return array of version objects
      * @throws AppCloudException
      */
@@ -1854,8 +1874,8 @@ public class ApplicationDAO {
 
 
         } catch (SQLException e) {
-            String msg = "Error while retrieving application version detail for non white listed applications in tenant"
-                    + tenantId;
+            String msg = "Error while retrieving application version detail for non white listed applications in" +
+                    " tenant : " + tenantId;
             throw new AppCloudException(msg, e);
         } finally {
             DBUtil.closeResultSet(resultSet);
@@ -2306,8 +2326,8 @@ public class ApplicationDAO {
                 return false;
             }
         } catch (SQLException e) {
-            String msg = "Error while checking if environment variable exists for version hash id: " + versionKey +
-                    " and tenant id: " + tenantId + ".";
+            String msg = "Error while checking if environment variable exists for version hash id : " + versionKey +
+                    " and tenant id : " + tenantId + ".";
             throw new AppCloudException(msg, e);
         } finally {
             DBUtil.closeResultSet(resultSet);
@@ -2343,7 +2363,7 @@ public class ApplicationDAO {
                 return false;
             }
         } catch (SQLException e) {
-            String msg = "Error while checking if tag exists for version hash id: " + versionKey + " and tenant id: "
+            String msg = "Error while checking if tag exists for version hash id : " + versionKey + " and tenant id : "
                     + tenantId + ".";
             throw new AppCloudException(msg, e);
         } finally {
@@ -2380,8 +2400,8 @@ public class ApplicationDAO {
                 return false;
             }
         } catch (SQLException e) {
-            String msg = "Error while checking if version exists for application name: " + applicationName +
-                    ", version: " + versionName + " and tenant id: " + tenantId + ".";
+            String msg = "Error while checking if version exists for application name : " + applicationName +
+                    ", version : " + versionName + " and tenant id : " + tenantId + ".";
             throw new AppCloudException(msg, e);
         } finally {
             DBUtil.closeResultSet(resultSet);
@@ -2540,7 +2560,7 @@ public class ApplicationDAO {
             }
             return applicationDetailsList;
         } catch (SQLException e) {
-            String msg = "Error while getting custom domain details for tenant with tenant Id: " + tenantId + ".";
+            String msg = "Error while getting custom domain details for tenant with tenant Id : " + tenantId + ".";
             throw new AppCloudException(msg, e);
         } finally {
             DBUtil.closeResultSet(resultSet);
@@ -2571,8 +2591,8 @@ public class ApplicationDAO {
                 return true;
             }
         } catch (SQLException e) {
-            String msg = "Error while checking if custom domain exists for domain: " + customDomain +
-                    " for tenant with tenant id: " + tenantId + ".";
+            String msg = "Error while checking if custom domain exists for domain : " + customDomain +
+                    " for tenant with tenant id : " + tenantId + ".";
             throw new AppCloudException(msg, e);
         } finally {
             DBUtil.closeResultSet(resultSet);

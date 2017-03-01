@@ -108,22 +108,18 @@ jagg.template("application", function (inputs, outputs, jagg) {
             if (newVersion == "true") {
                 isNewVersion = true;
             }
-
             //Get allowed container specification names
             for (var i = 0; i < allowedRuntimeContainerSpecJson["data"].length; i++) {
                 containerSpecNamesJson.push(allowedRuntimeContainerSpecJson.data[i].conSpecName);
             }
-
             //Set container specifications in the select option
             if (containerSpecNamesJson.length > 0) {
                 var listItems = '<option selected="selected" onClick="maxApplicationCountValidate()">' +
                     containerSpecNamesJson[0] + '</option>';
-
                 for (var i = 1; i < containerSpecNamesJson.length; i++) {
                     listItems += '<option onClick="maxApplicationCountValidate()">' + containerSpecNamesJson[i] +
                         '</option>';
                 }
-
                 $("#container").html(listItems);
             }
 

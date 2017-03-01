@@ -347,9 +347,15 @@ var getAllDatabasesInfo = function () {
     return allDBInfo;
 };
 
+/**
+ * Method to get the number of databases created by the tenant
+ *
+ * @returns {the number of all databases}
+ */
 var getDatabaseCount = function () {
 	var allDatabases = getDatabases();
 	return allDatabases.length;
 };
+
 
 %>
