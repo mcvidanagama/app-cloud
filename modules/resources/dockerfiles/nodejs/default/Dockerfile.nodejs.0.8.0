@@ -21,16 +21,36 @@
 FROM wso2-cloud/nodejs:0.8.0-base
 
 ENV APP_FILE_UPLOAD ARTIFACT_NAME
-ENV APP_LOCATION ARTIFACT_DIR
-ENV APP_FILE_ZIP "$APP_LOCATION.zip"
-COPY "$APP_FILE_UPLOAD" "$APP_HOME/"
+ENV NODE_ENV production
+ENV APP_ZIP app.zip
+ENV APP_DIR app
+
+# copying resources to image
+COPY "$APP_FILE_UPLOAD" "$APP_HOME/$APP_ZIP"
+
 WORKDIR "$APP_HOME/"
-RUN mv "$APP_FILE_UPLOAD" ${APP_FILE_UPLOAD%.upload}.zip
-RUN unzip $APP_FILE_ZIP
-RUN rm  $APP_FILE_ZIP
-WORKDIR "$APP_HOME/$APP_LOCATION"
+
+# unzip package.json to the APP_DIR directory
+# -d = path to the directory
+RUN unzip $APP_ZIP package.json -d app
+
+# install dependencies
+WORKDIR "$APP_HOME/app"
 RUN npm install
+#-----------------------------cached-----------------------------------
 
-CMD ["npm", "start"]
+WORKDIR "$APP_HOME/"
 
-#CMD ["bash", "-c", "source /init.sh"]
+# unzip rest of the content to the APP_DIR directory
+# -o = overwrite
+# -d = path to the directory
+RUN unzip -o $APP_ZIP -d app
+RUN rm $APP_ZIP
+
+WORKDIR "$APP_HOME/app"
+
+# wrap node process inside the tini process
+ENTRYPOINT ["/sbin/tini", "--"]
+
+# start the server
+CMD ["node", "index.js"]

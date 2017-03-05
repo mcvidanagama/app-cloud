@@ -22,7 +22,7 @@ FROM node:7.5.0-alpine
 
 ENV APP_HOME /src/nodejs
 ENV APP_VERSION 0.8.0
-RUN apk update && apk add unzip && \
+RUN apk update && apk add unzip && apk add --update tini && \
     mkdir -p "$APP_HOME" && \
     addgroup wso2 && \
     adduser -g '' -s /bin/bash -D -G wso2 wso2user && \
