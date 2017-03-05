@@ -18,17 +18,15 @@
 #
 # ------------------------------------------------------------------------
 
-FROM wso2-cloud/nodejs:0.8.0-base
+FROM wso2-cloud/nodejs:7.7.1-base
 
 ENV APP_FILE_UPLOAD ARTIFACT_NAME
 ENV NODE_ENV production
 ENV APP_ZIP app.zip
 ENV APP_DIR app
-ENV URL ARTIFACT_URL
 
-# download resources to image
-RUN wget "$URL" --no-check-certificate -O "$APP_HOME/$APP_ZIP"
-
+# copying resources to image
+COPY "$APP_FILE_UPLOAD" "$APP_HOME/$APP_ZIP"
 
 WORKDIR "$APP_HOME/"
 

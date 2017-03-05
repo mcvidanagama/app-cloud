@@ -18,39 +18,17 @@
 #
 # ------------------------------------------------------------------------
 
-FROM wso2-cloud/nodejs:0.8.0-base
+FROM node:7.7.1-alpine
 
-ENV APP_FILE_UPLOAD ARTIFACT_NAME
-ENV NODE_ENV production
-ENV APP_ZIP app.zip
-ENV APP_DIR app
+ENV APP_HOME /src/nodejs
+ENV APP_VERSION 0.8.0
+RUN apk update && apk add unzip && apk add wget && apk add --update tini && \
+    mkdir -p "$APP_HOME" && \
+    addgroup wso2 && \
+    adduser -g '' -s /bin/bash -D -G wso2 wso2user && \
+    chown wso2user:wso2 "$APP_HOME"
+USER wso2user
 
-# copying resources to image
-COPY "$APP_FILE_UPLOAD" "$APP_HOME/$APP_ZIP"
+WORKDIR $APP_HOME
 
-WORKDIR "$APP_HOME/"
-
-# unzip package.json to the APP_DIR directory
-# -d = path to the directory
-RUN unzip $APP_ZIP package.json -d app
-
-# install dependencies
-WORKDIR "$APP_HOME/app"
-RUN npm install
-#-----------------------------cached-----------------------------------
-
-WORKDIR "$APP_HOME/"
-
-# unzip rest of the content to the APP_DIR directory
-# -o = overwrite
-# -d = path to the directory
-RUN unzip -o $APP_ZIP -d app
-RUN rm $APP_ZIP
-
-WORKDIR "$APP_HOME/app"
-
-# wrap node process inside the tini process
-ENTRYPOINT ["/sbin/tini", "--"]
-
-# start the server
-CMD ["node", "index.js"]
+EXPOSE 8080 8443
