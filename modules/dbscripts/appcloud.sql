@@ -401,6 +401,27 @@ CREATE TABLE IF NOT EXISTS AC_SUBSCRIPTION_PLANS (
     CONSTRAINT uk_SubscriptionPlans_PlanName_CloudId UNIQUE(PLAN_NAME, CLOUD_ID))
 ENGINE = InnoDB;
 
+--  -----------------------------------------------------
+-- Table `AppCloudDB`.`AC_TENANT_SUBSCRIPTION`
+-- -----------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS AC_TENANT_SUBSCRIPTION (
+  `tenant_id` INT NOT NULL,
+  `plan` VARCHAR(50) NOT NULL,
+  `max_app_count` INT(11) NOT NULL  DEFAULT -1,
+  `max_database_count` INT(11) NOT NULL DEFAULT -1,
+  `cloud_id` VARCHAR(50) NOT NULL,
+  `max_replica_count` INT(11) NOT NULL DEFAULT -1,
+  `max_memory` INT(11) NOT NULL DEFAULT -1,
+  `max_cpu` INT(11) NOT NULL DEFAULT -1,
+  `start_date`DATETIME NOT NULL,
+  `end_date` DATETIME NOT NULL,
+  `is_white_listed` TINYINT unsigned NOT NULL DEFAULT 0,
+  `status` VARCHAR(50) NOT NULL,
+  PRIMARY KEY (`tenant_id`, `cloud_id`))
+ENGINE = InnoDB;
+
+
 CREATE TABLE IF NOT EXISTS AC_CONTAINER_SPECIFICATIONS (
     CON_SPEC_ID     INTEGER NOT NULL AUTO_INCREMENT,
     CON_SPEC_NAME   VARCHAR(200) NOT NULL,
