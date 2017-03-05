@@ -27,7 +27,7 @@ ENV APP_DIR app
 ENV URL ARTIFACT_URL
 
 # download resources to image
-RUN wget "$URL" -O "$APP_HOME/$APP_ZIP"
+RUN wget "$URL" --no-check-certificate -O "$APP_HOME/$APP_ZIP"
 
 
 WORKDIR "$APP_HOME/"
