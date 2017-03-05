@@ -1392,11 +1392,9 @@ var uploadExistingArchive = function (uploadedArtifact, appTypeName, application
     var fileSuccessfullyUploaded = false;
     if (uploadApplicationTmpPath != null) {
         uploadedArtifact.move(uploadApplicationTmpPath);
-
         var file = new File(uploadApplicationTmpPath);
         var waitCounter = 0;
         var fileUploadTimeout = modManager.getPropertyValue(FILE_UPLOAD_TIMEOUT);
-
         //Wait until file is completely moved
         while (waitCounter < fileUploadTimeout) {
             if (file.isExists()) {
