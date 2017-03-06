@@ -2379,13 +2379,14 @@ public class ApplicationDAO {
      * @param applicationName application name
      * @param versionName     version name
      * @param tenantId        tenant id
-     * @return if the version exists or not
+     * @return The number of occurrences for the given version
      * @throws AppCloudException
      */
-    public boolean isVersionExist(Connection dbConnection, String applicationName, String versionName, int tenantId)
+    public int getMatchingVersionCount(Connection dbConnection, String applicationName, String versionName, int tenantId)
             throws AppCloudException {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
+        int matchingVersionCount = 0;
         try {
             preparedStatement = dbConnection.prepareStatement(SQLQueryConstants.GET_MATCHING_VERSION_COUNT);
             preparedStatement.setInt(1, tenantId);
@@ -2395,9 +2396,7 @@ public class ApplicationDAO {
             resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                return (resultSet.getInt(SQLQueryConstants.MATCHING_VERSION_COUNT) > 0);
-            } else {
-                return false;
+                matchingVersionCount = resultSet.getInt(SQLQueryConstants.MATCHING_VERSION_COUNT);
             }
         } catch (SQLException e) {
             String msg = "Error while checking if version exists for application name : " + applicationName +
@@ -2407,6 +2406,7 @@ public class ApplicationDAO {
             DBUtil.closeResultSet(resultSet);
             DBUtil.closePreparedStatement(preparedStatement);
         }
+        return matchingVersionCount;
     }
 
     public Map<Integer, List<Application>> getRunningApplicationsOfAllTenants(Connection dbConnection) throws AppCloudException {

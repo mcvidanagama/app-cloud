@@ -1463,7 +1463,9 @@ public class ApplicationManager {
         Connection dbConnection = DBUtil.getDBConnection();
         int tenantId = CarbonContext.getThreadLocalCarbonContext().getTenantId();
         try {
-            return ApplicationDAO.getInstance().isVersionExist(dbConnection, applicationName, versionName, tenantId);
+            int matchingVersionCount = ApplicationDAO.getInstance().
+                    getMatchingVersionCount(dbConnection, applicationName, versionName, tenantId);
+            return (matchingVersionCount > 0);
         } catch (AppCloudException e) {
             String msg = "Error while checking if version exists for application name: " + applicationName +
                     " version name: " + versionName + " and tenant id: " + tenantId + ".";
