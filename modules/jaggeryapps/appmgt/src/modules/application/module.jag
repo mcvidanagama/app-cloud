@@ -258,15 +258,12 @@ jagg.module("application", {
     getAppTypeUtil:function () {
         return jagg.require(jagg.getModulesDir() + "application/appTypeUtil.jag").getAppTypeUtil.apply(this, arguments);
     },
-
     isEnvironmentVariableExist:function () {
         return jagg.require(jagg.getModulesDir() + "application/application.jag").isEnvironmentVariableExist.apply(this, arguments);
     },
-
     isTagExist:function () {
         return jagg.require(jagg.getModulesDir() + "application/application.jag").isTagExist.apply(this, arguments);
     },
-
     isVersionExist:function () {
         return jagg.require(jagg.getModulesDir() + "application/application.jag").isVersionExist.apply(this, arguments);
     },
