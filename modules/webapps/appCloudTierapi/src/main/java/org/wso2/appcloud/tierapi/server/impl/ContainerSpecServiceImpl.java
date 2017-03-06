@@ -43,6 +43,11 @@ public class ContainerSpecServiceImpl {
     private ContainerSpecDaoImpl ContainerSpecInstance = (ContainerSpecDaoImpl) DAOdelegate.getContainerSpecInstance();
     private static final Log log = LogFactory.getLog(ContainerSpecServiceImpl.class);
 
+    /**
+     * Method to get all container specifications.
+     *
+     * @return {@link Response}
+     */
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response getContainerSpecifications() {
@@ -62,6 +67,13 @@ public class ContainerSpecServiceImpl {
 
     }
 
+    /**
+     * Method to get container specification given Id.
+     *
+     * @param containerSpecId Container Specification Id
+     * @return {@link Response}
+     * @throws SQLException
+     */
     @GET
     @Path("/{containerSpecId}")
     @Produces({MediaType.APPLICATION_JSON})
@@ -79,6 +91,13 @@ public class ContainerSpecServiceImpl {
         }
     }
 
+    /**
+     * Method to get container specification given the runtime Id.
+     *
+     * @param runtimeId Runtime Id
+     * @return {@link Response}
+     * @throws SQLException
+     */
     @GET
     @Path("allowedruntime/{runTimeId}")
     @Produces({MediaType.APPLICATION_JSON})
