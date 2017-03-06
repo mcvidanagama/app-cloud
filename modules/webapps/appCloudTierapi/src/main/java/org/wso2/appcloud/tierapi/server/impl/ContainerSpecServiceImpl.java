@@ -50,7 +50,8 @@ public class ContainerSpecServiceImpl {
         try {
             List<ContainerSpecifications> containerSpecificationsList = ContainerSpecInstance.getAllContainerSpecs();
             GenericEntity<List<ContainerSpecifications>> entity = new
-                    GenericEntity<List<ContainerSpecifications>>(containerSpecificationsList) {};
+                    GenericEntity<List<ContainerSpecifications>>(containerSpecificationsList) {
+                    };
             return Response.ok().entity(entity).type(MediaType.APPLICATION_JSON_TYPE).build();
         } catch (SQLException e) {
             String msg = "Error while getting container specifications list";
@@ -87,10 +88,11 @@ public class ContainerSpecServiceImpl {
             List<ContainerSpecifications> containerSpecificationsList = ContainerSpecInstance.
                     getContainerSpecByRuntimeID(runtimeId);
             GenericEntity<List<ContainerSpecifications>> entity = new
-                    GenericEntity<List<ContainerSpecifications>>(containerSpecificationsList) {};
+                    GenericEntity<List<ContainerSpecifications>>(containerSpecificationsList) {
+                    };
             return Response.ok().entity(entity).type(MediaType.APPLICATION_JSON_TYPE).build();
         } catch (SQLException e) {
-            String msg = "Error while getting container specifications list for runtime ID: " +runtimeId;
+            String msg = "Error while getting container specifications list for runtime ID: " + runtimeId;
             log.error(msg, e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).
                     type(MediaType.APPLICATION_JSON_TYPE).build();

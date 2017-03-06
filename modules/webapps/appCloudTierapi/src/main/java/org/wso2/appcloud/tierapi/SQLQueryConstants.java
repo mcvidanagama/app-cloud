@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -48,32 +48,32 @@ public class SQLQueryConstants {
 
     /*Select Queries*/
 
-    public static final String GET_ALL_SUBSCRIPTION_PLANS = "select * from AC_SUBSCRIPTION_PLANS";
+    public static final String GET_ALL_SUBSCRIPTION_PLANS = "SELECT * FROM AC_SUBSCRIPTION_PLANS";
 
-    public static final String GET_SUBSCRIPTION_PLANS_BY_PLAN_ID = "select * from AC_SUBSCRIPTION_PLANS WHERE " +
+    public static final String GET_SUBSCRIPTION_PLANS_BY_PLAN_ID = "SELECT * FROM AC_SUBSCRIPTION_PLANS WHERE " +
             "PLAN_ID = ?";
 
-    public static final String GET_SUBSCRIPTION_PLANS_BY_PLAN_NAME_AND_CLOUD = "select * from AC_SUBSCRIPTION_PLANS WHERE " +
-            "PLAN_NAME = ? AND CLOUD_ID = ?";
+    public static final String GET_SUBSCRIPTION_PLANS_BY_PLAN_NAME_AND_CLOUD = "SELECT * FROM AC_SUBSCRIPTION_PLANS " +
+            "WHERE PLAN_NAME = ? AND CLOUD_ID = ?";
 
-    public static final String GET_SUBSCRIPTION_PLANS_BY_PLAN_NAME = "select * from AC_SUBSCRIPTION_PLANS WHERE " +
+    public static final String GET_SUBSCRIPTION_PLANS_BY_PLAN_NAME = "SELECT * FROM AC_SUBSCRIPTION_PLANS WHERE " +
             "PLAN_NAME = ?";
 
-    public static final String GET_ALLOWED_CONTAINER_SPECIFICATIONS = "select * from AC_CONTAINER_SPECIFICATIONS WHERE "
+    public static final String GET_ALLOWED_CONTAINER_SPECIFICATIONS = "SELECT * FROM AC_CONTAINER_SPECIFICATIONS WHERE "
             + "CON_SPEC_ID NOT IN (SELECT CON_SPEC_ID FROM AC_SUBSCRIPTION_PLANS JOIN RestrictedPlanContainerSpecs ON"
             + " AC_SUBSCRIPTION_PLANS.PLAN_ID = RestrictedPlanContainerSpecs.PLAN_ID WHERE"
             + " RestrictedPlanContainerSpecs.PLAN_ID = ?)";
 
-    public static final String GET_ALL_CONTAINER_SPECIFICATIONS = "select * from AC_CONTAINER_SPECIFICATIONS";
+    public static final String GET_ALL_CONTAINER_SPECIFICATIONS = "SELECT * FROM AC_CONTAINER_SPECIFICATIONS";
 
     public static final String GET_CONTAINER_SPECIFICATIONS_BY_RUNTIME_ID = "SELECT * FROM AC_CONTAINER_SPECIFICATIONS "
             + "JOIN AC_RUNTIME_CONTAINER_SPECIFICATIONS ON AC_CONTAINER_SPECIFICATIONS.CON_SPEC_ID = " +
             "AC_RUNTIME_CONTAINER_SPECIFICATIONS.CON_SPEC_ID WHERE AC_RUNTIME_CONTAINER_SPECIFICATIONS.id = ?";
 
-    public static final String GET_CONTAINER_SPECIFICATION_BY_ID = "select * from AC_CONTAINER_SPECIFICATIONS WHERE " +
+    public static final String GET_CONTAINER_SPECIFICATION_BY_ID = "SELECT * FROM AC_CONTAINER_SPECIFICATIONS WHERE " +
             "CON_SPEC_ID = ?";
 
-    public static final String GET_CONTAINER_SPECIFICATION_BY_NAME = "select * from AC_CONTAINER_SPECIFICATIONS WHERE "
+    public static final String GET_CONTAINER_SPECIFICATION_BY_NAME = "SELECT * FROM AC_CONTAINER_SPECIFICATIONS WHERE "
             + "CON_SPEC_NAME= ?";
 
     /*Delete Queries*/
@@ -85,9 +85,9 @@ public class SQLQueryConstants {
 
     /*Update Queries*/
 
-    public static final String UPDATE_SUBSCRIPTION_PLAN = "Update AC_SUBSCRIPTION_PLANS SET PLAN_NAME=?, " +
+    public static final String UPDATE_SUBSCRIPTION_PLAN = "UPDATE AC_SUBSCRIPTION_PLANS SET PLAN_NAME=?, " +
             "MAX_INSTANCES=?, WHERE PLAN_ID = ?";
 
-    public static final String UPDATE_CONTAINER_SPECIFICATION = "Update AC_CONTAINER_SPECIFICATIONS SET " +
+    public static final String UPDATE_CONTAINER_SPECIFICATION = "UPDATE AC_CONTAINER_SPECIFICATIONS SET " +
             "CON_SPEC_NAME=?, CPU= ?, MEMORY=?, COST_PER_HOUR=? WHERE CON_SPEC_ID = ?";
 }
