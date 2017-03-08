@@ -1946,7 +1946,7 @@ var scaleDeployment = function (applicationName, versionName, replicaCount) {
         log.error(e);
         throw e;
     }
-}
+};
 
 var getReplicaCountForVersion = function (applicationName, versionName) {
     try {
@@ -1957,7 +1957,16 @@ var getReplicaCountForVersion = function (applicationName, versionName) {
          log.error(e);
          throw e;
     }
-}
+};
+
+var isApplicationNameValid = function (applicationName) {
+    var appHashId = getApplicationHashIdByName(applicationName);
+    return getApplication(appHashId).hashId != null;
+};
+
+var isApplicationKeyValid = function (applicationKey) {
+    return getApplication(applicationKey).hashId == applicationKey;
+};
 
 var getVersionByHashId = function (versionHashId) {
     try {
@@ -1967,6 +1976,6 @@ var getVersionByHashId = function (versionHashId) {
         log.error(e);
         throw e;
     }
-}
+};
 
 %>

@@ -297,6 +297,13 @@ jagg.module("application", {
     },
     getVersionByHashId:function () {
         return jagg.require(jagg.getModulesDir() + "application/application.jag").getVersionByHashId.apply(this, arguments);
+    },
+    isApplicationNameValid: function () {
+        return jagg.require(jagg.getModulesDir() + "application/application.jag").isApplicationNameValid.apply(this, arguments);
+    },
+    isApplicationKeyValid: function () {
+        return jagg.require(jagg.getModulesDir() + "application/application.jag").isApplicationKeyValid.apply(this, arguments);
     }
-});
+
+    });
 %>
