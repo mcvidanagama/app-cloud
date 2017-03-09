@@ -236,29 +236,23 @@ function getTenantIdFromUsernameWithTenantDomain(context, usernameWithTenantDoma
         tenantDomain: null,
         message: ""
     };
-    if (usernameWithTenantDomain.indexOf("@") != -1) {
-        //Extract username and tenant domain from the full user name
-        result.tenantDomain = MultitenantUtils.getTenantDomain(usernameWithTenantDomain);
-        result.username = MultitenantUtils.getTenantAwareUsername(usernameWithTenantDomain);
-        //To get the tenant user realm set the carbon context details
-        var multiTenancyTenantManager = multitenancy.getTenantManager();
-        context.getThreadLocalCarbonContext().setTenantId(multiTenancyTenantManager.getTenantId(result.tenantDomain));
-        context.getThreadLocalCarbonContext().setUsername(usernameWithTenantDomain);
-        context.getThreadLocalCarbonContext().setTenantDomain(result.tenantDomain, true);
-        var realmService = carbon.server.osgiService('org.wso2.carbon.user.core.service.RealmService');
-        var realmServiceTenantManager = realmService.getTenantManager();
-        //Get tenant id from the extracted tenant domain
-        var tenantId = realmServiceTenantManager.getTenantId(result.tenantDomain);
-        if (tenantId == -1) {
-            result.message = "tenantDomain is not valid. username: " + result.username + ", tenantDomain: "
-                    + result.tenantDomain;
-        } else {
-            result.tenantId = tenantId;
-        }
+    //Extract username and tenant domain from the full user name
+    result.tenantDomain = MultitenantUtils.getTenantDomain(usernameWithTenantDomain);
+    result.username = MultitenantUtils.getTenantAwareUsername(usernameWithTenantDomain);
+    //To get the tenant user realm set the carbon context details
+    var multiTenancyTenantManager = multitenancy.getTenantManager();
+    context.getThreadLocalCarbonContext().setTenantId(multiTenancyTenantManager.getTenantId(result.tenantDomain));
+    context.getThreadLocalCarbonContext().setUsername(usernameWithTenantDomain);
+    context.getThreadLocalCarbonContext().setTenantDomain(result.tenantDomain, true);
+    var realmService = carbon.server.osgiService('org.wso2.carbon.user.core.service.RealmService');
+    var realmServiceTenantManager = realmService.getTenantManager();
+    //Get tenant id from the extracted tenant domain
+    var tenantId = realmServiceTenantManager.getTenantId(result.tenantDomain);
+    if (tenantId == -1) {
+        result.message = "tenantDomain is not valid. username: " + result.username + ", tenantDomain: "
+                + result.tenantDomain;
     } else {
-        result.message = "Failing authorization since tenant domain is not present in claim "
-                + SIGNED_JWT_AUTH_USERNAME;
-        result.username = usernameWithTenantDomain;
+        result.tenantId = tenantId;
     }
     return result;
 }
