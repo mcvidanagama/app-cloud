@@ -92,6 +92,7 @@ var DOC_URL = "_doc_url";
 
 var CLOUD_TYPES_PROPERTIES_CONFIG = "/jagg/cloud-types-properties.json";
 var DASHBOARD_TYPES_PROPERTIES_CONFIG = "/jagg/dashboard-types-properties.json";
+var HEADER_CONFIG = "/jagg/header.json";
 var SELECTED_CLOUD = "SELECTED_CLOUD";
 var APP_CLOUD = "app_cloud";
 var APP_CLOUD_HOSTNAME = "AppCloud.Hostname";
