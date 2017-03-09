@@ -63,7 +63,7 @@ docker build --no-cache -t docker.wso2.com/wso2-cloud/wso2esb:5.0.0-alpine3.4-or
 docker build --no-cache -t docker.wso2.com/wso2-cloud/custom:dind-base -f $CURRENT_DIR/custom/base/Dockerfile $CURRENT_DIR/custom/base/
 
 #ballerina base image
-docker build --no-cache -t docker.wso2.com/wso2-cloud/ballerina:8.0.0-base -f $CURRENT_DIR/ballerina/base/0.8.0/Dockerfile.wso2-ballerina-0.8.0.base $CURRENT_DIR/ballerina/base/0.8.0
+docker build --no-cache -t docker.wso2.com/wso2-cloud/ballerina:0.8.x-base -f $CURRENT_DIR/ballerina/base/0.8.x/Dockerfile.wso2-cloud-ballerina-0.8.x.base $CURRENT_DIR/ballerina/base/0.8.x
 
 #nodejs base image
 docker build --no-cache -t wso2-appcloud/nodejs:7.7.1-base -f $CURRENT_DIR/nodejs/base/7.7.1/Dockerfile.wso2-cloud-nodejs-7.7.1.base $CURRENT_DIR/nodejs/base/7.7.1/
