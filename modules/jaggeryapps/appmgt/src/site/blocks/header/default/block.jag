@@ -132,6 +132,7 @@ jagg.block("header/default", {
 
         var remainingDays = -1;
         remainingDays = subscriptionManager.getRemainingDaysToUpgrade(tenantDomain, jagg.getSelectedCloud());
+        var headerConfigJson = manager.getHeaderConfigJson();
 
         return {
             "user": user,
@@ -151,7 +152,8 @@ jagg.block("header/default", {
             "isBillingEnabled": isBillingEnabled,
             "remainingDays" : remainingDays,
             "isPaidAccount" : isPaidAccount,
-            "isAdminUser" : isAdminUser
+            "isAdminUser" : isAdminUser,
+            "headerConfigJson" : headerConfigJson
         };
     }
 });

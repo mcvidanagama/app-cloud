@@ -191,7 +191,15 @@ var getDashboardTypeProperties = function() {
     var stringfiedObject = stringify(dashboardTypePropertyConfPath);
     var dashboardTypesProperties = parse(stringfiedObject);
     return require(dashboardTypesProperties);
-}
+};
+
+var getHeaderConfigJson = function() {
+    var fileNameUtils = Packages.org.apache.commons.io.FilenameUtils;
+    var headerConfPath = fileNameUtils.normalize(HEADER_CONFIG);
+    var stringfiedObject = stringify(headerConfPath);
+    var headerConfigJson = parse(stringfiedObject);
+    return require(headerConfigJson);
+};
 
 function hasCustomURLSettingsAccess() {
     var username = jagg.getUser();
