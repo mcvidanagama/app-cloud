@@ -18,23 +18,11 @@
 #
 # ------------------------------------------------------------------------
 
-FROM docker.wso2.com/wso2-cloud/java:alpine3.4-oracle-jdk1.8.0_112
+FROM docker.wso2.com/wso2-cloud/ballerina:0.8.x-base
 
-ENV APP_HOME /srv/ballerina
-ENV APP_VERSION 0.8.0
-ENV RUNTIME_DISTRIBUTION_NAME ballerina-0.8.0.zip
-ENV RUNTIME_NAME ballerina-0.8.0
-ADD init.sh /init.sh
-RUN chmod +x /init.sh && \
-    mkdir -p "$APP_HOME" && \
-    mkdir -p "/srv/logs" && \
-    chown wso2user:wso2 "$APP_HOME" "/srv/logs"
-USER wso2user
-ADD $RUNTIME_DISTRIBUTION_NAME $APP_HOME/
+ENV URL ARTIFACT_URL
+ENV APP_FILE ARTIFACT_NAME
+RUN wget "$URL" -O "$APP_HOME/$APP_FILE"
+ENV TOTAL_MEMORY VAL_TOTAL_MEMORY
 
-
-RUN unzip $APP_HOME/$RUNTIME_DISTRIBUTION_NAME -d "$APP_HOME/" && \
-    rm $APP_HOME/$RUNTIME_DISTRIBUTION_NAME
-WORKDIR $APP_HOME
-
-EXPOSE 9090 9092
+CMD ["bash", "-c", "source /init.sh"]

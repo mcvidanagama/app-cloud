@@ -18,7 +18,7 @@
 #
 # ------------------------------------------------------------------------
 
-FROM wso2-cloud/ballerina:0.8.0-base
+FROM docker.wso2.com/wso2-cloud/ballerina:0.8.x-base
 
 ENV APP_FILE ARTIFACT_NAME
 COPY "$APP_FILE" "$APP_HOME/"
