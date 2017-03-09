@@ -132,7 +132,9 @@ var log = new Log();
             if (uploadedArtifacts == null) {
                 response.status = 400;
                 response.content = "Bad request : fileupload is required!";
-                return;
+                //'return ;' is added because when "createApplication" is called from the REST API we need to
+                // return the error response
+                return ;
             }
         }
 
@@ -185,7 +187,6 @@ var log = new Log();
             return;
         } else {
             var isAppCountLowerThanMax = false;
-
             //Added to restrict application creation using the REST api
             //If the user is trying to create a new version first check if an application with the given name exists
             //before creating the new application version

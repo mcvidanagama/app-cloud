@@ -473,6 +473,9 @@ jagg.template("application", function (inputs, outputs, jagg) {
                 change: onChangeFileUpload
             });
 
+        /**
+        * Method to get version hash id given the application name and application revision.
+        */
         function getVersionHashId() {
             jagg.post("../blocks/application/application.jag", {
                 action: "getVersionHashId",

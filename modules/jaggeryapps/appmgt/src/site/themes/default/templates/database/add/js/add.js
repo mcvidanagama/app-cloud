@@ -422,6 +422,12 @@ function addNewDatabase() {
     }
 }
 
+/**
+ * Method to validate database name
+ *
+ * @param value database name
+ * @returns {if database name is valid or not}
+ */
 function validateDatabaseName(value) {
     var dbNameValidation = validateDbName(value);
     if (!dbNameValidation.status) {
