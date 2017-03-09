@@ -34,6 +34,7 @@
     "Documentation": {
       "url": "https://docs.wso2.com/display/IntegrationCloud/WSO2+Integration+Cloud+Documentation",
       "icon": "fa fa-book",
+      "target": "_blank",
       "dropDown": "false"
     },
     "Support": {
@@ -50,16 +51,19 @@
       "Profile": {
         "url": "https://cloudmgt.cloud.wso2.com/cloudmgt/site/pages/user-profile.jag",
         "icon": "fa fa-user",
+        "target": "_blank",
         "dropDown": "false"
       },
       "Change Password": {
         "url": "https://cloudmgt.cloud.wso2.com/cloudmgt/site/pages/change-password.jag",
         "icon": "fa fa-lock",
+        "target": "_blank",
         "dropDown": "false"
       },
       "Logout": {
         "url": "https://cloudmgt.cloud.wso2.com/cloudmgt/site/pages/logout.jag",
         "icon": "fa fa-sign-out",
+        "target": "_blank",
         "dropDown": "false"
       }
     }
@@ -74,7 +78,7 @@
           "url": "https://api.cloud.wso2.com/publisher/",
           "icon": "fw fw-api fa-3x",
           "dropDown": "false",
-          "target": "_self"
+          "target": "_blank"
         },
         "Device Cloud": {
           "id": "device_cloud",
