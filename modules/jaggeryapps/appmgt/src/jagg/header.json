@@ -40,7 +40,7 @@
     "Support": {
       "url": "https://cloudmgt.cloud.wso2.com/cloudmgt/site/pages/contact-us.jag?cloud-type=integration_cloud",
       "icon": "fa fa-envelope",
-      "target": "_self",
+      "target": "_blank",
       "dropDown": "false"
     }
   },
