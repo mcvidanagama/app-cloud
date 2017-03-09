@@ -58,7 +58,8 @@ INSERT INTO `AC_APP_TYPE` (`id`, `name`, `description`) VALUES
 (5, 'wso2dataservice', 'Allows you to deploy a data service that is supported in WSO2 Data Services Server.'),
 (6, 'wso2esb', 'Allows you to deploy an ESB configuration that is supported by WSO2 Enterprise Service Bus'),
 (7, 'custom', 'Allows you to deploy applications using custom Docker images'),
-(8, 'ballerina', 'Allows you to deploy Ballerina service. Ballerina is a general purpose, concurrent and strongly typed programming language with both textual and graphical syntaxes.');
+(8, 'ballerina', 'Allows you to deploy Ballerina service. Ballerina is a general purpose, concurrent and strongly typed programming language with both textual and graphical syntaxes.'),
+(9, 'nodejs', 'Allows you to deploy Node.Js applications');
 
 -- -----------------------------------------------------
 -- Table `AppCloudDB`.`AC_RUNTIME`
@@ -96,7 +97,8 @@ INSERT INTO `AC_RUNTIME` (`id`, `name`, `image_name`, `tag`, `description`) VALU
 (16, 'Apache Tomcat 8.5.5 (Ubuntu 16.04/Open JDK 1.8.0_91)', 'tomcat', '8.5.5-ubuntu16.04-open-jdk1.8.0', 'OS:Ubuntu 16.04, Open JDK 1.8.0_91'),
 (17, 'OracleJDK 8 + WSO2 MSF4J 2.1.0', 'msf4j', '2.0.0', 'OS:alpine-java, Oracle JDK:8u102'),
 (18, 'Custom Docker http-8080 https-8443', 'custom', 'customtag', 'OS:Custom, JAVA Version:custom'),
-(19, 'Ballerina 0.8.0 (Alpine 3.4/Oracle JDK 1.8.0_112)', 'ballerina', '0.8.0', 'OS:Alpine 3.4, Oracle JDK 1.8.0_112');
+(19, 'Ballerina 0.8.0 (Alpine 3.4/Oracle JDK 1.8.0_112)', 'ballerina', '0.8.0', 'OS:Alpine 3.4, Oracle JDK 1.8.0_112'),
+(20, 'Node.JS 7.7.1 (Alpine 3.4/Node.JS 7.7.1)', 'nodejs', '7.7.1', 'OS:Alpine 3.4, Node.JS 7.7.1');
 
 
 -- -----------------------------------------------------
@@ -271,7 +273,8 @@ INSERT INTO `AC_APP_TYPE_RUNTIME` (`app_type_id`, `runtime_id`) VALUES
 (1, 16),
 (2, 17),
 (7, 18),
-(8, 19);
+(8, 19),
+(9, 20);
 
 
 -- -----------------------------------------------------
@@ -515,7 +518,9 @@ INSERT INTO `AC_RUNTIME_TRANSPORT` (`transport_id`, `runtime_id`) VALUES
 (3, 18),
 (4, 18),
 (9, 19),
-(10, 19);
+(10, 19),
+(3, 20),
+(4, 20);
 
 INSERT INTO `AC_CONTAINER_SPECIFICATIONS` (`CON_SPEC_NAME`, `CPU`, `MEMORY`, `COST_PER_HOUR`) VALUES
 ('128MB RAM and 0.1x vCPU', 100, 128, 1),
@@ -568,7 +573,8 @@ INSERT INTO `AC_RUNTIME_CONTAINER_SPECIFICATIONS` (`id`, `CON_SPEC_ID`) VALUES
 (17, 4),
 (18, 4),
 (19, 5),
-(19, 7);
+(19, 7),
+(20, 3);
 
 -- -----------------------------------------------------
 -- Table `AppCloudDB`.`AC_CLOUD_APP_TYPE`
@@ -603,7 +609,8 @@ INSERT INTO `AC_CLOUD_APP_TYPE` (`cloud_id`, `app_type_id`) VALUES
 ('integration_cloud', 5),
 ('integration_cloud', 6),
 ('integration_cloud', 7),
-('integration_cloud', 8);
+('integration_cloud', 8),
+('integration_cloud', 9);
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

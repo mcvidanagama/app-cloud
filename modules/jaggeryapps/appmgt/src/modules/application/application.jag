@@ -874,6 +874,7 @@ var getAllAppTypes = function () {
 
             appTypeObject.name = appType.appTypeName;
             appTypeObject.description = appType.description;
+
             if (appTypeObject.name == 'wso2esb') {
                 if (isAppTypeAllowed('wso2esb') == true) {
                     appTypeArray.push(appTypeObject);
@@ -910,7 +911,6 @@ var getAllRuntimes = function(appType){
             runtimeObject.imageName = runtime.imageName;
             runtimeObject.tag = runtime.tag;
             runtimeObject.description = runtime.description;
-
             runtimeArray.push(runtimeObject);
         }
     } catch(e){
